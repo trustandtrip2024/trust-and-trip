@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-ink: #0B1C2C;
+  --color-gold: #F59E0B;
+  --color-cream: #FAF7F2;
+  --color-sand: #EDE4D3;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-feature-settings: "ss01", "ss02", "cv01", "cv11";
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+@layer components {
+  .container-custom {
+    @apply mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-12;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-ink text-cream px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-gold hover:text-ink hover:-translate-y-0.5 hover:shadow-glow-gold;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center gap-2 bg-gold text-ink px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-ink hover:text-cream hover:-translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border border-ink/20 text-ink px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-ink hover:text-cream hover:border-ink;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 text-ink px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-ink/5;
+  }
+
+  .eyebrow {
+    @apply text-[11px] uppercase tracking-[0.25em] font-medium text-gold;
+  }
+
+  .eyebrow-ink {
+    @apply text-[11px] uppercase tracking-[0.25em] font-medium text-ink/60;
+  }
+
+  .heading-display {
+    @apply font-display text-display-lg font-medium tracking-tight;
+  }
+
+  .heading-section {
+    @apply font-display text-display-md font-medium tracking-tight;
+  }
+
+  .prose-travel {
+    @apply text-ink/70 leading-relaxed;
+  }
+
+  /* Divider with gold dot */
+  .gold-divider {
+    @apply flex items-center gap-3 text-ink/40;
+  }
+  .gold-divider::before,
+  .gold-divider::after {
+    content: "";
+    @apply flex-1 h-px bg-ink/10;
+  }
+
+  /* Card base */
+  .card-travel {
+    @apply bg-white rounded-3xl overflow-hidden transition-all duration-500 hover:shadow-soft-lg;
+  }
+
+  /* Form inputs */
+  .input-travel {
+    @apply w-full px-4 py-3.5 rounded-xl bg-cream border border-ink/10 text-ink text-sm outline-none transition-all duration-200;
+  }
+  .input-travel:focus {
+    @apply border-gold bg-white shadow-[0_0_0_3px_rgba(245,158,11,0.15)];
+  }
+  .input-travel::placeholder {
+    color: rgba(11, 28, 44, 0.4);
+  }
+
+  /* Shimmer effect for loading */
+  .shimmer-bg {
+    background: linear-gradient(
+      90deg,
+      rgba(237, 228, 211, 0.3) 0%,
+      rgba(237, 228, 211, 0.6) 50%,
+      rgba(237, 228, 211, 0.3) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  }
+
+  .mask-fade-r {
+    mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  }
+
+  /* Grain overlay */
+  .grain-overlay {
+    position: relative;
+  }
+  .grain-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+    opacity: 0.12;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+}
+
+/* Hide scrollbar utility for carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
