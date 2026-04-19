@@ -141,3 +141,10 @@ export async function getFeaturedPackages(): Promise<Package[]> {
   const raw = await sanityClient.fetch<SanityPackage[]>(FEATURED_PACKAGES_QUERY);
   return raw.map(mapPackage);
 }
+
+export async function getBudgetPackages(): Promise<Package[]> {
+  const raw = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package" && price <= 35000] | order(price asc) [0...6] { ${PACKAGE_FIELDS} }`
+  );
+  return raw.map(mapPackage);
+}
