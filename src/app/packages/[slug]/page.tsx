@@ -1,7 +1,11 @@
+export const revalidate = 30;
+export const dynamicParams = true;
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { packages, testimonials } from "@/lib/data";
+import { getPackageBySlug, getAllPackageSlugs } from "@/lib/sanity-queries";
+import { testimonials } from "@/lib/data";
 import Accordion from "@/components/Accordion";
 import TestimonialCard from "@/components/TestimonialCard";
 import CTASection from "@/components/CTASection";
@@ -22,11 +26,12 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return packages.map((p) => ({ slug: p.slug }));
+  const slugs = await getAllPackageSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
-  const p = packages.find((x) => x.slug === params.slug);
+  const p = await getPackageBySlug(params.slug);
   if (!p) return {};
   return {
     title: `${p.title} — Trust and Trip`,
@@ -34,8 +39,8 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default function PackageDetail({ params }: Props) {
-  const pkg = packages.find((p) => p.slug === params.slug);
+export default async function PackageDetail({ params }: Props) {
+  const pkg = await getPackageBySlug(params.slug);
   if (!pkg) return notFound();
 
   return (
@@ -88,7 +93,7 @@ export default function PackageDetail({ params }: Props) {
         </div>
       </section>
 
-      {/* Main content with sticky sidebar */}
+      {/* Main content */}
       <section className="py-16 md:py-20">
         <div className="container-custom grid lg:grid-cols-[1fr_380px] gap-12 lg:gap-16 items-start">
           <div className="min-w-0">
@@ -101,10 +106,7 @@ export default function PackageDetail({ params }: Props) {
               </h2>
               <div className="grid sm:grid-cols-2 gap-3">
                 {pkg.highlights.map((h, i) => (
-                  <div
-                    key={i}
-                    className="flex items-start gap-3 bg-cream rounded-2xl p-5 border border-ink/5"
-                  >
+                  <div key={i} className="flex items-start gap-3 bg-cream rounded-2xl p-5 border border-ink/5">
                     <span className="shrink-0 h-7 w-7 rounded-full bg-gold/20 text-gold flex items-center justify-center">
                       <Sparkles className="h-3.5 w-3.5" />
                     </span>
@@ -139,26 +141,17 @@ export default function PackageDetail({ params }: Props) {
               <h3 className="font-display text-3xl md:text-4xl font-medium mt-3 text-balance max-w-lg">
                 {pkg.hotel.name}
               </h3>
-              <p className="text-xs uppercase tracking-wider text-gold mt-2">
-                {pkg.hotel.category}
-              </p>
-              <p className="mt-5 text-ink/70 leading-relaxed max-w-xl">
-                {pkg.hotel.description}
-              </p>
+              <p className="text-xs uppercase tracking-wider text-gold mt-2">{pkg.hotel.category}</p>
+              <p className="mt-5 text-ink/70 leading-relaxed max-w-xl">{pkg.hotel.description}</p>
             </div>
 
             {/* Activities */}
             <div className="mb-16">
               <span className="eyebrow">Signature activities</span>
-              <h2 className="heading-section mt-3 mb-8 text-balance">
-                Built in, not bolted on.
-              </h2>
+              <h2 className="heading-section mt-3 mb-8 text-balance">Built in, not bolted on.</h2>
               <div className="flex flex-wrap gap-2">
                 {pkg.activities.map((a) => (
-                  <span
-                    key={a}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink text-cream text-xs"
-                  >
+                  <span key={a} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-ink text-cream text-xs">
                     <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                     {a}
                   </span>

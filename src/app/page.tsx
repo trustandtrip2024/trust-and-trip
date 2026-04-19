@@ -8,19 +8,20 @@ import VideoSection from "@/components/VideoSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import CTASection from "@/components/CTASection";
 import {
-  packages,
   testimonials,
   experiences,
   stats,
 } from "@/lib/data";
-import { getDestinations } from "@/lib/sanity-queries";
+import { getDestinations, getTrendingPackages } from "@/lib/sanity-queries";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Award, Globe2, Heart, Sparkles } from "lucide-react";
 
 export default async function HomePage() {
-  const featuredDestinations = await getDestinations();
-  const trendingPackages = packages.filter((p) => p.trending).slice(0, 3);
+  const [featuredDestinations, trendingPackages] = await Promise.all([
+    getDestinations(),
+    getTrendingPackages(),
+  ]);
 
   return (
     <>
