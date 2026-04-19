@@ -2,7 +2,7 @@ export const revalidate = 30;
 
 import Hero from "@/components/Hero";
 import DestinationTile from "@/components/DestinationTile";
-import PackageCard from "@/components/PackageCard";
+import PackageSlider from "@/components/PackageSlider";
 import TestimonialCard from "@/components/TestimonialCard";
 import VideoSection from "@/components/VideoSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
@@ -12,16 +12,36 @@ import {
   getDestinations,
   getTrendingPackages,
   getBudgetPackages,
+  getNewlyAddedPackages,
+  getBestChoicePackages,
 } from "@/lib/sanity-queries";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Award, Globe2, Heart, IndianRupee, Flame, MapPin } from "lucide-react";
+import {
+  ArrowRight,
+  Award,
+  Globe2,
+  Heart,
+  IndianRupee,
+  Flame,
+  MapPin,
+  Sparkles,
+  Star,
+} from "lucide-react";
 
 export default async function HomePage() {
-  const [allDestinations, trendingPackages, budgetPackages] = await Promise.all([
+  const [
+    allDestinations,
+    trendingPackages,
+    budgetPackages,
+    newlyAddedPackages,
+    bestChoicePackages,
+  ] = await Promise.all([
     getDestinations(),
     getTrendingPackages(),
     getBudgetPackages(),
+    getNewlyAddedPackages(),
+    getBestChoicePackages(),
   ]);
 
   const domesticDestinations = allDestinations
@@ -36,11 +56,8 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      {/* ── Marquee strip ─────────────────────────────────────────── */}
-      <section
-        aria-hidden="true"
-        className="border-y border-ink/10 bg-cream py-4 overflow-hidden"
-      >
+      {/* ── Marquee strip ─────────────────────────────────────── */}
+      <section aria-hidden="true" className="border-y border-ink/10 bg-cream py-4 overflow-hidden">
         <div className="flex gap-10 animate-marquee whitespace-nowrap">
           {[...Array(2)].map((_, r) => (
             <div key={r} className="flex items-center gap-10 shrink-0">
@@ -63,7 +80,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Pick a Feeling ─────────────────────────────────────────── */}
+      {/* ── Pick a Feeling ─────────────────────────────────────── */}
       <section className="py-14 md:py-20" aria-labelledby="feeling-heading">
         <div className="container-custom">
           <div className="flex items-end justify-between gap-4 mb-8 md:mb-10">
@@ -79,15 +96,15 @@ export default async function HomePage() {
             </div>
             <Link
               href="/experiences"
-              className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink hover:text-gold transition-colors group shrink-0"
               aria-label="View all travel experiences"
+              className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink hover:text-gold transition-colors group shrink-0"
             >
               All experiences
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
 
-          {/* 3-col tile grid — 2 rows × 3 cols = 6 tiles */}
+          {/* 3-col tile grid */}
           <div className="grid grid-cols-3 gap-2.5 md:gap-4">
             {experiences.map((exp, i) => (
               <Link
@@ -105,7 +122,7 @@ export default async function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/30 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-2.5 md:p-5 text-cream">
-                  <p className="hidden md:block text-[9px] md:text-[10px] uppercase tracking-[0.2em] text-gold mb-1">
+                  <p className="hidden md:block text-[9px] uppercase tracking-[0.2em] text-gold mb-1">
                     {exp.category}
                   </p>
                   <h3 className="font-display text-[11px] md:text-xl font-medium leading-tight">
@@ -128,8 +145,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Stats ──────────────────────────────────────────────────── */}
-      <section className="bg-ink text-cream py-10 md:py-14" aria-label="Trust and Trip stats">
+      {/* ── Stats ─────────────────────────────────────────────── */}
+      <section className="bg-ink text-cream py-10 md:py-14" aria-label="Trust and Trip at a glance">
         <div className="container-custom grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
           {stats.map((s, i) => (
             <div
@@ -147,14 +164,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Domestic Destinations ──────────────────────────────────── */}
+      {/* ── Explore India ─────────────────────────────────────── */}
       {domesticDestinations.length > 0 && (
         <section className="py-14 md:py-20" aria-labelledby="domestic-heading">
           <div className="container-custom">
             <div className="flex items-end justify-between gap-4 mb-7 md:mb-10">
               <div>
                 <span className="eyebrow flex items-center gap-1.5">
-                  <MapPin className="h-3 w-3 text-gold" />
+                  <MapPin className="h-3 w-3 text-gold" aria-hidden="true" />
                   Explore India
                 </span>
                 <h2
@@ -167,15 +184,13 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/destinations"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-gold transition-colors group shrink-0"
                 aria-label="View all Indian destinations"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-gold transition-colors group shrink-0"
               >
                 View all
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
-
-            {/* 3×3 tile grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 md:gap-4">
               {domesticDestinations.map((d, i) => (
                 <DestinationTile key={d.slug} destination={d} index={i} />
@@ -185,21 +200,18 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── International Destinations ─────────────────────────────── */}
+      {/* ── Go International ──────────────────────────────────── */}
       {internationalDestinations.length > 0 && (
-        <section
-          className="py-14 md:py-20 bg-sand/30"
-          aria-labelledby="international-heading"
-        >
+        <section className="py-14 md:py-20 bg-sand/30" aria-labelledby="intl-heading">
           <div className="container-custom">
             <div className="flex items-end justify-between gap-4 mb-7 md:mb-10">
               <div>
                 <span className="eyebrow flex items-center gap-1.5">
-                  <Globe2 className="h-3 w-3 text-gold" />
+                  <Globe2 className="h-3 w-3 text-gold" aria-hidden="true" />
                   Go International
                 </span>
                 <h2
-                  id="international-heading"
+                  id="intl-heading"
                   className="heading-section mt-2 max-w-xs md:max-w-lg text-balance"
                 >
                   World-class destinations,
@@ -208,14 +220,13 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/destinations"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-gold transition-colors group shrink-0"
                 aria-label="View all international destinations"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-gold transition-colors group shrink-0"
               >
                 View all
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
-
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 md:gap-4">
               {internationalDestinations.map((d, i) => (
                 <DestinationTile key={d.slug} destination={d} index={i} />
@@ -225,108 +236,62 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── Budget Picks ───────────────────────────────────────────── */}
-      {budgetPackages.length > 0 && (
-        <section className="py-14 md:py-20" aria-labelledby="budget-heading">
+      {/* ── Trending Experiences (slider) ─────────────────────── */}
+      {trendingPackages.length > 0 && (
+        <section className="py-14 md:py-20" aria-labelledby="trending-heading">
           <div className="container-custom">
-            <div className="flex items-end justify-between gap-4 mb-7 md:mb-10">
-              <div>
-                <span className="eyebrow flex items-center gap-1.5">
-                  <IndianRupee className="h-3 w-3 text-gold" />
-                  Budget Friendly
-                </span>
-                <h2
-                  id="budget-heading"
-                  className="heading-section mt-2 max-w-xs md:max-w-lg text-balance"
-                >
-                  Big journeys,
-                  <span className="italic text-gold font-light"> under ₹35,000.</span>
-                </h2>
-              </div>
-              <Link
-                href="/packages"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-gold transition-colors group shrink-0"
-                aria-label="View all budget packages"
-              >
-                View all
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-              {budgetPackages.map((p, i) => (
-                <PackageCard
-                  key={p.slug}
-                  title={p.title}
-                  slug={p.slug}
-                  image={p.image}
-                  duration={p.duration}
-                  price={p.price}
-                  rating={p.rating}
-                  reviews={p.reviews}
-                  destinationName={p.destinationName}
-                  travelType={p.travelType}
-                  trending={p.trending}
-                  limitedSlots={p.limitedSlots}
-                  index={i}
-                />
-              ))}
-            </div>
+            <PackageSlider
+              id="trending-slider"
+              eyebrow="Trending Experiences"
+              heading={`Journeys everyone's <span class=\"italic text-gold font-light\">talking about.</span>`}
+              packages={trendingPackages}
+              viewAllLabel="All trending"
+            />
           </div>
         </section>
       )}
 
-      {/* ── Trending Packages ──────────────────────────────────────── */}
-      {trendingPackages.length > 0 && (
-        <section
-          className="py-14 md:py-20 bg-sand/40"
-          aria-labelledby="trending-heading"
-        >
+      {/* ── Newly Added (slider) ──────────────────────────────── */}
+      {newlyAddedPackages.length > 0 && (
+        <section className="py-14 md:py-20 bg-sand/30" aria-labelledby="new-heading">
           <div className="container-custom">
-            <div className="flex items-end justify-between gap-4 mb-7 md:mb-10">
-              <div>
-                <span className="eyebrow flex items-center gap-1.5">
-                  <Flame className="h-3 w-3 text-gold" />
-                  Trending Now
-                </span>
-                <h2
-                  id="trending-heading"
-                  className="heading-section mt-2 max-w-xs md:max-w-lg text-balance"
-                >
-                  Journeys our planners
-                  <span className="italic text-gold font-light"> can't stop recommending.</span>
-                </h2>
-              </div>
-              <Link
-                href="/packages"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-gold transition-colors group shrink-0"
-                aria-label="View all trending packages"
-              >
-                All packages
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
+            <PackageSlider
+              id="new-slider"
+              eyebrow="Newly Added"
+              heading={`Fresh itineraries, <span class=\"italic text-gold font-light\">just dropped.</span>`}
+              packages={newlyAddedPackages}
+              viewAllLabel="All packages"
+            />
+          </div>
+        </section>
+      )}
 
-            {/* 3×3 tile grid — up to 9 trending packages */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-              {trendingPackages.slice(0, 9).map((p, i) => (
-                <PackageCard
-                  key={p.slug}
-                  title={p.title}
-                  slug={p.slug}
-                  image={p.image}
-                  duration={p.duration}
-                  price={p.price}
-                  rating={p.rating}
-                  reviews={p.reviews}
-                  destinationName={p.destinationName}
-                  travelType={p.travelType}
-                  trending={p.trending}
-                  limitedSlots={p.limitedSlots}
-                  index={i}
-                />
-              ))}
-            </div>
+      {/* ── Budget Picks (slider) ─────────────────────────────── */}
+      {budgetPackages.length > 0 && (
+        <section className="py-14 md:py-20" aria-labelledby="budget-heading">
+          <div className="container-custom">
+            <PackageSlider
+              id="budget-slider"
+              eyebrow="Budget Friendly"
+              heading={`Big journeys, <span class=\"italic text-gold font-light\">under ₹35,000.</span>`}
+              packages={budgetPackages}
+              viewAllLabel="Budget picks"
+            />
+          </div>
+        </section>
+      )}
+
+      {/* ── Best Choices (slider) ─────────────────────────────── */}
+      {bestChoicePackages.length > 0 && (
+        <section className="py-14 md:py-20 bg-sand/30" aria-labelledby="best-heading">
+          <div className="container-custom">
+            <PackageSlider
+              id="best-slider"
+              eyebrow="Best Choices"
+              heading={`Top-rated by our <span class=\"italic text-gold font-light\">happiest travelers.</span>`}
+              packages={bestChoicePackages}
+              viewAllLabel="Top rated"
+            />
           </div>
         </section>
       )}
@@ -335,7 +300,7 @@ export default async function HomePage() {
 
       <VideoSection />
 
-      {/* ── Testimonials ───────────────────────────────────────────── */}
+      {/* ── Testimonials ──────────────────────────────────────── */}
       <section className="py-14 md:py-20 bg-cream" aria-labelledby="testimonials-heading">
         <div className="container-custom">
           <div className="max-w-2xl mb-10 md:mb-14">
@@ -348,27 +313,24 @@ export default async function HomePage() {
               <span className="italic text-gold font-light"> in their own words.</span>
             </h2>
           </div>
-
           <div className="grid md:grid-cols-2 gap-5 md:gap-6">
             {testimonials.map((t, i) => (
               <TestimonialCard key={i} testimonial={t} index={i} />
             ))}
           </div>
-
-          {/* Trust badges */}
           <div className="mt-10 flex flex-wrap items-center gap-5 text-sm text-ink/60">
             <div className="flex items-center gap-2">
-              <Award className="h-4 w-4 text-gold shrink-0" />
+              <Award className="h-4 w-4 text-gold shrink-0" aria-hidden="true" />
               <span>Featured on Condé Nast</span>
             </div>
-            <span className="text-ink/20 hidden sm:block">·</span>
+            <span className="text-ink/20 hidden sm:block" aria-hidden="true">·</span>
             <div className="flex items-center gap-2">
-              <Globe2 className="h-4 w-4 text-gold shrink-0" />
+              <Globe2 className="h-4 w-4 text-gold shrink-0" aria-hidden="true" />
               <span>IATA Accredited</span>
             </div>
-            <span className="text-ink/20 hidden sm:block">·</span>
+            <span className="text-ink/20 hidden sm:block" aria-hidden="true">·</span>
             <div className="flex items-center gap-2">
-              <Heart className="h-4 w-4 text-gold shrink-0" />
+              <Heart className="h-4 w-4 text-gold shrink-0" aria-hidden="true" />
               <span>4.9 / 5 on Google</span>
             </div>
           </div>

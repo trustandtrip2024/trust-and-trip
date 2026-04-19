@@ -144,7 +144,21 @@ export async function getFeaturedPackages(): Promise<Package[]> {
 
 export async function getBudgetPackages(): Promise<Package[]> {
   const raw = await sanityClient.fetch<SanityPackage[]>(
-    `*[_type == "package" && price <= 35000] | order(price asc) [0...6] { ${PACKAGE_FIELDS} }`
+    `*[_type == "package" && price <= 35000] | order(price asc) [0...8] { ${PACKAGE_FIELDS} }`
+  );
+  return raw.map(mapPackage);
+}
+
+export async function getNewlyAddedPackages(): Promise<Package[]> {
+  const raw = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package"] | order(_createdAt desc) [0...8] { ${PACKAGE_FIELDS} }`
+  );
+  return raw.map(mapPackage);
+}
+
+export async function getBestChoicePackages(): Promise<Package[]> {
+  const raw = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package"] | order(rating desc, reviews desc) [0...8] { ${PACKAGE_FIELDS} }`
   );
   return raw.map(mapPackage);
 }
