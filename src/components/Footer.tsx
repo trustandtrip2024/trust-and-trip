@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Instagram, Facebook, Youtube, Send, MapPin, Mail, Phone } from "lucide-react";
+import { Instagram, Facebook, Linkedin, Twitter, Send, MapPin, Mail, Phone } from "lucide-react";
 
 const footerLinks = {
   Explore: [
@@ -102,28 +102,28 @@ export default function Footer() {
                   Trust<span className="text-gold">&</span>Trip
                 </span>
                 <span className="text-[9px] uppercase tracking-[0.22em] text-cream/40 mt-0.5">
-                  Est. 2014
+                  Crafting Reliable Travel
                 </span>
               </div>
             </Link>
             <p className="text-sm text-cream/60 leading-relaxed max-w-sm">
-              We design travel that listens. Handcrafted journeys for travelers who want
-              to collect moments, not just destinations.
+              Travel with Trust — not issues. Handcrafted journeys for families, couples
+              and groups who want to collect moments, not just destinations.
             </p>
 
             <div className="mt-6 space-y-2 text-sm text-cream/70">
               <p className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 text-gold mt-0.5 shrink-0" />
                 <span>
-                  42 Hill Road, Bandra West,
+                  R-607, Amrapali Princely,
                   <br />
-                  Mumbai 400050, India
+                  Noida Sector 71, Gautambuddh Nagar 201301
                 </span>
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-gold shrink-0" />
-                <a href="tel:+919999999999" className="hover:text-gold transition-colors">
-                  +91 99999 99999
+                <a href="tel:+918115999588" className="hover:text-gold transition-colors">
+                  +91 8115 999 588
                 </a>
               </p>
               <p className="flex items-center gap-2">
@@ -164,9 +164,10 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-2">
             {[
-              { icon: Instagram, href: "#", label: "Instagram" },
-              { icon: Facebook, href: "#", label: "Facebook" },
-              { icon: Youtube, href: "#", label: "YouTube" },
+              { icon: Instagram, href: "https://instagram.com/trust_and_trip", label: "Instagram" },
+              { icon: Facebook, href: "https://facebook.com/trustandtrip/", label: "Facebook" },
+              { icon: Linkedin, href: "https://linkedin.com/company/trust-and-trip/", label: "LinkedIn" },
+              { icon: Twitter, href: "https://x.com/trust_and_trip", label: "Twitter / X" },
             ].map((s) => (
               <a
                 key={s.label}

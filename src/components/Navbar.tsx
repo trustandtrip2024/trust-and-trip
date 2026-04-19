@@ -39,12 +39,12 @@ export default function Navbar() {
             </span>
           </div>
           <div className="flex items-center gap-5">
-            <a href="tel:+919999999999" className="flex items-center gap-1.5 hover:text-gold transition-colors">
+            <a href="tel:+918115999588" className="flex items-center gap-1.5 hover:text-gold transition-colors">
               <Phone className="h-3 w-3" />
-              +91 99999 99999
+              +91 8115 999 588
             </a>
             <span className="opacity-60">|</span>
-            <span className="text-gold">Monsoon Offer: Up to 25% off</span>
+            <span className="text-gold">🎉 10% Off on bookings 60+ days in advance</span>
           </div>
         </div>
       </div>
@@ -76,7 +76,7 @@ export default function Navbar() {
                 Trust<span className="text-gold">&</span>Trip
               </span>
               <span className="text-[9px] uppercase tracking-[0.22em] text-ink/50 mt-0.5">
-                Est. 2014
+                Crafting Reliable Travel
               </span>
             </div>
           </Link>

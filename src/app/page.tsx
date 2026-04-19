@@ -32,12 +32,13 @@ export default async function HomePage() {
           {[...Array(2)].map((_, r) => (
             <div key={r} className="flex items-center gap-12 shrink-0">
               {[
-                "Curated since 2014",
-                "15,000+ travelers",
+                "Travel with Trust — Not Issues",
+                "10% off on early bookings",
                 "60+ destinations",
-                "24/7 concierge",
+                "Domestic & international tours",
                 "100% price transparency",
-                "Handcrafted itineraries",
+                "Honeymoon · Family · Group tours",
+                "Open 8 AM – 10 PM daily",
               ].map((item, i) => (
                 <span key={i} className="flex items-center gap-12 text-sm text-ink/70">
                   <span className="font-display italic text-gold">âœ¦</span>

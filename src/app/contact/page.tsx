@@ -30,14 +30,14 @@ export default function ContactPage() {
             <InfoBlock
               icon={Phone}
               label="Call us"
-              value="+91 99999 99999"
-              href="tel:+919999999999"
+              value="+91 8115 999 588 / +91 7275 999 588"
+              href="tel:+918115999588"
             />
             <InfoBlock
               icon={MessageCircle}
               label="WhatsApp"
-              value="Chat with a planner"
-              href="https://wa.me/919999999999"
+              value="+91 8115 999 588"
+              href="https://wa.me/918115999588"
             />
             <InfoBlock
               icon={Mail}
@@ -48,12 +48,12 @@ export default function ContactPage() {
             <InfoBlock
               icon={MapPin}
               label="Visit us"
-              value="42 Hill Road, Bandra West, Mumbai 400050"
+              value="R-607, Amrapali Princely, Noida Sector 71, Gautambuddh Nagar 201301"
             />
             <InfoBlock
               icon={Clock}
-              label="Response time"
-              value="Under 2 hours, 24/7"
+              label="Office hours"
+              value="8:00 AM – 10:00 PM (Tuesday Closed)"
             />
 
             <div className="bg-ink rounded-3xl p-8 text-cream mt-8">

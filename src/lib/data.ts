@@ -766,22 +766,22 @@ export const whyChooseUs = [
     statLabel: "Unique itineraries crafted",
   },
   {
-    title: "Real Humans, Always Available",
-    description: "24/7 concierge support through WhatsApp, phone, or email — wherever in the world you are.",
+    title: "Stay Worry Free",
+    description: "Transparent, reliable, and trustworthy — from first inquiry to safe return. No surprises.",
     stat: "24/7",
-    statLabel: "Concierge on-call",
+    statLabel: "Support: 8 AM – 10 PM",
   },
   {
     title: "No Hidden Costs. Ever.",
-    description: "What we quote is what you pay. Every inclusion is listed upfront in black and gold.",
+    description: "What we quote is what you pay. All taxes included. Every inclusion listed upfront.",
     stat: "100%",
     statLabel: "Price transparency",
   },
   {
-    title: "Trusted by Thousands",
-    description: "With over a decade of curating trips, we've built a legacy of repeat travelers and referrals.",
-    stat: "15,000+",
-    statLabel: "Happy travelers",
+    title: "10% Early Bird Savings",
+    description: "Book 60 days or more in advance and get 10% off any package. Premium trips, honest prices.",
+    stat: "10%",
+    statLabel: "Off on early bookings",
   },
 ];
 

@@ -48,13 +48,14 @@ export default function AboutPage() {
               <span className="italic text-gold font-light"> that listens.</span>
             </h1>
             <p className="mt-6 text-ink/70 text-lg leading-relaxed">
-              Trust and Trip began in 2014 in a two-room office in Bandra. A group of travelers
-              who were tired of being sold the same three resorts and four transfer options.
+              Trust and Trip was born in Noida — built by travelers who were tired of
+              cookie-cutter packages and hidden costs. We set out to do one thing differently:
+              make travel genuinely worry-free.
             </p>
             <p className="mt-4 text-ink/60 leading-relaxed">
-              Twelve years later, we've planned journeys across 60+ countries for over 15,000 travelers.
-              We're still small enough to remember your anniversary, and big enough to know
-              the quietest beach on every island.
+              Today we craft journeys across 60+ destinations — from Ladakh to the Maldives,
+              Kashmir to Cappadocia — for families, couples, and groups who want to travel
+              with trust, not issues.
             </p>
           </div>
           <div className="relative aspect-[4/5] rounded-3xl overflow-hidden">

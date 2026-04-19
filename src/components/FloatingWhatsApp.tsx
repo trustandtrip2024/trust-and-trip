@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, MessageCircle, X } from "lucide-react";
 
-const WHATSAPP_NUMBER = "919999999999";
-const PHONE_NUMBER = "+919999999999";
+const WHATSAPP_NUMBER = "918115999588";
+const PHONE_NUMBER = "+918115999588";
 
 export default function FloatingWhatsApp() {
   const [expanded, setExpanded] = useState(false);

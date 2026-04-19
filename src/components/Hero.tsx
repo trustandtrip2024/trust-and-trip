@@ -62,7 +62,7 @@ export default function Hero() {
           className="eyebrow text-gold mb-6 md:mb-8 flex items-center gap-3"
         >
           <span className="h-px w-8 bg-gold" />
-          Curated since 2014
+          Travel with Trust — Not Issues
         </motion.div>
 
         <motion.h1
