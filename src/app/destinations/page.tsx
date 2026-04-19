@@ -1,6 +1,8 @@
+﻿export const revalidate = 30;
+
 import DestinationCard from "@/components/DestinationCard";
 import CTASection from "@/components/CTASection";
-import { destinations } from "@/lib/data";
+import { getDestinations } from "@/lib/sanity-queries";
 import Image from "next/image";
 
 export const metadata = {
@@ -8,7 +10,9 @@ export const metadata = {
   description: "Explore 60+ curated destinations designed for every kind of traveler.",
 };
 
-export default function DestinationsPage() {
+export default async function DestinationsPage() {
+  const destinations = await getDestinations();
+
   return (
     <>
       {/* Page hero */}
@@ -52,3 +56,4 @@ export default function DestinationsPage() {
     </>
   );
 }
+

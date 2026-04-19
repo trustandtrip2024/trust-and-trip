@@ -1,3 +1,5 @@
+﻿export const revalidate = 30;
+
 import Hero from "@/components/Hero";
 import DestinationCard from "@/components/DestinationCard";
 import PackageCard from "@/components/PackageCard";
@@ -38,7 +40,7 @@ export default async function HomePage() {
                 "Handcrafted itineraries",
               ].map((item, i) => (
                 <span key={i} className="flex items-center gap-12 text-sm text-ink/70">
-                  <span className="font-display italic text-gold">✦</span>
+                  <span className="font-display italic text-gold">âœ¦</span>
                   {item}
                 </span>
               ))}
@@ -206,14 +208,14 @@ export default async function HomePage() {
           <div className="mt-12 flex flex-wrap items-center gap-6 text-sm text-ink/60">
             <div className="flex items-center gap-2">
               <Award className="h-5 w-5 text-gold" />
-              <span>Featured on Condé Nast</span>
+              <span>Featured on CondÃ© Nast</span>
             </div>
-            <span className="text-ink/20">·</span>
+            <span className="text-ink/20">Â·</span>
             <div className="flex items-center gap-2">
               <Globe2 className="h-5 w-5 text-gold" />
               <span>IATA Accredited</span>
             </div>
-            <span className="text-ink/20">·</span>
+            <span className="text-ink/20">Â·</span>
             <div className="flex items-center gap-2">
               <Heart className="h-5 w-5 text-gold" />
               <span>4.9 / 5 on Google</span>
@@ -226,3 +228,4 @@ export default async function HomePage() {
     </>
   );
 }
+

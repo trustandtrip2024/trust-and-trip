@@ -1,21 +1,26 @@
+﻿export const revalidate = 30;
+export const dynamicParams = true;
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { destinations, packages } from "@/lib/data";
+import { packages } from "@/lib/data";
+import { getDestinationBySlug, getAllDestinationSlugs } from "@/lib/sanity-queries";
 import PackageCard from "@/components/PackageCard";
 import CTASection from "@/components/CTASection";
-import { Calendar, Clock, MapPin, ChevronRight, ArrowRight, Check } from "lucide-react";
+import { Calendar, Clock, MapPin, ChevronRight, ArrowRight } from "lucide-react";
 
 interface Props {
   params: { slug: string };
 }
 
 export async function generateStaticParams() {
-  return destinations.map((d) => ({ slug: d.slug }));
+  const slugs = await getAllDestinationSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
-  const d = destinations.find((x) => x.slug === params.slug);
+  const d = await getDestinationBySlug(params.slug);
   if (!d) return {};
   return {
     title: `${d.name}, ${d.country} — Trust and Trip`,
@@ -23,8 +28,8 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default function DestinationDetail({ params }: Props) {
-  const destination = destinations.find((d) => d.slug === params.slug);
+export default async function DestinationDetail({ params }: Props) {
+  const destination = await getDestinationBySlug(params.slug);
   if (!destination) return notFound();
 
   const relatedPackages = packages.filter((p) => p.destinationSlug === destination.slug);
@@ -79,9 +84,8 @@ export default function DestinationDetail({ params }: Props) {
               <p>{destination.overview}</p>
             </div>
 
-            {/* Highlights pills */}
             <div className="mt-8 flex flex-wrap gap-2">
-              {destination.highlights.map((h) => (
+              {(destination.highlights || []).map((h) => (
                 <span
                   key={h}
                   className="text-xs px-3 py-1.5 rounded-full bg-cream border border-ink/10 text-ink/80"
@@ -92,28 +96,11 @@ export default function DestinationDetail({ params }: Props) {
             </div>
           </div>
 
-          {/* Quick facts */}
           <div className="grid sm:grid-cols-2 gap-4 content-start">
-            <InfoCard
-              icon={Calendar}
-              label="Best time to visit"
-              value={destination.bestTimeToVisit}
-            />
-            <InfoCard
-              icon={Clock}
-              label="Ideal duration"
-              value={destination.idealDuration}
-            />
-            <InfoCard
-              icon={MapPin}
-              label="Region"
-              value={destination.region}
-            />
-            <InfoCard
-              icon={MapPin}
-              label="Starts from"
-              value={`₹${destination.priceFrom.toLocaleString("en-IN")}`}
-            />
+            <InfoCard icon={Calendar} label="Best time to visit" value={destination.bestTimeToVisit || "Year-round"} />
+            <InfoCard icon={Clock} label="Ideal duration" value={destination.idealDuration || "To be decided"} />
+            <InfoCard icon={MapPin} label="Region" value={destination.region} />
+            <InfoCard icon={MapPin} label="Starts from" value={`₹${destination.priceFrom.toLocaleString("en-IN")}`} />
           </div>
         </div>
       </section>
@@ -129,7 +116,7 @@ export default function DestinationDetail({ params }: Props) {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {destination.thingsToDo.map((t, i) => (
+            {(destination.thingsToDo || []).map((t, i) => (
               <div
                 key={i}
                 className="bg-white rounded-2xl p-6 flex items-start gap-4 border border-ink/5"
@@ -144,7 +131,6 @@ export default function DestinationDetail({ params }: Props) {
         </div>
       </section>
 
-      {/* Packages */}
       {relatedPackages.length > 0 && (
         <section className="py-20 md:py-24">
           <div className="container-custom">
@@ -189,7 +175,7 @@ export default function DestinationDetail({ params }: Props) {
 
       <CTASection
         title={`Dreaming of ${destination.name}?`}
-        subtitle="Talk to a dedicated planner who knows this destination inside-out. We'll craft an itinerary just for you."
+        subtitle="Talk to a dedicated planner who knows this destination inside-out. We will craft an itinerary just for you."
       />
     </>
   );
