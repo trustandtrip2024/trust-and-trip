@@ -13,6 +13,7 @@ import PackageEnquiryCTA from "@/components/PackageEnquiryCTA";
 import PackageSectionNav from "@/components/PackageSectionNav";
 import ReviewsList from "@/components/ReviewsList";
 import ReviewForm from "@/components/ReviewForm";
+import BookingDeposit from "@/components/BookingDeposit";
 import JsonLd from "@/components/JsonLd";
 import Image2 from "next/image";
 import {
@@ -379,6 +380,11 @@ export default async function PackageDetail({ params }: Props) {
                   <MessageCircle className="h-4 w-4" />
                   Book This Journey
                 </a>
+                <BookingDeposit
+                  packageSlug={pkg.slug}
+                  packageTitle={pkg.title}
+                  packagePrice={pkg.price}
+                />
                 <Link href="/customize-trip"
                   className="flex items-center justify-center gap-2 w-full bg-ink/5 hover:bg-ink/10 text-ink font-medium py-3.5 rounded-xl transition-colors text-sm border border-ink/10">
                   <Sparkles className="h-4 w-4 text-gold" />

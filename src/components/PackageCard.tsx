@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp, Heart, GitCompareArrows } from "lucide-react";
 import { useWishlistStore } from "@/store/useWishlistStore";
+import { getDynamicPrice } from "@/lib/dynamic-pricing";
 
 const BOOKED_COUNTS = [14, 8, 22, 6, 17, 11, 29, 5, 19, 9];
 
@@ -47,6 +48,7 @@ export default function PackageCard({
   const wishlisted = isWishlisted(slug);
   const inCompare = isInCompare(slug);
   const compareFull = compareList.length >= 3 && !inCompare;
+  const { price: dynPrice, originalPrice, tier, savings } = getDynamicPrice(price, slug);
 
   return (
     <motion.article
@@ -146,11 +148,17 @@ export default function PackageCard({
         <div className="mt-auto pt-4 mt-4 border-t border-ink/5 space-y-3">
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-[10px] uppercase tracking-wider text-ink/50">Starting from</p>
-              <p className="font-display text-xl md:text-2xl text-ink mt-0.5">
-                ₹{price.toLocaleString("en-IN")}
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${tier.color}`}>{tier.badge}</span>
+                {savings > 0 && <span className="text-[9px] text-green-600 font-medium">Save ₹{savings.toLocaleString("en-IN")}</span>}
+              </div>
+              <p className="font-display text-xl md:text-2xl text-ink">
+                ₹{dynPrice.toLocaleString("en-IN")}
                 <span className="text-xs text-ink/50 font-sans font-normal ml-1">/ person</span>
               </p>
+              {savings > 0 && (
+                <p className="text-[10px] text-ink/35 line-through">₹{originalPrice.toLocaleString("en-IN")}</p>
+              )}
             </div>
             <Link
               href={`/packages/${slug}`}
