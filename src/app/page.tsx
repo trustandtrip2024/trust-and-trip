@@ -1,6 +1,7 @@
 export const revalidate = 30;
 
 import Hero from "@/components/Hero";
+import StatCounter from "@/components/StatCounter";
 import DestinationTile from "@/components/DestinationTile";
 import PackageSlider from "@/components/PackageSlider";
 import TestimonialCard from "@/components/TestimonialCard";
@@ -104,28 +105,28 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          {/* 3-col tile grid */}
-          <div className="grid grid-cols-3 gap-2.5 md:gap-4">
+          {/* 3-col tile grid — horizontal scroll on mobile for bigger tiles */}
+          <div className="flex sm:grid sm:grid-cols-3 gap-2.5 md:gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-5 px-5 sm:mx-0 sm:px-0 pb-1 sm:pb-0">
             {experiences.map((exp, i) => (
               <Link
                 key={exp.slug}
                 href={`/experiences#${exp.slug}`}
                 aria-label={`${exp.title} — ${exp.description}`}
-                className="group relative overflow-hidden rounded-xl md:rounded-2xl aspect-square md:aspect-[4/5] bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
+                className="group relative overflow-hidden rounded-xl md:rounded-2xl aspect-[3/4] sm:aspect-square md:aspect-[4/5] bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 snap-start shrink-0 w-[52vw] sm:w-auto"
               >
                 <Image
                   src={exp.image}
                   alt={exp.title}
                   fill
-                  sizes="(max-width: 640px) 33vw, (max-width: 1024px) 33vw, 300px"
+                  sizes="(max-width: 640px) 52vw, (max-width: 1024px) 33vw, 300px"
                   className="object-cover transition-transform duration-[1500ms] group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/30 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-2.5 md:p-5 text-cream">
-                  <p className="hidden md:block text-[9px] uppercase tracking-[0.2em] text-gold mb-1">
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/40 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-3 md:p-5 text-cream">
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-gold mb-1 opacity-80">
                     {exp.category}
                   </p>
-                  <h3 className="font-display text-[11px] md:text-xl font-medium leading-tight">
+                  <h3 className="font-display text-sm md:text-xl font-medium leading-tight">
                     {exp.title}
                   </h3>
                 </div>
@@ -149,17 +150,7 @@ export default async function HomePage() {
       <section className="bg-ink text-cream py-10 md:py-14" aria-label="Trust and Trip at a glance">
         <div className="container-custom grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
           {stats.map((s, i) => (
-            <div
-              key={i}
-              className="text-center md:border-r md:border-cream/10 last:md:border-r-0 md:px-4"
-            >
-              <div className="font-display text-3xl md:text-5xl font-medium text-gold leading-none">
-                {s.value}
-              </div>
-              <p className="mt-2 text-[9px] md:text-[10px] uppercase tracking-[0.22em] text-cream/60">
-                {s.label}
-              </p>
-            </div>
+            <StatCounter key={i} value={s.value} label={s.label} />
           ))}
         </div>
       </section>

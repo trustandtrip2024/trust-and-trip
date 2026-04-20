@@ -81,30 +81,17 @@ export default function FloatingWhatsApp() {
         </button>
       </motion.div>
 
-      {/* Mobile sticky bottom CTA */}
-      <motion.div
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-cream/95 backdrop-blur-xl border-t border-ink/10 p-3 grid grid-cols-2 gap-2"
+      {/* Mobile: phone FAB above bottom nav */}
+      <motion.a
+        href={`tel:${PHONE_NUMBER}`}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 1, type: "spring", stiffness: 200, damping: 15 }}
+        className="md:hidden fixed bottom-[4.5rem] right-4 z-40 h-12 w-12 rounded-full bg-ink text-cream shadow-soft-lg flex items-center justify-center"
+        aria-label="Call us"
       >
-        <a
-          href={`tel:${PHONE_NUMBER}`}
-          className="flex items-center justify-center gap-2 bg-ink text-cream rounded-xl py-3 text-sm font-medium"
-        >
-          <Phone className="h-4 w-4" />
-          Call Now
-        </a>
-        <a
-          href={`https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 bg-[#25D366] text-white rounded-xl py-3 text-sm font-medium"
-        >
-          <MessageCircle className="h-4 w-4" />
-          WhatsApp
-        </a>
-      </motion.div>
+        <Phone className="h-5 w-5" />
+      </motion.a>
     </>
   );
 }

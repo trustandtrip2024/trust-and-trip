@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Star, PlayCircle, Heart, Users, UserCheck, User, Backpack } from "lucide-react";
 import SearchBar from "./SearchBar";
+import LiveBookingTicker from "./LiveBookingTicker";
 
 const personaPills = [
   { label: "Honeymoon", icon: Heart, type: "Couple", color: "hover:bg-rose-500/20 hover:border-rose-400/50" },
@@ -136,6 +137,11 @@ export default function Hero() {
             </Link>
           ))}
         </motion.div>
+
+        {/* Live booking ticker */}
+        <div className="mt-6">
+          <LiveBookingTicker />
+        </div>
       </div>
 
       {/* Search bar floating at bottom */}

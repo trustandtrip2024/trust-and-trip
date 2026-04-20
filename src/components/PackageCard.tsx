@@ -3,7 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Star, Clock, MapPin, ArrowRight, Flame } from "lucide-react";
+import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp } from "lucide-react";
+
+const BOOKED_COUNTS = [14, 8, 22, 6, 17, 11, 29, 5, 19, 9];
 
 export interface PackageCardProps {
   title: string;
@@ -53,7 +55,7 @@ export default function PackageCard({
         <div className="absolute inset-0 bg-gradient-to-t from-ink/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {/* Top tags */}
-        <div className="absolute top-4 left-4 flex items-center gap-2">
+        <div className="absolute top-3 left-3 flex items-center gap-1.5">
           {trending && (
             <span className="inline-flex items-center gap-1 bg-gold text-ink text-[10px] tracking-wider uppercase font-medium px-2.5 py-1 rounded-full">
               <Flame className="h-3 w-3" />
@@ -61,11 +63,19 @@ export default function PackageCard({
             </span>
           )}
           {limitedSlots && (
-            <span className="inline-flex items-center gap-1 bg-ink text-cream text-[10px] tracking-wider uppercase font-medium px-2.5 py-1 rounded-full">
-              <span className="h-1.5 w-1.5 rounded-full bg-gold animate-pulse" />
+            <span className="inline-flex items-center gap-1 bg-ink/90 backdrop-blur-sm text-cream text-[10px] tracking-wider uppercase font-medium px-2.5 py-1 rounded-full">
+              <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
               Limited Slots
             </span>
           )}
+        </div>
+
+        {/* Social proof badge */}
+        <div className="absolute bottom-3 left-3">
+          <span className="inline-flex items-center gap-1 bg-ink/70 backdrop-blur-sm text-cream text-[10px] font-medium px-2.5 py-1 rounded-full">
+            <TrendingUp className="h-3 w-3 text-gold" />
+            {BOOKED_COUNTS[index % BOOKED_COUNTS.length]} booked this month
+          </span>
         </div>
 
         {/* Rating badge */}
