@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Compass, MapPin, Search, MessageCircle, Heart } from "lucide-react";
+import { Home, MapPin, Search, MessageCircle, Heart } from "lucide-react";
 import clsx from "clsx";
 import { analytics } from "@/lib/analytics";
 import { useState } from "react";
@@ -15,11 +15,10 @@ const WHATSAPP = "https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I'd
 
 const leftTabs = [
   { href: "/", icon: Home, label: "Home" },
-  { href: "/packages", icon: Compass, label: "Packages" },
+  { href: "/destinations", icon: MapPin, label: "Explore" },
 ];
 
 const rightTabs = [
-  { href: "/destinations", icon: MapPin, label: "Explore" },
   { href: "/wishlist", icon: Heart, label: "Saved" },
 ];
 
