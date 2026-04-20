@@ -1,16 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
 import type { Lead } from "@/lib/supabase";
-import { LeadNotifyEmail } from "@/lib/emails/lead-notify";
-import { LeadConfirmEmail } from "@/lib/emails/lead-confirm";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+async function sendEmails(body: Lead) {
+  if (!process.env.RESEND_API_KEY) return;
+  try {
+    // Dynamically import to avoid build-time issues with Resend v6
+    const { Resend } = await import("resend");
+    const { LeadNotifyEmail } = await import("@/lib/emails/lead-notify");
+    const { LeadConfirmEmail } = await import("@/lib/emails/lead-confirm");
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const FROM = "Trust and Trip <noreply@trustandtrip.com>";
+    const BUSINESS_EMAIL = "hello@trustandtrip.com";
+
+    resend.emails.send({
+      from: FROM,
+      to: [BUSINESS_EMAIL],
+      subject: `New enquiry from ${body.name} — ${body.package_title ?? body.destination ?? "General"}`,
+      react: LeadNotifyEmail({
+        name: body.name,
+        phone: body.phone,
+        email: body.email ?? "",
+        destination: body.destination,
+        travelType: body.travel_type,
+        travelDate: body.travel_date,
+        numTravellers: body.num_travellers,
+        budget: body.budget,
+        message: body.message,
+        packageTitle: body.package_title,
+        source: body.source ?? "contact_form",
+        pageUrl: body.page_url,
+      }),
+    }).catch((e: unknown) => console.error("Notify email error:", e));
+
+    if (body.email?.trim()) {
+      resend.emails.send({
+        from: FROM,
+        to: [body.email.trim()],
+        subject: "We've received your enquiry — Trust and Trip",
+        react: LeadConfirmEmail({
+          name: body.name,
+          packageTitle: body.package_title,
+          destination: body.destination,
+        }),
+      }).catch((e: unknown) => console.error("Confirm email error:", e));
+    }
+  } catch (e) {
+    console.error("Email send error:", e);
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,7 +64,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
     }
 
-    // 1. Save to Supabase
     const { error } = await supabase.from("leads").insert({
       name: body.name.trim(),
       email: body.email?.trim() ?? "",
@@ -46,46 +89,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to save enquiry." }, { status: 500 });
     }
 
-    // 2. Send emails via Resend (fire-and-forget)
-    if (resend) {
-      const BUSINESS_EMAIL = "hello@trustandtrip.com";
-      const FROM = "Trust and Trip <noreply@trustandtrip.com>";
-
-      // Notify business
-      resend.emails.send({
-        from: FROM,
-        to: [BUSINESS_EMAIL],
-        subject: `New enquiry from ${body.name.trim()} — ${body.package_title ?? body.destination ?? "General"}`,
-        react: LeadNotifyEmail({
-          name: body.name.trim(),
-          phone: body.phone.trim(),
-          email: body.email?.trim() ?? "",
-          destination: body.destination,
-          travelType: body.travel_type,
-          travelDate: body.travel_date,
-          numTravellers: body.num_travellers,
-          budget: body.budget,
-          message: body.message?.trim(),
-          packageTitle: body.package_title,
-          source: body.source ?? "contact_form",
-          pageUrl: body.page_url,
-        }),
-      }).catch((e: unknown) => console.error("Notify email error:", e));
-
-      // Confirm to customer (only if email provided)
-      if (body.email?.trim()) {
-        resend.emails.send({
-          from: FROM,
-          to: [body.email.trim()],
-          subject: "We've received your enquiry — Trust and Trip",
-          react: LeadConfirmEmail({
-            name: body.name.trim(),
-            packageTitle: body.package_title,
-            destination: body.destination,
-          }),
-        }).catch((e: unknown) => console.error("Confirm email error:", e));
-      }
-    }
+    // Fire-and-forget emails
+    sendEmails(body);
 
     return NextResponse.json({ success: true });
   } catch (err) {
