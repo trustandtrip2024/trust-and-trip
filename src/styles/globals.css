@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --color-ink: #0B1C2C;
-  --color-gold: #E8A94C;
+  --color-ink: #122B1C;
+  --color-gold: #E8471C;
   --color-cream: #FAF7F2;
   --color-sand: #EDE4D3;
 }
