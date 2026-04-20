@@ -3,7 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp } from "lucide-react";
+import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp, Heart, GitCompareArrows } from "lucide-react";
+import { useWishlistStore } from "@/store/useWishlistStore";
 
 const BOOKED_COUNTS = [14, 8, 22, 6, 17, 11, 29, 5, 19, 9];
 
@@ -19,6 +20,8 @@ export interface PackageCardProps {
   travelType?: string;
   limitedSlots?: boolean;
   trending?: boolean;
+  highlights?: string[];
+  inclusions?: string[];
   index?: number;
 }
 
@@ -34,8 +37,15 @@ export default function PackageCard({
   travelType,
   limitedSlots,
   trending,
+  highlights,
+  inclusions,
   index = 0,
 }: PackageCardProps) {
+  const { toggleWishlist, isWishlisted, toggleCompare, isInCompare, compareList } = useWishlistStore();
+  const wishlisted = isWishlisted(slug);
+  const inCompare = isInCompare(slug);
+  const compareFull = compareList.length >= 3 && !inCompare;
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 40 }}
@@ -78,13 +88,26 @@ export default function PackageCard({
           </span>
         </div>
 
-        {/* Rating badge */}
-        {rating && (
-          <div className="absolute top-4 right-4 bg-cream/95 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm">
-            <Star className="h-3 w-3 fill-gold text-gold" />
-            <span className="text-[11px] font-medium text-ink">{rating}</span>
-          </div>
-        )}
+        {/* Wishlist + Rating */}
+        <div className="absolute top-3 right-3 flex items-center gap-1.5">
+          {rating && (
+            <div className="bg-cream/95 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm">
+              <Star className="h-3 w-3 fill-gold text-gold" />
+              <span className="text-[11px] font-medium text-ink">{rating}</span>
+            </div>
+          )}
+          <button
+            onClick={(e) => { e.preventDefault(); toggleWishlist(slug); }}
+            aria-label={wishlisted ? "Remove from wishlist" : "Save to wishlist"}
+            className={`h-8 w-8 rounded-full flex items-center justify-center shadow-sm transition-all duration-200 ${
+              wishlisted
+                ? "bg-red-500 text-white scale-110"
+                : "bg-cream/95 backdrop-blur-sm text-ink/60 hover:text-red-500"
+            }`}
+          >
+            <Heart className={`h-3.5 w-3.5 ${wishlisted ? "fill-white" : ""}`} />
+          </button>
+        </div>
       </div>
 
       <div className="p-4 md:p-6 flex-1 flex flex-col">
@@ -118,21 +141,40 @@ export default function PackageCard({
           )}
         </div>
 
-        <div className="mt-auto pt-4 mt-4 flex items-end justify-between border-t border-ink/5">
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-ink/50">Starting from</p>
-            <p className="font-display text-xl md:text-2xl text-ink mt-0.5">
-              ₹{price.toLocaleString("en-IN")}
-              <span className="text-xs text-ink/50 font-sans font-normal ml-1">/ person</span>
-            </p>
+        <div className="mt-auto pt-4 mt-4 border-t border-ink/5 space-y-3">
+          <div className="flex items-end justify-between">
+            <div>
+              <p className="text-[10px] uppercase tracking-wider text-ink/50">Starting from</p>
+              <p className="font-display text-xl md:text-2xl text-ink mt-0.5">
+                ₹{price.toLocaleString("en-IN")}
+                <span className="text-xs text-ink/50 font-sans font-normal ml-1">/ person</span>
+              </p>
+            </div>
+            <Link
+              href={`/packages/${slug}`}
+              className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-ink hover:bg-gold text-cream hover:text-ink transition-all duration-300 flex items-center justify-center group-hover:scale-110"
+              aria-label={`View details for ${title}`}
+            >
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
-          <Link
-            href={`/packages/${slug}`}
-            className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-ink hover:bg-gold text-cream hover:text-ink transition-all duration-300 flex items-center justify-center group-hover:scale-110"
-            aria-label={`View details for ${title}`}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              toggleCompare({ slug, title, image, price, duration, rating, reviews, destinationName, travelType, highlights, inclusions });
+            }}
+            disabled={compareFull}
+            className={`w-full flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-[11px] font-medium transition-all border ${
+              inCompare
+                ? "bg-gold/15 border-gold text-ink"
+                : compareFull
+                ? "bg-ink/3 border-ink/10 text-ink/30 cursor-not-allowed"
+                : "bg-ink/5 border-ink/10 text-ink/60 hover:bg-ink/10 hover:text-ink"
+            }`}
           >
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+            <GitCompareArrows className="h-3.5 w-3.5" />
+            {inCompare ? "Added to compare" : compareFull ? "Compare full (max 3)" : "Compare"}
+          </button>
         </div>
       </div>
     </motion.article>

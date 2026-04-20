@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, MapPin } from "lucide-react";
+import { Menu, X, Phone, MapPin, Heart } from "lucide-react";
 import clsx from "clsx";
 import { useTripPlanner } from "@/context/TripPlannerContext";
+import { useWishlistStore } from "@/store/useWishlistStore";
 
 const navLinks = [
   { href: "/destinations", label: "Destinations" },
@@ -21,6 +22,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { open: openPlanner } = useTripPlanner();
+  const wishlistCount = useWishlistStore((s) => s.wishlist.length);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -104,6 +106,18 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <Link
+              href="/wishlist"
+              aria-label="Wishlist"
+              className="relative hidden md:flex h-9 w-9 items-center justify-center rounded-full hover:bg-ink/5 transition-colors"
+            >
+              <Heart className="h-4 w-4 text-ink/60" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
             <button
               onClick={() => openPlanner()}
               className="hidden md:inline-flex btn-primary !py-2.5 !px-5 !text-xs"

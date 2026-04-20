@@ -9,6 +9,7 @@ import ExitIntentPopup from "@/components/ExitIntentPopup";
 import JsonLd from "@/components/JsonLd";
 import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import CompareBar from "@/components/CompareBar";
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import "../styles/globals.css";
 
@@ -153,6 +154,7 @@ export default function RootLayout({
           <MobileBottomNav />
           <TripPlannerModal />
           <ExitIntentPopup />
+          <CompareBar />
           <ScrollToTop />
           <GoogleAnalytics />
         </TripPlannerProvider>
