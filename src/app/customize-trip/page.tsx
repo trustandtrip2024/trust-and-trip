@@ -79,6 +79,7 @@ export default function CustomizeTripPage() {
           <LeadForm
             title="Get a free itinerary"
             subtitle="A few details to get us started. Your message opens directly in WhatsApp — a real planner replies within 2 hours."
+            source="trip_planner"
           />
         </div>
       </section>

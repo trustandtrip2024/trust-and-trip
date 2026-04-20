@@ -6,6 +6,8 @@ import { motion } from "framer-motion";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
 import { destinations } from "@/lib/data";
 import { analytics } from "@/lib/analytics";
+import { submitLead } from "@/lib/submit-lead";
+import type { LeadSource } from "@/lib/supabase";
 
 interface FormValues {
   name: string;
@@ -28,7 +30,9 @@ interface Props {
   subtitle?: string;
   ctaLabel?: string;
   packageContext?: string;
+  packageSlug?: string;
   destinationContext?: string;
+  source?: LeadSource;
 }
 
 export default function LeadForm({
@@ -38,7 +42,9 @@ export default function LeadForm({
   subtitle = "Tell us a little. We'll return with a hand-built proposal within 24 hours.",
   ctaLabel = "Get Free Itinerary",
   packageContext,
+  packageSlug,
   destinationContext,
+  source = "contact_form",
 }: Props) {
   const {
     register,
@@ -52,6 +58,22 @@ export default function LeadForm({
     if (submitHandler) {
       await submitHandler(data);
     } else {
+      // Save lead to Supabase (fire-and-forget — don't block WhatsApp)
+      submitLead({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        message: data.notes,
+        package_title: packageContext,
+        package_slug: packageSlug,
+        destination: data.destination || destinationContext,
+        travel_type: data.travelType,
+        travel_date: data.travelDates,
+        num_travellers: data.travelers,
+        budget: data.budget,
+        source,
+      }).catch(() => {}); // silently continue on error
+
       // Build WhatsApp message from form data
       const lines = [
         `Hi Trust and Trip! 🙏`,
