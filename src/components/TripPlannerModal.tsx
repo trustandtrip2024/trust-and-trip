@@ -1,16 +1,70 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X, ArrowRight, ArrowLeft, MapPin, Heart, Users, User,
-  Backpack, CheckCircle2, Loader2, Star, Clock,
+  X, ArrowRight, ArrowLeft, MapPin,
+  CheckCircle2, Loader2, Star, Clock,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTripPlanner } from "@/context/TripPlannerContext";
-import { sanityClient, urlFor } from "@/lib/sanity";
+import { sanityClient, urlFor } from "@/lib/sanity"; // urlFor used for package result images
+
+// ─── Destination image fallbacks (all 23 Sanity destinations) ─────────────────
+
+const DEST_IMAGES: Record<string, string> = {
+  bali:       "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=75&auto=format&fit=crop",
+  maldives:   "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=75&auto=format&fit=crop",
+  kerala:     "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&q=75&auto=format&fit=crop",
+  manali:     "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&q=75&auto=format&fit=crop",
+  goa:        "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=400&q=75&auto=format&fit=crop",
+  shimla:     "https://images.unsplash.com/photo-1626015365107-3a71e18c5268?w=400&q=75&auto=format&fit=crop",
+  ladakh:     "https://images.unsplash.com/photo-1622308644420-b20142b1e4fc?w=400&q=75&auto=format&fit=crop",
+  rajasthan:  "https://images.unsplash.com/photo-1590082773386-d19499f8c28e?w=400&q=75&auto=format&fit=crop",
+  andaman:    "https://images.unsplash.com/photo-1586500036706-41963de24d8b?w=400&q=75&auto=format&fit=crop",
+  coorg:      "https://images.unsplash.com/photo-1591080152067-b3e63c3b4c2c?w=400&q=75&auto=format&fit=crop",
+  varanasi:   "https://images.unsplash.com/photo-1561361058-c24cecae35ca?w=400&q=75&auto=format&fit=crop",
+  agra:       "https://images.unsplash.com/photo-1548013146-72479768bada?w=400&q=75&auto=format&fit=crop",
+  thailand:   "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=400&q=75&auto=format&fit=crop",
+  dubai:      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=75&auto=format&fit=crop",
+  switzerland:"https://images.unsplash.com/photo-1527668752968-14dc70a27c95?w=400&q=75&auto=format&fit=crop",
+  paris:      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=75&auto=format&fit=crop",
+  japan:      "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&q=75&auto=format&fit=crop",
+  singapore:  "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=400&q=75&auto=format&fit=crop",
+  malaysia:   "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?w=400&q=75&auto=format&fit=crop",
+  nepal:      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=400&q=75&auto=format&fit=crop",
+  turkey:     "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=400&q=75&auto=format&fit=crop",
+  australia:  "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=75&auto=format&fit=crop",
+  "sri-lanka":"https://images.unsplash.com/photo-1503596476-1c12a8ba09a9?w=400&q=75&auto=format&fit=crop",
+};
+
+const FALLBACK_DESTS = [
+  { slug: "kerala",    name: "Kerala",          country: "India",              priceFrom: 28000, image: DEST_IMAGES.kerala },
+  { slug: "goa",       name: "Goa",             country: "India",              priceFrom: 18000, image: DEST_IMAGES.goa },
+  { slug: "manali",    name: "Manali",          country: "India",              priceFrom: 20000, image: DEST_IMAGES.manali },
+  { slug: "rajasthan", name: "Rajasthan",       country: "India",              priceFrom: 22000, image: DEST_IMAGES.rajasthan },
+  { slug: "shimla",    name: "Shimla",          country: "India",              priceFrom: 15000, image: DEST_IMAGES.shimla },
+  { slug: "ladakh",    name: "Ladakh",          country: "India",              priceFrom: 30000, image: DEST_IMAGES.ladakh },
+  { slug: "andaman",   name: "Andaman Islands", country: "India",              priceFrom: 35000, image: DEST_IMAGES.andaman },
+  { slug: "coorg",     name: "Coorg",           country: "India",              priceFrom: 14000, image: DEST_IMAGES.coorg },
+  { slug: "varanasi",  name: "Varanasi",        country: "India",              priceFrom: 12000, image: DEST_IMAGES.varanasi },
+  { slug: "agra",      name: "Agra",            country: "India",              priceFrom: 10000, image: DEST_IMAGES.agra },
+  { slug: "bali",      name: "Bali",            country: "Indonesia",          priceFrom: 45000, image: DEST_IMAGES.bali },
+  { slug: "maldives",  name: "Maldives",        country: "Maldives",           priceFrom: 85000, image: DEST_IMAGES.maldives },
+  { slug: "thailand",  name: "Thailand",        country: "Thailand",           priceFrom: 35000, image: DEST_IMAGES.thailand },
+  { slug: "dubai",     name: "Dubai",           country: "United Arab Emirates", priceFrom: 55000, image: DEST_IMAGES.dubai },
+  { slug: "switzerland", name: "Switzerland",   country: "Switzerland",        priceFrom: 125000, image: DEST_IMAGES.switzerland },
+  { slug: "paris",     name: "Paris",           country: "France",             priceFrom: 110000, image: DEST_IMAGES.paris },
+  { slug: "japan",     name: "Japan",           country: "Japan",              priceFrom: 90000, image: DEST_IMAGES.japan },
+  { slug: "singapore", name: "Singapore",       country: "Singapore",          priceFrom: 65000, image: DEST_IMAGES.singapore },
+  { slug: "malaysia",  name: "Malaysia",        country: "Malaysia",           priceFrom: 45000, image: DEST_IMAGES.malaysia },
+  { slug: "nepal",     name: "Nepal",           country: "Nepal",              priceFrom: 25000, image: DEST_IMAGES.nepal },
+  { slug: "turkey",    name: "Turkey",          country: "Turkey",             priceFrom: 80000, image: DEST_IMAGES.turkey },
+  { slug: "australia", name: "Australia",       country: "Australia",          priceFrom: 150000, image: DEST_IMAGES.australia },
+  { slug: "sri-lanka", name: "Sri Lanka",       country: "Sri Lanka",          priceFrom: 35000, image: DEST_IMAGES["sri-lanka"] },
+];
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -84,22 +138,26 @@ export default function TripPlannerModal() {
   >([]);
   const [resultsLoading, setResultsLoading] = useState(false);
 
-  // Fetch destinations once on mount
+  // Fetch destinations — slug/name/country/priceFrom only, images come from local map
   useEffect(() => {
     if (!isOpen || destinations.length > 0) return;
     setDestsLoading(true);
     sanityClient
-      .fetch<{ slug: string; name: string; country: string; image: any; priceFrom: number }[]>(
-        `*[_type == "destination"] | order(name asc) { "slug": slug.current, name, country, image, priceFrom }`
+      .fetch<{ slug: string; name: string; country: string; priceFrom: number }[]>(
+        `*[_type == "destination"] | order(country asc, name asc) { "slug": slug.current, name, country, priceFrom }`
       )
       .then((raw) =>
         setDestinations(
           raw.map((d) => ({
             ...d,
-            image: d.image ? urlFor(d.image).width(400).height(300).quality(75).url() : "",
+            image: DEST_IMAGES[d.slug] ?? "",
           }))
         )
       )
+      .catch(() => {
+        // Fallback: use hardcoded list if Sanity is unreachable
+        setDestinations(FALLBACK_DESTS);
+      })
       .finally(() => setDestsLoading(false));
   }, [isOpen, destinations.length]);
 
