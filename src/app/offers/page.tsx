@@ -3,57 +3,101 @@ export const revalidate = 30;
 import Link from "next/link";
 import Image from "next/image";
 import { getOfferPackages } from "@/lib/sanity-queries";
-import { Clock, Tag, ArrowRight, Flame, Star } from "lucide-react";
+import { Clock, Tag, ArrowRight, Flame, Star, Zap, MessageCircle } from "lucide-react";
 import CTASection from "@/components/CTASection";
+import CountdownTimer from "@/components/CountdownTimer";
 
 export const metadata = {
-  title: "Offers — Trust and Trip",
-  description: "Limited-time journeys, exclusive rates, and curated deals.",
+  title: "Offers & Deals — Trust and Trip",
+  description: "Limited-time journeys, exclusive rates, and curated deals — save up to 25% on handcrafted packages.",
+  alternates: { canonical: "https://trustandtrip.com/offers" },
 };
 
-const OFFER_LABELS = [
-  { title: "Monsoon Escape", discount: 20, endsIn: "3 days" },
-  { title: "Honeymoon Festival", discount: 15, endsIn: "7 days" },
-  { title: "Early Bird Special", discount: 25, endsIn: "14 days" },
-  { title: "Flash Weekend Sale", discount: 10, endsIn: "24 hours" },
-  { title: "Group Bonanza", discount: 18, endsIn: "5 days" },
-  { title: "Premium Getaway", discount: 12, endsIn: "10 days" },
-  { title: "Last Minute Deal", discount: 22, endsIn: "48 hours" },
-  { title: "Seasonal Special", discount: 16, endsIn: "6 days" },
+// Deterministic end dates (7–21 days from a fixed anchor)
+function getEndDate(slug: string, days: number): string {
+  const anchor = new Date("2026-04-21T00:00:00Z");
+  anchor.setDate(anchor.getDate() + days);
+  return anchor.toISOString();
+}
+
+const OFFERS = [
+  { tag: "Summer Sale", discount: 22, days: 3, hot: true },
+  { tag: "Honeymoon Special", discount: 18, days: 7, hot: false },
+  { tag: "Early Bird", discount: 25, days: 14, hot: false },
+  { tag: "Flash Deal", discount: 12, days: 1, hot: true },
+  { tag: "Group Bonanza", discount: 20, days: 5, hot: false },
+  { tag: "Premium Escape", discount: 15, days: 10, hot: false },
+  { tag: "Last Minute", discount: 22, days: 2, hot: true },
+  { tag: "Seasonal Pick", discount: 16, days: 8, hot: false },
 ];
 
 export default async function OffersPage() {
   const packages = await getOfferPackages();
 
   const offers = packages.map((p, i) => {
-    const meta = OFFER_LABELS[i % OFFER_LABELS.length];
+    const meta = OFFERS[i % OFFERS.length];
     return {
       ...p,
       discount: meta.discount,
-      offerTitle: meta.title,
-      endsIn: meta.endsIn,
+      tag: meta.tag,
+      hot: meta.hot,
+      endsAt: getEndDate(p.slug, meta.days),
       originalPrice: Math.round(p.price / (1 - meta.discount / 100)),
     };
   });
 
+  const hotOffers = offers.filter((o) => o.hot);
+  const regularOffers = offers.filter((o) => !o.hot);
+
   return (
     <>
-      <section className="pt-28 md:pt-36 pb-12 bg-cream">
+      {/* Urgency banner */}
+      <div className="bg-gold text-ink py-3 text-center text-sm font-medium">
+        <span className="flex items-center justify-center gap-2">
+          <Zap className="h-4 w-4" />
+          Summer Sale — Save up to 25% on select packages. Limited availability.
+          <Link href="#deals" className="underline font-semibold">See deals →</Link>
+        </span>
+      </div>
+
+      {/* Hero */}
+      <section className="pt-24 md:pt-32 pb-12 bg-cream">
         <div className="container-custom max-w-4xl">
           <span className="eyebrow">Limited offers</span>
           <h1 className="mt-3 font-display text-display-lg font-medium leading-[1.02] text-balance">
             Exceptional trips,
             <span className="italic text-gold font-light"> exceptional pricing.</span>
           </h1>
-          <p className="mt-6 text-ink/60 max-w-xl leading-relaxed">
-            For a limited time, we&apos;ve negotiated special rates on some of our most-loved
-            journeys. When they&apos;re gone, they&apos;re gone.
+          <p className="mt-5 text-ink/60 max-w-xl leading-relaxed">
+            For a limited time, we've negotiated special rates on our most-loved journeys.
+            When they're gone, they're gone.
           </p>
         </div>
       </section>
 
-      <section className="py-12 md:py-16">
+      {/* Flash deals */}
+      {hotOffers.length > 0 && (
+        <section className="pb-4 md:pb-6" id="deals">
+          <div className="container-custom">
+            <div className="flex items-center gap-2 mb-5">
+              <Flame className="h-5 w-5 text-gold" />
+              <h2 className="font-display text-xl font-medium">Flash Deals — Ending Soon</h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4 md:gap-5">
+              {hotOffers.map((offer) => (
+                <OfferCard key={offer.slug} offer={offer} size="sm" />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* All deals */}
+      <section className="py-10 md:py-14">
         <div className="container-custom">
+          {regularOffers.length > 0 && (
+            <h2 className="font-display text-xl font-medium mb-6">All Current Deals</h2>
+          )}
           {offers.length === 0 ? (
             <div className="text-center py-20 bg-cream rounded-3xl border border-ink/5">
               <p className="font-display text-2xl mb-2">New offers dropping soon</p>
@@ -62,86 +106,97 @@ export default async function OffersPage() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-              {offers.map((offer) => (
-                <Link
-                  key={offer.slug}
-                  href={`/packages/${offer.slug}`}
-                  className="group relative overflow-hidden rounded-3xl bg-ink"
-                >
-                  <div className="relative aspect-[16/10]">
-                    <Image
-                      src={offer.image}
-                      alt={offer.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
-
-                    {/* Discount tag */}
-                    <div className="absolute top-5 left-5 flex items-center gap-2">
-                      <div className="bg-gold text-ink px-4 py-2 rounded-full text-sm font-display font-semibold flex items-center gap-1.5">
-                        <Tag className="h-3.5 w-3.5" />
-                        {offer.discount}% OFF
-                      </div>
-                      {offer.trending && (
-                        <div className="bg-ink/60 backdrop-blur-sm text-cream px-3 py-2 rounded-full text-[11px] flex items-center gap-1">
-                          <Flame className="h-3 w-3 text-gold" />
-                          Trending
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Ends in */}
-                    <div className="absolute top-5 right-5 bg-cream/20 backdrop-blur-md border border-cream/20 text-cream px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider flex items-center gap-1.5">
-                      <Clock className="h-3 w-3 text-gold" />
-                      Ends in {offer.endsIn}
-                    </div>
-
-                    <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 text-cream">
-                      <p className="text-[10px] uppercase tracking-[0.25em] text-gold mb-2">
-                        {offer.offerTitle}
-                      </p>
-                      <h3 className="font-display text-2xl md:text-3xl font-medium leading-tight mb-3">
-                        {offer.title}
-                      </h3>
-                      {/* Rating */}
-                      <div className="flex items-center gap-1.5 mb-4">
-                        <Star className="h-3.5 w-3.5 fill-gold text-gold" />
-                        <span className="text-xs text-cream/80">{offer.rating} · {offer.reviews} reviews</span>
-                        <span className="text-cream/40 mx-1">·</span>
-                        <span className="text-xs text-cream/70">{offer.duration}</span>
-                      </div>
-                      <div className="flex items-end justify-between">
-                        <div>
-                          <p className="text-[10px] uppercase tracking-wider text-cream/60">Starting from</p>
-                          <div className="flex items-baseline gap-2 mt-1">
-                            <span className="font-display text-2xl text-gold">
-                              ₹{offer.price.toLocaleString("en-IN")}
-                            </span>
-                            <span className="text-sm text-cream/40 line-through">
-                              ₹{offer.originalPrice.toLocaleString("en-IN")}
-                            </span>
-                          </div>
-                        </div>
-                        <span className="inline-flex items-center gap-1 text-sm text-cream/90 group-hover:text-gold transition-colors">
-                          View
-                          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+              {regularOffers.map((offer) => (
+                <OfferCard key={offer.slug} offer={offer} size="lg" />
               ))}
             </div>
           )}
         </div>
       </section>
 
-      <CTASection
-        title="Don't see your destination?"
-        subtitle="Tell us where you want to go — we often have unlisted deals and insider rates for our planners' favourite spots."
-      />
+      {/* WhatsApp CTA band */}
+      <section className="bg-ink text-cream py-10">
+        <div className="container-custom flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <p className="eyebrow text-gold">Exclusive rates</p>
+            <h2 className="font-display text-2xl md:text-3xl font-medium mt-1 text-balance">
+              Don't see your destination? Ask for an unlisted deal.
+            </h2>
+          </div>
+          <a
+            href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I'm%20looking%20for%20a%20special%20deal%20on%20my%20trip."
+            target="_blank" rel="noopener noreferrer"
+            className="shrink-0 flex items-center gap-2 bg-[#25D366] text-white px-6 py-3.5 rounded-xl font-semibold text-sm hover:bg-[#20ba5a] transition-colors"
+          >
+            <MessageCircle className="h-4 w-4 fill-white" />
+            Ask a planner
+          </a>
+        </div>
+      </section>
+
+      <CTASection />
     </>
+  );
+}
+
+function OfferCard({ offer, size }: { offer: any; size: "sm" | "lg" }) {
+  const isLg = size === "lg";
+  return (
+    <Link
+      href={`/packages/${offer.slug}`}
+      className={`group relative overflow-hidden rounded-3xl bg-ink block`}
+    >
+      <div className={`relative ${isLg ? "aspect-[16/10]" : "aspect-[4/3]"}`}>
+        <Image
+          src={offer.image}
+          alt={offer.title}
+          fill
+          sizes={isLg ? "(max-width: 768px) 100vw, 50vw" : "33vw"}
+          className="object-cover transition-transform duration-1000 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
+
+        {/* Badges */}
+        <div className="absolute top-4 left-4 flex items-center gap-2">
+          <div className="bg-gold text-ink px-3 py-1.5 rounded-full text-xs font-display font-bold flex items-center gap-1">
+            <Tag className="h-3 w-3" />{offer.discount}% OFF
+          </div>
+          {offer.hot && (
+            <div className="bg-red-500 text-white px-3 py-1.5 rounded-full text-[10px] font-semibold flex items-center gap-1">
+              <Zap className="h-3 w-3" />Flash
+            </div>
+          )}
+        </div>
+
+        {/* Countdown */}
+        <div className="absolute top-4 right-4 bg-ink/70 backdrop-blur-md border border-cream/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+          <Clock className="h-3 w-3 text-gold shrink-0" />
+          <CountdownTimer endsAt={offer.endsAt} />
+        </div>
+
+        <div className={`absolute inset-x-0 bottom-0 ${isLg ? "p-6 md:p-8" : "p-5"} text-cream`}>
+          <p className="text-[10px] uppercase tracking-[0.25em] text-gold mb-1.5">{offer.tag}</p>
+          <h3 className={`font-display ${isLg ? "text-2xl md:text-3xl" : "text-lg"} font-medium leading-tight mb-2`}>
+            {offer.title}
+          </h3>
+          <div className="flex items-center gap-1.5 mb-3">
+            <Star className="h-3 w-3 fill-gold text-gold" />
+            <span className="text-xs text-cream/70">{offer.rating} · {offer.reviews} reviews · {offer.duration}</span>
+          </div>
+          <div className="flex items-end justify-between">
+            <div>
+              <p className="text-[10px] text-cream/50 uppercase tracking-wider">Starting from</p>
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="font-display text-xl text-gold">₹{offer.price.toLocaleString("en-IN")}</span>
+                <span className="text-sm text-cream/40 line-through">₹{offer.originalPrice.toLocaleString("en-IN")}</span>
+              </div>
+            </div>
+            <span className="inline-flex items-center gap-1 text-sm text-cream/80 group-hover:text-gold transition-colors">
+              View <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 }

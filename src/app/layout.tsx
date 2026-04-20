@@ -97,8 +97,9 @@ export default function RootLayout({
       <head>
         {/* Preconnect to speed up third-party resources */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
-        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://lekxoexyebfvngllpeqx.supabase.co" />
       </head>
       <body className="min-h-screen flex flex-col bg-cream text-ink">
         <JsonLd data={[

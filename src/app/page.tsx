@@ -14,6 +14,7 @@ import WhyChooseUs from "@/components/WhyChooseUs";
 import CTASection from "@/components/CTASection";
 import QuickFilters from "@/components/QuickFilters";
 import DepartingSoon from "@/components/DepartingSoon";
+import SocialProofWall from "@/components/SocialProofWall";
 import { testimonials, experiences, stats } from "@/lib/data";
 import {
   getDestinations,
@@ -355,6 +356,8 @@ export default async function HomePage() {
       )}
 
       <WhyChooseUs />
+
+      <SocialProofWall />
 
       <VideoSection />
 
