@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { Star, Quote } from "lucide-react";
+import { Star } from "lucide-react";
 import type { Testimonial } from "@/lib/data";
 
 interface Props {
@@ -10,48 +9,31 @@ interface Props {
   index?: number;
 }
 
-export default function TestimonialCard({ testimonial, index = 0 }: Props) {
+export default function TestimonialCard({ testimonial }: Props) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ delay: index * 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="bg-cream rounded-3xl p-8 md:p-10 relative overflow-hidden group h-full flex flex-col"
-    >
-      {/* Decorative quote mark */}
-      <Quote
-        className="absolute -top-4 -right-4 h-32 w-32 text-gold/10 rotate-180 stroke-[0.5]"
-        aria-hidden
-      />
-
-      <div className="flex items-center gap-0.5 mb-6 relative">
+    <div className="w-[300px] md:w-[340px] shrink-0 bg-white rounded-2xl p-6 border border-ink/6 flex flex-col gap-4">
+      {/* Stars */}
+      <div className="flex gap-0.5">
         {[...Array(testimonial.rating)].map((_, i) => (
-          <Star key={i} className="h-4 w-4 fill-gold text-gold" />
+          <Star key={i} className="h-3.5 w-3.5 fill-gold text-gold" />
         ))}
       </div>
 
-      <blockquote className="font-display text-xl md:text-[22px] leading-snug text-ink flex-1 text-balance">
-        "{testimonial.quote}"
-      </blockquote>
+      {/* Quote */}
+      <p className="text-sm text-ink/80 leading-relaxed flex-1">
+        &ldquo;{testimonial.quote}&rdquo;
+      </p>
 
-      <div className="mt-8 flex items-center gap-4 pt-6 border-t border-ink/10">
-        <div className="relative h-12 w-12 rounded-full overflow-hidden ring-2 ring-gold/30">
-          <Image
-            src={testimonial.image}
-            alt={testimonial.name}
-            fill
-            sizes="48px"
-            className="object-cover"
-          />
+      {/* Author */}
+      <div className="flex items-center gap-3 pt-3 border-t border-ink/6">
+        <div className="relative h-9 w-9 rounded-full overflow-hidden shrink-0 ring-2 ring-gold/20">
+          <Image src={testimonial.image} alt={testimonial.name} fill sizes="36px" className="object-cover" />
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-medium text-ink">{testimonial.name}</p>
-          <p className="text-xs text-ink/50 mt-0.5">
-            {testimonial.location} · {testimonial.trip}
-          </p>
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-ink truncate">{testimonial.name}</p>
+          <p className="text-[11px] text-ink/40 truncate">{testimonial.trip} · {testimonial.location}</p>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -341,39 +341,32 @@ export default async function HomePage() {
       <VideoSection />
 
       {/* ── Testimonials ──────────────────────────────────────── */}
-      <section className="py-14 md:py-20 bg-cream" aria-labelledby="testimonials-heading">
-        <div className="container-custom">
-          <div className="max-w-2xl mb-10 md:mb-14">
-            <span className="eyebrow">Stories from our travelers</span>
-            <h2
-              id="testimonials-heading"
-              className="heading-section mt-2 text-balance"
-            >
-              Five-star memories,
-              <span className="italic text-gold font-light"> in their own words.</span>
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-5 md:gap-6">
-            {testimonials.map((t, i) => (
-              <TestimonialCard key={i} testimonial={t} index={i} />
-            ))}
-          </div>
-          <div className="mt-10 flex flex-wrap items-center gap-5 text-sm text-ink/60">
-            <div className="flex items-center gap-2">
-              <Award className="h-4 w-4 text-gold shrink-0" aria-hidden="true" />
-              <span>Featured on Condé Nast</span>
+      <section className="py-14 md:py-20 bg-cream overflow-hidden" aria-labelledby="testimonials-heading">
+        <div className="container-custom mb-10">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+            <div>
+              <span className="eyebrow">Stories from our travelers</span>
+              <h2 id="testimonials-heading" className="heading-section mt-2 text-balance">
+                Five-star memories,
+                <span className="italic text-gold font-light"> in their own words.</span>
+              </h2>
             </div>
-            <span className="text-ink/20 hidden sm:block" aria-hidden="true">·</span>
-            <div className="flex items-center gap-2">
-              <Globe2 className="h-4 w-4 text-gold shrink-0" aria-hidden="true" />
-              <span>IATA Accredited</span>
-            </div>
-            <span className="text-ink/20 hidden sm:block" aria-hidden="true">·</span>
-            <div className="flex items-center gap-2">
-              <Heart className="h-4 w-4 text-gold shrink-0" aria-hidden="true" />
-              <span>4.9 / 5 on Google</span>
+            <div className="flex flex-wrap items-center gap-4 text-xs text-ink/50 shrink-0">
+              <span className="flex items-center gap-1.5"><Award className="h-3.5 w-3.5 text-gold" />Condé Nast</span>
+              <span className="flex items-center gap-1.5"><Globe2 className="h-3.5 w-3.5 text-gold" />IATA Accredited</span>
+              <span className="flex items-center gap-1.5"><Heart className="h-3.5 w-3.5 text-gold" />4.9 / 5 Google</span>
             </div>
           </div>
+        </div>
+
+        {/* Auto-scrolling marquee */}
+        <div
+          className="flex gap-4 w-max animate-marquee hover:[animation-play-state:paused] px-5 md:px-0"
+          style={{ paddingLeft: "max(20px, calc((100vw - 1280px)/2))" }}
+        >
+          {[...testimonials, ...testimonials].map((t, i) => (
+            <TestimonialCard key={i} testimonial={t} index={i} />
+          ))}
         </div>
       </section>
 
