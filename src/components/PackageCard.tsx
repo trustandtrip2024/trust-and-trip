@@ -23,6 +23,7 @@ export interface PackageCardProps {
   highlights?: string[];
   inclusions?: string[];
   index?: number;
+  inSlider?: boolean;
 }
 
 export default function PackageCard({
@@ -40,6 +41,7 @@ export default function PackageCard({
   highlights,
   inclusions,
   index = 0,
+  inSlider = false,
 }: PackageCardProps) {
   const { toggleWishlist, isWishlisted, toggleCompare, isInCompare, compareList } = useWishlistStore();
   const wishlisted = isWishlisted(slug);
@@ -48,10 +50,10 @@ export default function PackageCard({
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ delay: index * 0.08, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      initial={inSlider ? false : { opacity: 0, y: 40 }}
+      whileInView={inSlider ? undefined : { opacity: 1, y: 0 }}
+      viewport={inSlider ? undefined : { once: true, margin: "-80px" }}
+      transition={inSlider ? undefined : { delay: index * 0.08, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       className="card-travel group h-full flex flex-col"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
