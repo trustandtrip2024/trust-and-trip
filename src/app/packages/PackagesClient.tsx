@@ -22,6 +22,8 @@ const priceRanges = [
 
 const travelTypes = ["Couple", "Family", "Group", "Solo"];
 
+const INDIA_SLUGS = new Set(["kerala","goa","manali","rajasthan","ladakh","andaman","shimla","coorg","varanasi","agra"]);
+
 interface Props {
   packages: Package[];
   destinations: Destination[];
@@ -29,6 +31,7 @@ interface Props {
   initialTravelType?: string;
   initialDuration?: string;
   initialBudget?: string;
+  initialRegion?: string;
 }
 
 const BUDGET_TO_PRICE: Record<string, string> = {
@@ -45,6 +48,7 @@ export default function PackagesClient({
   initialTravelType = "",
   initialDuration = "",
   initialBudget = "",
+  initialRegion = "",
 }: Props) {
   const resolvedPrice = initialBudget ? (BUDGET_TO_PRICE[initialBudget] ?? "") : "";
   const resolvedDuration = initialDuration
@@ -61,6 +65,8 @@ export default function PackagesClient({
     return packages.filter((p) => {
       if (filterDestination && p.destinationSlug !== filterDestination) return false;
       if (filterTravelType && p.travelType !== filterTravelType) return false;
+      if (initialRegion === "domestic" && !INDIA_SLUGS.has(p.destinationSlug)) return false;
+      if (initialRegion === "international" && INDIA_SLUGS.has(p.destinationSlug)) return false;
       if (filterDuration) {
         const range = durationRanges.find((d) => d.label === filterDuration);
         if (range && (p.days < range.min || p.days > range.max)) return false;

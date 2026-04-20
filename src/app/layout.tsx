@@ -10,6 +10,7 @@ import JsonLd from "@/components/JsonLd";
 import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CompareBar from "@/components/CompareBar";
+import ConditionalFooter from "@/components/ConditionalFooter";
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import "../styles/globals.css";
 
@@ -149,7 +150,7 @@ export default function RootLayout({
         <TripPlannerProvider>
           <Navbar />
           <main className="flex-1 pb-16 lg:pb-0">{children}</main>
-          <Footer />
+          <ConditionalFooter />
           <FloatingWhatsApp />
           <MobileBottomNav />
           <TripPlannerModal />

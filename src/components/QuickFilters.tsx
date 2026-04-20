@@ -4,13 +4,13 @@ import Link from "next/link";
 import { Flame, Heart, Users, User, Mountain, Globe2, IndianRupee, Palmtree } from "lucide-react";
 
 const filters = [
-  { label: "Trending", icon: Flame, href: "/packages?type=trending", hot: true },
+  { label: "Trending", icon: Flame, href: "/packages", hot: true },
   { label: "Honeymoon", icon: Heart, href: "/packages?type=Couple" },
   { label: "Family", icon: Users, href: "/packages?type=Family" },
   { label: "Solo", icon: User, href: "/packages?type=Solo" },
   { label: "Adventure", icon: Mountain, href: "/packages?type=Group" },
-  { label: "International", icon: Globe2, href: "/packages?destination=international" },
-  { label: "Beaches", icon: Palmtree, href: "/packages?destination=goa" },
+  { label: "International", icon: Globe2, href: "/packages?region=international" },
+  { label: "Domestic", icon: Palmtree, href: "/packages?region=domestic" },
   { label: "Under ₹35K", icon: IndianRupee, href: "/packages?budget=budget" },
 ];
 

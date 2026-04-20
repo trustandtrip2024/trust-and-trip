@@ -48,6 +48,7 @@ export default async function PackagesPage({
         initialTravelType={params.type ?? ""}
         initialDuration={params.duration ?? ""}
         initialBudget={params.budget ?? ""}
+        initialRegion={params.region ?? ""}
       />
 
       <CTASection />

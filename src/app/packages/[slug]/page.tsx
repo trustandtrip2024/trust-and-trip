@@ -10,7 +10,7 @@ import { getGalleryImages } from "@/lib/gallery-images";
 import Accordion from "@/components/Accordion";
 import PackageGallery from "@/components/PackageGallery";
 import TestimonialCard from "@/components/TestimonialCard";
-import PackageCard from "@/components/PackageCard";
+import PackageSlider from "@/components/PackageSlider";
 import CTASection from "@/components/CTASection";
 import PackageEnquiryCTA from "@/components/PackageEnquiryCTA";
 import JsonLd from "@/components/JsonLd";
@@ -28,6 +28,7 @@ import {
   Users,
   ArrowRight,
   MessageCircle,
+  Flame,
 } from "lucide-react";
 
 interface Props {
@@ -131,19 +132,35 @@ export default async function PackageDetail({ params }: Props) {
 
         <div className="relative h-full flex items-end pb-16 md:pb-20 container-custom text-cream">
           <div className="max-w-4xl">
-            <div className="flex items-center gap-3 flex-wrap mb-4">
-              <span className="inline-flex items-center gap-1 bg-cream/10 backdrop-blur-md border border-cream/20 text-cream/90 text-[10px] uppercase tracking-[0.25em] px-3 py-1.5 rounded-full">
+            <div className="flex items-center gap-2 flex-wrap mb-4">
+              <span className="inline-flex items-center gap-1.5 bg-cream/10 backdrop-blur-md border border-cream/20 text-cream/90 text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
                 <MapPin className="h-3 w-3 text-gold" />
                 {pkg.destinationName}
               </span>
-              <span className="inline-flex items-center gap-1 bg-cream/10 backdrop-blur-md border border-cream/20 text-cream/90 text-[10px] uppercase tracking-[0.25em] px-3 py-1.5 rounded-full">
+              <span className="inline-flex items-center gap-1.5 bg-cream/10 backdrop-blur-md border border-cream/20 text-cream/90 text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
                 <Clock className="h-3 w-3 text-gold" />
                 {pkg.duration}
               </span>
-              <span className="inline-flex items-center gap-1 bg-gold/20 backdrop-blur-md border border-gold/30 text-gold text-[10px] uppercase tracking-[0.25em] px-3 py-1.5 rounded-full">
+              <span className="inline-flex items-center gap-1.5 bg-cream/10 backdrop-blur-md border border-cream/20 text-cream/90 text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
+                <Users className="h-3 w-3 text-gold" />
+                {pkg.travelType}
+              </span>
+              <span className="inline-flex items-center gap-1.5 bg-gold/20 backdrop-blur-md border border-gold/30 text-gold text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
                 <Star className="h-3 w-3 fill-gold" />
                 {pkg.rating} · {pkg.reviews} reviews
               </span>
+              {pkg.limitedSlots && (
+                <span className="inline-flex items-center gap-1.5 bg-red-500/20 border border-red-400/30 text-red-300 text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
+                  <Zap className="h-3 w-3" />
+                  Limited Slots
+                </span>
+              )}
+              {pkg.trending && (
+                <span className="inline-flex items-center gap-1.5 bg-cream/10 border border-cream/20 text-cream/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
+                  <Flame className="h-3 w-3 text-gold" />
+                  Trending
+                </span>
+              )}
             </div>
             <h1 className="font-display text-display-lg font-medium leading-[0.98] text-balance">
               {pkg.title}
@@ -363,45 +380,18 @@ export default async function PackageDetail({ params }: Props) {
         </div>
       </section>
 
-      {/* Related packages */}
+      {/* You'll also like slider */}
       {relatedPackages.length > 0 && (
-        <section className="py-16 md:py-20 bg-sand/30">
+        <section className="py-14 md:py-16 bg-sand/30">
           <div className="container-custom">
-            <div className="flex items-end justify-between gap-4 mb-8 md:mb-10">
-              <div>
-                <span className="eyebrow">You may also like</span>
-                <h2 className="heading-section mt-2 max-w-lg text-balance">
-                  More journeys from
-                  <span className="italic text-gold font-light"> {pkg.destinationName}.</span>
-                </h2>
-              </div>
-              <Link
-                href={`/destinations/${pkg.destinationSlug}`}
-                className="hidden md:inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-gold transition-colors group shrink-0"
-              >
-                All {pkg.destinationName} packages
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
-              {relatedPackages.map((p, i) => (
-                <PackageCard
-                  key={p.slug}
-                  title={p.title}
-                  slug={p.slug}
-                  image={p.image}
-                  duration={p.duration}
-                  price={p.price}
-                  rating={p.rating}
-                  reviews={p.reviews}
-                  destinationName={p.destinationName}
-                  travelType={p.travelType}
-                  trending={p.trending}
-                  limitedSlots={p.limitedSlots}
-                  index={i}
-                />
-              ))}
-            </div>
+            <PackageSlider
+              id="related-slider"
+              eyebrow="You'll also like"
+              heading={`More journeys from <span class="italic text-gold font-light"> ${pkg.destinationName}.</span>`}
+              packages={relatedPackages}
+              viewAllHref={`/destinations/${pkg.destinationSlug}`}
+              viewAllLabel={`All ${pkg.destinationName}`}
+            />
           </div>
         </section>
       )}

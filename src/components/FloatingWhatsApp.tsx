@@ -81,17 +81,6 @@ export default function FloatingWhatsApp() {
         </button>
       </motion.div>
 
-      {/* Mobile: phone FAB above bottom nav */}
-      <motion.a
-        href={`tel:${PHONE_NUMBER}`}
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 1, type: "spring", stiffness: 200, damping: 15 }}
-        className="md:hidden fixed bottom-[4.5rem] right-4 z-40 h-12 w-12 rounded-full bg-ink text-cream shadow-soft-lg flex items-center justify-center"
-        aria-label="Call us"
-      >
-        <Phone className="h-5 w-5" />
-      </motion.a>
     </>
   );
 }
