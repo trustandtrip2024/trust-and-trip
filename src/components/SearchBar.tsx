@@ -110,9 +110,9 @@ export default function SearchBar() {
         </button>
       </div>
 
-      {/* Dropdown */}
+      {/* Dropdown — opens upward since bar sits at bottom of hero */}
       {open && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-soft-lg border border-ink/8 overflow-hidden z-50">
+        <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-soft-lg border border-ink/8 overflow-hidden z-50">
           {!query.trim() && (
             <div className="flex border-b border-ink/8">
               <button
