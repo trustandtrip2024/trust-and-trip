@@ -1,5 +1,6 @@
 import { sanityClient, urlFor } from "./sanity";
 import type { Destination, Package } from "./data";
+import { DESTINATION_GALLERY } from "./gallery-images";
 
 // ─── Destination queries ───────────────────────────────────────────────────
 
@@ -110,10 +111,15 @@ type SanityPackage = Omit<Package, "image" | "heroImage"> & {
 };
 
 function mapPackage(p: SanityPackage): Package {
+  const destGallery = DESTINATION_GALLERY[p.destinationSlug ?? ""] ?? [];
+  const destImage = destGallery[0] ?? null;
+
   return {
     ...p,
-    image: p.image ? urlFor(p.image).width(1200).quality(80).url() : FALLBACK_IMAGE,
-    heroImage: p.heroImage ? urlFor(p.heroImage).width(2400).quality(85).url() : FALLBACK_HERO,
+    image: destImage ?? (p.image ? urlFor(p.image).width(1200).quality(80).url() : FALLBACK_IMAGE),
+    heroImage: destImage
+      ? destImage.replace("w=1600", "w=2400")
+      : (p.heroImage ? urlFor(p.heroImage).width(2400).quality(85).url() : FALLBACK_HERO),
   };
 }
 
