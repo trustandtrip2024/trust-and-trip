@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone, MapPin } from "lucide-react";
 import clsx from "clsx";
+import { useTripPlanner } from "@/context/TripPlannerContext";
 
 const navLinks = [
   { href: "/destinations", label: "Destinations" },
@@ -19,6 +20,7 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { open: openPlanner } = useTripPlanner();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -96,9 +98,12 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link href="/contact" className="hidden md:inline-flex btn-primary !py-2.5 !px-5 !text-xs">
+            <button
+              onClick={() => openPlanner()}
+              className="hidden md:inline-flex btn-primary !py-2.5 !px-5 !text-xs"
+            >
               Plan My Trip
-            </Link>
+            </button>
 
             {/* Mobile: call button */}
             <a
@@ -168,13 +173,12 @@ export default function Navbar() {
                   </motion.div>
                 ))}
 
-                <Link
-                  href="/contact"
-                  onClick={() => setMobileOpen(false)}
+                <button
+                  onClick={() => { setMobileOpen(false); openPlanner(); }}
                   className="btn-primary mt-8 justify-center"
                 >
                   Plan My Trip
-                </Link>
+                </button>
 
                 <div className="mt-8 pt-6 border-t border-ink/10 space-y-2 text-sm text-ink/60">
                   <a href="tel:+919999999999" className="flex items-center gap-2 hover:text-gold">

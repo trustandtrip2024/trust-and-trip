@@ -9,8 +9,16 @@ export const metadata = {
   description: "40+ handcrafted tour packages across India and the world — for couples, families, groups and solo travelers.",
 };
 
-export default async function PackagesPage() {
-  const [packages, destinations] = await Promise.all([getPackages(), getDestinations()]);
+export default async function PackagesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }> | { [key: string]: string | undefined };
+}) {
+  const [packages, destinations, params] = await Promise.all([
+    getPackages(),
+    getDestinations(),
+    Promise.resolve(searchParams),
+  ]);
 
   return (
     <>
@@ -22,13 +30,20 @@ export default async function PackagesPage() {
             <span className="italic text-gold font-light"> Ready to live.</span>
           </h1>
           <p className="mt-6 text-ink/60 max-w-xl leading-relaxed">
-            Every package here was designed by a planner who's been there. Filter by what
+            Every package here was designed by a planner who&apos;s been there. Filter by what
             matters, or let us build one from scratch.
           </p>
         </div>
       </section>
 
-      <PackagesClient packages={packages} destinations={destinations} />
+      <PackagesClient
+        packages={packages}
+        destinations={destinations}
+        initialDestination={params.destination ?? ""}
+        initialTravelType={params.type ?? ""}
+        initialDuration={params.duration ?? ""}
+        initialBudget={params.budget ?? ""}
+      />
 
       <CTASection />
     </>

@@ -4,6 +4,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import TripPlannerModal from "@/components/TripPlannerModal";
+import ExitIntentPopup from "@/components/ExitIntentPopup";
+import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import "../styles/globals.css";
 
 const fraunces = Fraunces({
@@ -41,11 +44,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`}>
       <body className="min-h-screen flex flex-col bg-cream text-ink">
-        <Navbar />
-        <main className="flex-1 pb-16 lg:pb-0">{children}</main>
-        <Footer />
-        <FloatingWhatsApp />
-        <MobileBottomNav />
+        <TripPlannerProvider>
+          <Navbar />
+          <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+          <Footer />
+          <FloatingWhatsApp />
+          <MobileBottomNav />
+          <TripPlannerModal />
+          <ExitIntentPopup />
+        </TripPlannerProvider>
       </body>
     </html>
   );

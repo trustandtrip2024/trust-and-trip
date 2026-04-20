@@ -25,13 +25,36 @@ const travelTypes = ["Couple", "Family", "Group", "Solo"];
 interface Props {
   packages: Package[];
   destinations: Destination[];
+  initialDestination?: string;
+  initialTravelType?: string;
+  initialDuration?: string;
+  initialBudget?: string;
 }
 
-export default function PackagesClient({ packages, destinations }: Props) {
-  const [filterDestination, setFilterDestination] = useState("");
-  const [filterTravelType, setFilterTravelType] = useState("");
-  const [filterDuration, setFilterDuration] = useState("");
-  const [filterPrice, setFilterPrice] = useState("");
+const BUDGET_TO_PRICE: Record<string, string> = {
+  budget: "Under ₹50,000",
+  standard: "₹50K – ₹1L",
+  premium: "₹1L – ₹2L",
+  luxury: "Above ₹2L",
+};
+
+export default function PackagesClient({
+  packages,
+  destinations,
+  initialDestination = "",
+  initialTravelType = "",
+  initialDuration = "",
+  initialBudget = "",
+}: Props) {
+  const resolvedPrice = initialBudget ? (BUDGET_TO_PRICE[initialBudget] ?? "") : "";
+  const resolvedDuration = initialDuration
+    ? durationRanges.find((d) => d.label.replace(/\s/g, "") === initialDuration.replace(/\s/g, ""))?.label ?? ""
+    : "";
+
+  const [filterDestination, setFilterDestination] = useState(initialDestination);
+  const [filterTravelType, setFilterTravelType] = useState(initialTravelType);
+  const [filterDuration, setFilterDuration] = useState(resolvedDuration);
+  const [filterPrice, setFilterPrice] = useState(resolvedPrice);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const filtered = useMemo(() => {

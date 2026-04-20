@@ -1,99 +1,53 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { MapPin, Users, CalendarDays, Search } from "lucide-react";
-import { destinations } from "@/lib/data";
+import { useTripPlanner } from "@/context/TripPlannerContext";
 
 export default function SearchBar() {
-  const router = useRouter();
-  const [destination, setDestination] = useState("");
-  const [travelType, setTravelType] = useState("");
-  const [duration, setDuration] = useState("");
-
-  const handleSearch = () => {
-    const params = new URLSearchParams();
-    if (destination) params.set("destination", destination);
-    if (travelType) params.set("type", travelType);
-    if (duration) params.set("duration", duration);
-    router.push(`/packages?${params.toString()}`);
-  };
+  const { open } = useTripPlanner();
 
   return (
-    <div className="bg-cream/95 backdrop-blur-xl rounded-2xl md:rounded-full p-3 md:pr-3 md:pl-8 md:py-3 shadow-soft-lg border border-cream">
-      <div className="grid md:grid-cols-[1.3fr_1fr_1fr_auto] gap-2 md:gap-0 md:divide-x md:divide-ink/10">
+    <button
+      onClick={() => open()}
+      className="w-full text-left bg-cream/95 backdrop-blur-xl rounded-2xl md:rounded-full shadow-soft-lg border border-cream hover:shadow-[0_8px_40px_-8px_rgba(11,28,44,0.25)] transition-all duration-300 group"
+      aria-label="Open trip planner"
+    >
+      <div className="grid md:grid-cols-[1.3fr_1fr_1fr_auto] gap-0">
         {/* Destination */}
-        <div className="flex items-center gap-3 px-4 py-3 md:py-2 group">
+        <div className="flex items-center gap-3 px-5 py-4 md:py-3 border-b md:border-b-0 md:border-r border-ink/8">
           <MapPin className="h-4 w-4 text-gold shrink-0" />
-          <div className="flex-1 min-w-0">
-            <label className="block text-[10px] uppercase tracking-wider text-ink/50 font-medium">
-              Destination
-            </label>
-            <select
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              className="w-full bg-transparent text-sm text-ink outline-none cursor-pointer font-medium"
-            >
-              <option value="">Where to?</option>
-              {destinations.map((d) => (
-                <option key={d.slug} value={d.slug}>
-                  {d.name}, {d.country}
-                </option>
-              ))}
-            </select>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-ink/50 font-medium">Destination</p>
+            <p className="text-sm font-medium text-ink/70 group-hover:text-ink transition-colors">Where to?</p>
           </div>
         </div>
 
         {/* Travel Type */}
-        <div className="flex items-center gap-3 px-4 py-3 md:py-2 md:pl-6">
+        <div className="flex items-center gap-3 px-5 py-4 md:py-3 md:pl-5 border-b md:border-b-0 md:border-r border-ink/8">
           <Users className="h-4 w-4 text-gold shrink-0" />
-          <div className="flex-1 min-w-0">
-            <label className="block text-[10px] uppercase tracking-wider text-ink/50 font-medium">
-              Travel Type
-            </label>
-            <select
-              value={travelType}
-              onChange={(e) => setTravelType(e.target.value)}
-              className="w-full bg-transparent text-sm text-ink outline-none cursor-pointer font-medium"
-            >
-              <option value="">Who's traveling?</option>
-              <option value="Couple">Couple</option>
-              <option value="Family">Family</option>
-              <option value="Group">Group</option>
-              <option value="Solo">Solo</option>
-            </select>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-ink/50 font-medium">Travel Type</p>
+            <p className="text-sm font-medium text-ink/70 group-hover:text-ink transition-colors">Who&apos;s traveling?</p>
           </div>
         </div>
 
         {/* Duration */}
-        <div className="flex items-center gap-3 px-4 py-3 md:py-2 md:pl-6">
+        <div className="flex items-center gap-3 px-5 py-4 md:py-3 md:pl-5">
           <CalendarDays className="h-4 w-4 text-gold shrink-0" />
-          <div className="flex-1 min-w-0">
-            <label className="block text-[10px] uppercase tracking-wider text-ink/50 font-medium">
-              Duration
-            </label>
-            <select
-              value={duration}
-              onChange={(e) => setDuration(e.target.value)}
-              className="w-full bg-transparent text-sm text-ink outline-none cursor-pointer font-medium"
-            >
-              <option value="">How long?</option>
-              <option value="3-5">3 – 5 days</option>
-              <option value="5-7">5 – 7 days</option>
-              <option value="7-10">7 – 10 days</option>
-              <option value="10+">10+ days</option>
-            </select>
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-ink/50 font-medium">Duration</p>
+            <p className="text-sm font-medium text-ink/70 group-hover:text-ink transition-colors">How long?</p>
           </div>
         </div>
 
-        <button
-          onClick={handleSearch}
-          className="bg-ink hover:bg-gold text-cream hover:text-ink transition-all duration-300 rounded-xl md:rounded-full md:h-auto px-6 py-3.5 md:px-7 flex items-center justify-center gap-2 text-sm font-medium mt-1 md:mt-0 md:ml-2"
-        >
-          <Search className="h-4 w-4" />
-          Search
-        </button>
+        {/* Search button */}
+        <div className="px-3 py-3 flex items-center justify-center">
+          <div className="bg-ink group-hover:bg-gold text-cream group-hover:text-ink transition-all duration-300 rounded-xl md:rounded-full px-5 py-3 md:px-6 flex items-center gap-2 text-sm font-medium w-full md:w-auto justify-center">
+            <Search className="h-4 w-4" />
+            <span>Search</span>
+          </div>
+        </div>
       </div>
-    </div>
+    </button>
   );
 }
