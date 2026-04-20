@@ -6,7 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPackageBySlug, getAllPackageSlugs, getRelatedPackages } from "@/lib/sanity-queries";
 import { testimonials } from "@/lib/data";
+import { getGalleryImages } from "@/lib/gallery-images";
 import Accordion from "@/components/Accordion";
+import PackageGallery from "@/components/PackageGallery";
 import TestimonialCard from "@/components/TestimonialCard";
 import PackageCard from "@/components/PackageCard";
 import CTASection from "@/components/CTASection";
@@ -71,6 +73,8 @@ export default async function PackageDetail({ params }: Props) {
 
   // Deterministic social proof number (consistent per package, looks realistic)
   const viewedCount = Math.max(20, (pkg.reviews * 3 + pkg.slug.length * 7) % 120 + 15);
+
+  const galleryImages = getGalleryImages(pkg.destinationSlug, pkg.heroImage);
 
   return (
     <>
@@ -173,6 +177,9 @@ export default async function PackageDetail({ params }: Props) {
                 ))}
               </div>
             </div>
+
+            {/* Gallery */}
+            <PackageGallery images={galleryImages} title={pkg.title} />
 
             {/* Itinerary */}
             <div className="mb-16">
