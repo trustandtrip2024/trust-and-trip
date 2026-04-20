@@ -12,6 +12,8 @@ import TestimonialCard from "@/components/TestimonialCard";
 import VideoSection from "@/components/VideoSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import CTASection from "@/components/CTASection";
+import QuickFilters from "@/components/QuickFilters";
+import DepartingSoon from "@/components/DepartingSoon";
 import { testimonials, experiences, stats } from "@/lib/data";
 import {
   getDestinations,
@@ -60,6 +62,12 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
+
+      {/* ── Quick filters ─────────────────────────────────────── */}
+      <QuickFilters />
+
+      {/* ── Departing Soon ────────────────────────────────────── */}
+      <DepartingSoon packages={trendingPackages} />
 
       {/* ── Marquee strip ─────────────────────────────────────── */}
       <section aria-hidden="true" className="border-y border-ink/10 bg-cream py-4 overflow-hidden">
@@ -159,6 +167,21 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Trending Packages ─────────────────────────────────── */}
+      {trendingPackages.length > 0 && (
+        <section className="py-12 md:py-16" aria-labelledby="trending-heading">
+          <div className="container-custom">
+            <PackageSlider
+              id="trending-slider"
+              eyebrow="Trending Right Now"
+              heading={`Journeys everyone's <span class=\"italic text-gold font-light\">talking about.</span>`}
+              packages={trendingPackages}
+              viewAllLabel="All trending"
+            />
+          </div>
+        </section>
+      )}
 
       {/* ── Stats ─────────────────────────────────────────────── */}
       <section className="bg-ink text-cream py-10 md:py-14" aria-label="Trust and Trip at a glance">
@@ -282,21 +305,6 @@ export default async function HomePage() {
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── Trending Experiences (slider) ─────────────────────── */}
-      {trendingPackages.length > 0 && (
-        <section className="py-14 md:py-20" aria-labelledby="trending-heading">
-          <div className="container-custom">
-            <PackageSlider
-              id="trending-slider"
-              eyebrow="Trending Experiences"
-              heading={`Journeys everyone's <span class=\"italic text-gold font-light\">talking about.</span>`}
-              packages={trendingPackages}
-              viewAllLabel="All trending"
-            />
           </div>
         </section>
       )}
