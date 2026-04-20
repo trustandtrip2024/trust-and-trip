@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Instagram, Facebook, Linkedin, Twitter, Send, MapPin, Mail, Phone } from "lucide-react";
+import { Instagram, Facebook, Linkedin, Twitter, Send, MapPin, Mail, Phone, CheckCircle2 } from "lucide-react";
 
 const footerLinks = {
   Explore: [
@@ -26,6 +27,30 @@ const footerLinks = {
 };
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [subState, setSubState] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubState("loading");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setSubState("success");
+        setEmail("");
+      } else {
+        setSubState("error");
+      }
+    } catch {
+      setSubState("error");
+    }
+  };
+
   return (
     <footer className="relative bg-ink text-cream pt-20 pb-8 md:pb-10 mt-16 md:mt-0 overflow-hidden">
       {/* Large word decoration */}
@@ -53,39 +78,54 @@ export default function Footer() {
             </h3>
           </div>
           <div className="md:pt-8">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const input = e.currentTarget.querySelector<HTMLInputElement>("input[type=email]");
-                if (input) {
-                  alert(`Subscribed: ${input.value}`);
-                  input.value = "";
-                }
-              }}
-              className="flex items-center gap-2 bg-cream/5 border border-cream/10 rounded-full p-2 pl-6 focus-within:border-gold transition-colors"
-            >
-              <Mail className="h-4 w-4 text-cream/40 shrink-0" />
-              <input
-                type="email"
-                required
-                placeholder="your@email.com"
-                className="flex-1 bg-transparent text-cream placeholder:text-cream/40 text-sm outline-none py-2.5"
-              />
-              <button
-                type="submit"
-                className="shrink-0 bg-gold text-ink rounded-full h-11 w-11 flex items-center justify-center hover:bg-cream transition-colors"
-                aria-label="Subscribe"
+            {subState === "success" ? (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-3 bg-gold/15 border border-gold/30 rounded-full px-6 py-4"
               >
-                <Send className="h-4 w-4" />
-              </button>
-            </form>
-            <p className="text-xs text-cream/40 mt-3">
-              No spam. Unsubscribe anytime. Read our{" "}
-              <Link href="#" className="underline hover:text-gold">
-                privacy policy
-              </Link>
-              .
-            </p>
+                <CheckCircle2 className="h-5 w-5 text-gold shrink-0" />
+                <p className="text-cream/90 text-sm">
+                  You&apos;re subscribed! First story coming your way soon.
+                </p>
+              </motion.div>
+            ) : (
+              <form
+                onSubmit={handleSubscribe}
+                className="flex items-center gap-2 bg-cream/5 border border-cream/10 rounded-full p-2 pl-6 focus-within:border-gold transition-colors"
+              >
+                <Mail className="h-4 w-4 text-cream/40 shrink-0" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  disabled={subState === "loading"}
+                  className="flex-1 bg-transparent text-cream placeholder:text-cream/40 text-sm outline-none py-2.5 disabled:opacity-50"
+                />
+                <button
+                  type="submit"
+                  disabled={subState === "loading"}
+                  className="shrink-0 bg-gold text-ink rounded-full h-11 w-11 flex items-center justify-center hover:bg-cream transition-colors disabled:opacity-60"
+                  aria-label="Subscribe"
+                >
+                  <Send className={`h-4 w-4 ${subState === "loading" ? "animate-pulse" : ""}`} />
+                </button>
+              </form>
+            )}
+            {subState === "error" && (
+              <p className="text-xs text-red-400 mt-2">Something went wrong. Please try again.</p>
+            )}
+            {subState !== "success" && (
+              <p className="text-xs text-cream/40 mt-3">
+                No spam. Unsubscribe anytime. Read our{" "}
+                <Link href="/privacy-policy" className="underline hover:text-gold">
+                  privacy policy
+                </Link>
+                .
+              </p>
+            )}
           </div>
         </motion.div>
 

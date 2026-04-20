@@ -177,3 +177,23 @@ export async function getOfferPackages(): Promise<Package[]> {
   );
   return raw.map(mapPackage);
 }
+
+export async function getRelatedPackages(
+  destinationSlug: string,
+  excludeSlug: string,
+  travelType: string
+): Promise<Package[]> {
+  // First try: same destination, different package
+  const sameDest = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package" && destination->slug.current == $dest && slug.current != $excl] | order(rating desc) [0...4] { ${PACKAGE_FIELDS} }`,
+    { dest: destinationSlug, excl: excludeSlug }
+  );
+  if (sameDest.length >= 3) return sameDest.slice(0, 4).map(mapPackage);
+
+  // Fallback: same travel type from any destination
+  const sameType = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package" && travelType == $type && slug.current != $excl] | order(rating desc) [0...4] { ${PACKAGE_FIELDS} }`,
+    { type: travelType, excl: excludeSlug }
+  );
+  return [...sameDest, ...sameType].slice(0, 4).map(mapPackage);
+}

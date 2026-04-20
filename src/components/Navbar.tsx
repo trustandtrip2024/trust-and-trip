@@ -31,16 +31,22 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top announcement strip */}
-      <div className="hidden md:block bg-ink text-cream text-xs py-2.5">
-        <div className="container-custom flex items-center justify-between">
-          <div className="flex items-center gap-6 opacity-80">
+      {/* Top announcement strip — mobile: compact single line, md+: full */}
+      <div className="bg-ink text-cream text-xs py-2 md:py-2.5">
+        <div className="container-custom flex items-center justify-between gap-4">
+          {/* Mobile: single promo line */}
+          <p className="md:hidden text-gold text-center w-full text-[11px] font-medium tracking-wide">
+            🎉 10% Off on bookings 60+ days in advance ·{" "}
+            <a href="tel:+918115999588" className="text-cream/80 hover:text-gold">Call +91 8115 999 588</a>
+          </p>
+          {/* Desktop: full strip */}
+          <div className="hidden md:flex items-center gap-6 opacity-80">
             <span className="flex items-center gap-1.5">
               <MapPin className="h-3 w-3 text-gold" />
               Curating journeys across 60+ destinations
             </span>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="hidden md:flex items-center gap-5">
             <a href="tel:+918115999588" className="flex items-center gap-1.5 hover:text-gold transition-colors">
               <Phone className="h-3 w-3" />
               +91 8115 999 588
