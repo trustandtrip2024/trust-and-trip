@@ -1,159 +1,205 @@
+export const revalidate = 60;
+export const dynamicParams = true;
+
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { blogPosts } from "@/lib/data";
-import { Clock, ChevronRight, ArrowRight } from "lucide-react";
+import { getBlogPostBySlug, getAllBlogSlugs, getBlogPosts } from "@/lib/sanity-queries";
+import { blogPosts as staticPosts } from "@/lib/data";
+import { Clock, ChevronRight, ArrowRight, Tag } from "lucide-react";
 import CTASection from "@/components/CTASection";
+import NewsletterInline from "@/components/NewsletterInline";
 
-interface Props {
-  params: { slug: string };
-}
+interface Props { params: { slug: string } }
 
 export async function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
+  const sanitySlugss = await getAllBlogSlugs().catch(() => []);
+  const staticSlugs = staticPosts.map((p) => p.slug);
+  return [...new Set([...sanitySlugss, ...staticSlugs])].map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+  const post = await getBlogPostBySlug(params.slug).catch(() => null)
+    ?? staticPosts.find((p) => p.slug === params.slug);
   if (!post) return {};
   return {
-    title: post.title,
+    title: `${post.title} — Trust and Trip`,
     description: post.excerpt,
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title: post.title, description: post.excerpt,
       images: [{ url: post.image, width: 1200, height: 630, alt: post.title }],
       type: "article",
-      publishedTime: post.date,
       authors: [post.author],
     },
-    alternates: { canonical: `https://trustandtrip.com/blog/${post.slug}` },
+    alternates: { canonical: `https://trustandtrip.com/blog/${params.slug}` },
   };
 }
 
-export default function BlogPostPage({ params }: Props) {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+export default async function BlogPostPage({ params }: Props) {
+  const sanityPost = await getBlogPostBySlug(params.slug).catch(() => null);
+  const post = sanityPost ?? staticPosts.find((p) => p.slug === params.slug);
   if (!post) return notFound();
 
-  const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const allPosts = await getBlogPosts().catch(() => staticPosts as any[]);
+  const related = allPosts
+    .filter((p: any) => (p.slug?.current ?? p.slug) !== params.slug)
+    .slice(0, 3);
+
+  const slug = (post as any).slug?.current ?? (post as any).slug;
+  const image = (post as any).image ?? "";
 
   return (
     <>
       {/* Hero */}
-      <section className="pt-28 md:pt-36 pb-8 bg-cream">
+      <section className="pt-24 md:pt-32 pb-8 bg-cream">
         <div className="container-custom max-w-3xl">
           <div className="flex items-center gap-2 text-xs text-ink/60 mb-6">
             <Link href="/" className="hover:text-gold">Home</Link>
             <ChevronRight className="h-3 w-3" />
             <Link href="/blog" className="hover:text-gold">Journal</Link>
             <ChevronRight className="h-3 w-3" />
-            <span className="text-gold">{post.category}</span>
+            <span className="text-gold truncate">{post.category}</span>
           </div>
-          <span className="text-[10px] uppercase tracking-[0.25em] text-gold">
-            {post.category}
-          </span>
-          <h1 className="mt-4 font-display text-display-md font-medium leading-[1.05] text-balance">
+          <span className="text-[10px] uppercase tracking-[0.25em] text-gold font-medium">{post.category}</span>
+          <h1 className="mt-3 font-display text-display-md font-medium leading-[1.05] text-balance">
             {post.title}
           </h1>
-          <div className="mt-6 flex items-center gap-4 text-sm text-ink/60">
-            <span>{post.author}</span>
+          <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-ink/50">
+            <span className="font-medium text-ink">{post.author}</span>
             <span className="text-ink/20">·</span>
             <span>{post.date}</span>
             <span className="text-ink/20">·</span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="h-3 w-3" />
-              {post.readTime}
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Hero image */}
-      <section className="pb-12">
-        <div className="container-custom max-w-5xl">
-          <div className="relative aspect-[16/9] rounded-3xl overflow-hidden">
-            <Image
-              src={post.image}
-              alt={post.title}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 1024px"
-              className="object-cover"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Content */}
-      <article className="pb-16">
-        <div className="container-custom max-w-2xl">
-          <p className="font-display text-2xl md:text-3xl italic font-light leading-snug text-ink/80 mb-10 text-balance">
-            {post.excerpt}
-          </p>
-
-          <div className="space-y-6 text-ink/80 leading-relaxed text-base md:text-lg">
-            {post.content.split("\n\n").map((para, i) => {
-              if (para.startsWith('"') && para.endsWith('"')) {
-                return (
-                  <blockquote
-                    key={i}
-                    className="border-l-4 border-gold pl-6 italic font-display text-2xl text-ink my-8"
-                  >
-                    {para}
-                  </blockquote>
-                );
-              }
-              return <p key={i}>{para}</p>;
-            })}
+            <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />{post.readTime}</span>
           </div>
 
-          <div className="mt-12 pt-8 border-t border-ink/10 flex items-center justify-between">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 text-sm text-ink hover:text-gold transition-colors group"
-            >
-              <ArrowRight className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1" />
-              Back to Journal
-            </Link>
-            <Link
-              href="/customize-trip"
-              className="btn-gold !py-2.5 !px-5 !text-xs"
-            >
-              Plan a trip inspired by this
-            </Link>
-          </div>
-        </div>
-      </article>
-
-      {/* Related */}
-      <section className="py-16 md:py-20 bg-sand/40">
-        <div className="container-custom">
-          <h3 className="font-display text-3xl md:text-4xl font-medium mb-10 text-balance">
-            Keep reading
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-            {related.map((p) => (
-              <Link key={p.slug} href={`/blog/${p.slug}`} className="group">
-                <div className="relative aspect-[4/3] rounded-3xl overflow-hidden mb-4">
-                  <Image
-                    src={p.image}
-                    alt={p.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                </div>
-                <span className="text-[10px] uppercase tracking-[0.25em] text-gold">
-                  {p.category}
+          {/* Tags */}
+          {(post as any).tags?.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {(post as any).tags.map((tag: string) => (
+                <span key={tag} className="inline-flex items-center gap-1 text-[11px] px-3 py-1 rounded-full bg-gold/10 text-ink/70 border border-gold/20">
+                  <Tag className="h-2.5 w-2.5 text-gold" />{tag}
                 </span>
-                <h4 className="mt-2 font-display text-xl font-medium group-hover:text-gold transition-colors leading-tight text-balance">
-                  {p.title}
-                </h4>
-              </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
+      {/* Cover image */}
+      {image && (
+        <section className="pb-10">
+          <div className="container-custom max-w-5xl">
+            <div className="relative aspect-[16/9] rounded-3xl overflow-hidden">
+              <Image src={image} alt={post.title} fill priority sizes="(max-width: 1024px) 100vw, 1024px" className="object-cover" />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Article content + sidebar */}
+      <div className="pb-16">
+        <div className="container-custom grid lg:grid-cols-[1fr_280px] gap-12 items-start max-w-5xl">
+          {/* Content */}
+          <article>
+            <p className="font-display text-xl md:text-2xl italic font-light leading-snug text-ink/70 mb-8 text-balance border-l-4 border-gold pl-6">
+              {post.excerpt}
+            </p>
+
+            <div className="space-y-5 text-ink/80 leading-relaxed text-base">
+              {post.content.split("\n\n").map((para: string, i: number) => {
+                if (para.startsWith('"') && para.endsWith('"')) {
+                  return (
+                    <blockquote key={i} className="border-l-4 border-gold pl-6 italic font-display text-xl text-ink/80 my-6">
+                      {para}
+                    </blockquote>
+                  );
+                }
+                return <p key={i}>{para}</p>;
+              })}
+            </div>
+
+            <div className="mt-10 pt-8 border-t border-ink/10 flex items-center justify-between flex-wrap gap-4">
+              <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-ink hover:text-gold transition-colors group">
+                <ArrowRight className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1" />
+                Back to Journal
+              </Link>
+              <Link href="/customize-trip" className="btn-gold !py-2.5 !px-5 !text-xs">
+                Plan a trip inspired by this
+              </Link>
+            </div>
+          </article>
+
+          {/* Sticky sidebar */}
+          <aside className="lg:sticky lg:top-28 space-y-5">
+            {/* Newsletter */}
+            <div className="bg-ink text-cream rounded-2xl p-6">
+              <p className="eyebrow text-gold mb-2">Newsletter</p>
+              <h3 className="font-display text-lg font-medium mb-3 text-balance">Get stories like this in your inbox</h3>
+              <form action="/api/newsletter" method="POST" className="space-y-2">
+                <input type="email" name="email" required placeholder="your@email.com"
+                  className="w-full bg-cream/10 border border-cream/20 text-cream placeholder:text-cream/40 text-sm rounded-xl px-4 py-2.5 outline-none focus:border-gold" />
+                <button type="submit"
+                  className="w-full bg-gold text-ink text-sm font-semibold py-2.5 rounded-xl hover:bg-gold/90 transition-colors">
+                  Subscribe — Free
+                </button>
+              </form>
+            </div>
+
+            {/* Related posts */}
+            <div className="bg-cream rounded-2xl p-5 border border-ink/6">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-ink/40 font-medium mb-4">More from the journal</p>
+              <div className="space-y-4">
+                {related.slice(0, 3).map((p: any) => {
+                  const pSlug = p.slug?.current ?? p.slug;
+                  return (
+                    <Link key={pSlug} href={`/blog/${pSlug}`} className="flex gap-3 group">
+                      <div className="relative h-14 w-16 rounded-xl overflow-hidden shrink-0 bg-sand">
+                        {(p.image) && <Image src={p.image} alt={p.title} fill className="object-cover" sizes="64px" />}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs font-medium text-ink group-hover:text-gold transition-colors line-clamp-2 leading-tight">{p.title}</p>
+                        <p className="text-[10px] text-ink/40 mt-1">{p.readTime}</p>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="bg-gold/10 border border-gold/20 rounded-2xl p-5">
+              <p className="font-display text-base font-medium text-balance mb-2">Ready to plan your next trip?</p>
+              <p className="text-xs text-ink/60 mb-3">Talk to a planner — free consultation.</p>
+              <Link href="/customize-trip" className="block text-center bg-ink text-cream text-xs font-medium py-2.5 rounded-xl hover:bg-gold hover:text-ink transition-colors">
+                Get Free Itinerary
+              </Link>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      {/* Related posts grid */}
+      {related.length > 0 && (
+        <section className="py-14 bg-sand/40">
+          <div className="container-custom">
+            <h3 className="font-display text-2xl font-medium mb-8">Keep reading</h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              {related.map((p: any) => {
+                const pSlug = p.slug?.current ?? p.slug;
+                return (
+                  <Link key={pSlug} href={`/blog/${pSlug}`} className="group">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-3 bg-sand">
+                      {p.image && <Image src={p.image} alt={p.title} fill sizes="33vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
+                    </div>
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-gold">{p.category}</span>
+                    <h4 className="mt-1 font-display text-lg font-medium group-hover:text-gold transition-colors leading-tight line-clamp-2">{p.title}</h4>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       <CTASection />
     </>

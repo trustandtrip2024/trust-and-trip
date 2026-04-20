@@ -2,6 +2,23 @@ import { sanityClient, urlFor } from "./sanity";
 import type { Destination, Package } from "./data";
 import { DESTINATION_GALLERY } from "./gallery-images";
 
+// ─── Blog post type ────────────────────────────────────────────────────────
+
+export type SanityBlogPost = {
+  _id: string;
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  author: string;
+  date: string;
+  readTime: string;
+  featured: boolean;
+  tags: string[];
+};
+
 // ─── Destination queries ───────────────────────────────────────────────────
 
 const DESTINATIONS_QUERY = `*[_type == "destination"] | order(name asc) {
@@ -190,6 +207,47 @@ export async function getOfferPackages(): Promise<Package[]> {
     `*[_type == "package" && (trending == true || limitedSlots == true || featured == true)] | order(rating desc) [0...8] { ${PACKAGE_FIELDS} }`
   );
   return raw.map(mapPackage);
+}
+
+// ─── Blog queries ─────────────────────────────────────────────────────────
+
+const BLOG_FIELDS = `
+  _id,
+  title,
+  "slug": slug.current,
+  category,
+  excerpt,
+  content,
+  "image": image.asset->url,
+  author,
+  date,
+  readTime,
+  featured,
+  tags
+`;
+
+export async function getBlogPosts(category?: string): Promise<SanityBlogPost[]> {
+  const filter = category
+    ? `*[_type == "blogPost" && category == $category] | order(date desc)`
+    : `*[_type == "blogPost"] | order(date desc)`;
+  return sanityClient.fetch<SanityBlogPost[]>(`${filter} { ${BLOG_FIELDS} }`, category ? { category } : {});
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<SanityBlogPost | null> {
+  return sanityClient.fetch<SanityBlogPost | null>(
+    `*[_type == "blogPost" && slug.current == $slug][0] { ${BLOG_FIELDS} }`,
+    { slug }
+  );
+}
+
+export async function getAllBlogSlugs(): Promise<string[]> {
+  return sanityClient.fetch<string[]>(`*[_type == "blogPost"].slug.current`);
+}
+
+export async function getFeaturedBlogPost(): Promise<SanityBlogPost | null> {
+  return sanityClient.fetch<SanityBlogPost | null>(
+    `*[_type == "blogPost" && featured == true] | order(date desc) [0] { ${BLOG_FIELDS} }`
+  );
 }
 
 export async function getRelatedPackages(
