@@ -18,12 +18,16 @@ interface FormValues {
   notes: string;
 }
 
+const WA_NUMBER = "918115999588";
+
 interface Props {
   variant?: "popup" | "full";
   submitHandler?: (data: FormValues) => Promise<void> | void;
   title?: string;
   subtitle?: string;
   ctaLabel?: string;
+  packageContext?: string;
+  destinationContext?: string;
 }
 
 export default function LeadForm({
@@ -32,6 +36,8 @@ export default function LeadForm({
   title = "Get a free itinerary",
   subtitle = "Tell us a little. We'll return with a hand-built proposal within 24 hours.",
   ctaLabel = "Get Free Itinerary",
+  packageContext,
+  destinationContext,
 }: Props) {
   const {
     register,
@@ -45,13 +51,34 @@ export default function LeadForm({
     if (submitHandler) {
       await submitHandler(data);
     } else {
-      // Mock submit
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Lead captured:", data);
+      // Build WhatsApp message from form data
+      const lines = [
+        `Hi Trust and Trip! 🙏`,
+        ``,
+        packageContext ? `📦 Interested in: *${packageContext}*` : null,
+        destinationContext ? `📍 Destination interest: *${destinationContext}*` : null,
+        ``,
+        `👤 Name: ${data.name}`,
+        `📱 Phone: ${data.phone}`,
+        `📧 Email: ${data.email}`,
+        data.destination ? `🗺️ Destination: ${data.destination}` : null,
+        data.travelType ? `👥 Travel type: ${data.travelType}` : null,
+        data.travelers ? `🧳 Travelers: ${data.travelers}` : null,
+        data.budget ? `💰 Budget: ${data.budget}` : null,
+        data.travelDates ? `📅 Travel dates: ${data.travelDates}` : null,
+        data.notes ? `📝 Notes: ${data.notes}` : null,
+        ``,
+        `Please help me plan my trip. Thank you!`,
+      ]
+        .filter((l) => l !== null)
+        .join("\n");
+
+      const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines)}`;
+      window.open(waUrl, "_blank", "noopener,noreferrer");
     }
     setSuccess(true);
     reset();
-    setTimeout(() => setSuccess(false), 4000);
+    setTimeout(() => setSuccess(false), 5000);
   };
 
   const isPopup = variant === "popup";
@@ -75,9 +102,9 @@ export default function LeadForm({
           <div className="h-16 w-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="h-8 w-8 text-gold" />
           </div>
-          <h4 className="font-display text-2xl mb-2">You're in good hands.</h4>
+          <h4 className="font-display text-2xl mb-2">Opening WhatsApp…</h4>
           <p className="text-ink/60 text-sm">
-            A Trust and Trip planner will reach out within 24 hours.
+            Your message is ready to send. A planner will reply within 2 hours.
           </p>
         </motion.div>
       ) : (

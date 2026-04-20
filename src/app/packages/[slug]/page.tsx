@@ -9,6 +9,7 @@ import { testimonials } from "@/lib/data";
 import Accordion from "@/components/Accordion";
 import TestimonialCard from "@/components/TestimonialCard";
 import CTASection from "@/components/CTASection";
+import PackageEnquiryCTA from "@/components/PackageEnquiryCTA";
 import {
   Clock,
   Star,
@@ -230,10 +231,15 @@ export default async function PackageDetail({ params }: Props) {
             </div>
 
             <div className="mt-6 space-y-2.5">
-              <Link href="/customize-trip" className="btn-gold w-full justify-center">
+              <a
+                href={`https://wa.me/918115999588?text=${encodeURIComponent(`Hi Trust and Trip! 🙏\n\nI'd like to book the *${pkg.title}* package (₹${pkg.price.toLocaleString("en-IN")}/person · ${pkg.duration}).\n\nPlease help me proceed.`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-gold w-full justify-center"
+              >
                 Book This Journey
-              </Link>
-              <Link href="/customize-trip" className="btn-outline w-full justify-center">
+              </a>
+              <Link href={`/customize-trip`} className="btn-outline w-full justify-center">
                 Customize
               </Link>
             </div>
@@ -252,6 +258,13 @@ export default async function PackageDetail({ params }: Props) {
         title="Not quite what you had in mind?"
         subtitle="We'll swap, tweak, add, or rebuild this entirely — until it feels like yours."
         primaryLabel="Customize this trip"
+      />
+
+      {/* Mobile sticky enquiry bar */}
+      <PackageEnquiryCTA
+        packageTitle={pkg.title}
+        price={pkg.price}
+        duration={pkg.duration}
       />
     </>
   );

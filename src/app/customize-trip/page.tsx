@@ -78,7 +78,7 @@ export default function CustomizeTripPage() {
         <div className="container-custom max-w-4xl">
           <LeadForm
             title="Get a free itinerary"
-            subtitle="A few details to get us started. Real planner reply within 24 hours — not a bot."
+            subtitle="A few details to get us started. Your message opens directly in WhatsApp — a real planner replies within 2 hours."
           />
         </div>
       </section>

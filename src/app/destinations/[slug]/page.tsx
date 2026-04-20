@@ -4,8 +4,7 @@ export const dynamicParams = true;
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { packages } from "@/lib/data";
-import { getDestinationBySlug, getAllDestinationSlugs } from "@/lib/sanity-queries";
+import { getDestinationBySlug, getAllDestinationSlugs, getPackagesByDestination } from "@/lib/sanity-queries";
 import PackageCard from "@/components/PackageCard";
 import CTASection from "@/components/CTASection";
 import { Calendar, Clock, MapPin, ChevronRight, ArrowRight } from "lucide-react";
@@ -32,7 +31,7 @@ export default async function DestinationDetail({ params }: Props) {
   const destination = await getDestinationBySlug(params.slug);
   if (!destination) return notFound();
 
-  const relatedPackages = packages.filter((p) => p.destinationSlug === destination.slug);
+  const relatedPackages = await getPackagesByDestination(destination.slug);
 
   return (
     <>

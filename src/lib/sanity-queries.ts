@@ -162,3 +162,18 @@ export async function getBestChoicePackages(): Promise<Package[]> {
   );
   return raw.map(mapPackage);
 }
+
+export async function getPackagesByDestination(destinationSlug: string): Promise<Package[]> {
+  const raw = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package" && destination->slug.current == $slug] | order(rating desc) { ${PACKAGE_FIELDS} }`,
+    { slug: destinationSlug }
+  );
+  return raw.map(mapPackage);
+}
+
+export async function getOfferPackages(): Promise<Package[]> {
+  const raw = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package" && (trending == true || limitedSlots == true || featured == true)] | order(rating desc) [0...8] { ${PACKAGE_FIELDS} }`
+  );
+  return raw.map(mapPackage);
+}
