@@ -8,6 +8,7 @@ import TripPlannerModal from "@/components/TripPlannerModal";
 import ExitIntentPopup from "@/components/ExitIntentPopup";
 import JsonLd from "@/components/JsonLd";
 import ScrollToTop from "@/components/ScrollToTop";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import "../styles/globals.css";
 
@@ -91,6 +92,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`}>
+      <head>
+        {/* Preconnect to speed up third-party resources */}
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+      </head>
       <body className="min-h-screen flex flex-col bg-cream text-ink">
         <JsonLd data={[
           {
@@ -147,6 +154,7 @@ export default function RootLayout({
           <TripPlannerModal />
           <ExitIntentPopup />
           <ScrollToTop />
+          <GoogleAnalytics />
         </TripPlannerProvider>
       </body>
     </html>

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
 import { destinations } from "@/lib/data";
+import { analytics } from "@/lib/analytics";
 
 interface FormValues {
   name: string;
@@ -76,6 +77,7 @@ export default function LeadForm({
       const waUrl = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines)}`;
       window.open(waUrl, "_blank", "noopener,noreferrer");
     }
+    analytics.formSubmit(data.destination || destinationContext);
     setSuccess(true);
     reset();
     setTimeout(() => setSuccess(false), 5000);

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
+import { analytics } from "@/lib/analytics";
 
 export interface TripSelections {
   destination: string;
@@ -37,6 +38,7 @@ export function TripPlannerProvider({ children }: { children: ReactNode }) {
   const open = (preset: Partial<TripSelections> = {}) => {
     setSelections((s) => ({ ...s, ...preset }));
     setIsOpen(true);
+    analytics.plannerOpen();
   };
 
   const close = () => setIsOpen(false);

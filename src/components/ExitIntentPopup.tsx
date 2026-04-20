@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles } from "lucide-react";
 import { useTripPlanner } from "@/context/TripPlannerContext";
+import { analytics } from "@/lib/analytics";
 
 const SESSION_KEY = "ttp_exit_shown";
 
@@ -14,10 +15,13 @@ export default function ExitIntentPopup() {
   const dismiss = () => {
     setVisible(false);
     sessionStorage.setItem(SESSION_KEY, "1");
+    analytics.exitIntentDismiss();
   };
 
   const handlePlan = () => {
-    dismiss();
+    setVisible(false);
+    sessionStorage.setItem(SESSION_KEY, "1");
+    analytics.exitIntentConvert();
     open();
   };
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Instagram, Facebook, Linkedin, Twitter, Send, MapPin, Mail, Phone, CheckCircle2 } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 
 const footerLinks = {
   Explore: [
@@ -43,6 +44,7 @@ export default function Footer() {
       if (res.ok) {
         setSubState("success");
         setEmail("");
+        analytics.newsletterSubscribe();
       } else {
         setSubState("error");
       }

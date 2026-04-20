@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTripPlanner } from "@/context/TripPlannerContext";
 import { sanityClient, urlFor } from "@/lib/sanity"; // urlFor used for package result images
+import { analytics } from "@/lib/analytics";
 
 // ─── Destination image fallbacks (all 23 Sanity destinations) ─────────────────
 
@@ -214,7 +215,15 @@ export default function TripPlannerModal() {
         const r4 = await sanityClient.fetch(buildQuery(null, null, null, null));
         return mapResults(r4);
       })
-      .then(setResults)
+      .then((results) => {
+        setResults(results);
+        analytics.plannerSearch(
+          selections.destination || "any",
+          selections.travelType || "any",
+          selections.budget || "any"
+        );
+        return results;
+      })
       .catch(() => setResults([]))
       .finally(() => setResultsLoading(false));
   }, [step]); // eslint-disable-line react-hooks/exhaustive-deps

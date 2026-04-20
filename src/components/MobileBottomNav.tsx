@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Compass, MapPin, Sliders, MessageCircle } from "lucide-react";
 import clsx from "clsx";
+import { analytics } from "@/lib/analytics";
 
 const WHATSAPP = "https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I'd%20love%20help%20planning%20my%20next%20trip.";
 
@@ -79,6 +80,7 @@ export default function MobileBottomNav() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Chat on WhatsApp"
+            onClick={() => analytics.whatsappClick("mobile_bottom_nav")}
             className="flex flex-col items-center gap-1 flex-1 -mt-5 pb-0.5"
           >
             <div className="relative h-14 w-14 rounded-full bg-[#25D366] shadow-[0_4px_20px_rgba(37,211,102,0.45)] flex items-center justify-center transition-transform active:scale-95">

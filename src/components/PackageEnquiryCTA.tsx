@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { MessageCircle, Phone } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 
 const WA_NUMBER = "918115999588";
 const PHONE = "+918115999588";
@@ -48,6 +49,7 @@ export default function PackageEnquiryCTA({ packageTitle, price, duration }: Pro
           href={`https://wa.me/${WA_NUMBER}?text=${waMessage}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => analytics.whatsappClick(`package_cta:${packageTitle}`)}
           className="flex items-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-xl text-sm font-semibold shrink-0"
         >
           <MessageCircle className="h-4 w-4 fill-white" />
