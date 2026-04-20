@@ -7,6 +7,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import TripPlannerModal from "@/components/TripPlannerModal";
 import ExitIntentPopup from "@/components/ExitIntentPopup";
 import JsonLd from "@/components/JsonLd";
+import ScrollToTop from "@/components/ScrollToTop";
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import "../styles/globals.css";
 
@@ -145,6 +146,7 @@ export default function RootLayout({
           <MobileBottomNav />
           <TripPlannerModal />
           <ExitIntentPopup />
+          <ScrollToTop />
         </TripPlannerProvider>
       </body>
     </html>

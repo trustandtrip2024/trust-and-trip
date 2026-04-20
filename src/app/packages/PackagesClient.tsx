@@ -168,10 +168,27 @@ export default function PackagesClient({
             </div>
 
             {filtered.length === 0 ? (
-              <div className="text-center py-20 bg-cream rounded-3xl border border-ink/5">
-                <p className="font-display text-2xl mb-2">No packages match your filters</p>
-                <p className="text-ink/60 mb-6">Try clearing some filters to see more options.</p>
-                <button onClick={clearAll} className="btn-outline">Clear filters</button>
+              <div className="text-center py-20 bg-cream rounded-3xl border border-ink/5 px-6">
+                <p className="text-5xl mb-5">🧭</p>
+                <p className="font-display text-2xl font-medium mb-2">
+                  No packages match these filters
+                </p>
+                <p className="text-ink/60 mb-8 max-w-sm mx-auto leading-relaxed">
+                  Try relaxing a filter or two — we have 130+ packages across 23 destinations.
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center">
+                  <button onClick={clearAll} className="btn-primary">
+                    Clear all filters
+                  </button>
+                  <a
+                    href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I%20can't%20find%20what%20I'm%20looking%20for.%20Can%20you%20help?"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-outline"
+                  >
+                    Ask a planner
+                  </a>
+                </div>
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
