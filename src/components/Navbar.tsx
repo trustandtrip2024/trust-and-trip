@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, MapPin, Heart } from "lucide-react";
+import { Menu, X, Phone, MapPin, Heart, Search } from "lucide-react";
 import clsx from "clsx";
 import { useTripPlanner } from "@/context/TripPlannerContext";
 import { useWishlistStore } from "@/store/useWishlistStore";
+import dynamic from "next/dynamic";
+const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
 
 const navLinks = [
   { href: "/destinations", label: "Destinations" },
@@ -23,6 +25,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { open: openPlanner } = useTripPlanner();
   const wishlistCount = useWishlistStore((s) => s.wishlist.length);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -106,6 +109,16 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
+            {/* Search trigger */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="hidden md:flex items-center gap-2 h-9 px-3 rounded-full border border-ink/12 text-ink/50 hover:text-ink hover:border-ink/25 transition-all text-xs"
+              aria-label="Search"
+            >
+              <Search className="h-3.5 w-3.5" />
+              <span>Search</span>
+              <kbd className="text-[10px] border border-ink/15 rounded px-1 py-0.5 text-ink/30">⌘K</kbd>
+            </button>
             <Link
               href="/wishlist"
               aria-label="Wishlist"
@@ -212,6 +225,8 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
+
+      {searchOpen && <SearchModal onClose={() => setSearchOpen(false)} />}
     </>
   );
 }

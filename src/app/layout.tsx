@@ -11,6 +11,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CompareBar from "@/components/CompareBar";
 import ConditionalFooter from "@/components/ConditionalFooter";
+import SearchProvider from "@/components/SearchProvider";
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import "../styles/globals.css";
 
@@ -157,6 +158,7 @@ export default function RootLayout({
           <TripPlannerModal />
           <ExitIntentPopup />
           <CompareBar />
+          <SearchProvider />
           <ScrollToTop />
           <GoogleAnalytics />
         </TripPlannerProvider>
