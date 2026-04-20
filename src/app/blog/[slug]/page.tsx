@@ -17,8 +17,17 @@ export async function generateMetadata({ params }: Props) {
   const post = blogPosts.find((p) => p.slug === params.slug);
   if (!post) return {};
   return {
-    title: `${post.title} — Trust and Trip`,
+    title: post.title,
     description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      images: [{ url: post.image, width: 1200, height: 630, alt: post.title }],
+      type: "article",
+      publishedTime: post.date,
+      authors: [post.author],
+    },
+    alternates: { canonical: `https://trustandtrip.com/blog/${post.slug}` },
   };
 }
 
@@ -82,25 +91,20 @@ export default function BlogPostPage({ params }: Props) {
             {post.excerpt}
           </p>
 
-          <div className="prose-travel space-y-6 text-lg leading-relaxed">
-            <p>{post.content}</p>
-            <p>
-              Travel, at its best, is a practice of attention. It's waking up before your hotel
-              offers breakfast because the light at dawn is different than the light at nine. It's
-              letting your plan unravel because the person at the bakery mentioned a village you'd
-              never heard of.
-            </p>
-            <p>
-              We write this journal because we believe stories shape trips as much as maps do. The
-              more deeply you know a place before you arrive, the more generously it reveals itself.
-            </p>
-            <blockquote className="border-l-4 border-gold pl-6 italic font-display text-2xl text-ink my-8">
-              "A good journey is one you can't quite describe when you return — only feel."
-            </blockquote>
-            <p>
-              If this piece nudges you toward a place you've been dreaming about, we'd love to help
-              you get there — in the right way, for you.
-            </p>
+          <div className="space-y-6 text-ink/80 leading-relaxed text-base md:text-lg">
+            {post.content.split("\n\n").map((para, i) => {
+              if (para.startsWith('"') && para.endsWith('"')) {
+                return (
+                  <blockquote
+                    key={i}
+                    className="border-l-4 border-gold pl-6 italic font-display text-2xl text-ink my-8"
+                  >
+                    {para}
+                  </blockquote>
+                );
+              }
+              return <p key={i}>{para}</p>;
+            })}
           </div>
 
           <div className="mt-12 pt-8 border-t border-ink/10 flex items-center justify-between">

@@ -17,11 +17,11 @@ const footerLinks = {
     { label: "Customize a Trip", href: "/customize-trip" },
     { label: "Contact", href: "/contact" },
   ],
-  Support: [
-    { label: "Help Center", href: "/contact" },
-    { label: "Terms of Service", href: "#" },
-    { label: "Privacy Policy", href: "#" },
-    { label: "Cookie Policy", href: "#" },
+  Legal: [
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms & Conditions", href: "/terms-and-conditions" },
+    { label: "Cancellation Policy", href: "/cancellation-policy" },
+    { label: "Help & Contact", href: "/contact" },
   ],
 };
 

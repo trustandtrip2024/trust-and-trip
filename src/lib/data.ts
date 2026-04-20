@@ -703,58 +703,74 @@ export const testimonials: Testimonial[] = [
 
 export const blogPosts: BlogPost[] = [
   {
-    title: "The Ten Sunsets You Must Witness in Your Lifetime",
-    slug: "ten-sunsets-lifetime",
+    title: "Phu Quoc Travel Guide: 15 Amazing Reasons to Visit Vietnam's Island Paradise",
+    slug: "phu-quoc-travel-guide",
     excerpt:
-      "From the burning caldera of Santorini to the quiet glow of Varanasi's ghats, these are the sunsets worth crossing oceans for.",
+      "Phu Quoc is where soft white beaches, warm turquoise waters and incredible seafood meet some of Southeast Asia's most affordable luxury resorts.",
     content:
-      "The world has many beautiful moments, but none quite like the golden hour when the sun surrenders to the horizon. Here are ten sunsets that deserve a spot on every traveler's lifetime list.",
+      "Tucked off the southwestern coast of Vietnam, Phu Quoc is the country's largest island — and one of its best-kept secrets. With powdery white sands at Long Beach, coral reefs teeming with marine life, and pepper plantations covering the interior hills, Phu Quoc offers something rare: genuine tropical beauty without the crowds of Bali or Phuket.\n\nHere are 15 reasons why Phu Quoc deserves a place on every Indian traveller's bucket list.\n\n1. Sao Beach — consistently rated one of Asia's top beaches, with water so clear you can see the bottom at 3 metres. 2. Grand World entertainment complex — a 24-hour Venice-inspired canal town with gondola rides, restaurants and shows. 3. Sunset Sanato Beach Club — the island's most iconic sundowner spot. 4. Vinpearl Safari — Vietnam's only open-air zoo and wildlife conservation park. 5. Phu Quoc Night Market — fresh seafood, local snacks and Vietnamese street food at its cheapest. 6. An Thoi Archipelago — a chain of 18 islets perfect for snorkelling and island hopping. 7. The Rach Vem Floating Village — a stilted village community built entirely over the sea. 8. Pepper plantations and fish sauce factories — a glimpse into Phu Quoc's unique culinary heritage. 9. Phu Quoc Prison — a sobering but important historical monument from the Vietnam War. 10. Sunset cable car — 8 kilometres of sea-crossing cable car to Hon Thom island. 11. Diving — visibility up to 15 metres with vibrant corals and diverse reef fish. 12. Duong Dong Market — the island's main market, packed with fresh produce, dried seafood and local crafts. 13. Starfish Beach — walk among hundreds of red starfish in shallow crystal-clear water. 14. Jungle trekking — Phu Quoc National Park covers over half the island with dense jungle trails. 15. Luxury at Indian budget prices — 5-star resorts that would cost ₹30,000+ per night elsewhere start from ₹12,000 here.\n\nFor Indian travellers, Phu Quoc is visa-free for stays under 45 days (subject to current regulations) and direct flights operate from major metros via Ho Chi Minh City. Trust and Trip packages to Phu Quoc start from ₹31,599 per person.",
     image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80&auto=format&fit=crop",
-    author: "Maya Verma",
-    date: "April 12, 2026",
-    readTime: "6 min read",
-    category: "Inspiration",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80&auto=format&fit=crop",
+    author: "Trust and Trip",
+    date: "March 18, 2026",
+    readTime: "11 min read",
+    category: "International",
   },
   {
-    title: "How to Plan a Honeymoon You'll Still Talk About in 30 Years",
-    slug: "honeymoon-planning-guide",
+    title: "Char Dham Temple Opening & Closing Dates for 2026: Complete Yatra Guide for Devotees",
+    slug: "char-dham-2026-opening-dates",
     excerpt:
-      "A practical, romantic guide to choosing the destination, timing, and experiences that will turn a trip into a story.",
-    content: "Honeymoons are more than a trip. They're a memory fund that your marriage will draw on for decades.",
+      "The sacred Char Dham shrines open each year as the Himalayan snow melts. Here are the confirmed opening dates for 2026 and everything you need to plan your Yatra.",
+    content:
+      "Every year, millions of Hindu devotees undertake the Char Dham Yatra — a pilgrimage to four of the most sacred shrines in the Himalayas. Located in the Garhwal region of Uttarakhand, these temples — Yamunotri, Gangotri, Kedarnath and Badrinath — are closed during winter due to heavy snowfall and reopen in spring, usually in April or May.\n\nChar Dham 2026 Opening Dates (Approximate):\n\nYamunotri: Expected to open on Akshaya Tritiya — typically in late April/early May 2026.\nGangotri: Opens the same day as Yamunotri on Akshaya Tritiya.\nKedarnath: Opens on Shivratri muhurat — typically May 2026.\nBadrinath: Opens a few days after Kedarnath, usually in early-to-mid May 2026.\n\nThe exact dates are announced by temple committees based on the Hindu calendar (Panchang) and are confirmed 1-2 months before opening.\n\nYamunotri — The Source of Yamuna: Located at 3,293 metres, Yamunotri is reached via a 6km trek from Janki Chatti. The hot springs of Surya Kund, where pilgrims cook rice to offer as prasad, are a highlight.\n\nGangotri — The Birthplace of Ganga: At 3,048 metres, Gangotri is the origin point of the sacred Bhagirathi river (which later becomes the Ganges). The town has dozens of ashrams, and the Gangotri Glacier — Gaumukh — is 18km further for trekkers.\n\nKedarnath — Jyotirlinga of Lord Shiva: One of the 12 Jyotirlingas, Kedarnath at 3,583 metres is one of the most emotionally powerful pilgrimage sites in India. A 16km trek (or helicopter service) leads to the ancient stone temple.\n\nBadrinath — The Abode of Vishnu: The final and most visited Char Dham shrine, Badrinath sits at 3,133 metres surrounded by the peaks of Nar and Narayan. The hot water spring Tapt Kund beside the temple is a must-visit.\n\nRegistration: Online registration is mandatory for Kedarnath and Yamunotri. The Uttarakhand Tourism portal opens registration approximately 60-90 days before the shrines open.\n\nBest Time: May–June (before monsoon) and September–October (after monsoon, before closing) are the ideal months. Avoid July–August due to landslide risk.\n\nTrust and Trip organises complete Char Dham Yatra packages from Haridwar or Rishikesh with accommodation, transport, guide and registration assistance.",
     image:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80&auto=format&fit=crop",
-    author: "Rishi Kapoor",
-    date: "April 5, 2026",
+      "https://images.unsplash.com/photo-1566296314736-6eafac81fd59?w=1200&q=80&auto=format&fit=crop",
+    author: "Trust and Trip",
+    date: "March 18, 2026",
+    readTime: "9 min read",
+    category: "Pilgrim",
+  },
+  {
+    title: "5 Most Affordable Countries to Travel from India in 2026: Budget-Friendly International Destinations",
+    slug: "affordable-countries-from-india-2026",
+    excerpt:
+      "International travel doesn't have to drain your savings. These five countries offer world-class experiences that Indian travellers can reach for under ₹50,000 per person.",
+    content:
+      "The belief that international travel is expensive is one of the most stubborn myths in Indian travel. The reality? With the right planning, you can fly to world-class destinations, stay in comfortable hotels, eat amazing food, and return home with memories — all for less than a domestic flight-hotel package to Goa.\n\nHere are five countries that offer the best value for Indian passport holders in 2026.\n\n1. Vietnam — The Undisputed Budget King\nVietnam consistently tops budget travel lists, and for good reason. Return flights from Indian metros hover around ₹18,000–₹25,000. A decent hotel in Hanoi or Ho Chi Minh City costs ₹1,500–₹3,000 per night. Street food pho and banh mi cost under ₹100. A full 5-night Vietnam trip can be done for ₹30,000–₹45,000 per person including flights. Phu Quoc, Da Nang and Ha Long Bay are all stunning, accessible and affordable.\n\n2. Thailand — The Classic for a Reason\nDespite its popularity, Thailand remains one of the best-value destinations from India. Flights to Bangkok start from ₹12,000 return. Bangkok's street food scene, temples and rooftop bars, Chiang Mai's elephant sanctuaries, and Phuket's beaches all offer incredible value. Budget 5-7 nights for ₹35,000–₹55,000 per person with flights.\n\n3. Nepal — The Himalayan Neighbour\nFor sheer mountain drama per rupee, nothing beats Nepal. No visa required for Indians (just a valid passport). Kathmandu's heritage sites, Pokhara's lakeside cafes, and Chitwan's wildlife safaris are all accessible on modest budgets. Flights from Delhi start at ₹5,000 return. A comfortable 5-night trip with accommodation and activities costs ₹18,000–₹30,000 per person.\n\n4. Sri Lanka — The Indian Ocean Gem\nSri Lanka offers colonial heritage, Buddhist temples, hill country tea estates, and beaches — often all in one trip. Flights from Chennai or Bengaluru cost ₹8,000–₹15,000 return. A 6-night trip covering Colombo, Kandy, Ella and Mirissa can be done for ₹35,000–₹50,000 per person with comfortable mid-range hotels.\n\n5. Malaysia — Kuala Lumpur & Beyond\nKuala Lumpur is one of Asia's most underrated cities — world-class food, modern infrastructure, Petronas Towers, and incredible diversity. Add a Penang extension for one of the world's best street food scenes. Flights from India are well-priced at ₹12,000–₹22,000 return. A 5-night trip runs ₹40,000–₹65,000 per person.\n\nTrust and Trip offers fully customised packages to all five destinations. Contact us for a personalised quote.",
+    image:
+      "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200&q=80&auto=format&fit=crop",
+    author: "Trust and Trip",
+    date: "November 16, 2025",
+    readTime: "12 min read",
+    category: "International",
+  },
+  {
+    title: "How E-Gates and E-Passports Will Transform International Travel for Indian Passport Holders",
+    slug: "e-gates-e-passports-indian-travellers",
+    excerpt:
+      "India's rollout of e-passports and the expanding network of e-gates at international airports mean faster, easier immigration for Indian travellers. Here's what you need to know.",
+    content:
+      "For anyone who has stood in long immigration queues at international airports, the promise of e-gates — automated passport control booths that verify biometric data in seconds — is genuinely exciting. And with India's e-passport programme gaining momentum, this future is arriving faster than most travellers realise.\n\nWhat is an E-Passport?\nAn e-passport (electronic passport) contains a microchip embedded in the cover that stores the holder's biographic data and a digital photograph. The chip uses cryptographic security to prevent counterfeiting. India began issuing e-passports in 2024, initially through select Passport Seva Kendras, with a phased rollout planned across the country.\n\nHow E-Gates Work\nE-gates (Automated Border Control gates) use optical character recognition (OCR) to read your passport and facial recognition to match the holder. The process takes 10–15 seconds compared to 3–5 minutes for a manual immigration check. Many airports in the UK, Europe, UAE, Singapore and Australia already operate e-gates for compatible passports.\n\nWhich Countries Currently Accept Indian E-Passports at E-Gates?\nAs of 2025, Indian e-passports are accepted at e-gates in: Singapore (Changi Airport), UAE (Dubai, Abu Dhabi), UK (select airports for pre-registered travellers via ETA), Australia (SmartGate for eligible travellers). More countries are expected to add Indian e-passport compatibility as the programme scales.\n\nBenefits for Indian Travellers:\n- Dramatically shorter immigration queues — especially at busy hubs like Dubai and Singapore\n- Reduced risk of human error in passport verification\n- Faster connection times at transit airports\n- A step towards visa-on-arrival or e-visa expansion as India's biometric credibility improves\n\nHow to Apply for an Indian E-Passport\nApply through the Passport Seva portal (passportindia.gov.in) as you would for a regular passport. E-passport issuance depends on availability at your local PSK — call ahead to confirm. The fee structure is the same as a standard passport.\n\nThe Bigger Picture: India's Travel Ambitions\nThe e-passport rollout is part of a broader Indian government effort to ease international travel for citizens. Combined with the expanding list of countries offering visa-on-arrival or e-visa to Indian passport holders (now over 60 countries), Indian travellers are enjoying genuinely improved access to the world.\n\nTrust and Trip's travel planners stay updated on visa requirements and immigration procedures for all destinations we cover. Ask us for the latest advice when planning your next international trip.",
+    image:
+      "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=1200&q=80&auto=format&fit=crop",
+    author: "Trust and Trip",
+    date: "November 16, 2025",
+    readTime: "12 min read",
+    category: "Travel Tips",
+  },
+  {
+    title: "Chardham Yatra 2025: Complete Guide, Route Map & Registration Tips",
+    slug: "chardham-yatra-2025-guide",
+    excerpt:
+      "Everything you need to plan a smooth, spiritually fulfilling Char Dham Yatra — from registration to route planning, accommodation and the best time to go.",
+    content:
+      "The Char Dham Yatra is one of the most sacred pilgrimages in Hinduism — a circular journey through four high-altitude Himalayan shrines in Uttarakhand. Completing the Yatra is believed to wash away lifelong sins and help attain moksha. For millions of devotees, it's the journey of a lifetime.\n\nThe Four Dhams:\nYamunotri (3,293m) → Gangotri (3,048m) → Kedarnath (3,583m) → Badrinath (3,133m)\n\nThe traditional route follows this west-to-east sequence, starting and ending at Haridwar or Rishikesh.\n\nComplete Route Map:\n\nDay 1-2: Delhi/NCR → Haridwar → Barkot (Yamunotri base)\nDay 3: Barkot → Janki Chatti → Yamunotri trek (6km one-way) → return to Barkot\nDay 4: Barkot → Uttarkashi (Gangotri base)\nDay 5: Uttarkashi → Gangotri darshan → Uttarkashi\nDay 6: Uttarkashi → Guptkashi/Sonprayag (Kedarnath base)\nDay 7: Sonprayag → Gaurikund → Kedarnath trek (16km) or helicopter\nDay 8: Kedarnath → return to Sonprayag → drive to Badrinath\nDay 9: Badrinath darshan → Mana village (last Indian village before Tibet)\nDay 10: Badrinath → Rishikesh/Haridwar → Delhi\n\nRegistration (Mandatory):\nOnline registration is compulsory for Kedarnath and Yamunotri to manage crowd flow. Register at registrationandtouristcare.uk.gov.in. You'll need a valid photo ID and recent photograph. Registration opens approximately 2-3 months before the temples open. Biometric registration kiosks are also available at Haridwar, Rishikesh, Sonprayag and Phata.\n\nHelicopter Services:\nHelicopter services to Kedarnath operate from: Phata, Sitapur, Guptkashi, Sersi and Agustmuni. Book well in advance — seats fill up 2-3 months ahead. IRCTC and private operators (UTT, Heritage Aviation) offer packages. One-way costs ₹4,000–₹8,000 per person.\n\nBest Time to Go:\n- April–June: Ideal. Clear skies, manageable crowds, full facilities operational.\n- September–October: Post-monsoon. Lush, scenic, cooler. Lower crowds than peak season.\n- Avoid July–August: Monsoon brings heavy rain, landslide risk and road closures.\n\nMedical Precautions:\n- Consult a doctor before travel if you have cardiac or respiratory conditions.\n- Carry prescribed medications + basic first aid.\n- Acclimatise in Haridwar/Rishikesh for 1-2 days before ascending.\n- Oxygen cylinders are available at Kedarnath and Badrinath.\n\nPacking Essentials:\nWarm layers (temperature can drop to 0°C at night even in May), rainproof jacket, trekking shoes, thermal innerwear, sunscreen, lip balm, energy snacks, water bottle, walking stick.\n\nTrust and Trip organises complete Char Dham Yatra packages from Haridwar with all accommodation, transport, porters, registration assistance and a dedicated local guide.",
+    image:
+      "https://images.unsplash.com/photo-1566296314736-6eafac81fd59?w=1200&q=80&auto=format&fit=crop",
+    author: "Trust and Trip",
+    date: "March 30, 2025",
     readTime: "8 min read",
-    category: "Guides",
-  },
-  {
-    title: "Why Slow Travel is the New Luxury",
-    slug: "slow-travel-new-luxury",
-    excerpt:
-      "In a world that rewards speed, choosing to linger has become the most radical — and rewarding — way to see the world.",
-    content:
-      "There's a quiet revolution happening in travel. Travelers are swapping crowded itineraries for single-destination deep dives.",
-    image:
-      "https://images.unsplash.com/photo-1504609813442-a8924e83f76e?w=1200&q=80&auto=format&fit=crop",
-    author: "Ishaan Patel",
-    date: "March 28, 2026",
-    readTime: "5 min read",
-    category: "Perspectives",
-  },
-  {
-    title: "A First-Timer's Guide to the Maldives",
-    slug: "maldives-first-timers-guide",
-    excerpt:
-      "Which island? Which resort? When to go? Everything you need to know before booking your Maldives escape.",
-    content: "The Maldives isn't one destination. It's 1,192 islands, each with its own personality.",
-    image:
-      "https://images.unsplash.com/photo-1540202404-1b927e27fa8b?w=1200&q=80&auto=format&fit=crop",
-    author: "Maya Verma",
-    date: "March 21, 2026",
-    readTime: "10 min read",
-    category: "Guides",
+    category: "Pilgrim",
   },
 ];
 
