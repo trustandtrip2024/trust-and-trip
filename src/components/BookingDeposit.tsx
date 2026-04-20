@@ -14,6 +14,8 @@ declare global {
 }
 
 export default function BookingDeposit({ packageSlug, packageTitle, packagePrice }: Props) {
+  const depositAmount = Math.max(5000, Math.round((packagePrice * 0.30) / 100) * 100);
+  const depositDisplay = `₹${depositAmount.toLocaleString("en-IN")}`;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -105,7 +107,7 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
         className="w-full flex items-center justify-center gap-2 bg-ink/5 hover:bg-ink text-ink hover:text-cream border border-ink/15 font-medium py-3 rounded-xl transition-all duration-200 text-sm group"
       >
         <CreditCard className="h-4 w-4" />
-        Pay ₹5,000 Deposit to Confirm Slot
+        Pay {depositDisplay} Deposit to Confirm Slot
       </button>
       <p className="text-center text-[11px] text-ink/40 mt-1.5">100% refundable · No hidden charges</p>
 
@@ -118,7 +120,7 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
             <div className="flex items-center justify-between p-5 border-b border-ink/8">
               <div>
                 <h3 className="font-display text-lg font-medium">Secure your slot</h3>
-                <p className="text-xs text-ink/50 mt-0.5">Pay ₹5,000 deposit · Balance due later</p>
+                <p className="text-xs text-ink/50 mt-0.5">Pay {depositDisplay} deposit · Balance due later</p>
               </div>
               <button onClick={() => setOpen(false)} className="h-8 w-8 rounded-full bg-ink/5 flex items-center justify-center hover:bg-ink/10 transition-colors">
                 <X className="h-4 w-4" />
@@ -135,7 +137,7 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
               </div>
               <div className="flex items-center justify-between mt-1">
                 <span className="text-xs text-gold font-medium">Deposit now</span>
-                <span className="text-sm font-bold text-gold">₹5,000</span>
+                <span className="text-sm font-bold text-gold">{depositDisplay}</span>
               </div>
             </div>
 
@@ -174,7 +176,7 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
 
               <button type="submit" disabled={loading}
                 className="w-full flex items-center justify-center gap-2 bg-gold text-ink font-semibold py-3.5 rounded-xl hover:bg-gold/90 transition-colors text-sm disabled:opacity-70">
-                {loading ? <><Loader2 className="h-4 w-4 animate-spin" />Processing…</> : <><IndianRupee className="h-4 w-4" />Pay ₹5,000 Deposit</>}
+                {loading ? <><Loader2 className="h-4 w-4 animate-spin" />Processing…</> : <><IndianRupee className="h-4 w-4" />Pay {depositDisplay} Deposit</>}
               </button>
 
               <div className="flex items-center justify-center gap-2 text-[11px] text-ink/40">

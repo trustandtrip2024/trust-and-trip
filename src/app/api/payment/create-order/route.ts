@@ -6,14 +6,16 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const DEPOSIT_AMOUNT = 500000; // ₹5,000 in paise
-
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { package_slug, package_title, package_price,
             customer_name, customer_email, customer_phone,
             travel_date, num_travellers, special_requests } = body;
+
+    // 30% of package price, minimum ₹5,000, rounded to nearest ₹100
+    const depositRupees = Math.max(5000, Math.round((package_price * 0.30) / 100) * 100);
+    const DEPOSIT_AMOUNT = depositRupees * 100; // convert to paise
 
     if (!customer_name || !customer_email || !customer_phone || !package_slug) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
