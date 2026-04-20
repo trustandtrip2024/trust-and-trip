@@ -1,53 +1,166 @@
 "use client";
 
-import { MapPin, Users, CalendarDays, Search } from "lucide-react";
-import { useTripPlanner } from "@/context/TripPlannerContext";
+import { useState, useEffect, useRef } from "react";
+import { Search, MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+const PLACEHOLDERS = [
+  "Bali honeymoon...", "Kerala backwaters...", "Maldives escape...",
+  "Manali adventure...", "Dubai family trip...", "Rajasthan heritage...",
+  "Thailand beaches...", "Switzerland snow...", "Goa getaway...",
+];
+
+const DOMESTIC = [
+  { label: "Kerala", slug: "kerala" },
+  { label: "Goa", slug: "goa" },
+  { label: "Manali", slug: "manali" },
+  { label: "Rajasthan", slug: "rajasthan" },
+  { label: "Ladakh", slug: "ladakh" },
+  { label: "Andaman", slug: "andaman" },
+  { label: "Shimla", slug: "shimla" },
+  { label: "Coorg", slug: "coorg" },
+  { label: "Varanasi", slug: "varanasi" },
+  { label: "Agra", slug: "agra" },
+];
+
+const INTERNATIONAL = [
+  { label: "Bali", slug: "bali" },
+  { label: "Maldives", slug: "maldives" },
+  { label: "Dubai", slug: "dubai" },
+  { label: "Thailand", slug: "thailand" },
+  { label: "Switzerland", slug: "switzerland" },
+  { label: "Paris", slug: "paris" },
+  { label: "Japan", slug: "japan" },
+  { label: "Singapore", slug: "singapore" },
+  { label: "Nepal", slug: "nepal" },
+  { label: "Turkey", slug: "turkey" },
+];
 
 export default function SearchBar() {
-  const { open } = useTripPlanner();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [tab, setTab] = useState<"domestic" | "international">("domestic");
+  const [phIdx, setPhIdx] = useState(0);
+  const [query, setQuery] = useState("");
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Cycle placeholder text
+  useEffect(() => {
+    const t = setInterval(() => setPhIdx((i) => (i + 1) % PLACEHOLDERS.length), 2500);
+    return () => clearInterval(t);
+  }, []);
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const destinations = tab === "domestic" ? DOMESTIC : INTERNATIONAL;
+
+  const filtered = query.trim()
+    ? [...DOMESTIC, ...INTERNATIONAL].filter((d) =>
+        d.label.toLowerCase().includes(query.toLowerCase())
+      )
+    : destinations;
+
+  const go = (slug: string) => {
+    setOpen(false);
+    setQuery("");
+    router.push(`/packages?destination=${slug}`);
+  };
+
+  const handleSearch = () => {
+    if (query.trim()) {
+      const match = [...DOMESTIC, ...INTERNATIONAL].find((d) =>
+        d.label.toLowerCase().includes(query.toLowerCase())
+      );
+      if (match) go(match.slug);
+      else router.push(`/packages`);
+    } else {
+      router.push("/packages");
+    }
+  };
 
   return (
-    <button
-      onClick={() => open()}
-      className="w-full text-left bg-cream/95 backdrop-blur-xl rounded-2xl md:rounded-full shadow-soft-lg border border-cream hover:shadow-[0_8px_40px_-8px_rgba(11,28,44,0.25)] transition-all duration-300 group"
-      aria-label="Open trip planner"
-    >
-      <div className="grid md:grid-cols-[1.3fr_1fr_1fr_auto] gap-0">
-        {/* Destination */}
-        <div className="flex items-center gap-3 px-5 py-4 md:py-3 border-b md:border-b-0 md:border-r border-ink/8">
-          <MapPin className="h-4 w-4 text-gold shrink-0" />
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-ink/50 font-medium">Destination</p>
-            <p className="text-sm font-medium text-ink/70 group-hover:text-ink transition-colors">Where to?</p>
-          </div>
-        </div>
-
-        {/* Travel Type */}
-        <div className="flex items-center gap-3 px-5 py-4 md:py-3 md:pl-5 border-b md:border-b-0 md:border-r border-ink/8">
-          <Users className="h-4 w-4 text-gold shrink-0" />
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-ink/50 font-medium">Travel Type</p>
-            <p className="text-sm font-medium text-ink/70 group-hover:text-ink transition-colors">Who&apos;s traveling?</p>
-          </div>
-        </div>
-
-        {/* Duration */}
-        <div className="flex items-center gap-3 px-5 py-4 md:py-3 md:pl-5">
-          <CalendarDays className="h-4 w-4 text-gold shrink-0" />
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-ink/50 font-medium">Duration</p>
-            <p className="text-sm font-medium text-ink/70 group-hover:text-ink transition-colors">How long?</p>
-          </div>
-        </div>
-
-        {/* Search button */}
-        <div className="px-3 py-3 flex items-center justify-center">
-          <div className="bg-ink group-hover:bg-gold text-cream group-hover:text-ink transition-all duration-300 rounded-xl md:rounded-full px-5 py-3 md:px-6 flex items-center gap-2 text-sm font-medium w-full md:w-auto justify-center">
-            <Search className="h-4 w-4" />
-            <span>Search</span>
-          </div>
-        </div>
+    <div ref={ref} className="relative w-full max-w-2xl mx-auto">
+      {/* Flat search bar */}
+      <div className="flex items-center bg-cream/95 backdrop-blur-xl rounded-2xl shadow-soft-lg border border-cream overflow-hidden">
+        <MapPin className="h-4 w-4 text-gold shrink-0 ml-5" />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setOpen(true)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          placeholder={PLACEHOLDERS[phIdx]}
+          className="flex-1 bg-transparent text-ink text-sm font-medium placeholder:text-ink/40 placeholder:font-normal outline-none px-3 py-4"
+          aria-label="Search destinations"
+          aria-expanded={open}
+        />
+        <button
+          onClick={handleSearch}
+          className="m-1.5 bg-ink hover:bg-gold text-cream hover:text-ink transition-all duration-200 rounded-xl px-5 py-3 flex items-center gap-2 text-sm font-medium shrink-0"
+        >
+          <Search className="h-4 w-4" />
+          <span className="hidden sm:inline">Search</span>
+        </button>
       </div>
-    </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-soft-lg border border-ink/8 overflow-hidden z-50">
+          {!query.trim() && (
+            <div className="flex border-b border-ink/8">
+              <button
+                onClick={() => setTab("domestic")}
+                className={`flex-1 py-3 text-sm font-medium transition-colors ${
+                  tab === "domestic" ? "text-ink border-b-2 border-gold -mb-px" : "text-ink/50 hover:text-ink"
+                }`}
+              >
+                Domestic
+              </button>
+              <button
+                onClick={() => setTab("international")}
+                className={`flex-1 py-3 text-sm font-medium transition-colors ${
+                  tab === "international" ? "text-ink border-b-2 border-gold -mb-px" : "text-ink/50 hover:text-ink"
+                }`}
+              >
+                International
+              </button>
+            </div>
+          )}
+
+          <div className="p-3 flex flex-wrap gap-2 max-h-48 overflow-y-auto">
+            {filtered.length === 0 ? (
+              <p className="text-sm text-ink/40 px-2 py-1">No destinations found</p>
+            ) : (
+              filtered.map((d) => (
+                <button
+                  key={d.slug}
+                  onClick={() => go(d.slug)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink/5 hover:bg-gold hover:text-ink text-sm text-ink/70 transition-all duration-150 font-medium"
+                >
+                  <MapPin className="h-3 w-3 text-gold" />
+                  {d.label}
+                </button>
+              ))
+            )}
+          </div>
+
+          <div className="px-4 py-2.5 border-t border-ink/5 bg-ink/2">
+            <button
+              onClick={() => { setOpen(false); router.push("/packages"); }}
+              className="text-xs text-ink/50 hover:text-gold transition-colors"
+            >
+              Browse all packages →
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
