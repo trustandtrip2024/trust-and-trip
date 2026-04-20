@@ -126,6 +126,15 @@ export default function TripPlannerModal() {
   const [dir, setDir] = useState(1);
   const [tab, setTab] = useState<"india" | "international">("india");
 
+  // Reset to step 1 every time modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setStep("destination");
+      setDir(1);
+      setResults([]);
+    }
+  }, [isOpen]);
+
   // Destination data
   const [destinations, setDestinations] = useState<
     { slug: string; name: string; country: string; image: string; priceFrom: number }[]
@@ -161,7 +170,7 @@ export default function TripPlannerModal() {
       .finally(() => setDestsLoading(false));
   }, [isOpen, destinations.length]);
 
-  // Fetch results when we hit the results step
+  // Fetch results when we hit the results step — with progressive fallback
   useEffect(() => {
     if (step !== "results") return;
     setResultsLoading(true);
@@ -169,28 +178,44 @@ export default function TripPlannerModal() {
     const dur = selections.duration ? DUR_MAP[selections.duration] : null;
     const bud = BUDGETS.find((b) => b.value === selections.budget);
 
-    const filters = [
-      `_type == "package"`,
-      selections.destination ? `destination->slug.current == "${selections.destination}"` : null,
-      selections.travelType ? `travelType == "${selections.travelType}"` : null,
-      dur ? `days >= ${dur.min}` : null,
-      dur ? `days <= ${dur.max}` : null,
-      bud ? `price >= ${bud.min}` : null,
-      bud && bud.max < 9999999 ? `price <= ${bud.max}` : null,
-    ]
-      .filter(Boolean)
-      .join(" && ");
+    type DurEntry = { min: number; max: number } | null | undefined;
+    type BudEntry = { min: number; max: number; value: string; label: string; symbol: string; range: string; desc: string } | null | undefined;
+    const buildQuery = (dest: string | null, type: string | null, d: DurEntry, b: BudEntry) => {
+      const filters = [
+        `_type == "package"`,
+        dest ? `destination->slug.current == "${dest}"` : null,
+        type ? `travelType == "${type}"` : null,
+        d ? `days >= ${d.min}` : null,
+        d ? `days <= ${d.max}` : null,
+        b ? `price >= ${b.min}` : null,
+        b && b.max < 9999999 ? `price <= ${b.max}` : null,
+      ].filter(Boolean).join(" && ");
+      return `*[${filters}] | order(rating desc) [0...6] { ${PACKAGE_FIELDS} }`;
+    };
 
+    const mapResults = (raw: any[]) =>
+      raw.map((p) => ({
+        ...p,
+        image: p.image ? urlFor(p.image).width(200).height(150).quality(75).url() : "",
+      }));
+
+    // Try exact match first, then progressively loosen filters
     sanityClient
-      .fetch(`*[${filters}] | order(rating desc) [0...6] { ${PACKAGE_FIELDS} }`)
-      .then((raw: any[]) =>
-        setResults(
-          raw.map((p) => ({
-            ...p,
-            image: p.image ? urlFor(p.image).width(200).height(150).quality(75).url() : "",
-          }))
-        )
-      )
+      .fetch(buildQuery(selections.destination || null, selections.travelType || null, dur, bud))
+      .then(async (raw: any[]) => {
+        if (raw.length > 0) return mapResults(raw);
+        // Loosen: drop duration + budget, keep dest + type
+        const r2 = await sanityClient.fetch(buildQuery(selections.destination || null, selections.travelType || null, null, null));
+        if (r2.length > 0) return mapResults(r2);
+        // Loosen more: drop type too, keep dest
+        const r3 = await sanityClient.fetch(buildQuery(selections.destination || null, null, null, null));
+        if (r3.length > 0) return mapResults(r3);
+        // Final fallback: top-rated packages regardless
+        const r4 = await sanityClient.fetch(buildQuery(null, null, null, null));
+        return mapResults(r4);
+      })
+      .then(setResults)
+      .catch(() => setResults([]))
       .finally(() => setResultsLoading(false));
   }, [step]); // eslint-disable-line react-hooks/exhaustive-deps
 
