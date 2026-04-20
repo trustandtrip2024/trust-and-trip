@@ -5,13 +5,14 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getPackageBySlug, getAllPackageSlugs, getRelatedPackages } from "@/lib/sanity-queries";
-import { testimonials } from "@/lib/data";
 import { getGalleryImages } from "@/lib/gallery-images";
 import Accordion from "@/components/Accordion";
 import PackageGallery from "@/components/PackageGallery";
 import PackageSlider from "@/components/PackageSlider";
 import PackageEnquiryCTA from "@/components/PackageEnquiryCTA";
 import PackageSectionNav from "@/components/PackageSectionNav";
+import ReviewsList from "@/components/ReviewsList";
+import ReviewForm from "@/components/ReviewForm";
 import JsonLd from "@/components/JsonLd";
 import Image2 from "next/image";
 import {
@@ -284,42 +285,16 @@ export default async function PackageDetail({ params }: Props) {
             <section id="reviews" className="mb-12 scroll-mt-32 pt-10 border-t border-ink/8">
               <div className="flex items-center justify-between gap-4 mb-6">
                 <div>
-                  <span className="eyebrow">Reviews</span>
+                  <span className="eyebrow">Traveler Reviews</span>
                   <h2 className="heading-section mt-2 text-balance">
                     Travelers who've
                     <span className="italic text-gold font-light"> been there.</span>
                   </h2>
                 </div>
-                <div className="text-right shrink-0">
-                  <p className="font-display text-4xl font-medium text-gold">{pkg.rating}</p>
-                  <div className="flex gap-0.5 justify-end mt-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`h-3.5 w-3.5 ${i < Math.floor(pkg.rating ?? 0) ? "fill-gold text-gold" : "text-ink/20"}`} />
-                    ))}
-                  </div>
-                  <p className="text-xs text-ink/40 mt-0.5">{pkg.reviews} reviews</p>
-                </div>
               </div>
-              <div className="grid md:grid-cols-2 gap-4">
-                {testimonials.slice(0, 4).map((t, i) => (
-                  <div key={i} className="bg-cream rounded-2xl p-5 border border-ink/5">
-                    <div className="flex gap-0.5 mb-3">
-                      {[...Array(t.rating)].map((_, j) => (
-                        <Star key={j} className="h-3.5 w-3.5 fill-gold text-gold" />
-                      ))}
-                    </div>
-                    <p className="text-sm text-ink/80 leading-relaxed mb-4">&ldquo;{t.quote}&rdquo;</p>
-                    <div className="flex items-center gap-3 pt-3 border-t border-ink/6">
-                      <div className="relative h-8 w-8 rounded-full overflow-hidden shrink-0 ring-2 ring-gold/20">
-                        <Image2 src={t.image} alt={t.name} fill sizes="32px" className="object-cover" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-medium text-ink">{t.name}</p>
-                        <p className="text-[10px] text-ink/40">{t.trip} · {t.location}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              <ReviewsList packageSlug={pkg.slug} initialRating={pkg.rating} />
+              <div className="mt-6">
+                <ReviewForm packageSlug={pkg.slug} packageTitle={pkg.title} />
               </div>
             </section>
 
