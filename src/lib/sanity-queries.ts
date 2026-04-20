@@ -169,6 +169,14 @@ export async function getBestChoicePackages(): Promise<Package[]> {
   return raw.map(mapPackage);
 }
 
+export async function getPackagesByType(travelType: string): Promise<Package[]> {
+  const raw = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package" && travelType == $type] | order(rating desc, featured desc) { ${PACKAGE_FIELDS} }`,
+    { type: travelType }
+  );
+  return raw.map(mapPackage);
+}
+
 export async function getPackagesByDestination(destinationSlug: string): Promise<Package[]> {
   const raw = await sanityClient.fetch<SanityPackage[]>(
     `*[_type == "package" && destination->slug.current == $slug] | order(rating desc) { ${PACKAGE_FIELDS} }`,

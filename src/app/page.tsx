@@ -109,30 +109,40 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          {/* 3-col tile grid — horizontal scroll on mobile for bigger tiles */}
-          <div className="flex sm:grid sm:grid-cols-3 gap-2.5 md:gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-5 px-5 sm:mx-0 sm:px-0 pb-1 sm:pb-0">
-            {experiences.map((exp, i) => (
+          {/* Experience tiles — big cards, horizontal scroll mobile */}
+          <div className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-proximity scroll-smooth no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 pb-1"
+            style={{ WebkitOverflowScrolling: "touch" }}>
+            {experiences.map((exp) => (
               <Link
                 key={exp.slug}
-                href={`/experiences#${exp.slug}`}
+                href={`/experiences/${exp.slug}`}
                 aria-label={`${exp.title} — ${exp.description}`}
-                className="group relative overflow-hidden rounded-xl md:rounded-2xl aspect-[3/4] sm:aspect-square md:aspect-[4/5] bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 snap-start shrink-0 w-[52vw] sm:w-auto"
+                className="group relative overflow-hidden rounded-2xl md:rounded-3xl bg-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 snap-start shrink-0
+                  w-[72vw] sm:w-[44vw] md:w-[calc(33.333%-11px)]
+                  aspect-[3/4] md:aspect-[3/4]"
               >
                 <Image
                   src={exp.image}
                   alt={exp.title}
                   fill
-                  sizes="(max-width: 640px) 52vw, (max-width: 1024px) 33vw, 300px"
+                  sizes="(max-width: 640px) 72vw, (max-width: 1024px) 44vw, 33vw"
                   className="object-cover transition-transform duration-[1500ms] group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/40 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-3 md:p-5 text-cream">
-                  <p className="text-[9px] uppercase tracking-[0.2em] text-gold mb-1 opacity-80">
-                    {exp.category}
-                  </p>
-                  <h3 className="font-display text-sm md:text-xl font-medium leading-tight">
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/30 to-transparent" />
+
+                {/* Arrow */}
+                <div className="absolute top-5 right-5 h-10 w-10 rounded-full bg-cream/15 backdrop-blur-md border border-cream/20 flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-500">
+                  <ArrowRight className="h-4 w-4 text-cream group-hover:text-ink -rotate-45" />
+                </div>
+
+                <div className="absolute inset-x-0 bottom-0 p-5 md:p-7 text-cream">
+                  <p className="text-[9px] uppercase tracking-[0.25em] text-gold mb-2">{exp.category}</p>
+                  <h3 className="font-display text-xl md:text-2xl font-medium leading-tight mb-2">
                     {exp.title}
                   </h3>
+                  <p className="text-xs text-cream/60 leading-relaxed line-clamp-2 max-w-xs">
+                    {exp.description}
+                  </p>
                 </div>
               </Link>
             ))}

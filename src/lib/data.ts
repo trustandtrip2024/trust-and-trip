@@ -54,6 +54,9 @@ export type Experience = {
   category: string;
   image: string;
   description: string;
+  travelType?: string; // maps to Package.travelType for filtering
+  tagline?: string;
+  highlights?: string[];
 };
 
 export type Testimonial = {
@@ -612,49 +615,61 @@ export const experiences: Experience[] = [
     title: "Honeymoon Escapes",
     slug: "honeymoon",
     category: "Couples",
-    image:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80&auto=format&fit=crop",
+    travelType: "Couple",
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=80&auto=format&fit=crop",
     description: "Private villas, candlelit dinners, and destinations designed for two.",
+    tagline: "Just the two of you. Just the way it should be.",
+    highlights: ["Private villa stays", "Candlelit beach dinners", "Couples spa rituals", "Sunrise experiences", "Photographer-included packages"],
   },
   {
     title: "Family Adventures",
     slug: "family",
     category: "Family",
-    image:
-      "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1200&q=80&auto=format&fit=crop",
+    travelType: "Family",
+    image: "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1200&q=80&auto=format&fit=crop",
     description: "Journeys that bring generations closer with room for every age.",
+    tagline: "Every age, every smile, one trip.",
+    highlights: ["Kid-friendly itineraries", "Three-generation friendly stays", "Theme parks & wildlife", "Safe & supervised activities", "Flexible pacing"],
   },
   {
     title: "Solo Journeys",
     slug: "solo",
     category: "Solo",
-    image:
-      "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80&auto=format&fit=crop",
+    travelType: "Solo",
+    image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&q=80&auto=format&fit=crop",
     description: "Curated trips for solo travelers who seek meaning on the move.",
+    tagline: "Your pace. Your rules. Your story.",
+    highlights: ["24/7 concierge support", "Solo-friendly accommodations", "Meet-local experiences", "Safe destination guides", "Flexible booking"],
   },
   {
     title: "Wellness Retreats",
     slug: "wellness",
     category: "Wellness",
-    image:
-      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80&auto=format&fit=crop",
+    travelType: "Solo",
+    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80&auto=format&fit=crop",
     description: "Yoga, ayurveda, and digital detox in world's most serene corners.",
+    tagline: "Come back lighter than you left.",
+    highlights: ["Ayurveda & spa resorts", "Yoga & meditation retreats", "Digital detox stays", "Nature immersion", "Healthy cuisine experiences"],
   },
   {
     title: "Adventure Expeditions",
     slug: "adventure",
     category: "Adventure",
-    image:
-      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=80&auto=format&fit=crop",
+    travelType: "Group",
+    image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=80&auto=format&fit=crop",
     description: "Trek, dive, raft and climb through nature's most dramatic landscapes.",
+    tagline: "For those who need a bigger horizon.",
+    highlights: ["High-altitude treks", "Scuba & snorkelling", "White-water rafting", "Camping under stars", "Expert-guided expeditions"],
   },
   {
     title: "Cultural Immersions",
     slug: "cultural",
     category: "Cultural",
-    image:
-      "https://images.unsplash.com/photo-1528127269322-539801943592?w=1200&q=80&auto=format&fit=crop",
+    travelType: "Group",
+    image: "https://images.unsplash.com/photo-1528127269322-539801943592?w=1200&q=80&auto=format&fit=crop",
     description: "Home-stays, master classes, and rituals beyond the tourist trail.",
+    tagline: "Travel that changes the way you see the world.",
+    highlights: ["Local home-stays", "Cooking & craft classes", "Festival & ritual access", "Heritage walks", "Off-the-beaten-path routes"],
   },
 ];
 

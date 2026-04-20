@@ -32,7 +32,7 @@ export default function ExperiencesPage() {
             <Link
               key={exp.slug}
               id={exp.slug}
-              href="/customize-trip"
+              href={`/experiences/${exp.slug}`}
               className="group relative aspect-[4/5] overflow-hidden rounded-3xl bg-ink"
             >
               <Image
