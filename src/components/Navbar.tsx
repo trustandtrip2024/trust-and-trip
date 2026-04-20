@@ -100,6 +100,15 @@ export default function Navbar() {
               Plan My Trip
             </Link>
 
+            {/* Mobile: call button */}
+            <a
+              href="tel:+918115999588"
+              className="lg:hidden p-2 rounded-full hover:bg-gold/10 transition-colors"
+              aria-label="Call us"
+            >
+              <Phone className="h-[18px] w-[18px] text-ink" />
+            </a>
+
             <button
               onClick={() => setMobileOpen(true)}
               className="lg:hidden p-2 rounded-full hover:bg-ink/5 transition-colors"

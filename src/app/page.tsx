@@ -164,6 +164,45 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── Browse by Travel Style ────────────────────────────── */}
+      <section className="py-14 md:py-20 bg-sand/30" aria-labelledby="style-heading">
+        <div className="container-custom">
+          <div className="flex items-end justify-between gap-4 mb-8 md:mb-10">
+            <div>
+              <span className="eyebrow">Travel Style</span>
+              <h2
+                id="style-heading"
+                className="heading-section mt-2 max-w-xs md:max-w-lg text-balance"
+              >
+                Every trip starts with
+                <span className="italic text-gold font-light"> a feeling.</span>
+              </h2>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
+            {[
+              { label: "Honeymoon", icon: "💑", type: "Couple", bg: "from-rose-200/60 to-pink-100/40" },
+              { label: "Family", icon: "👨‍👩‍👧‍👦", type: "Family", bg: "from-sky-200/60 to-blue-100/40" },
+              { label: "Group", icon: "🎉", type: "Group", bg: "from-emerald-200/60 to-green-100/40" },
+              { label: "Solo", icon: "🧭", type: "Solo", bg: "from-violet-200/60 to-purple-100/40" },
+              { label: "Adventure", icon: "🏔️", type: "Adventure", bg: "from-amber-200/60 to-orange-100/40" },
+            ].map(({ label, icon, type, bg }) => (
+              <Link
+                key={type}
+                href={`/packages?type=${type}`}
+                className={`group relative flex flex-col items-center justify-center gap-3 p-6 rounded-2xl bg-gradient-to-br ${bg} border border-ink/5 hover:border-gold/30 hover:shadow-soft transition-all duration-300 hover:-translate-y-1`}
+              >
+                <span className="text-3xl md:text-4xl">{icon}</span>
+                <span className="font-display text-sm md:text-base font-medium text-ink group-hover:text-gold transition-colors">
+                  {label}
+                </span>
+                <ArrowRight className="h-3.5 w-3.5 text-ink/30 group-hover:text-gold group-hover:translate-x-1 transition-all" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Explore India ─────────────────────────────────────── */}
       {domesticDestinations.length > 0 && (
         <section className="py-14 md:py-20" aria-labelledby="domestic-heading">
@@ -191,9 +230,12 @@ export default async function HomePage() {
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 md:gap-4">
+            {/* Mobile: horizontal scroll rail; md+: 3-col grid */}
+            <div className="flex md:grid md:grid-cols-3 gap-2.5 md:gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 pb-1 md:pb-0">
               {domesticDestinations.map((d, i) => (
-                <DestinationTile key={d.slug} destination={d} index={i} />
+                <div key={d.slug} className="snap-start shrink-0 w-[58vw] sm:w-[44vw] md:w-auto">
+                  <DestinationTile destination={d} index={i} />
+                </div>
               ))}
             </div>
           </div>
@@ -227,9 +269,12 @@ export default async function HomePage() {
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 md:gap-4">
+            {/* Mobile: horizontal scroll rail; md+: 3-col grid */}
+            <div className="flex md:grid md:grid-cols-3 gap-2.5 md:gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 pb-1 md:pb-0">
               {internationalDestinations.map((d, i) => (
-                <DestinationTile key={d.slug} destination={d} index={i} />
+                <div key={d.slug} className="snap-start shrink-0 w-[58vw] sm:w-[44vw] md:w-auto">
+                  <DestinationTile destination={d} index={i} />
+                </div>
               ))}
             </div>
           </div>

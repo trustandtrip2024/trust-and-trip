@@ -77,39 +77,48 @@ export default function PackageCard({
         )}
       </div>
 
-      <div className="p-6 flex-1 flex flex-col">
+      <div className="p-4 md:p-6 flex-1 flex flex-col">
         {destinationName && (
           <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-[0.2em] text-ink/50">
             <MapPin className="h-3 w-3" />
             {destinationName}
-            {travelType && <span className="text-ink/30">·</span>}
-            {travelType && <span>{travelType}</span>}
+            {travelType && (
+              <>
+                <span className="text-ink/30">·</span>
+                <span className="bg-ink/5 px-2 py-0.5 rounded-full">{travelType}</span>
+              </>
+            )}
           </div>
         )}
 
-        <h3 className="font-display text-xl md:text-2xl font-medium leading-tight text-balance group-hover:text-gold transition-colors duration-300">
+        <h3 className="font-display text-lg md:text-xl font-medium leading-tight text-balance group-hover:text-gold transition-colors duration-300">
           {title}
         </h3>
 
-        <div className="flex items-center gap-4 mt-3 text-xs text-ink/60">
+        <div className="flex items-center gap-3 mt-2.5 text-xs text-ink/60">
           <span className="inline-flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5" />
             {duration}
           </span>
-          {reviews && <span>· {reviews} reviews</span>}
+          {reviews && (
+            <span className="inline-flex items-center gap-1">
+              <Star className="h-3 w-3 fill-gold text-gold" />
+              {rating} <span className="text-ink/40">({reviews})</span>
+            </span>
+          )}
         </div>
 
-        <div className="mt-auto pt-5 mt-5 flex items-end justify-between border-t border-ink/5">
+        <div className="mt-auto pt-4 mt-4 flex items-end justify-between border-t border-ink/5">
           <div>
             <p className="text-[10px] uppercase tracking-wider text-ink/50">Starting from</p>
-            <p className="font-display text-2xl text-ink mt-0.5">
+            <p className="font-display text-xl md:text-2xl text-ink mt-0.5">
               ₹{price.toLocaleString("en-IN")}
               <span className="text-xs text-ink/50 font-sans font-normal ml-1">/ person</span>
             </p>
           </div>
           <Link
             href={`/packages/${slug}`}
-            className="h-10 w-10 rounded-full bg-ink hover:bg-gold text-cream hover:text-ink transition-all duration-300 flex items-center justify-center group-hover:scale-110"
+            className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-ink hover:bg-gold text-cream hover:text-ink transition-all duration-300 flex items-center justify-center group-hover:scale-110"
             aria-label={`View details for ${title}`}
           >
             <ArrowRight className="h-4 w-4" />

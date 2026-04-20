@@ -1,14 +1,15 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import PackageCard from "./PackageCard";
 import type { Package } from "@/lib/data";
 
 interface Props {
-  heading: string;
   eyebrow: string;
+  heading: string;
+  headingItalic?: string;
   packages: Package[];
   viewAllHref?: string;
   viewAllLabel?: string;
@@ -16,23 +17,35 @@ interface Props {
 }
 
 export default function PackageSlider({
-  heading,
   eyebrow,
+  heading,
+  headingItalic,
   packages,
   viewAllHref = "/packages",
   viewAllLabel = "View all",
   id,
 }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const scroll = (dir: "left" | "right") => {
     if (!scrollRef.current) return;
     const card = scrollRef.current.querySelector("[data-card]") as HTMLElement | null;
-    const cardW = card ? card.offsetWidth + 20 : 320;
+    const cardW = card ? card.offsetWidth + 16 : 300;
     scrollRef.current.scrollBy({ left: dir === "left" ? -cardW : cardW, behavior: "smooth" });
   };
 
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    const card = scrollRef.current.querySelector("[data-card]") as HTMLElement | null;
+    const cardW = card ? card.offsetWidth + 16 : 300;
+    const idx = Math.round(scrollRef.current.scrollLeft / cardW);
+    setActiveIndex(idx);
+  }, []);
+
   if (!packages.length) return null;
+
+  const dotCount = Math.min(packages.length, 8);
 
   return (
     <div>
@@ -46,8 +59,8 @@ export default function PackageSlider({
           />
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          {/* Arrow buttons — desktop */}
-          <div className="hidden md:flex items-center gap-1.5">
+          {/* Arrow buttons — tablet+ */}
+          <div className="hidden sm:flex items-center gap-1.5">
             <button
               onClick={() => scroll("left")}
               aria-label="Previous packages"
@@ -74,20 +87,21 @@ export default function PackageSlider({
         </div>
       </div>
 
-      {/* Slider */}
+      {/* Slider — shows ~1.35 cards on mobile, ~2.1 on tablet, 3 on desktop */}
       <div
         ref={scrollRef}
         id={id}
         role="list"
         aria-label={eyebrow}
-        className="flex gap-4 md:gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 pb-2"
+        onScroll={handleScroll}
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 pb-1"
       >
         {packages.map((p, i) => (
           <div
             key={p.slug}
             role="listitem"
             data-card
-            className="snap-start shrink-0 w-[80vw] sm:w-[46vw] lg:w-[calc(33.333%-14px)]"
+            className="snap-start shrink-0 w-[73vw] sm:w-[44vw] md:w-[42vw] lg:w-[calc(33.333%-14px)]"
           >
             <PackageCard
               title={p.title}
@@ -107,10 +121,27 @@ export default function PackageSlider({
         ))}
       </div>
 
-      {/* Mobile swipe hint */}
-      <p className="mt-3 text-center text-[10px] text-ink/40 tracking-widest uppercase md:hidden">
-        swipe to explore
-      </p>
+      {/* Scroll progress dots — mobile/tablet */}
+      <div className="mt-4 flex items-center justify-center gap-1.5 lg:hidden">
+        {Array.from({ length: dotCount }).map((_, i) => (
+          <button
+            key={i}
+            aria-label={`Go to package ${i + 1}`}
+            onClick={() => {
+              if (!scrollRef.current) return;
+              const card = scrollRef.current.querySelector("[data-card]") as HTMLElement | null;
+              const cardW = card ? card.offsetWidth + 16 : 300;
+              scrollRef.current.scrollTo({ left: i * cardW, behavior: "smooth" });
+              setActiveIndex(i);
+            }}
+            className={`rounded-full transition-all duration-300 ${
+              activeIndex === i
+                ? "w-5 h-1.5 bg-gold"
+                : "w-1.5 h-1.5 bg-ink/20 hover:bg-ink/40"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

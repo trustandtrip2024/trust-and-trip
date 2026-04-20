@@ -3,8 +3,16 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Star, PlayCircle } from "lucide-react";
+import { ArrowRight, Star, PlayCircle, Heart, Users, UserCheck, User, Backpack } from "lucide-react";
 import SearchBar from "./SearchBar";
+
+const personaPills = [
+  { label: "Honeymoon", icon: Heart, type: "Couple", color: "hover:bg-rose-500/20 hover:border-rose-400/50" },
+  { label: "Family", icon: Users, type: "Family", color: "hover:bg-blue-500/20 hover:border-blue-400/50" },
+  { label: "Group", icon: UserCheck, type: "Group", color: "hover:bg-green-500/20 hover:border-green-400/50" },
+  { label: "Solo", icon: User, type: "Solo", color: "hover:bg-purple-500/20 hover:border-purple-400/50" },
+  { label: "Adventure", icon: Backpack, type: "Adventure", color: "hover:bg-orange-500/20 hover:border-orange-400/50" },
+];
 
 export default function Hero() {
   return (
@@ -105,6 +113,28 @@ export default function Hero() {
             <PlayCircle className="h-5 w-5" />
             Watch our story
           </Link>
+        </motion.div>
+
+        {/* Persona pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.4, duration: 0.7 }}
+          className="mt-8 flex flex-wrap gap-2"
+        >
+          <span className="text-cream/40 text-[10px] uppercase tracking-[0.2em] self-center mr-1 hidden sm:block">
+            I&apos;m traveling for
+          </span>
+          {personaPills.map(({ label, icon: Icon, type, color }) => (
+            <Link
+              key={type}
+              href={`/packages?type=${type}`}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-cream/20 bg-cream/10 backdrop-blur-sm text-cream/80 text-xs font-medium tracking-wide transition-all duration-300 ${color} hover:text-cream`}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {label}
+            </Link>
+          ))}
         </motion.div>
       </div>
 

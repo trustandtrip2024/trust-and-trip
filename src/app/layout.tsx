@@ -3,6 +3,7 @@ import { Fraunces, DM_Sans } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import "../styles/globals.css";
 
 const fraunces = Fraunces({
@@ -41,9 +42,10 @@ export default function RootLayout({
     <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`}>
       <body className="min-h-screen flex flex-col bg-cream text-ink">
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-16 lg:pb-0">{children}</main>
         <Footer />
         <FloatingWhatsApp />
+        <MobileBottomNav />
       </body>
     </html>
   );
