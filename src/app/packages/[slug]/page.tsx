@@ -10,6 +10,7 @@ import Accordion from "@/components/Accordion";
 import TestimonialCard from "@/components/TestimonialCard";
 import CTASection from "@/components/CTASection";
 import PackageEnquiryCTA from "@/components/PackageEnquiryCTA";
+import JsonLd from "@/components/JsonLd";
 import {
   Clock,
   Star,
@@ -35,8 +36,21 @@ export async function generateMetadata({ params }: Props) {
   const p = await getPackageBySlug(params.slug);
   if (!p) return {};
   return {
-    title: `${p.title} — Trust and Trip`,
+    title: p.title,
     description: p.description,
+    openGraph: {
+      title: p.title,
+      description: p.description,
+      images: [{ url: p.heroImage, width: 1200, height: 630, alt: p.title }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: p.title,
+      description: p.description,
+      images: [p.heroImage],
+    },
+    alternates: { canonical: `https://trustandtrip.com/packages/${p.slug}` },
   };
 }
 
@@ -46,6 +60,35 @@ export default async function PackageDetail({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: pkg.title,
+        description: pkg.description,
+        image: pkg.heroImage,
+        brand: { "@type": "Brand", name: "Trust and Trip" },
+        offers: {
+          "@type": "Offer",
+          url: `https://trustandtrip.com/packages/${pkg.slug}`,
+          priceCurrency: "INR",
+          price: pkg.price,
+          priceValidUntil: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+          availability: pkg.limitedSlots
+            ? "https://schema.org/LimitedAvailability"
+            : "https://schema.org/InStock",
+          seller: { "@type": "TravelAgency", name: "Trust and Trip" },
+        },
+        ...(pkg.rating && {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: pkg.rating,
+            reviewCount: pkg.reviews,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }),
+      }} />
+
       {/* Hero */}
       <section className="relative h-[80vh] min-h-[560px] w-full overflow-hidden bg-ink">
         <Image

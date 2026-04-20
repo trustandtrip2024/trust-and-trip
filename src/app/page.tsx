@@ -1,5 +1,9 @@
 export const revalidate = 30;
 
+export const metadata = {
+  alternates: { canonical: "https://trustandtrip.com" },
+};
+
 import Hero from "@/components/Hero";
 import StatCounter from "@/components/StatCounter";
 import DestinationTile from "@/components/DestinationTile";

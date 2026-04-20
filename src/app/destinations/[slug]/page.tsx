@@ -7,6 +7,7 @@ import Link from "next/link";
 import { getDestinationBySlug, getAllDestinationSlugs, getPackagesByDestination } from "@/lib/sanity-queries";
 import PackageCard from "@/components/PackageCard";
 import CTASection from "@/components/CTASection";
+import JsonLd from "@/components/JsonLd";
 import { Calendar, Clock, MapPin, ChevronRight, ArrowRight } from "lucide-react";
 
 interface Props {
@@ -22,8 +23,19 @@ export async function generateMetadata({ params }: Props) {
   const d = await getDestinationBySlug(params.slug);
   if (!d) return {};
   return {
-    title: `${d.name}, ${d.country} — Trust and Trip`,
-    description: d.tagline,
+    title: `${d.name} Tour Packages — ${d.tagline}`,
+    description: `Explore ${d.name}, ${d.country}. ${d.overview?.slice(0, 155)}…`,
+    openGraph: {
+      title: `${d.name} — ${d.tagline}`,
+      description: d.overview?.slice(0, 200),
+      images: [{ url: d.heroImage, width: 1200, height: 630, alt: d.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${d.name} — ${d.tagline}`,
+      images: [d.heroImage],
+    },
+    alternates: { canonical: `https://trustandtrip.com/destinations/${d.slug}` },
   };
 }
 
@@ -35,6 +47,20 @@ export default async function DestinationDetail({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "TouristDestination",
+        name: destination.name,
+        description: destination.overview,
+        url: `https://trustandtrip.com/destinations/${destination.slug}`,
+        image: destination.heroImage,
+        touristType: ["Couple", "Family", "Group", "Solo"],
+        includesAttraction: (destination.thingsToDo || []).map((t) => ({
+          "@type": "TouristAttraction",
+          name: t,
+        })),
+      }} />
+
       {/* Hero */}
       <section className="relative h-[85vh] min-h-[600px] w-full overflow-hidden bg-ink">
         <Image

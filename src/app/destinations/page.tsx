@@ -6,8 +6,13 @@ import { getDestinations } from "@/lib/sanity-queries";
 import Image from "next/image";
 
 export const metadata = {
-  title: "Destinations — Trust and Trip",
-  description: "Explore 60+ curated destinations designed for every kind of traveler.",
+  title: "Destinations — Explore 23 Curated Travel Destinations",
+  description: "From Kerala backwaters to Maldives overwater villas — browse 23 handpicked destinations across India and the world with Trust and Trip.",
+  alternates: { canonical: "https://trustandtrip.com/destinations" },
+  openGraph: {
+    title: "Destinations — Trust and Trip",
+    description: "Browse 23 curated destinations across India and the world.",
+  },
 };
 
 export default async function DestinationsPage() {

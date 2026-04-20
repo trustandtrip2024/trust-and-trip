@@ -5,8 +5,13 @@ import PackagesClient from "./PackagesClient";
 import CTASection from "@/components/CTASection";
 
 export const metadata = {
-  title: "Packages — Trust and Trip",
-  description: "40+ handcrafted tour packages across India and the world — for couples, families, groups and solo travelers.",
+  title: "Tour Packages — Handcrafted Trips for Every Traveller",
+  description: "Browse 130+ handcrafted tour packages across India and the world — honeymoon, family, group and solo trips starting from ₹10,000.",
+  alternates: { canonical: "https://trustandtrip.com/packages" },
+  openGraph: {
+    title: "Tour Packages — Trust and Trip",
+    description: "130+ handcrafted packages across 23 destinations. Couples, families, groups and solo.",
+  },
 };
 
 export default async function PackagesPage({
