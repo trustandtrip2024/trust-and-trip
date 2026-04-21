@@ -170,6 +170,57 @@ export const DESTINATION_GALLERY: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=1600&q=85&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=1600&q=85&auto=format&fit=crop",
   ],
+  kashmir: [
+    "https://images.unsplash.com/photo-1566837945700-30057527ade0?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1609766857413-21c26b143aca?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1598430234309-12b39a27d2d7?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1602825206569-4e7d6ab40e84?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1579165466741-7f35e4755660?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1527786356703-4b100091cd2c?w=1600&q=85&auto=format&fit=crop",
+  ],
+  "himachal-pradesh": [
+    "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1626015365107-3a71e18c5268?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1609766857413-21c26b143aca?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1580746738099-78d6833b8bcc?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=85&auto=format&fit=crop",
+  ],
+  santorini: [
+    "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1601581875309-fafbf2d3ed3a?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1555993539-1732b0258235?w=1600&q=85&auto=format&fit=crop",
+  ],
+  vietnam: [
+    "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1600&q=85&auto=format&fit=crop",
+  ],
+  "spiti-valley": [
+    "https://images.unsplash.com/photo-1596627115620-48a4b09aff07?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1580746738099-78d6833b8bcc?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=85&auto=format&fit=crop",
+  ],
+  uttarakhand: [
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1580746738099-78d6833b8bcc?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1622308644420-b20142b1e4fc?w=1600&q=85&auto=format&fit=crop",
+  ],
+  rishikesh: [
+    "https://images.unsplash.com/photo-1591020887970-c6a61c1cd5ea?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1624806992066-5ffcf7ca186b?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1554476347-8cfe14f5d652?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1580746738099-78d6833b8bcc?w=1600&q=85&auto=format&fit=crop",
+  ],
 };
 
 export function getGalleryImages(destinationSlug: string, heroImage: string): string[] {

@@ -76,11 +76,14 @@ type SanityDestination = Omit<Destination, "image" | "heroImage"> & {
 export async function getDestinations(): Promise<Destination[]> {
   return cached("sanity:destinations", TTL.long, async () => {
     const raw = await sanityClient.fetch<SanityDestination[]>(DESTINATIONS_QUERY);
-    return raw.map((d) => ({
-      ...d,
-      image: d.image ? urlFor(d.image).width(1200).quality(80).url() : "",
-      heroImage: d.heroImage ? urlFor(d.heroImage).width(2400).quality(85).url() : "",
-    }));
+    return raw.map((d) => {
+      const fallback = galleryImage(d.slug) ?? FALLBACK_DEST_IMAGE;
+      return {
+        ...d,
+        image: d.image ? urlFor(d.image).width(1200).quality(80).url() : fallback,
+        heroImage: d.heroImage ? urlFor(d.heroImage).width(2400).quality(85).url() : fallback,
+      };
+    });
   });
 }
 
@@ -88,10 +91,11 @@ export async function getDestinationBySlug(slug: string): Promise<Destination | 
   return cached(`sanity:destination:${slug}`, TTL.medium, async () => {
     const raw = await sanityClient.fetch<SanityDestination | null>(DESTINATION_BY_SLUG_QUERY, { slug });
     if (!raw) return null;
+    const fallback = galleryImage(raw.slug) ?? FALLBACK_DEST_IMAGE;
     return {
       ...raw,
-      image: raw.image ? urlFor(raw.image).width(2400).quality(85).url() : "",
-      heroImage: raw.heroImage ? urlFor(raw.heroImage).width(2400).quality(85).url() : "",
+      image: raw.image ? urlFor(raw.image).width(2400).quality(85).url() : fallback,
+      heroImage: raw.heroImage ? urlFor(raw.heroImage).width(2400).quality(85).url() : fallback,
     };
   });
 }
@@ -137,6 +141,27 @@ const FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1200&q=80&auto=format&fit=crop";
 const FALLBACK_HERO =
   "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=2400&q=85&auto=format&fit=crop";
+const FALLBACK_DEST_IMAGE =
+  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80&auto=format&fit=crop";
+
+// Some Sanity slugs differ from gallery keys — map them here
+const SLUG_ALIASES: Record<string, string> = {
+  "himachal-pradesh": "himachal-pradesh",
+  himachal: "himachal-pradesh",
+  manali: "himachal-pradesh",
+  shimla: "himachal-pradesh",
+  "spiti-valley": "spiti-valley",
+  spiti: "spiti-valley",
+  uttarakhand: "uttarakhand",
+  rishikesh: "rishikesh",
+  "andaman-and-nicobar": "andaman",
+  "andaman-nicobar": "andaman",
+};
+
+function galleryImage(slug: string): string | null {
+  const key = SLUG_ALIASES[slug] ?? slug;
+  return DESTINATION_GALLERY[key]?.[0] ?? null;
+}
 
 type SanityPackage = Omit<Package, "image" | "heroImage"> & {
   image: any;
@@ -144,8 +169,7 @@ type SanityPackage = Omit<Package, "image" | "heroImage"> & {
 };
 
 function mapPackage(p: SanityPackage): Package {
-  const destGallery = DESTINATION_GALLERY[p.destinationSlug ?? ""] ?? [];
-  const destImage = destGallery[0] ?? null;
+  const destImage = galleryImage(p.destinationSlug ?? "");
 
   return {
     ...p,
