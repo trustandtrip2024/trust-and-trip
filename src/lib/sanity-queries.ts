@@ -1,6 +1,21 @@
 import { sanityClient, urlFor } from "./sanity";
 import type { Destination, Package } from "./data";
 import { DESTINATION_GALLERY } from "./gallery-images";
+import { cacheGet, cacheSet } from "./redis";
+
+const TTL = {
+  short: 2 * 60,    // 2 min — individual pages
+  medium: 5 * 60,   // 5 min — listings
+  long: 10 * 60,    // 10 min — rarely changing data
+};
+
+async function cached<T>(key: string, ttl: number, fn: () => Promise<T>): Promise<T> {
+  const hit = await cacheGet<T>(key);
+  if (hit !== null) return hit;
+  const value = await fn();
+  await cacheSet(key, value, ttl);
+  return value;
+}
 
 // ─── Blog post type ────────────────────────────────────────────────────────
 
@@ -59,25 +74,26 @@ type SanityDestination = Omit<Destination, "image" | "heroImage"> & {
 };
 
 export async function getDestinations(): Promise<Destination[]> {
-  const raw = await sanityClient.fetch<SanityDestination[]>(DESTINATIONS_QUERY);
-  return raw.map((d) => ({
-    ...d,
-    image: d.image ? urlFor(d.image).width(1200).quality(80).url() : "",
-    heroImage: d.heroImage ? urlFor(d.heroImage).width(2400).quality(85).url() : "",
-  }));
+  return cached("sanity:destinations", TTL.long, async () => {
+    const raw = await sanityClient.fetch<SanityDestination[]>(DESTINATIONS_QUERY);
+    return raw.map((d) => ({
+      ...d,
+      image: d.image ? urlFor(d.image).width(1200).quality(80).url() : "",
+      heroImage: d.heroImage ? urlFor(d.heroImage).width(2400).quality(85).url() : "",
+    }));
+  });
 }
 
 export async function getDestinationBySlug(slug: string): Promise<Destination | null> {
-  const raw = await sanityClient.fetch<SanityDestination | null>(
-    DESTINATION_BY_SLUG_QUERY,
-    { slug }
-  );
-  if (!raw) return null;
-  return {
-    ...raw,
-    image: raw.image ? urlFor(raw.image).width(2400).quality(85).url() : "",
-    heroImage: raw.heroImage ? urlFor(raw.heroImage).width(2400).quality(85).url() : "",
-  };
+  return cached(`sanity:destination:${slug}`, TTL.medium, async () => {
+    const raw = await sanityClient.fetch<SanityDestination | null>(DESTINATION_BY_SLUG_QUERY, { slug });
+    if (!raw) return null;
+    return {
+      ...raw,
+      image: raw.image ? urlFor(raw.image).width(2400).quality(85).url() : "",
+      heroImage: raw.heroImage ? urlFor(raw.heroImage).width(2400).quality(85).url() : "",
+    };
+  });
 }
 
 export async function getAllDestinationSlugs(): Promise<string[]> {
@@ -141,28 +157,38 @@ function mapPackage(p: SanityPackage): Package {
 }
 
 export async function getPackages(): Promise<Package[]> {
-  const raw = await sanityClient.fetch<SanityPackage[]>(PACKAGES_QUERY);
-  return raw.map(mapPackage);
+  return cached("sanity:packages", TTL.medium, async () => {
+    const raw = await sanityClient.fetch<SanityPackage[]>(PACKAGES_QUERY);
+    return raw.map(mapPackage);
+  });
 }
 
 export async function getPackageBySlug(slug: string): Promise<Package | null> {
-  const raw = await sanityClient.fetch<SanityPackage | null>(PACKAGE_BY_SLUG_QUERY, { slug });
-  if (!raw) return null;
-  return mapPackage(raw);
+  return cached(`sanity:package:${slug}`, TTL.short, async () => {
+    const raw = await sanityClient.fetch<SanityPackage | null>(PACKAGE_BY_SLUG_QUERY, { slug });
+    if (!raw) return null;
+    return mapPackage(raw);
+  });
 }
 
 export async function getAllPackageSlugs(): Promise<string[]> {
-  return sanityClient.fetch<string[]>(`*[_type == "package"].slug.current`);
+  return cached("sanity:package-slugs", TTL.long, () =>
+    sanityClient.fetch<string[]>(`*[_type == "package"].slug.current`)
+  );
 }
 
 export async function getTrendingPackages(): Promise<Package[]> {
-  const raw = await sanityClient.fetch<SanityPackage[]>(TRENDING_PACKAGES_QUERY);
-  return raw.map(mapPackage);
+  return cached("sanity:packages:trending", TTL.medium, async () => {
+    const raw = await sanityClient.fetch<SanityPackage[]>(TRENDING_PACKAGES_QUERY);
+    return raw.map(mapPackage);
+  });
 }
 
 export async function getFeaturedPackages(): Promise<Package[]> {
-  const raw = await sanityClient.fetch<SanityPackage[]>(FEATURED_PACKAGES_QUERY);
-  return raw.map(mapPackage);
+  return cached("sanity:packages:featured", TTL.medium, async () => {
+    const raw = await sanityClient.fetch<SanityPackage[]>(FEATURED_PACKAGES_QUERY);
+    return raw.map(mapPackage);
+  });
 }
 
 export async function getBudgetPackages(): Promise<Package[]> {
@@ -227,16 +253,21 @@ const BLOG_FIELDS = `
 `;
 
 export async function getBlogPosts(category?: string): Promise<SanityBlogPost[]> {
-  const filter = category
-    ? `*[_type == "blogPost" && category == $category] | order(date desc)`
-    : `*[_type == "blogPost"] | order(date desc)`;
-  return sanityClient.fetch<SanityBlogPost[]>(`${filter} { ${BLOG_FIELDS} }`, category ? { category } : {});
+  const key = category ? `sanity:blog:${category}` : "sanity:blog:all";
+  return cached(key, TTL.long, async () => {
+    const filter = category
+      ? `*[_type == "blogPost" && category == $category] | order(date desc)`
+      : `*[_type == "blogPost"] | order(date desc)`;
+    return sanityClient.fetch<SanityBlogPost[]>(`${filter} { ${BLOG_FIELDS} }`, category ? { category } : {});
+  });
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<SanityBlogPost | null> {
-  return sanityClient.fetch<SanityBlogPost | null>(
-    `*[_type == "blogPost" && slug.current == $slug][0] { ${BLOG_FIELDS} }`,
-    { slug }
+  return cached(`sanity:blog:${slug}`, TTL.medium, () =>
+    sanityClient.fetch<SanityBlogPost | null>(
+      `*[_type == "blogPost" && slug.current == $slug][0] { ${BLOG_FIELDS} }`,
+      { slug }
+    )
   );
 }
 

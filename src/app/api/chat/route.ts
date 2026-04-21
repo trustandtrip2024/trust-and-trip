@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { rateLimit } from "@/lib/redis";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -29,6 +30,17 @@ Keep responses conversational and helpful.`;
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit: 20 messages per IP per minute
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const { allowed, remaining } = await rateLimit(`chat:${ip}`, { limit: 20, windowSeconds: 60 });
+
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many messages. Please wait a moment before continuing." },
+        { status: 429, headers: { "X-RateLimit-Remaining": "0" } }
+      );
+    }
+
     const { messages } = await req.json();
 
     if (!process.env.ANTHROPIC_API_KEY) {
@@ -39,7 +51,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid messages." }, { status: 400 });
     }
 
-    // Keep last 10 messages to stay within context
     const recentMessages = messages.slice(-10);
 
     const response = await client.messages.create({
@@ -50,7 +61,10 @@ export async function POST(req: NextRequest) {
     });
 
     const text = response.content[0].type === "text" ? response.content[0].text : "";
-    return NextResponse.json({ message: text });
+    return NextResponse.json(
+      { message: text },
+      { headers: { "X-RateLimit-Remaining": String(remaining) } }
+    );
   } catch (err) {
     console.error("Chat API error:", err);
     return NextResponse.json({ error: "Failed to get response." }, { status: 500 });
