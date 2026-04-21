@@ -1,6 +1,9 @@
 export const revalidate = 30;
 
 export const metadata = {
+  title: "Trust and Trip – Crafting Reliable Travel",
+  description:
+    "Trust and Trip crafts reliable, handpicked travel experiences across 60+ destinations. Honeymoons, family holidays, group tours and solo adventures — planned with trust, delivered with care.",
   alternates: { canonical: "https://trustandtrip.com" },
 };
 

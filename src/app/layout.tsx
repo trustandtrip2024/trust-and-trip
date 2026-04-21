@@ -38,21 +38,23 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Trust and Trip — Travel Beyond Packages. Experience Trust.",
-    template: "%s — Trust and Trip",
+    default: "Trust and Trip – Crafting Reliable Travel",
+    template: "%s | Trust and Trip",
   },
   description:
-    "Handcrafted travel packages across 60+ destinations. Honeymoons, family holidays, group tours and solo adventures — designed around you, not a template.",
+    "Trust and Trip crafts reliable, handpicked travel experiences across 60+ destinations. Honeymoons, family holidays, group tours and solo adventures — planned with trust, delivered with care.",
   keywords: [
+    "trust and trip",
+    "crafting reliable travel",
     "travel packages India",
-    "honeymoon packages",
+    "honeymoon packages India",
     "family tour packages",
     "international tour packages",
-    "custom itinerary",
-    "trust and trip",
-    "Bali packages",
-    "Maldives packages",
-    "Kerala packages",
+    "custom itinerary India",
+    "Bali tour packages from India",
+    "Maldives packages India",
+    "Kerala tour packages",
+    "reliable travel agency India",
   ],
   authors: [{ name: "Trust and Trip", url: BASE_URL }],
   creator: "Trust and Trip",
@@ -63,8 +65,8 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
   openGraph: {
-    title: "Trust and Trip — Travel Beyond Packages",
-    description: "Handcrafted travel packages across 60+ destinations. Honeymoons, family holidays, group tours.",
+    title: "Trust and Trip – Crafting Reliable Travel",
+    description: "Handpicked travel experiences across 60+ destinations. Honeymoons, family holidays, group tours — planned with trust, delivered with care.",
     url: BASE_URL,
     siteName: "Trust and Trip",
     type: "website",
@@ -74,7 +76,7 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Trust and Trip — Travel Beyond Packages",
+        alt: "Trust and Trip – Crafting Reliable Travel",
       },
     ],
   },
@@ -82,8 +84,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     site: "@trust_and_trip",
     creator: "@trust_and_trip",
-    title: "Trust and Trip — Travel Beyond Packages",
-    description: "Handcrafted travel packages across 60+ destinations.",
+    title: "Trust and Trip – Crafting Reliable Travel",
+    description: "Handpicked travel experiences across 60+ destinations — planned with trust, delivered with care.",
     images: ["/og-image.jpg"],
   },
   alternates: {
@@ -109,7 +111,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0B1C2C" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="Trust&amp;Trip" />
+        <meta name="apple-mobile-web-app-title" content="Trust and Trip" />
       </head>
       <body className="min-h-screen flex flex-col bg-cream text-ink">
         <JsonLd data={[
@@ -121,7 +123,8 @@ export default function RootLayout({
             telephone: "+918115999588",
             email: "hello@trustandtrip.com",
             priceRange: "₹₹–₹₹₹₹",
-            description: "Handcrafted travel packages across 60+ destinations for couples, families, groups and solo travelers.",
+            description: "Trust and Trip crafts reliable travel experiences across 60+ destinations for couples, families, groups and solo travelers.",
+            slogan: "Crafting Reliable Travel",
             address: {
               "@type": "PostalAddress",
               streetAddress: "R-607, Amrapali Princely, Noida Sector 71",

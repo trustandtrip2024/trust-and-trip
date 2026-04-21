@@ -1,7 +1,7 @@
 {
   "name": "Trust and Trip",
-  "short_name": "T&T Travel",
-  "description": "Handcrafted travel packages across 60+ destinations.",
+  "short_name": "Trust & Trip",
+  "description": "Crafting reliable travel experiences across 60+ destinations.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FAF7F2",
