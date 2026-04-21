@@ -12,6 +12,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import CompareBar from "@/components/CompareBar";
 import ConditionalFooter from "@/components/ConditionalFooter";
 import SearchProvider from "@/components/SearchProvider";
+import AriaChatWidget from "@/components/AriaChatWidget";
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import "../styles/globals.css";
 
@@ -159,6 +160,7 @@ export default function RootLayout({
           <ExitIntentPopup />
           <CompareBar />
           <SearchProvider />
+          <AriaChatWidget />
           <ScrollToTop />
           <GoogleAnalytics />
         </TripPlannerProvider>

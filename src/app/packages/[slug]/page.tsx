@@ -22,6 +22,7 @@ import {
   MessageCircle, Flame, IndianRupee, Info, Phone,
   Plane, Utensils, Car, Camera,
 } from "lucide-react";
+import SharePackage from "@/components/SharePackage";
 
 interface Props { params: { slug: string } }
 
@@ -338,11 +339,14 @@ export default async function PackageDetail({ params }: Props) {
                 <span className="bg-gold/15 text-gold text-xs font-semibold px-3 py-1 rounded-full">
                   {discount}% OFF
                 </span>
-                {pkg.limitedSlots && (
-                  <span className="flex items-center gap-1 bg-red-50 text-red-600 text-xs font-medium px-3 py-1 rounded-full">
-                    <Zap className="h-3 w-3" /> Limited seats
-                  </span>
-                )}
+                <div className="flex items-center gap-2">
+                  {pkg.limitedSlots && (
+                    <span className="flex items-center gap-1 bg-red-50 text-red-600 text-xs font-medium px-3 py-1 rounded-full">
+                      <Zap className="h-3 w-3" /> Limited seats
+                    </span>
+                  )}
+                  <SharePackage title={pkg.title} slug={pkg.slug} price={pkg.price} destination={pkg.destinationName} />
+                </div>
               </div>
 
               {/* Price */}
