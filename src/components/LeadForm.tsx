@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Send, CheckCircle2, Loader2 } from "lucide-react";
 import { destinations } from "@/lib/data";
 import { analytics } from "@/lib/analytics";
+import { pixel } from "@/components/MetaPixel";
 import { submitLead } from "@/lib/submit-lead";
 import type { LeadSource } from "@/lib/supabase";
 
@@ -100,6 +101,7 @@ export default function LeadForm({
       window.open(waUrl, "_blank", "noopener,noreferrer");
     }
     analytics.formSubmit(data.destination || destinationContext);
+    pixel.lead();
     setSuccess(true);
     reset();
     setTimeout(() => setSuccess(false), 5000);

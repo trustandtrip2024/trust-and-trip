@@ -14,6 +14,7 @@ import ConditionalFooter from "@/components/ConditionalFooter";
 import SearchProvider from "@/components/SearchProvider";
 import AriaChatWidget from "@/components/AriaChatWidget";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import MetaPixel from "@/components/MetaPixel";
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import "../styles/globals.css";
 
@@ -170,6 +171,7 @@ export default function RootLayout({
           <AriaChatWidget />
           <ScrollToTop />
           <GoogleAnalytics />
+          <MetaPixel />
           <ServiceWorkerRegister />
         </TripPlannerProvider>
       </body>

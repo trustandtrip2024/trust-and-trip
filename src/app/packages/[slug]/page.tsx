@@ -23,6 +23,7 @@ import {
   Plane, Utensils, Car, Camera,
 } from "lucide-react";
 import SharePackage from "@/components/SharePackage";
+import PackagePixelEvent from "@/components/PackagePixelEvent";
 
 interface Props { params: { slug: string } }
 
@@ -346,6 +347,7 @@ export default async function PackageDetail({ params }: Props) {
                     </span>
                   )}
                   <SharePackage title={pkg.title} slug={pkg.slug} price={pkg.price} destination={pkg.destinationName} />
+                  <PackagePixelEvent title={pkg.title} price={pkg.price} />
                 </div>
               </div>
 

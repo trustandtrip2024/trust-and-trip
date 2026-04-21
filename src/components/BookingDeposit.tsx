@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Shield, CreditCard, CheckCircle2, Loader2, X, IndianRupee } from "lucide-react";
+import { pixel } from "@/components/MetaPixel";
 
 interface Props {
   packageSlug: string;
@@ -55,6 +56,8 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Failed to initiate payment."); setLoading(false); return; }
 
+      pixel.initiateCheckout(packageTitle, depositAmount);
+
       const rzp = new window.Razorpay({
         key: data.key,
         amount: data.amount,
@@ -75,7 +78,10 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(response),
           });
-          if (verify.ok) { setSuccess(true); setOpen(false); }
+          if (verify.ok) {
+            pixel.purchase(packageTitle, depositAmount);
+            setSuccess(true); setOpen(false);
+          }
           else setError("Payment received but verification failed. Please contact us.");
         },
         modal: { ondismiss: () => setLoading(false) },
