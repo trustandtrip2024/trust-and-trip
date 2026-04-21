@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, MapPin, Heart, Search } from "lucide-react";
+import { Menu, X, Phone, MapPin, Heart, Search, Mail, Instagram, MessageCircle, ChevronRight } from "lucide-react";
 import clsx from "clsx";
 import { useTripPlanner } from "@/context/TripPlannerContext";
 import { useWishlistStore } from "@/store/useWishlistStore";
@@ -167,61 +167,143 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-ink/60 backdrop-blur-sm z-[60]"
+              className="fixed inset-0 bg-ink/70 backdrop-blur-sm z-[60]"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-cream z-[70] overflow-y-auto"
+              transition={{ type: "spring", damping: 28, stiffness: 220 }}
+              className="fixed right-0 top-0 bottom-0 w-[88vw] max-w-sm bg-cream z-[70] flex flex-col overflow-hidden"
             >
-              <div className="flex items-center justify-between p-6 border-b border-ink/10">
-                <span className="font-display text-2xl">
-                  Trust<span className="text-gold">&</span>Trip
-                </span>
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 py-5 border-b border-ink/8">
+                <div>
+                  <span className="font-display text-xl font-medium text-ink">
+                    Trust<span className="text-gold">&</span>Trip
+                  </span>
+                  <p className="text-[10px] text-ink/40 tracking-wider uppercase mt-0.5">Crafting Reliable Travel</p>
+                </div>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="p-2 rounded-full hover:bg-ink/5"
+                  className="h-9 w-9 rounded-full bg-ink/6 flex items-center justify-center"
                   aria-label="Close menu"
                 >
-                  <X className="h-5 w-5 text-ink" />
+                  <X className="h-4 w-4 text-ink" />
                 </button>
               </div>
-              <nav className="p-6 flex flex-col">
-                {navLinks.map((link, i) => (
-                  <motion.div
-                    key={link.href}
-                    initial={{ x: 30, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.05 + 0.1 }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="py-4 text-2xl font-display text-ink border-b border-ink/5 block hover:text-gold transition-colors"
+
+              {/* Nav links */}
+              <nav className="flex-1 overflow-y-auto px-4 py-4">
+                <div className="space-y-0.5">
+                  {navLinks.map((link, i) => (
+                    <motion.div
+                      key={link.href}
+                      initial={{ x: 20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: i * 0.04 + 0.05 }}
                     >
-                      {link.label}
-                    </Link>
-                  </motion.div>
-                ))}
-
-                <button
-                  onClick={() => { setMobileOpen(false); openPlanner(); }}
-                  className="btn-primary mt-8 justify-center"
-                >
-                  Plan My Trip
-                </button>
-
-                <div className="mt-8 pt-6 border-t border-ink/10 space-y-2 text-sm text-ink/60">
-                  <a href="tel:+919999999999" className="flex items-center gap-2 hover:text-gold">
-                    <Phone className="h-4 w-4" />
-                    +91 99999 99999
-                  </a>
-                  <p>hello@trustandtrip.com</p>
+                      <Link
+                        href={link.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium text-ink/80 hover:bg-ink/5 hover:text-ink active:bg-ink/8 transition-all group"
+                      >
+                        {link.label}
+                        <ChevronRight className="h-4 w-4 text-ink/25 group-hover:text-gold group-hover:translate-x-0.5 transition-all" />
+                      </Link>
+                    </motion.div>
+                  ))}
                 </div>
+
+                {/* Plan My Trip CTA */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.45 }}
+                  className="mt-5"
+                >
+                  <button
+                    onClick={() => { setMobileOpen(false); openPlanner(); }}
+                    className="w-full btn-primary justify-center py-3.5"
+                  >
+                    Plan My Trip
+                  </button>
+                </motion.div>
+
+                {/* WhatsApp quick CTA */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="mt-3"
+                >
+                  <a
+                    href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I'd%20love%20help%20planning%20my%20next%20trip."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileOpen(false)}
+                    className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#25D366]/10 text-[#1a9e4e] font-semibold text-sm border border-[#25D366]/20"
+                  >
+                    <MessageCircle className="h-4 w-4 fill-[#25D366] text-[#25D366]" />
+                    Chat on WhatsApp
+                  </a>
+                </motion.div>
               </nav>
+
+              {/* Footer contact */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.55 }}
+                className="border-t border-ink/8 px-6 py-5 bg-ink/[0.02] space-y-3"
+              >
+                <a
+                  href="tel:+918115999588"
+                  className="flex items-center gap-3 group"
+                >
+                  <div className="h-8 w-8 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
+                    <Phone className="h-3.5 w-3.5 text-gold" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-ink/40 uppercase tracking-wider">Call us</p>
+                    <p className="text-sm font-medium text-ink group-hover:text-gold transition-colors">+91 811 5999 588</p>
+                  </div>
+                </a>
+                <a
+                  href="tel:+917275999588"
+                  className="flex items-center gap-3 group"
+                >
+                  <div className="h-8 w-8 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
+                    <Phone className="h-3.5 w-3.5 text-gold" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-ink/40 uppercase tracking-wider">Alternate</p>
+                    <p className="text-sm font-medium text-ink group-hover:text-gold transition-colors">+91 727 5999 588</p>
+                  </div>
+                </a>
+                <a
+                  href="mailto:hello@trustandtrip.com"
+                  className="flex items-center gap-3 group"
+                >
+                  <div className="h-8 w-8 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
+                    <Mail className="h-3.5 w-3.5 text-gold" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-ink/40 uppercase tracking-wider">Email</p>
+                    <p className="text-sm font-medium text-ink group-hover:text-gold transition-colors">hello@trustandtrip.com</p>
+                  </div>
+                </a>
+
+                {/* Social row */}
+                <div className="flex items-center gap-3 pt-1">
+                  <a href="https://instagram.com/trust_and_trip" target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-[11px] text-ink/50 hover:text-gold transition-colors">
+                    <Instagram className="h-3.5 w-3.5" />
+                    @trust_and_trip
+                  </a>
+                </div>
+              </motion.div>
             </motion.div>
           </>
         )}

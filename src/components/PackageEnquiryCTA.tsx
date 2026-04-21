@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageCircle, Phone } from "lucide-react";
+import { MessageCircle, Phone, IndianRupee } from "lucide-react";
 import { analytics } from "@/lib/analytics";
 
 const WA_NUMBER = "918115999588";
-const PHONE = "+918115999588";
+const PHONE_1 = "+918115999588";
+const PHONE_2 = "+917275999588";
 
 interface Props {
   packageTitle: string;
@@ -20,41 +21,54 @@ export default function PackageEnquiryCTA({ packageTitle, price, duration }: Pro
 
   return (
     <motion.div
-      initial={{ y: 80, opacity: 0 }}
+      initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 1.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed bottom-16 inset-x-0 z-40 lg:hidden"
+      transition={{ delay: 1.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-x-0 z-40 lg:hidden"
+      style={{ bottom: "calc(4rem + env(safe-area-inset-bottom))" }}
     >
-      <div className="mx-3 bg-white rounded-2xl shadow-[0_-4px_30px_rgba(11,28,44,0.15)] border border-ink/8 p-3 flex items-center gap-3">
-        {/* Price */}
-        <div className="flex-1 min-w-0 pl-1">
-          <p className="text-[10px] uppercase tracking-wider text-ink/50">From</p>
-          <p className="font-display text-xl font-medium text-ink leading-none mt-0.5">
-            ₹{price.toLocaleString("en-IN")}
-            <span className="text-xs text-ink/40 font-sans font-normal ml-1">/person</span>
-          </p>
+      <div className="mx-3 mb-2 rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(11,28,44,0.18)] border border-white/60">
+        {/* Price strip */}
+        <div className="bg-ink px-4 py-2.5 flex items-center justify-between">
+          <div>
+            <p className="text-[9px] uppercase tracking-[0.2em] text-cream/50">Starting from</p>
+            <div className="flex items-baseline gap-1 mt-0.5">
+              <span className="font-display text-xl font-medium text-cream leading-none">
+                ₹{price.toLocaleString("en-IN")}
+              </span>
+              <span className="text-[10px] text-cream/40 font-sans">/person</span>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-[9px] uppercase tracking-[0.15em] text-gold">{duration}</p>
+            <p className="text-[9px] text-cream/40 mt-0.5">All inclusive</p>
+          </div>
         </div>
 
-        {/* Call button */}
-        <a
-          href={`tel:${PHONE}`}
-          className="h-12 w-12 rounded-xl bg-ink/8 flex items-center justify-center shrink-0"
-          aria-label="Call us"
-        >
-          <Phone className="h-5 w-5 text-ink" />
-        </a>
+        {/* Action buttons */}
+        <div className="bg-white/95 backdrop-blur-md px-3 py-2.5 flex items-center gap-2">
+          {/* Call button */}
+          <a
+            href={`tel:${PHONE_1}`}
+            className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-xl bg-ink/6 border border-ink/10 text-ink text-xs font-medium shrink-0"
+            aria-label="Call us"
+          >
+            <Phone className="h-3.5 w-3.5" />
+            Call
+          </a>
 
-        {/* WhatsApp CTA */}
-        <a
-          href={`https://wa.me/${WA_NUMBER}?text=${waMessage}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => analytics.whatsappClick(`package_cta:${packageTitle}`)}
-          className="flex items-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-xl text-sm font-semibold shrink-0"
-        >
-          <MessageCircle className="h-4 w-4 fill-white" />
-          Book Now
-        </a>
+          {/* WhatsApp Book Now */}
+          <a
+            href={`https://wa.me/${WA_NUMBER}?text=${waMessage}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => analytics.whatsappClick(`package_cta:${packageTitle}`)}
+            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-[#25D366] text-white text-sm font-semibold"
+          >
+            <MessageCircle className="h-4 w-4 fill-white" />
+            Book on WhatsApp
+          </a>
+        </div>
       </div>
     </motion.div>
   );
