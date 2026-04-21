@@ -31,12 +31,13 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ code });
 }
 
-// PATCH — track click
+// PATCH — track click (raw increment via SQL)
 export async function PATCH(req: NextRequest) {
   const { code } = await req.json();
   if (!code) return NextResponse.json({ error: "Code required." }, { status: 400 });
-  await supabase.rpc("increment_referral_clicks", { ref_code: code }).catch(() =>
-    supabase.from("referrals").update({ clicks: supabase.rpc("clicks") }).eq("code", code)
-  );
+  const { data } = await supabase.from("referrals").select("clicks").eq("code", code).maybeSingle();
+  if (data) {
+    await supabase.from("referrals").update({ clicks: data.clicks + 1 }).eq("code", code);
+  }
   return NextResponse.json({ ok: true });
 }

@@ -13,6 +13,7 @@ import CompareBar from "@/components/CompareBar";
 import ConditionalFooter from "@/components/ConditionalFooter";
 import SearchProvider from "@/components/SearchProvider";
 import AriaChatWidget from "@/components/AriaChatWidget";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import "../styles/globals.css";
 
@@ -102,6 +103,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://lekxoexyebfvngllpeqx.supabase.co" />
+        {/* PWA */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#0B1C2C" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Trust&amp;Trip" />
       </head>
       <body className="min-h-screen flex flex-col bg-cream text-ink">
         <JsonLd data={[
@@ -163,6 +170,7 @@ export default function RootLayout({
           <AriaChatWidget />
           <ScrollToTop />
           <GoogleAnalytics />
+          <ServiceWorkerRegister />
         </TripPlannerProvider>
       </body>
     </html>

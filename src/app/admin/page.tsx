@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Users, Star } from "lucide-react";
+import { Users, Star, Gift } from "lucide-react";
 
 export default function AdminHome() {
   return (
@@ -17,6 +17,11 @@ export default function AdminHome() {
             className="flex items-center gap-3 bg-white border border-gray-200 text-gray-700 px-5 py-3.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
             <Star className="h-4 w-4 text-yellow-500" />
             Reviews Moderation
+          </Link>
+          <Link href="/admin/referrals"
+            className="flex items-center gap-3 bg-white border border-gray-200 text-gray-700 px-5 py-3.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+            <Gift className="h-4 w-4 text-amber-500" />
+            Referral Tracking
           </Link>
         </div>
       </div>

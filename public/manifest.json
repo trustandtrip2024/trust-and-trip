@@ -1,0 +1,42 @@
+{
+  "name": "Trust and Trip",
+  "short_name": "T&T Travel",
+  "description": "Handcrafted travel packages across 60+ destinations.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F2",
+  "theme_color": "#0B1C2C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "Browse Packages",
+      "url": "/packages",
+      "description": "View all travel packages"
+    },
+    {
+      "name": "Customize Trip",
+      "url": "/customize-trip",
+      "description": "Build a custom itinerary"
+    },
+    {
+      "name": "My Booking",
+      "url": "/my-booking",
+      "description": "Check booking status"
+    }
+  ]
+}
