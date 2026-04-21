@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,11 +14,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
-    // Log the subscriber (replace with Mailchimp / Resend in the future)
-    console.log(`[Newsletter] New subscriber: ${email}`);
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .insert({ email: email.toLowerCase().trim() });
 
-    // In production: POST to your email provider API here
-    // e.g. Mailchimp, Brevo, Resend, etc.
+    if (error) {
+      // Unique violation = already subscribed — treat as success
+      if (error.code === "23505") {
+        return NextResponse.json({ success: true, already: true });
+      }
+      return NextResponse.json({ error: "Failed to subscribe." }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch {
