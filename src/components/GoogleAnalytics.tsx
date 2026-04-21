@@ -4,17 +4,18 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { GA_ID } from "@/lib/analytics";
+import { useCookieConsent } from "@/context/CookieConsentContext";
 
 export default function GoogleAnalytics() {
   const pathname = usePathname();
+  const { consent } = useCookieConsent();
 
-  // Track SPA navigation as page views
   useEffect(() => {
-    if (!GA_ID || typeof window === "undefined" || !window.gtag) return;
+    if (!GA_ID || !consent?.analytics || typeof window === "undefined" || !window.gtag) return;
     window.gtag("config", GA_ID, { page_path: pathname });
-  }, [pathname]);
+  }, [pathname, consent]);
 
-  if (!GA_ID) return null;
+  if (!GA_ID || !consent?.analytics) return null;
 
   return (
     <>

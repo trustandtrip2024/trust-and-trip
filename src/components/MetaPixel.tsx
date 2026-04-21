@@ -3,6 +3,7 @@
 import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, Suspense } from "react";
+import { useCookieConsent } from "@/context/CookieConsentContext";
 
 const PIXEL_ID = "1712300429671832";
 
@@ -17,7 +18,6 @@ function MetaPixelInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Track SPA navigation as PageView
   useEffect(() => {
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("track", "PageView");
@@ -28,6 +28,10 @@ function MetaPixelInner() {
 }
 
 export default function MetaPixel() {
+  const { consent } = useCookieConsent();
+
+  if (!consent?.marketing) return null;
+
   return (
     <>
       <Script

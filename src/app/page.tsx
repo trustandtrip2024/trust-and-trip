@@ -12,6 +12,7 @@ import StatCounter from "@/components/StatCounter";
 import DestinationTile from "@/components/DestinationTile";
 import PackageSlider from "@/components/PackageSlider";
 import TestimonialCard from "@/components/TestimonialCard";
+import GoogleReviewsSection from "@/components/GoogleReviewsSection";
 import VideoSection from "@/components/VideoSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import CTASection from "@/components/CTASection";
@@ -360,6 +361,8 @@ export default async function HomePage() {
 
       <WhyChooseUs />
 
+      <GoogleReviewsSection />
+
       <SocialProofWall />
 
       <VideoSection />
@@ -378,7 +381,7 @@ export default async function HomePage() {
             <div className="flex flex-wrap items-center gap-4 text-xs text-ink/50 shrink-0">
               <span className="flex items-center gap-1.5"><Award className="h-3.5 w-3.5 text-gold" />Condé Nast</span>
               <span className="flex items-center gap-1.5"><Globe2 className="h-3.5 w-3.5 text-gold" />IATA Accredited</span>
-              <span className="flex items-center gap-1.5"><Heart className="h-3.5 w-3.5 text-gold" />4.9 / 5 Google</span>
+              <span className="flex items-center gap-1.5"><Heart className="h-3.5 w-3.5 text-gold" />4.9 / 5 Google &amp; TripAdvisor</span>
             </div>
           </div>
         </div>
