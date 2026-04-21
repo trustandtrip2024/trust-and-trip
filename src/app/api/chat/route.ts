@@ -60,7 +60,8 @@ export async function POST(req: NextRequest) {
       messages: recentMessages,
     });
 
-    const text = response.content[0].type === "text" ? response.content[0].text : "";
+    const textBlock = response.content.find((b) => b.type === "text");
+    const text = textBlock?.type === "text" ? textBlock.text : "";
     return NextResponse.json(
       { message: text },
       { headers: { "X-RateLimit-Remaining": String(remaining) } }
