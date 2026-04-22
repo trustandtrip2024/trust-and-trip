@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getDestinationBySlug, getAllDestinationSlugs, getPackagesByDestination } from "@/lib/sanity-queries";
 import { DESTINATION_GALLERY } from "@/lib/gallery-images";
+import DestinationGallery from "@/components/DestinationGallery";
 import PackageSlider from "@/components/PackageSlider";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
@@ -83,17 +84,9 @@ export default async function DestinationDetail({ params }: Props) {
         </div>
       </section>
 
-      {/* Photo gallery strip */}
+      {/* Photo gallery strip — clickable with lightbox */}
       {gallery.length > 0 && (
-        <section className="bg-ink py-3">
-          <div className="flex gap-1.5 overflow-x-auto no-scrollbar px-4 md:px-0 md:container-custom">
-            {gallery.slice(0, 6).map((img, i) => (
-              <div key={i} className="relative h-28 md:h-36 shrink-0 rounded-xl overflow-hidden" style={{ width: i === 0 ? 280 : 160 }}>
-                <Image src={img} alt={`${destination.name} photo ${i + 1}`} fill className="object-cover" sizes="280px" />
-              </div>
-            ))}
-          </div>
-        </section>
+        <DestinationGallery images={gallery} name={destination.name} />
       )}
 
       {/* Overview + quick facts */}

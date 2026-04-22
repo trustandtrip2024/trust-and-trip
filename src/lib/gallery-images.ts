@@ -200,6 +200,14 @@ export const DESTINATION_GALLERY: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=1600&q=85&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1600&q=85&auto=format&fit=crop",
   ],
+  "zanskar-valley": [
+    "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1609766857413-21c26b143aca?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1596627115620-48a4b09aff07?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=85&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=85&auto=format&fit=crop",
+  ],
   "spiti-valley": [
     "https://images.unsplash.com/photo-1596627115620-48a4b09aff07?w=1600&q=85&auto=format&fit=crop",
     "https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=1600&q=85&auto=format&fit=crop",
