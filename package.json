@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",
-    "@sanity/image-url": "^2.1.1",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^3.99.0",
     "@supabase/supabase-js": "^2.104.0",
     "@upstash/redis": "^1.37.0",
     "clsx": "^2.1.1",
@@ -23,6 +25,8 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.0",
     "resend": "^6.12.2",
+    "sanity": "^3.99.0",
+    "styled-components": "^6.4.1",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
