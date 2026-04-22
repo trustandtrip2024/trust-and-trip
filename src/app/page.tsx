@@ -27,6 +27,7 @@ import {
   getBudgetPackages,
   getNewlyAddedPackages,
   getBestChoicePackages,
+  getPilgrimPackages,
 } from "@/lib/sanity-queries";
 import Link from "next/link";
 import Image from "next/image";
@@ -49,12 +50,14 @@ export default async function HomePage() {
     budgetPackages,
     newlyAddedPackages,
     bestChoicePackages,
+    pilgrimPackages,
   ] = await Promise.all([
     getDestinations(),
     getTrendingPackages(),
     getBudgetPackages(),
     getNewlyAddedPackages(),
     getBestChoicePackages(),
+    getPilgrimPackages(),
   ]);
 
   const domesticDestinations = allDestinations
@@ -454,6 +457,68 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ── Pilgrim Trips ─────────────────────────────────────── */}
+      {pilgrimPackages.length > 0 && (
+        <section className="py-14 md:py-20 relative overflow-hidden" aria-labelledby="pilgrim-heading">
+          {/* Saffron texture background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50" />
+          <div className="absolute inset-0 opacity-5" style={{backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d97706' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"}} />
+          <div className="relative container-custom">
+            <div className="flex items-end justify-between gap-4 mb-8 md:mb-10">
+              <div>
+                <span className="eyebrow text-amber-700">Pilgrim Trips</span>
+                <h2 id="pilgrim-heading" className="heading-section mt-2 max-w-xs md:max-w-xl text-balance">
+                  Char Dham, Kedarnath &
+                  <span className="italic font-light" style={{color: "#b45309"}}> sacred Uttarakhand.</span>
+                </h2>
+                <p className="mt-3 text-sm text-ink/60 max-w-lg">
+                  Devbhumi awaits. Complete yatras by road or helicopter — with registration, transfers, and accommodation fully arranged.
+                </p>
+              </div>
+              <Link href="/destinations/uttarakhand" className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-amber-700 hover:text-amber-900 transition-colors group shrink-0">
+                All yatra packages
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+              {pilgrimPackages.map((pkg) => (
+                <Link
+                  key={pkg.slug}
+                  href={`/packages/${pkg.slug}`}
+                  className="group bg-white rounded-2xl border border-amber-100 hover:border-amber-300 hover:shadow-lg transition-all duration-300 overflow-hidden"
+                >
+                  <div className="p-5">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <h3 className="font-display text-base font-medium leading-snug text-ink group-hover:text-amber-800 transition-colors flex-1">
+                        {pkg.title}
+                      </h3>
+                      <span className="shrink-0 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full whitespace-nowrap">
+                        {pkg.duration}
+                      </span>
+                    </div>
+                    <p className="text-xs text-ink/55 leading-relaxed line-clamp-2 mb-4">{pkg.description}</p>
+                    <div className="flex items-center justify-between pt-3 border-t border-amber-50">
+                      <div>
+                        <p className="text-[10px] text-ink/40 uppercase tracking-wider">Starting from</p>
+                        <p className="text-sm font-bold text-amber-800">₹{pkg.price.toLocaleString("en-IN")}<span className="text-xs font-normal text-ink/50">/person</span></p>
+                      </div>
+                      <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-700 group-hover:gap-2 transition-all">
+                        View package <ArrowRight className="h-3.5 w-3.5" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-6 flex md:hidden justify-center">
+              <Link href="/destinations/uttarakhand" className="inline-flex items-center gap-2 text-sm font-medium text-amber-700 hover:text-amber-900 transition-colors">
+                All yatra packages <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       <CTASection />
     </>

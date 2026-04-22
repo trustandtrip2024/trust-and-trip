@@ -229,6 +229,15 @@ export async function getNewlyAddedPackages(): Promise<Package[]> {
   return raw.map(mapPackage);
 }
 
+export async function getPilgrimPackages(): Promise<Package[]> {
+  return cached("sanity:packages:pilgrim", TTL.medium, async () => {
+    const raw = await sanityClient.fetch<SanityPackage[]>(
+      `*[_type == "package" && destination->slug.current == "uttarakhand"] | order(price asc) [0...6] { ${PACKAGE_FIELDS} }`
+    );
+    return raw.map(mapPackage);
+  });
+}
+
 export async function getBestChoicePackages(): Promise<Package[]> {
   const raw = await sanityClient.fetch<SanityPackage[]>(
     `*[_type == "package"] | order(rating desc, reviews desc) [0...8] { ${PACKAGE_FIELDS} }`
