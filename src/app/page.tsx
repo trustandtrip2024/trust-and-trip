@@ -9,13 +9,14 @@ export const metadata = {
 
 import Hero from "@/components/Hero";
 import StatCounter from "@/components/StatCounter";
-import Destination3DCard from "@/components/Destination3DCard";
 import DestinationTile from "@/components/DestinationTile";
 import PackageSlider from "@/components/PackageSlider";
 import TestimonialCard from "@/components/TestimonialCard";
 import GoogleReviewsSection from "@/components/GoogleReviewsSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import CTASection from "@/components/CTASection";
+import TourismBoardsBar from "@/components/TourismBoardsBar";
+import HomepageOffersSection from "@/components/HomepageOffersSection";
 import { testimonials, experiences, stats } from "@/lib/data";
 import {
   getDestinations,
@@ -165,62 +166,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Dream destinations (3D) ───────────────────────────── */}
-      <section className="py-20 md:py-28" aria-labelledby="dream-heading">
-        <div className="container-custom">
-          <div className="flex items-end justify-between gap-4 mb-10 md:mb-14">
-            <div>
-              <span className="eyebrow">Dream Destinations</span>
-              <h2 id="dream-heading" className="heading-section mt-2 max-w-sm text-balance">
-                Places that make you
-                <span className="italic text-gold font-light"> stop scrolling.</span>
-              </h2>
-            </div>
-            <Link href="/destinations" className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink/60 hover:text-gold transition-colors group shrink-0">
-              All destinations
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-            {[
-              {
-                name: "Bali",
-                country: "Indonesia",
-                tagline: "Temples, terraced rice fields, and sunsets you'll never forget.",
-                image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&q=85&auto=format&fit=crop",
-                slug: "bali",
-                priceFrom: 45000,
-                badge: "Popular",
-              },
-              {
-                name: "Maldives",
-                country: "Maldives",
-                tagline: "Overwater villas, coral reefs, and infinite turquoise horizon.",
-                image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1200&q=85&auto=format&fit=crop",
-                slug: "maldives",
-                priceFrom: 85000,
-                badge: "Luxury",
-              },
-              {
-                name: "Kerala",
-                country: "India",
-                tagline: "Backwaters, spice gardens, and God's own coastline.",
-                image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=1200&q=85&auto=format&fit=crop",
-                slug: "kerala",
-                priceFrom: 18000,
-                badge: "Trending",
-              },
-            ].map((dest) => (
-              <Destination3DCard key={dest.slug} {...dest} />
-            ))}
-          </div>
-          <div className="mt-8 flex md:hidden justify-center">
-            <Link href="/destinations" className="text-sm font-medium text-ink/60 hover:text-gold transition-colors inline-flex items-center gap-1.5">
-              All destinations <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ── Tourism boards marquee ────────────────────────────── */}
+      <TourismBoardsBar />
 
       {/* ── Explore India ─────────────────────────────────────── */}
       {domesticDestinations.length > 0 && (
@@ -343,6 +290,9 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* ── Offers showcase ───────────────────────────────────── */}
+      <HomepageOffersSection />
 
       {/* ── Why choose us ─────────────────────────────────────── */}
       <WhyChooseUs />

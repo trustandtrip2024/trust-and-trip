@@ -1,11 +1,15 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp, Heart, GitCompareArrows } from "lucide-react";
+import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp, Heart, Sliders, PhoneCall } from "lucide-react";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { getDynamicPrice } from "@/lib/dynamic-pricing";
+import CustomizeModal from "./CustomizeModal";
+import ScheduleCallModal from "./ScheduleCallModal";
 
 const BOOKED_COUNTS = [14, 8, 22, 6, 17, 11, 29, 5, 19, 9];
 
@@ -44,13 +48,16 @@ export default function PackageCard({
   index = 0,
   inSlider = false,
 }: PackageCardProps) {
-  const { toggleWishlist, isWishlisted, toggleCompare, isInCompare, compareList } = useWishlistStore();
+  const { toggleWishlist, isWishlisted } = useWishlistStore();
   const wishlisted = isWishlisted(slug);
-  const inCompare = isInCompare(slug);
-  const compareFull = compareList.length >= 3 && !inCompare;
   const { price: dynPrice, originalPrice, tier, savings } = getDynamicPrice(price, slug);
+  const [showCustomize, setShowCustomize] = useState(false);
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   return (
+    <>
     <motion.article
       initial={inSlider ? false : { opacity: 0, y: 40 }}
       whileInView={inSlider ? undefined : { opacity: 1, y: 0 }}
@@ -168,25 +175,47 @@ export default function PackageCard({
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              toggleCompare({ slug, title, image, price, duration, rating, reviews, destinationName, travelType, highlights, inclusions });
-            }}
-            disabled={compareFull}
-            className={`w-full flex items-center justify-center gap-1.5 py-1.5 rounded-xl text-[11px] font-medium transition-all border ${
-              inCompare
-                ? "bg-gold/15 border-gold text-ink"
-                : compareFull
-                ? "bg-ink/3 border-ink/10 text-ink/30 cursor-not-allowed"
-                : "bg-ink/5 border-ink/10 text-ink/60 hover:bg-ink/10 hover:text-ink"
-            }`}
-          >
-            <GitCompareArrows className="h-3.5 w-3.5" />
-            {inCompare ? "Added to compare" : compareFull ? "Compare full (max 3)" : "Compare"}
-          </button>
+
+          {/* Action buttons */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={(e) => { e.preventDefault(); setShowCustomize(true); }}
+              className="flex items-center justify-center gap-1.5 py-2 rounded-xl border border-ink/12 text-[11px] font-medium text-ink/65 hover:bg-ink hover:text-cream hover:border-ink transition-all duration-200"
+            >
+              <Sliders className="h-3.5 w-3.5 shrink-0" />
+              Customize
+            </button>
+            <button
+              onClick={(e) => { e.preventDefault(); setShowSchedule(true); }}
+              className="flex items-center justify-center gap-1.5 py-2 rounded-xl border border-gold/40 bg-gold/8 text-[11px] font-medium text-ink/70 hover:bg-gold hover:text-ink hover:border-gold transition-all duration-200"
+            >
+              <PhoneCall className="h-3.5 w-3.5 shrink-0" />
+              Schedule Call
+            </button>
+          </div>
         </div>
+
       </div>
     </motion.article>
+
+    {mounted && showCustomize && createPortal(
+      <CustomizeModal
+        packageTitle={title}
+        packageSlug={slug}
+        destinationName={destinationName}
+        onClose={() => setShowCustomize(false)}
+      />,
+      document.body
+    )}
+    {mounted && showSchedule && createPortal(
+      <ScheduleCallModal
+        packageTitle={title}
+        packageSlug={slug}
+        destinationName={destinationName}
+        onClose={() => setShowSchedule(false)}
+      />,
+      document.body
+    )}
+    </>
   );
 }
