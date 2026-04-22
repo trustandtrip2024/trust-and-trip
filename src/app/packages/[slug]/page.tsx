@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import SharePackage from "@/components/SharePackage";
 import PackagePixelEvent from "@/components/PackagePixelEvent";
+import PackageStickyBar from "@/components/PackageStickyBar";
 
 interface Props { params: { slug: string } }
 
@@ -59,6 +60,8 @@ export default async function PackageDetail({ params }: Props) {
   const originalPrice = Math.round(pkg.price * 1.22);
   const discount = Math.round(((originalPrice - pkg.price) / originalPrice) * 100);
   const viewedCount = Math.max(20, (pkg.reviews * 3 + pkg.slug.length * 7) % 120 + 15);
+  const enquiredCount = Math.max(8, (pkg.reviews * 2 + pkg.slug.length * 3) % 60 + 8);
+  const hotelStars = pkg.hotel?.stars ?? 3;
 
   const waBook = `https://wa.me/${WA}?text=${encodeURIComponent(`Hi Trust and Trip! 🙏\n\nI'd like to book the *${pkg.title}* package (₹${pkg.price.toLocaleString("en-IN")}/person · ${pkg.duration}).\n\nPlease help me proceed.`)}`;
 
@@ -145,7 +148,7 @@ export default async function PackageDetail({ params }: Props) {
       <PackageSectionNav />
 
       {/* ── Main Content ───────────────────────────────────────── */}
-      <div className="container-custom py-8 md:py-12">
+      <div className="container-custom py-8 md:py-12 pb-24 lg:pb-12">
         <div className="grid lg:grid-cols-[1fr_360px] gap-8 lg:gap-12 items-start">
 
           {/* ── Left column ────────────────────────────────────── */}
@@ -202,8 +205,8 @@ export default async function PackageDetail({ params }: Props) {
                 <span className="italic text-gold font-light"> unfolded.</span>
               </h2>
               <Accordion
-                items={pkg.itinerary.map((day) => ({
-                  subtitle: `Day ${day.day}`,
+                items={pkg.itinerary.map((day, idx) => ({
+                  subtitle: `Day ${idx + 1}`,
                   title: day.title,
                   content: day.description,
                 }))}
@@ -260,13 +263,18 @@ export default async function PackageDetail({ params }: Props) {
                 Comfort you'll
                 <span className="italic text-gold font-light"> remember.</span>
               </h2>
-              <div className="bg-sand/40 rounded-2xl p-6 md:p-8 relative overflow-hidden flex items-start gap-5">
+              <div className="bg-sand/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
                 <div className="h-14 w-14 rounded-2xl bg-gold/15 flex items-center justify-center shrink-0">
                   <Hotel className="h-7 w-7 text-gold" />
                 </div>
                 <div>
                   <h3 className="font-display text-2xl font-medium">{pkg.hotel.name}</h3>
-                  <p className="text-xs uppercase tracking-wider text-gold mt-1">{pkg.hotel.category}</p>
+                  <div className="flex items-center gap-1 mt-1.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-gold text-gold" : "text-ink/15"}`} />
+                    ))}
+                    <span className="text-xs text-ink/50 ml-1">{hotelStars}-star accommodation</span>
+                  </div>
                   <p className="mt-3 text-ink/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
                 </div>
               </div>
@@ -404,9 +412,11 @@ export default async function PackageDetail({ params }: Props) {
               </div>
 
               {/* Social proof */}
-              <p className="text-center text-[11px] text-ink/40 mt-3">
-                {viewedCount} people viewed this week
-              </p>
+              <div className="flex items-center justify-center gap-3 mt-3 text-[11px] text-ink/40">
+                <span>{viewedCount} viewed this week</span>
+                <span className="text-ink/20">·</span>
+                <span className="text-gold/80 font-medium">{enquiredCount} enquired recently</span>
+              </div>
             </div>
 
             {/* Trust badges */}
@@ -456,6 +466,9 @@ export default async function PackageDetail({ params }: Props) {
           </div>
         </section>
       )}
+
+      {/* Sticky mobile bottom bar */}
+      <PackageStickyBar price={pkg.price} title={pkg.title} slug={pkg.slug} duration={pkg.duration} />
 
       <PackageEnquiryCTA packageTitle={pkg.title} price={pkg.price} duration={pkg.duration} />
     </>

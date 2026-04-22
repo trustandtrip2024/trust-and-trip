@@ -34,11 +34,12 @@ export type Package = {
   exclusions: string[];
   hotel: {
     name: string;
-    category: string;
+    stars?: number;
+    category?: string;
     description: string;
   };
   itinerary: {
-    day: number;
+    day?: number;
     title: string;
     description: string;
   }[];
