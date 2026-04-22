@@ -6,10 +6,10 @@ import { Cookie, X, ChevronDown, ChevronUp } from "lucide-react";
 import { useCookieConsent } from "@/context/CookieConsentContext";
 
 export default function CookieBanner() {
-  const { hasDecided, acceptAll, rejectAll } = useCookieConsent();
+  const { hasDecided, initialized, acceptAll, rejectAll } = useCookieConsent();
   const [showDetails, setShowDetails] = useState(false);
 
-  if (hasDecided) return null;
+  if (!initialized || hasDecided) return null;
 
   return (
     <div

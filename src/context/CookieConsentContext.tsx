@@ -8,10 +8,11 @@ export type ConsentState = {
 };
 
 type CookieConsentContextValue = {
-  consent: ConsentState | null; // null = not yet decided
+  consent: ConsentState | null;
   acceptAll: () => void;
   rejectAll: () => void;
   hasDecided: boolean;
+  initialized: boolean; // false until localStorage has been checked
 };
 
 const STORAGE_KEY = "trustandtrip_cookie_consent";
@@ -21,11 +22,13 @@ const CookieConsentContext = createContext<CookieConsentContextValue>({
   acceptAll: () => {},
   rejectAll: () => {},
   hasDecided: false,
+  initialized: false,
 });
 
 export function CookieConsentProvider({ children }: { children: React.ReactNode }) {
   const [consent, setConsent] = useState<ConsentState | null>(null);
   const [hasDecided, setHasDecided] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     try {
@@ -37,6 +40,7 @@ export function CookieConsentProvider({ children }: { children: React.ReactNode 
     } catch {
       // ignore
     }
+    setInitialized(true);
   }, []);
 
   const save = (state: ConsentState) => {
@@ -53,7 +57,7 @@ export function CookieConsentProvider({ children }: { children: React.ReactNode 
   const rejectAll = () => save({ analytics: false, marketing: false });
 
   return (
-    <CookieConsentContext.Provider value={{ consent, acceptAll, rejectAll, hasDecided }}>
+    <CookieConsentContext.Provider value={{ consent, acceptAll, rejectAll, hasDecided, initialized }}>
       {children}
     </CookieConsentContext.Provider>
   );
