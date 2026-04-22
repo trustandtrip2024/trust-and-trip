@@ -13,11 +13,14 @@ export const metadata = {
   alternates: { canonical: "https://trustandtrip.com/offers" },
 };
 
-// Deterministic end dates (7–21 days from a fixed anchor)
+// End dates rolling from today — refreshes every revalidation cycle
 function getEndDate(slug: string, days: number): string {
-  const anchor = new Date("2026-04-21T00:00:00Z");
-  anchor.setDate(anchor.getDate() + days);
-  return anchor.toISOString();
+  const base = new Date();
+  // Offset by slug hash so each package gets a stable-looking end date
+  const hash = slug.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  base.setDate(base.getDate() + days + (hash % 5));
+  base.setHours(23, 59, 59, 0);
+  return base.toISOString();
 }
 
 const OFFERS = [
