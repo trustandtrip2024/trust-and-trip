@@ -14,7 +14,7 @@ const navLinks = [
   { href: "/destinations", label: "Destinations" },
   { href: "/packages", label: "Packages" },
   { href: "/experiences", label: "Experiences" },
-  { href: "/customize-trip", label: "Customize" },
+  { href: "/plan", label: "Plan a Trip" },
   { href: "/offers", label: "Offers" },
   { href: "/refer", label: "Refer & Earn" },
   { href: "/blog", label: "Journal" },

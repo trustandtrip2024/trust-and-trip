@@ -5,7 +5,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export type LeadSource = "package_enquiry" | "contact_form" | "trip_planner" | "exit_intent" | "newsletter";
+export type LeadSource = "package_enquiry" | "contact_form" | "trip_planner" | "exit_intent" | "newsletter" | "itinerary_generator";
 
 export interface Lead {
   id?: string;

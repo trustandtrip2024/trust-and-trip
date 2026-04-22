@@ -102,11 +102,11 @@ export default function Hero() {
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
           <Link
-            href="/customize-trip"
+            href="/plan"
             className="inline-flex items-center gap-2 text-cream/90 hover:text-gold transition-colors text-sm font-medium"
           >
             <PlayCircle className="h-5 w-5" />
-            Watch our story
+            Get a free itinerary
           </Link>
         </motion.div>
 
