@@ -54,6 +54,7 @@ module.exports = {
         "slow-zoom": "slowZoom 20s ease-out infinite alternate",
         "marquee": "marquee 40s linear infinite",
         "shimmer": "shimmer 2s infinite",
+        "slide-up": "slideUp 0.25s ease-out",
       },
       keyframes: {
         fadeIn: {
@@ -75,6 +76,10 @@ module.exports = {
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(100%)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
         },
       },
       boxShadow: {

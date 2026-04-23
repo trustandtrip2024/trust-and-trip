@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
+import FounderNote from "@/components/homepage-v2/FounderNote";
 import { stats, whyChooseUs } from "@/lib/data";
 import {
   Compass, Handshake, HeartHandshake, Sparkles,
@@ -108,6 +109,9 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Founder note */}
+      <FounderNote />
 
       {/* Stats */}
       <section className="bg-ink text-cream py-14">
