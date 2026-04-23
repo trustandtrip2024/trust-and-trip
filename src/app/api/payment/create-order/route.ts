@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import { pushBookingAsDeal } from "@/lib/bitrix24";
+import { REF_COOKIE, isValidRefCode } from "@/lib/creator-attribution";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -47,6 +49,10 @@ export async function POST(req: NextRequest) {
 
     const order = await rzpRes.json();
 
+    // Capture creator referral from cookie (set by middleware on ?ref= visit)
+    const cookieRef = cookies().get(REF_COOKIE)?.value;
+    const refCode = isValidRefCode(cookieRef) ? cookieRef : null;
+
     // Save booking as "created"
     const { error: dbErr } = await supabase.from("bookings").insert({
       razorpay_order_id: order.id,
@@ -54,6 +60,7 @@ export async function POST(req: NextRequest) {
       deposit_amount: DEPOSIT_AMOUNT / 100,
       customer_name, customer_email, customer_phone,
       travel_date, num_travellers, special_requests,
+      ref_code: refCode,
       status: "created",
     });
 
@@ -72,6 +79,7 @@ export async function POST(req: NextRequest) {
       numTravellers: num_travellers,
       specialRequests: special_requests,
       razorpayOrderId: order.id,
+      refCode: refCode ?? undefined,
     }).catch((e) => console.error("Bitrix24 pushBookingAsDeal error:", e));
 
     return NextResponse.json({

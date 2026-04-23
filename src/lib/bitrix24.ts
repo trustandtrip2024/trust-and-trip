@@ -85,6 +85,9 @@ const UF = {
   utmSource: "UF_CRM_UTM_SOURCE",
   utmMedium: "UF_CRM_UTM_MEDIUM",
   utmCampaign: "UF_CRM_UTM_CAMPAIGN",
+  refCode: "UF_CRM_REF_CODE",
+  commissionAmount: "UF_CRM_COMMISSION_AMOUNT",
+  commissionPaid: "UF_CRM_COMMISSION_PAID",
 } as const;
 
 // ---- Types ----------------------------------------------------------------
@@ -105,6 +108,8 @@ export interface Bitrix24DealPayload {
   razorpayOrderId: string;
   razorpayPaymentId?: string;
   isGroup?: boolean;
+  refCode?: string;
+  commissionAmount?: number;
 }
 
 interface BitrixResponse {
@@ -189,6 +194,9 @@ function buildLeadFields(lead: Bitrix24LeadPayload): Record<string, unknown> {
   if (lead.utm_source)      fields[UF.utmSource]     = lead.utm_source;
   if (lead.utm_medium)      fields[UF.utmMedium]     = lead.utm_medium;
   if (lead.utm_campaign)    fields[UF.utmCampaign]   = lead.utm_campaign;
+  if ((lead as Bitrix24LeadPayload & { ref_code?: string }).ref_code) {
+    fields[UF.refCode] = (lead as Bitrix24LeadPayload & { ref_code?: string }).ref_code;
+  }
 
   return fields;
 }
@@ -219,6 +227,8 @@ function buildDealFields(deal: Bitrix24DealPayload): Record<string, unknown> {
   if (deal.packageSlug)   fields[UF.packageSlug] = deal.packageSlug;
   if (deal.travelDate)    fields[UF.travelDate]  = deal.travelDate;
   if (deal.numTravellers) fields[UF.numTravellers] = String(deal.numTravellers);
+  if (deal.refCode)       fields[UF.refCode] = deal.refCode;
+  if (deal.commissionAmount !== undefined) fields[UF.commissionAmount] = deal.commissionAmount;
 
   return fields;
 }

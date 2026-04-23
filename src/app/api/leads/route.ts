@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import type { Lead } from "@/lib/supabase";
 import { pushLead } from "@/lib/bitrix24";
+import { REF_COOKIE, isValidRefCode, findActiveCreator } from "@/lib/creator-attribution";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -105,8 +107,16 @@ export async function POST(req: NextRequest) {
       }, { status: 500 });
     }
 
+    // Read referral cookie (set by middleware on ?ref= visits) — body.ref_code overrides
+    const cookieRef = cookies().get(REF_COOKIE)?.value;
+    const refCode = isValidRefCode((body as Lead & { ref_code?: string }).ref_code)
+      ? (body as Lead & { ref_code?: string }).ref_code!
+      : (isValidRefCode(cookieRef) ? cookieRef! : null);
+
+    mark(`3b. ref_code=${refCode ?? "(none)"}`);
+
     mark("4. calling supabase.from(leads).insert(...)");
-    const { error } = await supabase.from("leads").insert({
+    const { data: leadRow, error } = await supabase.from("leads").insert({
       name: safeName,
       email: safeEmail,
       phone: safePhone,
@@ -123,8 +133,9 @@ export async function POST(req: NextRequest) {
       utm_medium: body.utm_medium,
       utm_campaign: body.utm_campaign,
       page_url: body.page_url,
+      ref_code: refCode,
       status: "new",
-    });
+    }).select("id").single();
 
     if (error) {
       console.error("Supabase insert error:", error);
@@ -142,6 +153,28 @@ export async function POST(req: NextRequest) {
 
     mark("5. supabase insert OK");
 
+    // Creator attribution: link this lead to the creator referenced by ref_code.
+    // Fire-and-forget — never blocks lead capture.
+    if (refCode && leadRow?.id) {
+      (async () => {
+        try {
+          const creator = await findActiveCreator(refCode);
+          if (!creator) return;
+          await supabase.from("creator_attributions").insert({
+            creator_id: creator.id,
+            ref_code: refCode,
+            lead_id: leadRow.id,
+            source: "cookie",
+            utm_campaign: body.utm_campaign ?? null,
+            page_url: body.page_url ?? null,
+          });
+        } catch (e) {
+          console.error("Creator attribution insert error:", e);
+        }
+      })();
+    }
+    mark("5b. creator attribution queued");
+
     // Fire-and-forget emails — skip for anonymous click intents (no one to confirm to)
     if (!isIntent) {
       sendEmails({ ...body, name: safeName, email: safeEmail, phone: safePhone });
@@ -150,7 +183,7 @@ export async function POST(req: NextRequest) {
 
     // Fire-and-forget Bitrix24 sync — errors logged but never block response.
     // Always push, even intents, so sales sees every click in the CRM.
-    pushLead({ ...body, name: safeName, email: safeEmail, phone: safePhone }).catch((e) =>
+    pushLead({ ...body, name: safeName, email: safeEmail, phone: safePhone, ref_code: refCode ?? undefined }).catch((e) =>
       console.error("Bitrix24 pushLead error:", e)
     );
     mark("7. bitrix24 pushLead queued");

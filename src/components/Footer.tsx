@@ -16,6 +16,7 @@ const EXPLORE = [
   { label: "Offers & Deals", href: "/offers" },
   { label: "Plan a Trip (AI)", href: "/plan" },
   { label: "Refer & Earn", href: "/refer" },
+  { label: "Creator Program", href: "/creators" },
 ];
 
 const PILGRIM = [

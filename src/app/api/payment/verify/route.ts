@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import { computeTier, pointsForRupees } from "@/lib/points";
 import { markDealPaid } from "@/lib/bitrix24";
+import { findActiveCreator } from "@/lib/creator-attribution";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -90,6 +91,27 @@ export async function POST(req: NextRequest) {
     if (matchedUserId) {
       const totalDeposit = bookings.reduce((sum, b) => sum + (b.deposit_amount ?? 0), 0);
       await awardPointsForBooking(matchedUserId, firstBooking.id, totalDeposit);
+    }
+
+    // Creator earnings: if any booking has a ref_code, create earnings rows
+    for (const b of bookings) {
+      if (!b.ref_code) continue;
+      try {
+        const creator = await findActiveCreator(b.ref_code);
+        if (!creator) continue;
+        const grossPaise = (b.package_price ?? 0) * (b.num_travellers ?? 1) * 100;
+        const commissionPaise = Math.round(grossPaise * (Number(creator.commission_pct) / 100));
+        await supabase.from("creator_earnings").upsert({
+          creator_id: creator.id,
+          booking_id: b.id,
+          gross_amount_paise: grossPaise,
+          commission_pct: creator.commission_pct,
+          commission_amount_paise: commissionPaise,
+          status: "pending",
+        }, { onConflict: "booking_id" });
+      } catch (e) {
+        console.error("Creator earning insert error:", e);
+      }
     }
 
     // Save leads CRM entries (one per booking)

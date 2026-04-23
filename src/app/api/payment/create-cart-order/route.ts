@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import { pushBookingAsDeal } from "@/lib/bitrix24";
+import { REF_COOKIE, isValidRefCode } from "@/lib/creator-attribution";
 
 const adminClient = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -81,6 +83,10 @@ export async function POST(req: NextRequest) {
 
     const order = await rzpRes.json();
 
+    // Capture creator ref from cookie
+    const cookieRef = cookies().get(REF_COOKIE)?.value;
+    const refCode = isValidRefCode(cookieRef) ? cookieRef : null;
+
     // Insert one bookings row per cart item, all sharing order_group_id + razorpay_order_id
     const bookingRows = lineItems.map(({ item, num, depositTotal }) => ({
       razorpay_order_id: order.id,
@@ -95,6 +101,7 @@ export async function POST(req: NextRequest) {
       travel_date: item.travel_date,
       num_travellers: num,
       special_requests: specialRequests || null,
+      ref_code: refCode,
       status: "created" as const,
     }));
 
@@ -119,6 +126,7 @@ export async function POST(req: NextRequest) {
         specialRequests: row.special_requests ?? undefined,
         razorpayOrderId: row.razorpay_order_id,
         isGroup: true,
+        refCode: row.ref_code ?? undefined,
       }).catch((e) => console.error("Bitrix24 pushBookingAsDeal (cart) error:", e));
     }
 

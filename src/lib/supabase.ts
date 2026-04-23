@@ -39,6 +39,7 @@ export interface Lead {
   utm_medium?: string;
   utm_campaign?: string;
   page_url?: string;
+  ref_code?: string;
   status?: "new" | "contacted" | "qualified" | "booked" | "lost";
   created_at?: string;
 }
