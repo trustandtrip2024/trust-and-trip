@@ -79,9 +79,15 @@ export async function POST(req: NextRequest) {
     const isIntent = INTENT_SOURCES.has(body.source ?? "");
 
     if (!isIntent) {
-      // Full-form submissions require name + phone
-      if (!body.name?.trim() || !body.phone?.trim()) {
-        return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
+      // Newsletter sign-ups only need email. Every other form needs name + phone.
+      if (body.source === "newsletter") {
+        if (!body.email?.trim()) {
+          return NextResponse.json({ error: "Email is required." }, { status: 400 });
+        }
+      } else {
+        if (!body.name?.trim() || !body.phone?.trim()) {
+          return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
+        }
       }
     }
 
