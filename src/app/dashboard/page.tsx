@@ -2,14 +2,21 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarCheck, Heart, ShoppingCart, Tag, ArrowRight, MapPin, Plane, Clock } from "lucide-react";
+import { CalendarCheck, Heart, ShoppingCart, Tag, ArrowRight, MapPin, Plane, Clock, Crown } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useUserStore } from "@/store/useUserStore";
+import { TIER_PERKS, pointsToNextTier, type Tier } from "@/lib/points";
 
 interface Stats {
   bookings: number;
   saved: number;
   cart: number;
+}
+
+interface PointsSummary {
+  total_points: number;
+  lifetime_points: number;
+  tier: Tier;
 }
 
 interface UpcomingTrip {
@@ -31,6 +38,7 @@ export default function DashboardPage() {
   const { user } = useUserStore();
   const [stats, setStats] = useState<Stats>({ bookings: 0, saved: 0, cart: 0 });
   const [upcoming, setUpcoming] = useState<UpcomingTrip | null>(null);
+  const [pointsSummary, setPointsSummary] = useState<PointsSummary | null>(null);
   const [loadingStats, setLoadingStats] = useState(true);
 
   const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Traveller";
@@ -47,7 +55,7 @@ export default function DashboardPage() {
 
         type BookingLite = { id: string; package_title: string; package_slug: string; travel_date: string | null; status: string };
 
-        const [savedRes, cartRes, bookingsData] = await Promise.all([
+        const [savedRes, cartRes, bookingsData, pointsData] = await Promise.all([
           safe(supabase.from("user_saved_trips").select("id", { count: "exact", head: true }).then((r) => r.count ?? 0), 0),
           safe(supabase.from("user_cart").select("id", { count: "exact", head: true }).then((r) => r.count ?? 0), 0),
           token
@@ -58,9 +66,18 @@ export default function DashboardPage() {
                 [] as BookingLite[]
               )
             : Promise.resolve([] as BookingLite[]),
+          token
+            ? safe(
+                fetch("/api/user/points", { headers: { Authorization: `Bearer ${token}` } })
+                  .then((r) => r.ok ? r.json() : null)
+                  .then((d): PointsSummary | null => d?.points ?? null),
+                null as PointsSummary | null
+              )
+            : Promise.resolve(null),
         ]);
 
         setStats({ saved: savedRes, cart: cartRes, bookings: bookingsData.length });
+        setPointsSummary(pointsData);
 
         const upcomingTrip = bookingsData
           .filter((b) => b.travel_date && ["verified", "paid"].includes(b.status) && daysUntil(b.travel_date) >= 0)
@@ -121,6 +138,46 @@ export default function DashboardPage() {
         </h1>
         <p className="text-sm text-ink/50 mt-1.5">Here&apos;s a summary of your travel activity.</p>
       </div>
+
+      {/* Rewards banner */}
+      {pointsSummary && (() => {
+        const tierCfg = TIER_PERKS[pointsSummary.tier];
+        const { next, needed } = pointsToNextTier(pointsSummary.lifetime_points);
+        return (
+          <Link
+            href="/dashboard/rewards"
+            className="group block bg-white rounded-2xl border border-ink/8 hover:border-gold/40 hover:shadow-soft p-4 md:p-5 mb-6 transition-all"
+          >
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${tierCfg.color}`}>
+                  <Crown className={`h-4 w-4 ${tierCfg.accent}`} />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`text-[10px] uppercase tracking-widest font-semibold ${tierCfg.accent}`}>
+                      {tierCfg.label} tier
+                    </span>
+                    <span className="text-[10px] text-ink/35">·</span>
+                    <span className="text-[11px] text-ink/55">{tierCfg.discount}</span>
+                  </div>
+                  <p className="font-display text-lg font-medium text-ink mt-0.5">
+                    {pointsSummary.total_points.toLocaleString("en-IN")} points
+                  </p>
+                  {next && (
+                    <p className="text-[11px] text-ink/45 mt-0.5">
+                      {needed.toLocaleString("en-IN")} pts to {TIER_PERKS[next].label}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <span className="text-xs text-ink/45 group-hover:text-gold transition-colors flex items-center gap-1">
+                View rewards <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </div>
+          </Link>
+        );
+      })()}
 
       {/* Upcoming trip banner */}
       {upcoming && upcoming.travel_date && (() => {

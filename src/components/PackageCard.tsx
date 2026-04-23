@@ -66,6 +66,7 @@ export default function PackageCard({
         package_title: title,
         package_image: image,
         package_price: price,
+        price_at_save: dynPrice,
         duration,
         destination_name: destinationName,
         travel_type: travelType,

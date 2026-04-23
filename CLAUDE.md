@@ -26,9 +26,11 @@ There are no automated tests. Validate changes with `npx tsc --noEmit` before co
 
 ## Key Data Flows
 
-**Lead capture:** Any form (contact, package enquiry, trip planner, exit intent) calls `submitLead()` from `src/lib/submit-lead.ts` → `POST /api/leads` → Supabase `leads` table + fire-and-forget Resend emails (notify business + confirm to user). Lead templates are React Email components in `src/lib/emails/`.
+**Lead capture:** Any form (contact, package enquiry, trip planner, exit intent) calls `submitLead()` from `src/lib/submit-lead.ts` → `POST /api/leads` → Supabase `leads` table + fire-and-forget Resend emails (notify business + confirm to user) + fire-and-forget Bitrix24 push (`pushLead` from `src/lib/bitrix24.ts`). Lead templates are React Email components in `src/lib/emails/`.
 
-**Payment:** `POST /api/payment/create-order` creates a Razorpay order (30% deposit, min ₹5,000) and inserts a `bookings` row with status `created`. `POST /api/payment/verify` validates the Razorpay HMAC signature and updates status to `verified`.
+**Payment:** `POST /api/payment/create-order` creates a Razorpay order (30% deposit, min ₹5,000), inserts a `bookings` row with status `created`, and pushes a Deal into Bitrix24 Sales pipeline (`pushBookingAsDeal`). `POST /api/payment/verify` validates the Razorpay HMAC signature, updates status to `verified`, and advances the Bitrix24 Deal to Won (`markDealPaid`).
+
+**Bitrix24 CRM:** `src/lib/bitrix24.ts` wraps a Bitrix24 incoming webhook (env: `BITRIX24_WEBHOOK_URL`). All calls are fire-and-forget — CRM failures never break primary flows. If the webhook env var is absent, the functions silently no-op (same graceful pattern as Resend). Functions: `pushLead`, `pushBookingAsDeal`, `markDealPaid`, `pushNewsletterSubscriber`. Custom field codes (`UF_CRM_*`) at the top of the file must match fields created in the Bitrix24 portal — missing custom fields are silently ignored by Bitrix24.
 
 **Aria chat:** `POST /api/chat` calls Claude Haiku via `@anthropic-ai/sdk`. Rate-limited to 20 msg/IP/min via Redis. The system prompt is hardcoded in the route file.
 
@@ -46,6 +48,7 @@ There are no automated tests. Validate changes with `npx tsc --noEmit` before co
 **Optional env vars** (features degrade gracefully when absent):
 - `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` — Redis cache + rate limiting; if absent, caching is skipped and rate limiting allows all requests
 - `RESEND_API_KEY` — email notifications; silently skipped if absent
+- `BITRIX24_WEBHOOK_URL` — Bitrix24 CRM sync for leads, bookings, newsletter. Format: `https://<portal>.bitrix24.in/rest/<userId>/<token>/`. If absent, Bitrix24 functions no-op. Setup docs: `../TAT bitrix/trustandtrip-bitrix-integration/01-setup-webhook.md`.
 - `GOOGLE_PLACES_API_KEY` / `GOOGLE_PLACE_ID` — live Google reviews
 - `WHATSAPP_ACCESS_TOKEN` / `WHATSAPP_PHONE_ID` / `WHATSAPP_VERIFY_TOKEN`
 

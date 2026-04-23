@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { pushBookingAsDeal } from "@/lib/bitrix24";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -57,6 +58,21 @@ export async function POST(req: NextRequest) {
     });
 
     if (dbErr) console.error("Booking insert error:", dbErr);
+
+    // Fire-and-forget Bitrix24 sync: opens a Deal in the Sales pipeline
+    pushBookingAsDeal({
+      customerName: customer_name,
+      customerEmail: customer_email,
+      customerPhone: customer_phone,
+      packageTitle: package_title,
+      packageSlug: package_slug,
+      packagePrice: package_price,
+      depositAmount: DEPOSIT_AMOUNT / 100,
+      travelDate: travel_date,
+      numTravellers: num_travellers,
+      specialRequests: special_requests,
+      razorpayOrderId: order.id,
+    }).catch((e) => console.error("Bitrix24 pushBookingAsDeal error:", e));
 
     return NextResponse.json({
       order_id: order.id,

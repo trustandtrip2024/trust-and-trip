@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import type { Lead } from "@/lib/supabase";
+import { pushLead } from "@/lib/bitrix24";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -91,6 +92,9 @@ export async function POST(req: NextRequest) {
 
     // Fire-and-forget emails
     sendEmails(body);
+
+    // Fire-and-forget Bitrix24 sync — errors logged but never block response
+    pushLead(body).catch((e) => console.error("Bitrix24 pushLead error:", e));
 
     return NextResponse.json({ success: true });
   } catch (err) {

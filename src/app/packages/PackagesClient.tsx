@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import PackageCard from "@/components/PackageCard";
 import type { Package, Destination } from "@/lib/data";
-import { SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal, X, ArrowUpDown, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const durationRanges = [
@@ -21,6 +22,21 @@ const priceRanges = [
 ];
 
 const travelTypes = ["Couple", "Family", "Group", "Solo"];
+
+const ratingFloors = [
+  { label: "4.5+", value: "4.5" },
+  { label: "4.0+", value: "4.0" },
+  { label: "3.5+", value: "3.5" },
+];
+
+const sortOptions = [
+  { label: "Popularity", value: "popular" },
+  { label: "Price: Low to High", value: "price-asc" },
+  { label: "Price: High to Low", value: "price-desc" },
+  { label: "Rating", value: "rating" },
+  { label: "Duration: Short to Long", value: "duration-asc" },
+  { label: "Newest first", value: "newest" },
+];
 
 const INDIA_SLUGS = new Set(["kerala","goa","manali","rajasthan","ladakh","andaman","shimla","coorg","varanasi","agra"]);
 
@@ -50,6 +66,9 @@ export default function PackagesClient({
   initialBudget = "",
   initialRegion = "",
 }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const resolvedPrice = initialBudget ? (BUDGET_TO_PRICE[initialBudget] ?? "") : "";
   const resolvedDuration = initialDuration
     ? durationRanges.find((d) => d.label.replace(/\s/g, "") === initialDuration.replace(/\s/g, ""))?.label ?? ""
@@ -59,10 +78,31 @@ export default function PackagesClient({
   const [filterTravelType, setFilterTravelType] = useState(initialTravelType);
   const [filterDuration, setFilterDuration] = useState(resolvedDuration);
   const [filterPrice, setFilterPrice] = useState(resolvedPrice);
+  const [filterRating, setFilterRating] = useState("");
+  const [sortBy, setSortBy] = useState<string>("popular");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
+  // Sync state → URL (shallow, no scroll)
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (filterDestination) params.set("destination", filterDestination);
+    if (filterTravelType) params.set("type", filterTravelType);
+    if (filterDuration) params.set("duration", filterDuration.replace(/\s/g, ""));
+    if (filterPrice) {
+      const key = Object.entries(BUDGET_TO_PRICE).find(([, v]) => v === filterPrice)?.[0];
+      if (key) params.set("budget", key);
+    }
+    if (filterRating) params.set("rating", filterRating);
+    if (sortBy && sortBy !== "popular") params.set("sort", sortBy);
+    if (initialRegion) params.set("region", initialRegion);
+
+    const qs = params.toString();
+    const url = qs ? `${pathname}?${qs}` : pathname;
+    router.replace(url, { scroll: false });
+  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, sortBy, initialRegion, pathname, router]);
+
   const filtered = useMemo(() => {
-    return packages.filter((p) => {
+    const list = packages.filter((p) => {
       if (filterDestination && p.destinationSlug !== filterDestination) return false;
       if (filterTravelType && p.travelType !== filterTravelType) return false;
       if (initialRegion === "domestic" && !INDIA_SLUGS.has(p.destinationSlug)) return false;
@@ -75,27 +115,64 @@ export default function PackagesClient({
         const range = priceRanges.find((r) => r.label === filterPrice);
         if (range && (p.price < range.min || p.price > range.max)) return false;
       }
+      if (filterRating) {
+        const floor = parseFloat(filterRating);
+        if (!p.rating || p.rating < floor) return false;
+      }
       return true;
     });
-  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice]);
+
+    // Sort
+    const sorted = [...list];
+    switch (sortBy) {
+      case "price-asc":
+        sorted.sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        sorted.sort((a, b) => b.price - a.price);
+        break;
+      case "rating":
+        sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+        break;
+      case "duration-asc":
+        sorted.sort((a, b) => a.days - b.days);
+        break;
+      case "newest":
+        // heuristic: reverse original order (closest to array end = newest in Sanity)
+        sorted.reverse();
+        break;
+      case "popular":
+      default:
+        sorted.sort((a, b) => {
+          const scoreA = (a.rating ?? 0) * (a.reviews ?? 0) + (a.trending ? 100 : 0);
+          const scoreB = (b.rating ?? 0) * (b.reviews ?? 0) + (b.trending ? 100 : 0);
+          return scoreB - scoreA;
+        });
+    }
+    return sorted;
+  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, sortBy, initialRegion]);
 
   const activeFilterCount =
     (filterDestination ? 1 : 0) +
     (filterTravelType ? 1 : 0) +
     (filterDuration ? 1 : 0) +
-    (filterPrice ? 1 : 0);
+    (filterPrice ? 1 : 0) +
+    (filterRating ? 1 : 0);
 
   const clearAll = () => {
     setFilterDestination("");
     setFilterTravelType("");
     setFilterDuration("");
     setFilterPrice("");
+    setFilterRating("");
+    setSortBy("popular");
   };
 
   return (
     <section className="py-12 md:py-16">
       <div className="container-custom">
-        <div className="flex items-center justify-between gap-4 mb-8 md:hidden">
+        {/* Mobile bar */}
+        <div className="flex items-center justify-between gap-3 mb-6 md:hidden">
           <button
             onClick={() => setFiltersOpen(!filtersOpen)}
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-ink text-cream text-sm"
@@ -108,10 +185,20 @@ export default function PackagesClient({
               </span>
             )}
           </button>
-          <p className="text-sm text-ink/60">{filtered.length} results</p>
+          <div className="relative">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="appearance-none pl-8 pr-6 py-2.5 rounded-full border border-ink/15 text-sm text-ink bg-cream focus:outline-none focus:ring-2 focus:ring-gold/40"
+            >
+              {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+            </select>
+            <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink/50 pointer-events-none" />
+          </div>
         </div>
 
         <div className="grid md:grid-cols-[260px_1fr] gap-8 lg:gap-12">
+          {/* Desktop sidebar */}
           <aside className="hidden md:block">
             <div className="md:sticky md:top-28">
               <FilterPanel
@@ -124,12 +211,15 @@ export default function PackagesClient({
                 setFilterDuration={setFilterDuration}
                 filterPrice={filterPrice}
                 setFilterPrice={setFilterPrice}
+                filterRating={filterRating}
+                setFilterRating={setFilterRating}
                 activeFilterCount={activeFilterCount}
                 clearAll={clearAll}
               />
             </div>
           </aside>
 
+          {/* Mobile drawer */}
           <AnimatePresence>
             {filtersOpen && (
               <>
@@ -157,6 +247,8 @@ export default function PackagesClient({
                     setFilterDuration={setFilterDuration}
                     filterPrice={filterPrice}
                     setFilterPrice={setFilterPrice}
+                    filterRating={filterRating}
+                    setFilterRating={setFilterRating}
                     activeFilterCount={activeFilterCount}
                     clearAll={clearAll}
                     onClose={() => setFiltersOpen(false)}
@@ -167,10 +259,27 @@ export default function PackagesClient({
           </AnimatePresence>
 
           <div>
-            <div className="hidden md:flex items-center justify-between mb-6">
+            {/* Desktop results header */}
+            <div className="hidden md:flex items-center justify-between mb-6 gap-4 flex-wrap">
               <p className="text-sm text-ink/60">
-                <span className="font-medium text-ink">{filtered.length}</span> packages available
+                <span className="font-medium text-ink">{filtered.length}</span> packages
+                {activeFilterCount > 0 && (
+                  <span className="text-ink/45"> · {activeFilterCount} filter{activeFilterCount > 1 ? "s" : ""} applied</span>
+                )}
               </p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-ink/50">Sort by:</span>
+                <div className="relative">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none pl-3 pr-8 py-2 rounded-lg border border-ink/15 text-sm text-ink bg-white hover:border-ink/30 focus:outline-none focus:ring-2 focus:ring-gold/40 transition-colors"
+                  >
+                    {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
+                  <ArrowUpDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink/50 pointer-events-none" />
+                </div>
+              </div>
             </div>
 
             {filtered.length === 0 ? (
@@ -224,20 +333,7 @@ export default function PackagesClient({
   );
 }
 
-function FilterPanel({
-  destinations,
-  filterDestination,
-  setFilterDestination,
-  filterTravelType,
-  setFilterTravelType,
-  filterDuration,
-  setFilterDuration,
-  filterPrice,
-  setFilterPrice,
-  activeFilterCount,
-  clearAll,
-  onClose,
-}: {
+interface PanelProps {
   destinations: Destination[];
   filterDestination: string;
   setFilterDestination: (v: string) => void;
@@ -247,10 +343,21 @@ function FilterPanel({
   setFilterDuration: (v: string) => void;
   filterPrice: string;
   setFilterPrice: (v: string) => void;
+  filterRating: string;
+  setFilterRating: (v: string) => void;
   activeFilterCount: number;
   clearAll: () => void;
   onClose?: () => void;
-}) {
+}
+
+function FilterPanel({
+  destinations, filterDestination, setFilterDestination,
+  filterTravelType, setFilterTravelType,
+  filterDuration, setFilterDuration,
+  filterPrice, setFilterPrice,
+  filterRating, setFilterRating,
+  activeFilterCount, clearAll, onClose,
+}: PanelProps) {
   return (
     <>
       <div className="flex items-center justify-between mb-6">
@@ -306,7 +413,7 @@ function FilterPanel({
         />
       </FilterGroup>
 
-      <FilterGroup label="Price Range" last>
+      <FilterGroup label="Price Range">
         <RadioRow
           name="price"
           options={[{ label: "Any", value: "" }].concat(
@@ -315,6 +422,35 @@ function FilterPanel({
           value={filterPrice}
           onChange={setFilterPrice}
         />
+      </FilterGroup>
+
+      <FilterGroup label="Minimum rating" last>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => setFilterRating("")}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+              !filterRating
+                ? "bg-ink text-cream border-ink"
+                : "bg-cream text-ink/65 border-ink/15 hover:border-ink/30"
+            }`}
+          >
+            Any
+          </button>
+          {ratingFloors.map((r) => (
+            <button
+              key={r.value}
+              onClick={() => setFilterRating(r.value)}
+              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                filterRating === r.value
+                  ? "bg-gold/15 text-ink border-gold"
+                  : "bg-cream text-ink/65 border-ink/15 hover:border-ink/30"
+              }`}
+            >
+              <Star className="h-3 w-3 fill-gold text-gold" />
+              {r.label}
+            </button>
+          ))}
+        </div>
       </FilterGroup>
     </>
   );
@@ -330,10 +466,7 @@ function FilterGroup({ label, children, last }: { label: string; children: React
 }
 
 function RadioRow({
-  name,
-  options,
-  value,
-  onChange,
+  name, options, value, onChange,
 }: {
   name: string;
   options: { label: string; value: string }[];

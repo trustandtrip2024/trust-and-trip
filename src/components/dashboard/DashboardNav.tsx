@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Heart, ShoppingCart, Tag, CalendarCheck,
-  LogOut, Settings, Star, Gift, MoreHorizontal, X, Users,
+  LogOut, Settings, Star, Gift, MoreHorizontal, X, Users, Crown,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { User as SupaUser } from "@supabase/supabase-js";
@@ -15,6 +15,7 @@ const NAV = [
   { href: "/dashboard/bookings", label: "My Bookings", icon: CalendarCheck },
   { href: "/dashboard/saved", label: "Saved Trips", icon: Heart },
   { href: "/dashboard/cart", label: "My Cart", icon: ShoppingCart },
+  { href: "/dashboard/rewards", label: "Rewards", icon: Crown },
   { href: "/dashboard/travellers", label: "Travellers", icon: Users },
   { href: "/dashboard/offers", label: "Offers for You", icon: Tag },
   { href: "/dashboard/reviews", label: "My Reviews", icon: Star },

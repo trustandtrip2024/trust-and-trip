@@ -1,11 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
+import { computeTier, pointsForRupees } from "@/lib/points";
+import { markDealPaid } from "@/lib/bitrix24";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+
+async function awardPointsForBooking(userId: string, bookingId: string, depositAmount: number) {
+  const earned = pointsForRupees(depositAmount);
+  if (earned <= 0) return;
+
+  // Fetch current
+  const { data: existing } = await supabase
+    .from("user_points")
+    .select("total_points, lifetime_points")
+    .eq("user_id", userId)
+    .single();
+
+  const newTotal = (existing?.total_points ?? 0) + earned;
+  const newLifetime = (existing?.lifetime_points ?? 0) + earned;
+  const tier = computeTier(newLifetime);
+
+  await supabase
+    .from("user_points")
+    .upsert({
+      user_id: userId,
+      total_points: newTotal,
+      lifetime_points: newLifetime,
+      tier,
+      updated_at: new Date().toISOString(),
+    });
+
+  await supabase.from("points_log").insert({
+    user_id: userId,
+    delta: earned,
+    reason: "booking_verified",
+    ref_id: bookingId,
+  });
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,13 +74,22 @@ export async function POST(req: NextRequest) {
     const firstBooking = bookings[0];
     const isGroup = bookings.length > 1 || !!firstBooking.order_group_id;
 
-    // Find user by email to clear cart (only if logged-in group checkout)
-    if (isGroup && firstBooking.customer_email) {
+    // Find user by email — used for cart clearing + points award
+    let matchedUserId: string | null = null;
+    if (firstBooking.customer_email) {
       const { data: { users } } = await supabase.auth.admin.listUsers();
       const matchedUser = users?.find((u) => u.email === firstBooking.customer_email);
-      if (matchedUser) {
-        await supabase.from("user_cart").delete().eq("user_id", matchedUser.id);
+      matchedUserId = matchedUser?.id ?? null;
+
+      if (isGroup && matchedUserId) {
+        await supabase.from("user_cart").delete().eq("user_id", matchedUserId);
       }
+    }
+
+    // Award loyalty points (1 per ₹100 of deposit, summed across all bookings in this order)
+    if (matchedUserId) {
+      const totalDeposit = bookings.reduce((sum, b) => sum + (b.deposit_amount ?? 0), 0);
+      await awardPointsForBooking(matchedUserId, firstBooking.id, totalDeposit);
     }
 
     // Save leads CRM entries (one per booking)
@@ -63,6 +107,12 @@ export async function POST(req: NextRequest) {
         status: "booked",
       });
     }
+
+    // Fire-and-forget Bitrix24 sync: advance the Deal(s) created at order time to Won.
+    // If the deal wasn't pushed earlier (e.g. webhook missing at that time), this no-ops.
+    markDealPaid(razorpay_order_id, razorpay_payment_id).catch((e) =>
+      console.error("Bitrix24 markDealPaid error:", e)
+    );
 
     return NextResponse.json({
       success: true,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
+import { pushBookingAsDeal } from "@/lib/bitrix24";
 
 const adminClient = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -101,6 +102,24 @@ export async function POST(req: NextRequest) {
     if (insertErr) {
       console.error("Booking insert error:", insertErr);
       return NextResponse.json({ error: "Failed to record bookings." }, { status: 500 });
+    }
+
+    // Fire-and-forget Bitrix24 sync: one Deal per cart line (all tagged as cart group)
+    for (const row of bookingRows) {
+      pushBookingAsDeal({
+        customerName: row.customer_name,
+        customerEmail: row.customer_email,
+        customerPhone: row.customer_phone,
+        packageTitle: row.package_title,
+        packageSlug: row.package_slug,
+        packagePrice: row.package_price,
+        depositAmount: row.deposit_amount,
+        travelDate: row.travel_date,
+        numTravellers: row.num_travellers,
+        specialRequests: row.special_requests ?? undefined,
+        razorpayOrderId: row.razorpay_order_id,
+        isGroup: true,
+      }).catch((e) => console.error("Bitrix24 pushBookingAsDeal (cart) error:", e));
     }
 
     return NextResponse.json({
