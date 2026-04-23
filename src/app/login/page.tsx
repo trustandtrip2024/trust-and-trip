@@ -21,8 +21,11 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const dashboardFor = (u: { user_metadata?: { role?: string } } | null) =>
+    u?.user_metadata?.role === "creator" ? "/creators/dashboard" : "/dashboard";
+
   useEffect(() => {
-    if (!loading && user) router.replace("/dashboard");
+    if (!loading && user) router.replace(dashboardFor(user));
   }, [user, loading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,9 +35,9 @@ export default function LoginPage() {
     setSubmitting(true);
 
     if (mode === "signin") {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setError(error.message);
-      else router.replace("/dashboard");
+      else router.replace(dashboardFor(data.user));
     } else if (mode === "signup") {
       const { error } = await supabase.auth.signUp({
         email,
