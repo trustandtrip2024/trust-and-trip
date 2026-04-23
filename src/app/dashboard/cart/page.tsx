@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart, Trash2, Clock, Users, CalendarDays, ArrowRight, Loader2 } from "lucide-react";
+import { ShoppingCart, Trash2, Clock, Users, CalendarDays, ArrowRight, Loader2, CreditCard } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useUserStore } from "@/store/useUserStore";
+import CartCheckoutModal from "@/components/dashboard/CartCheckoutModal";
 
 interface CartItem {
   id: string;
@@ -26,6 +27,7 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   const [removing, setRemoving] = useState<string>("");
   const [updating, setUpdating] = useState<string>("");
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -175,29 +177,54 @@ export default function CartPage() {
                   </div>
                   <Link
                     href={`/packages/${item.package_slug}`}
-                    className="flex items-center gap-2 bg-ink hover:bg-gold text-cream hover:text-ink px-4 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                    className="text-xs text-ink/50 hover:text-gold transition-colors inline-flex items-center gap-1"
                   >
-                    Book Now <ArrowRight className="h-4 w-4" />
+                    View package <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
               </div>
             );
           })}
 
-          {/* Cart total */}
-          <div className="bg-ink rounded-2xl p-5 text-cream flex items-center justify-between">
-            <div>
-              <p className="text-xs text-cream/50 mb-0.5">Total deposit for all items</p>
-              <p className="font-display text-2xl">₹{totalDeposit.toLocaleString("en-IN")}</p>
+          {/* Cart total + checkout */}
+          <div className="bg-ink rounded-2xl p-5 md:p-6 text-cream sticky bottom-20 lg:bottom-4 shadow-soft-lg">
+            <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
+              <div>
+                <p className="text-xs text-cream/50 mb-0.5">Total deposit · {items.length} {items.length === 1 ? "item" : "items"}</p>
+                <p className="font-display text-2xl md:text-3xl">₹{totalDeposit.toLocaleString("en-IN")}</p>
+                <p className="text-[11px] text-cream/40 mt-1">Balance due 14 days before departure</p>
+              </div>
+              <button
+                onClick={() => setCheckoutOpen(true)}
+                disabled={!items.every((i) => i.travel_date)}
+                className="flex items-center gap-2 bg-gold text-ink px-5 md:px-6 py-3 rounded-xl text-sm font-semibold hover:bg-gold/90 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <CreditCard className="h-4 w-4" />
+                Checkout all
+              </button>
             </div>
+            {!items.every((i) => i.travel_date) && (
+              <p className="text-[11px] text-amber-200">
+                Select a travel date for each trip to enable checkout.
+              </p>
+            )}
             <Link
               href="/packages"
-              className="flex items-center gap-2 bg-gold text-ink px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-gold/90 transition-all"
+              className="text-[11px] text-cream/55 hover:text-gold transition-colors inline-flex items-center gap-1"
             >
-              Continue browsing experiences <ArrowRight className="h-4 w-4" />
+              Continue browsing experiences <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
         </div>
+      )}
+
+      {checkoutOpen && (
+        <CartCheckoutModal
+          totalDeposit={totalDeposit}
+          itemCount={items.length}
+          onClose={() => setCheckoutOpen(false)}
+          onSuccess={() => setItems([])}
+        />
       )}
     </div>
   );

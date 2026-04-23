@@ -80,7 +80,11 @@ export default function BookingsPage() {
             const cfg = STATUS_CONFIG[b.status] ?? STATUS_CONFIG.created;
             const Icon = cfg.icon;
             return (
-              <div key={b.id} className="bg-white rounded-2xl border border-ink/8 p-5 md:p-6">
+              <Link
+                key={b.id}
+                href={`/dashboard/bookings/${b.id}`}
+                className="group block bg-white rounded-2xl border border-ink/8 hover:border-ink/15 hover:shadow-soft p-5 md:p-6 transition-all"
+              >
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
@@ -109,15 +113,12 @@ export default function BookingsPage() {
                     <p className="text-xs text-ink/40 mb-0.5">Deposit paid</p>
                     <p className="font-display text-lg font-medium text-ink">₹{b.deposit_amount.toLocaleString("en-IN")}</p>
                     <p className="text-[11px] text-ink/35 mt-0.5">of ₹{b.package_price.toLocaleString("en-IN")} total</p>
-                    <Link
-                      href={`/packages/${b.package_slug}`}
-                      className="inline-flex items-center gap-1 text-[11px] text-ink/40 hover:text-gold transition-colors mt-2"
-                    >
-                      View package <ArrowRight className="h-3 w-3" />
-                    </Link>
+                    <span className="inline-flex items-center gap-1 text-[11px] text-ink/45 mt-2 group-hover:text-gold transition-colors">
+                      View details <ArrowRight className="h-3 w-3" />
+                    </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
