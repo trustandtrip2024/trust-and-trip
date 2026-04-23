@@ -10,6 +10,7 @@ import ExitIntentPopup from "@/components/ExitIntentPopup";
 import JsonLd from "@/components/JsonLd";
 import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import VercelAnalytics from "@/components/VercelAnalytics";
 import CompareBar from "@/components/CompareBar";
 import ConditionalFooter from "@/components/ConditionalFooter";
 import SearchProvider from "@/components/SearchProvider";
@@ -180,6 +181,7 @@ export default function RootLayout({
           <AriaChatWidget />
           <ScrollToTop />
           <GoogleAnalytics />
+          <VercelAnalytics />
           <MetaPixel />
           <ServiceWorkerRegister />
           <CookieBanner />
