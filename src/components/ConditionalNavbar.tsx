@@ -1,13 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Footer from "./Footer";
+import Navbar from "./Navbar";
 
 const HIDDEN_ON = ["/dashboard", "/login"];
 
-export default function ConditionalFooter() {
+export default function ConditionalNavbar() {
   const path = usePathname();
   if (HIDDEN_ON.some((p) => path.startsWith(p))) return null;
-  if (/^\/packages\/[^/]+/.test(path)) return null;
-  return <Footer />;
+  return <Navbar />;
 }

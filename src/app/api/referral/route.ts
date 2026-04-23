@@ -12,6 +12,18 @@ function generateCode(name: string): string {
   return `${base}${rand}`;
 }
 
+// GET — fetch existing referral by email
+export async function GET(req: NextRequest) {
+  const email = req.nextUrl.searchParams.get("email");
+  if (!email) return NextResponse.json({ referral: null });
+  const { data } = await supabase
+    .from("referrals")
+    .select("code, clicks, conversions, reward_amount, status, created_at")
+    .eq("referrer_email", email.toLowerCase())
+    .maybeSingle();
+  return NextResponse.json({ referral: data ?? null });
+}
+
 // POST — create referral link
 export async function POST(req: NextRequest) {
   const { name, email, phone } = await req.json();

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, DM_Sans } from "next/font/google";
-import Navbar from "@/components/Navbar";
+import ConditionalNavbar from "@/components/ConditionalNavbar";
+import MainWrapper from "@/components/MainWrapper";
 import Footer from "@/components/Footer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import MobileBottomNav from "@/components/MobileBottomNav";
@@ -167,8 +168,8 @@ export default function RootLayout({
         <CookieConsentProvider>
         <AuthProvider>
         <TripPlannerProvider>
-          <Navbar />
-          <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+          <ConditionalNavbar />
+          <MainWrapper>{children}</MainWrapper>
           <ConditionalFooter />
           <FloatingWhatsApp />
           <MobileBottomNav />

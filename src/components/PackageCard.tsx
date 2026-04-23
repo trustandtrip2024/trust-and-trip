@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp, Heart, Sliders, PhoneCall } from "lucide-react";
+import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp, Heart, Sliders, PhoneCall, ShoppingCart, Check } from "lucide-react";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useUserStore } from "@/store/useUserStore";
 import { supabase } from "@/lib/supabase";
@@ -75,8 +75,28 @@ export default function PackageCard({
   const { price: dynPrice, originalPrice, tier, savings } = getDynamicPrice(price, slug);
   const [showCustomize, setShowCustomize] = useState(false);
   const [showSchedule, setShowSchedule] = useState(false);
+  const [inCart, setInCart] = useState(false);
+  const [addingCart, setAddingCart] = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
+
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!user || addingCart) return;
+    setAddingCart(true);
+    await supabase.from("user_cart").upsert({
+      user_id: user.id,
+      package_slug: slug,
+      package_title: title,
+      package_image: image,
+      package_price: price,
+      duration,
+      destination_name: destinationName,
+      travel_type: travelType,
+    }, { onConflict: "user_id,package_slug" });
+    setInCart(true);
+    setAddingCart(false);
+  };
 
   return (
     <>
@@ -197,6 +217,27 @@ export default function PackageCard({
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
+
+          {/* Add to cart — logged-in only */}
+          {user && (
+            <button
+              onClick={handleAddToCart}
+              disabled={addingCart}
+              className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] font-semibold transition-all duration-200 border ${
+                inCart
+                  ? "bg-green-50 border-green-200 text-green-700"
+                  : "bg-ink/5 border-ink/12 text-ink/70 hover:bg-ink hover:text-cream hover:border-ink"
+              }`}
+            >
+              {inCart ? (
+                <><Check className="h-3.5 w-3.5 shrink-0" />Added to cart</>
+              ) : addingCart ? (
+                <><ShoppingCart className="h-3.5 w-3.5 shrink-0 animate-pulse" />Adding…</>
+              ) : (
+                <><ShoppingCart className="h-3.5 w-3.5 shrink-0" />Add to Cart</>
+              )}
+            </button>
+          )}
 
           {/* Action buttons */}
           <div className="grid grid-cols-2 gap-2">

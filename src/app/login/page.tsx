@@ -39,7 +39,10 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: name } },
+        options: {
+          data: { full_name: name },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
       if (error) setError(error.message);
       else setSuccess("Check your email to confirm your account, then sign in.");

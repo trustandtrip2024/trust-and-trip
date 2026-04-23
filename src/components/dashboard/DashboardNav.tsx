@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Heart, ShoppingCart, Tag, CalendarCheck, LogOut, User } from "lucide-react";
+import { LayoutDashboard, Heart, ShoppingCart, Tag, CalendarCheck, LogOut, User, Settings, Star, Gift } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
@@ -12,6 +12,9 @@ const NAV = [
   { href: "/dashboard/saved", label: "Saved Trips", icon: Heart },
   { href: "/dashboard/cart", label: "My Cart", icon: ShoppingCart },
   { href: "/dashboard/offers", label: "Offers for You", icon: Tag },
+  { href: "/dashboard/reviews", label: "My Reviews", icon: Star },
+  { href: "/dashboard/referral", label: "Refer & Earn", icon: Gift },
+  { href: "/dashboard/profile", label: "Profile", icon: Settings },
 ];
 
 interface Props {

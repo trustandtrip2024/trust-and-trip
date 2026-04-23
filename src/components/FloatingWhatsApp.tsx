@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, MessageCircle, X } from "lucide-react";
 
@@ -8,8 +9,11 @@ const WHATSAPP_NUMBER = "918115999588";
 const PHONE_NUMBER = "+918115999588";
 
 export default function FloatingWhatsApp() {
+  const path = usePathname();
   const [expanded, setExpanded] = useState(false);
   const [show, setShow] = useState(false);
+
+  if (path.startsWith("/dashboard") || path.startsWith("/login")) return null;
 
   useEffect(() => {
     const t = setTimeout(() => setShow(true), 1500);

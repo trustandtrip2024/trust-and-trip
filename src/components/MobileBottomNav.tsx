@@ -45,11 +45,15 @@ function Tab({ href, icon: Icon, label, active, badge }: {
   );
 }
 
+const HIDDEN_ON = ["/dashboard", "/login"];
+
 export default function MobileBottomNav() {
   const path = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
   const wishlistCount = useWishlistStore((s) => s.wishlist.length);
   const isActive = (href: string) => path === href || (href !== "/" && path.startsWith(href));
+
+  if (HIDDEN_ON.some((p) => path.startsWith(p))) return null;
 
   return (
     <>
