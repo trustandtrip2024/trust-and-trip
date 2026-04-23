@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (!pathname.startsWith("/admin")) return NextResponse.next();
+  const isAdminPath = pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
+  if (!isAdminPath) return NextResponse.next();
 
   const adminSecret = process.env.ADMIN_SECRET;
   if (!adminSecret) return NextResponse.next(); // no secret set → open (dev only)
