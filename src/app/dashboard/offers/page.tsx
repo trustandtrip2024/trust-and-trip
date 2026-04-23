@@ -48,7 +48,7 @@ export default async function DashboardOffersPage() {
       <div className="bg-gold/10 border border-gold/20 rounded-2xl px-5 py-4 flex items-center gap-3 mb-6">
         <Zap className="h-5 w-5 text-gold shrink-0" />
         <p className="text-sm text-ink/80">
-          <span className="font-semibold text-ink">Members get priority access</span> — these rates are exclusive to logged-in users. Save up to 25% on select packages.
+          <span className="font-semibold text-ink">Members get priority access</span> — these rates are exclusive to logged-in users. Save up to 25% on select experiences.
         </p>
       </div>
 

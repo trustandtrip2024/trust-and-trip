@@ -99,7 +99,7 @@ export default function ReviewsPage() {
           <p className="font-medium text-ink">No confirmed bookings yet</p>
           <p className="text-sm text-ink/45 mt-1 mb-5">Reviews are available after your booking is confirmed.</p>
           <Link href="/packages" className="inline-flex items-center gap-2 bg-ink text-cream px-5 py-2.5 rounded-full text-sm font-medium hover:bg-gold hover:text-ink transition-all">
-            Browse packages
+            Browse experiences
           </Link>
         </div>
       ) : (

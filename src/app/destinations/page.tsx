@@ -167,7 +167,7 @@ export default async function DestinationsPage() {
             {[
               { n: india.length || "15+", label: "India destinations" },
               { n: international.length || "20+", label: "International" },
-              { n: "130+", label: "Packages" },
+              { n: "130+", label: "Experiences" },
             ].map(({ n, label }) => (
               <div key={label} className="text-center">
                 <p className="font-display text-2xl md:text-3xl text-gold font-medium">{n}</p>
@@ -198,7 +198,7 @@ export default async function DestinationsPage() {
                 href="/packages?region=india"
                 className="hidden md:flex items-center gap-1.5 text-sm text-ink/50 hover:text-gold transition-colors shrink-0"
               >
-                View India packages <ArrowUpRight className="h-4 w-4" />
+                View India experiences <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>
 
@@ -214,7 +214,7 @@ export default async function DestinationsPage() {
                 href="/packages?region=india"
                 className="flex items-center gap-1.5 text-sm text-ink/50 hover:text-gold transition-colors"
               >
-                View India packages <ArrowUpRight className="h-4 w-4" />
+                View India experiences <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -244,7 +244,7 @@ export default async function DestinationsPage() {
                 href="/packages?region=international"
                 className="hidden md:flex items-center gap-1.5 text-sm text-ink/50 hover:text-gold transition-colors shrink-0"
               >
-                View international packages <ArrowUpRight className="h-4 w-4" />
+                View international experiences <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>
 
@@ -260,7 +260,7 @@ export default async function DestinationsPage() {
                 href="/packages?region=international"
                 className="flex items-center gap-1.5 text-sm text-ink/50 hover:text-gold transition-colors"
               >
-                View international packages <ArrowUpRight className="h-4 w-4" />
+                View international experiences <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>
           </div>

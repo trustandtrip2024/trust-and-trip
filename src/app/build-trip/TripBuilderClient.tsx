@@ -196,7 +196,7 @@ export default function TripBuilderClient({ packages, destinations }: { packages
               <div>
                 <span className="eyebrow">Your matches</span>
                 <h1 className="heading-section mt-2 mb-2">
-                  {matched.length > 0 ? `${matched.length} packages found` : "No exact matches"}
+                  {matched.length > 0 ? `${matched.length} experiences found` : "No exact matches"}
                   <span className="italic text-gold font-light"> for you.</span>
                 </h1>
                 <p className="text-ink/60 text-sm mb-6">Based on your preferences. A planner can also build a custom one.</p>

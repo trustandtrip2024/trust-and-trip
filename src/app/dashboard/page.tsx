@@ -56,7 +56,7 @@ export default function DashboardPage() {
       value: stats.saved,
       icon: Heart,
       color: "bg-red-50 text-red-500",
-      desc: "Your wishlist of dream packages",
+      desc: "Your wishlist of dream experiences",
     },
     {
       href: "/dashboard/cart",
@@ -64,7 +64,7 @@ export default function DashboardPage() {
       value: stats.cart,
       icon: ShoppingCart,
       color: "bg-amber-50 text-amber-600",
-      desc: "Packages ready to book",
+      desc: "Experiences ready to book",
     },
     {
       href: "/dashboard/offers",
@@ -121,7 +121,7 @@ export default function DashboardPage() {
               <MapPin className="h-4 w-4 text-gold" />
             </div>
             <div>
-              <p className="text-sm font-medium text-ink group-hover:text-gold transition-colors">Browse Packages</p>
+              <p className="text-sm font-medium text-ink group-hover:text-gold transition-colors">Browse Experiences</p>
               <p className="text-[11px] text-ink/40">Explore 60+ destinations</p>
             </div>
           </Link>

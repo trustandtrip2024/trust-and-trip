@@ -64,7 +64,7 @@ export default function DestinationCard({ destination, index = 0 }: Props) {
               </p>
             </div>
             <span className="text-xs text-cream/70 underline-offset-2 decoration-gold group-hover:text-gold group-hover:underline transition-colors">
-              View Packages
+              View Experiences
             </span>
           </div>
         </div>

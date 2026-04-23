@@ -71,7 +71,7 @@ export default function BookingsPage() {
           <p className="font-medium text-ink">No bookings yet</p>
           <p className="text-sm text-ink/45 mt-1 mb-5">Your confirmed bookings will appear here.</p>
           <Link href="/packages" className="inline-flex items-center gap-2 bg-ink text-cream px-5 py-2.5 rounded-full text-sm font-medium hover:bg-gold hover:text-ink transition-all">
-            Browse packages <ArrowRight className="h-4 w-4" />
+            Browse experiences <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       ) : (

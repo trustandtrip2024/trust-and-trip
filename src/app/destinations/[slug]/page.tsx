@@ -132,7 +132,7 @@ export default async function DestinationDetail({ params }: Props) {
 
             <Link href={`/packages?destination=${destination.slug}`}
               className="flex items-center justify-center gap-2 w-full bg-ink text-cream py-3 rounded-xl text-sm font-medium hover:bg-gold hover:text-ink transition-colors mt-2">
-              View all packages <ArrowRight className="h-4 w-4" />
+              View all experiences <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
@@ -168,10 +168,10 @@ export default async function DestinationDetail({ params }: Props) {
             <PackageSlider
               id={`dest-${destination.slug}`}
               eyebrow="Curated journeys"
-              heading={`Packages built for <span class="italic text-gold font-light">${destination.name}.</span>`}
+              heading={`Experiences built for <span class="italic text-gold font-light">${destination.name}.</span>`}
               packages={packages}
               viewAllHref={`/packages?destination=${destination.slug}`}
-              viewAllLabel="All packages"
+              viewAllLabel="All experiences"
             />
           </div>
         </section>

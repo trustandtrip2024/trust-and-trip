@@ -102,7 +102,7 @@ export default async function ExperienceDetailPage({ params }: Props) {
           <div className="mb-10 md:mb-12">
             <span className="eyebrow">Curated for you</span>
             <h2 className="heading-section mt-2 text-balance">
-              {exp.title} packages
+              {exp.title} experiences
               <span className="italic text-gold font-light"> worth every moment.</span>
             </h2>
             <p className="mt-4 text-ink/60 max-w-xl leading-relaxed">
@@ -136,7 +136,7 @@ export default async function ExperienceDetailPage({ params }: Props) {
           ) : (
             <div className="text-center py-16 bg-cream rounded-3xl border border-ink/5">
               <p className="font-display text-2xl mb-3">Coming soon</p>
-              <p className="text-ink/60 mb-6">We're curating the perfect packages for this experience.</p>
+              <p className="text-ink/60 mb-6">We're curating the perfect experiences for this experience.</p>
               <Link href="/customize-trip" className="btn-primary inline-flex">
                 Build a custom trip <ArrowRight className="h-4 w-4" />
               </Link>
@@ -145,7 +145,7 @@ export default async function ExperienceDetailPage({ params }: Props) {
 
           <div className="mt-10 text-center">
             <Link href={`/packages?type=${exp.travelType ?? ""}`} className="btn-outline inline-flex">
-              See all {exp.category} packages
+              See all {exp.category} experiences
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

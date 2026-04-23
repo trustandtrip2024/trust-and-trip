@@ -70,7 +70,7 @@ export default function CartPage() {
       <div className="mb-6">
         <p className="text-xs uppercase tracking-widest text-ink/40 mb-1">Dashboard</p>
         <h1 className="font-display text-2xl font-medium text-ink">My Cart</h1>
-        <p className="text-sm text-ink/50 mt-1">Packages you&apos;re ready to book.</p>
+        <p className="text-sm text-ink/50 mt-1">Experiences ready to book.</p>
       </div>
 
       {loading ? (
@@ -81,13 +81,13 @@ export default function CartPage() {
         <div className="bg-white rounded-2xl border border-ink/8 p-10 text-center">
           <ShoppingCart className="h-10 w-10 text-ink/20 mx-auto mb-3" />
           <p className="font-medium text-ink">Your cart is empty</p>
-          <p className="text-sm text-ink/45 mt-1 mb-5">Add packages from Saved Trips or browse packages.</p>
+          <p className="text-sm text-ink/45 mt-1 mb-5">Add experiences from Saved Trips or browse.</p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <Link href="/dashboard/saved" className="inline-flex items-center gap-2 bg-ink text-cream px-5 py-2.5 rounded-full text-sm font-medium hover:bg-gold hover:text-ink transition-all">
               Saved trips <ArrowRight className="h-4 w-4" />
             </Link>
             <Link href="/packages" className="inline-flex items-center gap-2 border border-ink/20 text-ink px-5 py-2.5 rounded-full text-sm font-medium hover:border-ink/40 transition-all">
-              Browse packages
+              Browse experiences
             </Link>
           </div>
         </div>
@@ -194,7 +194,7 @@ export default function CartPage() {
               href="/packages"
               className="flex items-center gap-2 bg-gold text-ink px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-gold/90 transition-all"
             >
-              Continue browsing <ArrowRight className="h-4 w-4" />
+              Continue browsing experiences <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
