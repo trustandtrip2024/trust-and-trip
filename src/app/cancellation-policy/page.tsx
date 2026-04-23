@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { RotateCcw } from "lucide-react";
+import IntentAnchor from "@/components/IntentAnchor";
 
 export const metadata: Metadata = {
   title: "Cancellation & Refund Policy",
@@ -139,7 +140,7 @@ export default function CancellationPolicyPage() {
             </ol>
             <p className="mt-6 text-sm text-cream/60">
               You can also call us at{" "}
-              <a href="tel:+918115999588" className="text-gold">+91 8115 999 588</a> during
+              <IntentAnchor href="tel:+918115999588" intent="call_click" metadata={{ note: "Cancellation policy — call us" }} className="text-gold">+91 8115 999 588</IntentAnchor> during
               office hours (8 AM – 10 PM, Tuesday closed).
             </p>
           </div>

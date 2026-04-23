@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { Search, CheckCircle2, Clock, XCircle, AlertCircle, Package, CalendarDays, Users, IndianRupee, Phone, ArrowRight } from "lucide-react";
+import { captureIntent } from "@/lib/capture-intent";
 
 type Booking = {
   id: string;
@@ -102,6 +103,10 @@ function BookingCard({ b }: { b: Booking }) {
           href={`https://wa.me/918115999588?text=${encodeURIComponent(`Hi! I'd like to discuss my booking (ID: ${b.id.slice(0, 8).toUpperCase()}) for ${b.package_title}. Customer: ${b.customer_name}`)}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => captureIntent("whatsapp_click", {
+            package_title: b.package_title,
+            note: `My-booking status page — Talk to Your Planner (booking ${b.id.slice(0, 8).toUpperCase()})`,
+          })}
           className="flex items-center justify-center gap-2 w-full btn-primary !py-3"
         >
           <Phone className="h-4 w-4" />
@@ -207,9 +212,17 @@ function MyBookingInner() {
         {/* Help */}
         <p className="text-center text-sm text-ink/50 mt-8">
           Can't find your booking?{" "}
-          <a href="https://wa.me/918115999588" className="text-gold hover:underline">WhatsApp us</a>{" "}
+          <a
+            href="https://wa.me/918115999588"
+            onClick={() => captureIntent("whatsapp_click", { note: "My-booking — Can't find your booking" })}
+            className="text-gold hover:underline"
+          >WhatsApp us</a>{" "}
           or call{" "}
-          <a href="tel:+918115999588" className="text-gold hover:underline">+91 8115 999 588</a>
+          <a
+            href="tel:+918115999588"
+            onClick={() => captureIntent("call_click", { note: "My-booking — Can't find your booking" })}
+            className="text-gold hover:underline"
+          >+91 8115 999 588</a>
         </p>
       </div>
     </div>
