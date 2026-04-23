@@ -18,6 +18,7 @@ import MetaPixel from "@/components/MetaPixel";
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import { CookieConsentProvider } from "@/context/CookieConsentContext";
 import CookieBanner from "@/components/CookieBanner";
+import AuthProvider from "@/components/AuthProvider";
 import "../styles/globals.css";
 
 const BASE_URL = "https://trustandtrip.com";
@@ -164,6 +165,7 @@ export default function RootLayout({
           },
         ]} />
         <CookieConsentProvider>
+        <AuthProvider>
         <TripPlannerProvider>
           <Navbar />
           <main className="flex-1 pb-16 lg:pb-0">{children}</main>
@@ -181,6 +183,7 @@ export default function RootLayout({
           <ServiceWorkerRegister />
           <CookieBanner />
         </TripPlannerProvider>
+        </AuthProvider>
         </CookieConsentProvider>
       </body>
     </html>

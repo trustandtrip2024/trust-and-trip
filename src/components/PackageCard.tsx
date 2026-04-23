@@ -7,6 +7,8 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp, Heart, Sliders, PhoneCall } from "lucide-react";
 import { useWishlistStore } from "@/store/useWishlistStore";
+import { useUserStore } from "@/store/useUserStore";
+import { supabase } from "@/lib/supabase";
 import { getDynamicPrice } from "@/lib/dynamic-pricing";
 import CustomizeModal from "./CustomizeModal";
 import ScheduleCallModal from "./ScheduleCallModal";
@@ -49,7 +51,27 @@ export default function PackageCard({
   inSlider = false,
 }: PackageCardProps) {
   const { toggleWishlist, isWishlisted } = useWishlistStore();
+  const { user } = useUserStore();
   const wishlisted = isWishlisted(slug);
+
+  const handleWishlist = async () => {
+    toggleWishlist(slug);
+    if (!user) return;
+    if (isWishlisted(slug)) {
+      await supabase.from("user_saved_trips").delete().match({ user_id: user.id, package_slug: slug });
+    } else {
+      await supabase.from("user_saved_trips").upsert({
+        user_id: user.id,
+        package_slug: slug,
+        package_title: title,
+        package_image: image,
+        package_price: price,
+        duration,
+        destination_name: destinationName,
+        travel_type: travelType,
+      }, { onConflict: "user_id,package_slug" });
+    }
+  };
   const { price: dynPrice, originalPrice, tier, savings } = getDynamicPrice(price, slug);
   const [showCustomize, setShowCustomize] = useState(false);
   const [showSchedule, setShowSchedule] = useState(false);
@@ -108,7 +130,7 @@ export default function PackageCard({
             </div>
           )}
           <button
-            onClick={(e) => { e.preventDefault(); toggleWishlist(slug); }}
+            onClick={(e) => { e.preventDefault(); handleWishlist(); }}
             aria-label={wishlisted ? "Remove from wishlist" : "Save to wishlist"}
             className={`h-8 w-8 rounded-full flex items-center justify-center shadow-sm transition-all duration-200 ${
               wishlisted

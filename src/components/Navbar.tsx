@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Phone, MapPin, Heart, Search, Mail, Instagram, MessageCircle, ChevronRight } from "lucide-react";
+import { Menu, X, Phone, MapPin, Heart, Search, Mail, Instagram, MessageCircle, ChevronRight, User, LayoutDashboard, LogOut } from "lucide-react";
 import clsx from "clsx";
 import { useTripPlanner } from "@/context/TripPlannerContext";
 import { useWishlistStore } from "@/store/useWishlistStore";
+import { useUserStore } from "@/store/useUserStore";
+import { supabase } from "@/lib/supabase";
 import dynamic from "next/dynamic";
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
 
@@ -24,8 +26,10 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { open: openPlanner } = useTripPlanner();
   const wishlistCount = useWishlistStore((s) => s.wishlist.length);
+  const { user } = useUserStore();
   const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
@@ -132,6 +136,47 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
+            {/* User avatar / login */}
+            {user ? (
+              <div className="relative hidden md:block">
+                <button
+                  onClick={() => setUserMenuOpen((v) => !v)}
+                  className="h-9 w-9 rounded-full bg-gold/20 hover:bg-gold/30 flex items-center justify-center transition-colors text-xs font-semibold text-ink"
+                  aria-label="User menu"
+                >
+                  {(user.user_metadata?.full_name || user.email || "U").slice(0, 2).toUpperCase()}
+                </button>
+                {userMenuOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
+                    <div className="absolute right-0 top-11 z-50 bg-white border border-ink/10 rounded-2xl shadow-xl w-48 py-2 overflow-hidden">
+                      <div className="px-4 py-2 border-b border-ink/8 mb-1">
+                        <p className="text-xs font-medium text-ink truncate">{user.user_metadata?.full_name || "Traveller"}</p>
+                        <p className="text-[10px] text-ink/45 truncate">{user.email}</p>
+                      </div>
+                      <Link href="/dashboard" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-4 py-2 text-sm text-ink/70 hover:bg-sand/40 hover:text-ink transition-colors">
+                        <LayoutDashboard className="h-3.5 w-3.5" /> Dashboard
+                      </Link>
+                      <button
+                        onClick={async () => { await supabase.auth.signOut(); setUserMenuOpen(false); }}
+                        className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-500/80 hover:bg-red-50 hover:text-red-600 transition-colors"
+                      >
+                        <LogOut className="h-3.5 w-3.5" /> Sign Out
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="hidden md:flex items-center gap-1.5 h-9 px-3.5 rounded-full border border-ink/15 text-xs font-medium text-ink/70 hover:border-ink/30 hover:text-ink transition-all"
+              >
+                <User className="h-3.5 w-3.5" />
+                Sign In
+              </Link>
+            )}
+
             <button
               onClick={() => openPlanner()}
               className="hidden md:inline-flex btn-primary !py-2.5 !px-5 !text-xs"
