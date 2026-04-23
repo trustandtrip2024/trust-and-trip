@@ -203,5 +203,5 @@ body {
   .max-w-4xl, .max-w-3xl { max-width: 100% !important; padding: 0 !important; }
   main, .min-h-screen { min-height: 0 !important; padding: 0 !important; }
   .shadow-soft, .shadow-soft-lg { box-shadow: none !important; }
-  * { color-adjust: exact; -webkit-print-color-adjust: exact; }
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
