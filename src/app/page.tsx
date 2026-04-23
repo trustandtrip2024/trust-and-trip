@@ -11,13 +11,12 @@ import Hero from "@/components/Hero";
 import StatCounter from "@/components/StatCounter";
 import DestinationTile from "@/components/DestinationTile";
 import PackageSlider from "@/components/PackageSlider";
-import TestimonialCard from "@/components/TestimonialCard";
 import GoogleReviewsSection from "@/components/GoogleReviewsSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import CTASection from "@/components/CTASection";
 import TourismBoardsBar from "@/components/TourismBoardsBar";
 import HomepageOffersSection from "@/components/HomepageOffersSection";
-import { testimonials, experiences, stats } from "@/lib/data";
+import { experiences, stats } from "@/lib/data";
 import {
   getDestinations,
   getTrendingPackages,
@@ -26,13 +25,7 @@ import {
 } from "@/lib/sanity-queries";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  ArrowRight,
-  Award,
-  Globe2,
-  Heart,
-  MapPin,
-} from "lucide-react";
+import { ArrowRight, MapPin, Globe2 } from "lucide-react";
 
 export default async function HomePage() {
   const [
@@ -82,53 +75,80 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ── Pick a feeling ────────────────────────────────────── */}
-      <section className="py-20 md:py-28" aria-labelledby="feeling-heading">
+      {/* ── How we travel — bento grid ───────────────────────── */}
+      <section className="py-20 md:py-28 bg-sand/15" aria-labelledby="feeling-heading">
         <div className="container-custom">
-          <div className="flex items-end justify-between gap-4 mb-10 md:mb-14">
+          <div className="flex items-end justify-between gap-4 mb-10 md:mb-12">
             <div>
               <span className="eyebrow">How to travel</span>
-              <h2 id="feeling-heading" className="heading-section mt-2 max-w-sm text-balance">
-                Pick a feeling, not just a
-                <span className="italic text-gold font-light"> destination.</span>
+              <h2 id="feeling-heading" className="heading-section mt-2 max-w-md text-balance">
+                Travel the way
+                <span className="italic text-gold font-light"> you feel it.</span>
               </h2>
+              <p className="text-sm text-ink/50 mt-3 max-w-sm leading-relaxed">
+                Every journey is different. Browse by the experience that speaks to you.
+              </p>
             </div>
-            <Link
-              href="/experiences"
-              className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink/60 hover:text-gold transition-colors group shrink-0"
-            >
+            <Link href="/experiences"
+              className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink/60 hover:text-gold transition-colors group shrink-0">
               All experiences
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
 
-          <div
-            className="flex gap-4 overflow-x-auto snap-x snap-proximity no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 pb-1"
-            style={{ WebkitOverflowScrolling: "touch" }}
-          >
-            {experiences.map((exp) => (
-              <Link
-                key={exp.slug}
-                href={`/experiences/${exp.slug}`}
-                className="group relative overflow-hidden rounded-2xl md:rounded-3xl bg-ink snap-start shrink-0 w-[72vw] sm:w-[44vw] md:w-[calc(33.333%-11px)] aspect-[3/4]"
-              >
-                <Image
-                  src={exp.image}
-                  alt={exp.title}
-                  fill
-                  sizes="(max-width: 640px) 72vw, (max-width: 1024px) 44vw, 33vw"
-                  className="object-cover transition-transform duration-[1200ms] group-hover:scale-108"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
-                <div className="absolute top-5 right-5 h-9 w-9 rounded-full bg-cream/10 backdrop-blur-sm border border-cream/15 flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-400">
-                  <ArrowRight className="h-3.5 w-3.5 text-cream group-hover:text-ink -rotate-45" />
+          {/* Bento grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-[auto] gap-3 md:gap-4">
+            {/* Featured — spans 2 cols + 2 rows */}
+            {experiences[0] && (
+              <Link href={`/experiences/${experiences[0].slug}`}
+                className="group relative overflow-hidden rounded-2xl md:rounded-3xl bg-ink col-span-2 row-span-2 aspect-square md:aspect-auto md:min-h-[420px]">
+                <Image src={experiences[0].image} alt={experiences[0].title} fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-[1400ms] group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-6 md:p-7 text-cream">
+                  <span className="inline-block text-[9px] uppercase tracking-[0.3em] text-gold/80 bg-gold/15 px-2.5 py-1 rounded-full mb-3">{experiences[0].category}</span>
+                  <h3 className="font-display text-2xl md:text-3xl font-medium leading-tight mb-2">{experiences[0].title}</h3>
+                  <p className="text-sm text-cream/60 leading-relaxed line-clamp-2 mb-4">{experiences[0].description}</p>
+                  <span className="inline-flex items-center gap-2 text-xs font-medium text-gold group-hover:gap-3 transition-all">
+                    Explore <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
                 </div>
-                <div className="absolute inset-x-0 bottom-0 p-5 md:p-6 text-cream">
-                  <p className="text-[9px] uppercase tracking-[0.25em] text-gold mb-2">{exp.category}</p>
-                  <h3 className="font-display text-xl md:text-2xl font-medium leading-tight mb-1.5">
-                    {exp.title}
-                  </h3>
-                  <p className="text-xs text-cream/55 leading-relaxed line-clamp-2">{exp.description}</p>
+              </Link>
+            )}
+
+            {/* Right column — 4 small cards */}
+            {experiences.slice(1, 5).map((exp) => (
+              <Link key={exp.slug} href={`/experiences/${exp.slug}`}
+                className="group relative overflow-hidden rounded-2xl bg-ink aspect-[4/3] md:aspect-auto md:min-h-[196px]">
+                <Image src={exp.image} alt={exp.title} fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-3 md:p-4 text-cream">
+                  <p className="text-[8px] uppercase tracking-[0.2em] text-gold/70 mb-1">{exp.category}</p>
+                  <h3 className="font-display text-sm md:text-base font-medium leading-tight">{exp.title}</h3>
+                </div>
+                <div className="absolute top-3 right-3 h-7 w-7 rounded-full bg-cream/10 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ArrowRight className="h-3 w-3 text-cream -rotate-45" />
+                </div>
+              </Link>
+            ))}
+
+            {/* Bottom row — remaining categories */}
+            {experiences.slice(5).map((exp) => (
+              <Link key={exp.slug} href={`/experiences/${exp.slug}`}
+                className="group relative overflow-hidden rounded-2xl bg-ink aspect-[4/3]">
+                <Image src={exp.image} alt={exp.title} fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-3 md:p-4 text-cream">
+                  <p className="text-[8px] uppercase tracking-[0.2em] text-gold/70 mb-0.5">{exp.category}</p>
+                  <h3 className="font-display text-sm font-medium leading-tight">{exp.title}</h3>
+                </div>
+                <div className="absolute top-3 right-3 h-7 w-7 rounded-full bg-cream/10 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ArrowRight className="h-3 w-3 text-cream -rotate-45" />
                 </div>
               </Link>
             ))}
@@ -299,34 +319,6 @@ export default async function HomePage() {
 
       {/* ── Google Reviews ────────────────────────────────────── */}
       <GoogleReviewsSection />
-
-      {/* ── Testimonials ──────────────────────────────────────── */}
-      <section className="py-20 md:py-28 bg-cream overflow-hidden" aria-labelledby="testimonials-heading">
-        <div className="container-custom mb-12">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div>
-              <span className="eyebrow">Traveller Stories</span>
-              <h2 id="testimonials-heading" className="heading-section mt-2 text-balance">
-                Five-star memories,
-                <span className="italic text-gold font-light"> in their own words.</span>
-              </h2>
-            </div>
-            <div className="flex flex-wrap items-center gap-5 text-xs text-ink/40">
-              <span className="flex items-center gap-1.5"><Award className="h-3.5 w-3.5 text-gold/60" />Condé Nast</span>
-              <span className="flex items-center gap-1.5"><Globe2 className="h-3.5 w-3.5 text-gold/60" />IATA Accredited</span>
-              <span className="flex items-center gap-1.5"><Heart className="h-3.5 w-3.5 text-gold/60" />4.9 / 5 rating</span>
-            </div>
-          </div>
-        </div>
-        <div
-          className="flex gap-4 w-max animate-marquee hover:[animation-play-state:paused]"
-          style={{ paddingLeft: "max(20px, calc((100vw - 1280px)/2))" }}
-        >
-          {[...testimonials, ...testimonials].map((t, i) => (
-            <TestimonialCard key={i} testimonial={t} index={i} />
-          ))}
-        </div>
-      </section>
 
       <CTASection />
     </>
