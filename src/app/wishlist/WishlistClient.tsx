@@ -5,6 +5,7 @@ import { Heart, ArrowRight, PackageSearch } from "lucide-react";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import PackageCard from "@/components/PackageCard";
 import type { Package } from "@/lib/data";
+import { captureIntent } from "@/lib/capture-intent";
 
 export default function WishlistClient({ allPackages }: { allPackages: Package[] }) {
   const { wishlist } = useWishlistStore();
@@ -81,6 +82,11 @@ export default function WishlistClient({ allPackages }: { allPackages: Package[]
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() =>
+                    captureIntent("whatsapp_click", {
+                      note: `Wishlist share · ${saved.length} pkg(s): ${saved.map((p) => p.title).join(", ")}`,
+                    })
+                  }
                   className="btn-gold inline-flex"
                 >
                   Share wishlist on WhatsApp

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Phone, IndianRupee } from "lucide-react";
 import { analytics } from "@/lib/analytics";
+import { captureIntent } from "@/lib/capture-intent";
 
 const WA_NUMBER = "918115999588";
 const PHONE_1 = "+918115999588";
@@ -50,6 +51,12 @@ export default function PackageEnquiryCTA({ packageTitle, price, duration }: Pro
           {/* Call button */}
           <a
             href={`tel:${PHONE_1}`}
+            onClick={() =>
+              captureIntent("call_click", {
+                package_title: packageTitle,
+                note: `Tapped Call on package CTA · ₹${price.toLocaleString("en-IN")} · ${duration}`,
+              })
+            }
             className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-xl bg-ink/6 border border-ink/10 text-ink text-xs font-medium shrink-0"
             aria-label="Call us"
           >
@@ -62,7 +69,13 @@ export default function PackageEnquiryCTA({ packageTitle, price, duration }: Pro
             href={`https://wa.me/${WA_NUMBER}?text=${waMessage}`}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => analytics.whatsappClick(`package_cta:${packageTitle}`)}
+            onClick={() => {
+              analytics.whatsappClick(`package_cta:${packageTitle}`);
+              captureIntent("whatsapp_click", {
+                package_title: packageTitle,
+                note: `Book on WhatsApp · ₹${price.toLocaleString("en-IN")} · ${duration}`,
+              });
+            }}
             className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-[#25D366] text-white text-sm font-semibold"
           >
             <MessageCircle className="h-4 w-4 fill-white" />

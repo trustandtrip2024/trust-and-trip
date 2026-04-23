@@ -1,6 +1,7 @@
 export const revalidate = 30;
 
 import Link from "next/link";
+import IntentAnchor from "@/components/IntentAnchor";
 import Image from "next/image";
 import { getOfferPackages } from "@/lib/sanity-queries";
 import { Clock, Tag, ArrowRight, Flame, Star, Zap, MessageCircle } from "lucide-react";
@@ -126,14 +127,16 @@ export default async function OffersPage() {
               Don't see your destination? Ask for an unlisted deal.
             </h2>
           </div>
-          <a
+          <IntentAnchor
             href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I'm%20looking%20for%20a%20special%20deal%20on%20my%20trip."
             target="_blank" rel="noopener noreferrer"
+            intent="whatsapp_click"
+            metadata={{ note: "Offers page — Ask for unlisted deal" }}
             className="shrink-0 flex items-center gap-2 bg-[#25D366] text-white px-6 py-3.5 rounded-xl font-semibold text-sm hover:bg-[#20ba5a] transition-colors"
           >
             <MessageCircle className="h-4 w-4 fill-white" />
             Ask a planner
-          </a>
+          </IntentAnchor>
         </div>
       </section>
 

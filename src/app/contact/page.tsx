@@ -1,4 +1,5 @@
 import LeadForm from "@/components/LeadForm";
+import IntentAnchor from "@/components/IntentAnchor";
 import { Mail, MapPin, Phone, Clock, MessageCircle } from "lucide-react";
 
 export const metadata = {
@@ -103,12 +104,27 @@ function InfoBlock({
       </div>
     </div>
   );
-  if (href) {
+  if (!href) return content;
+
+  // Pick intent by protocol
+  const intent: "call_click" | "whatsapp_click" | null = href.startsWith("tel:")
+    ? "call_click"
+    : href.startsWith("https://wa.me") || href.startsWith("http://wa.me")
+      ? "whatsapp_click"
+      : null;
+
+  const className = "block group hover:bg-cream rounded-2xl p-2 -m-2 transition-colors";
+
+  if (intent) {
     return (
-      <a href={href} className="block group hover:bg-cream rounded-2xl p-2 -m-2 transition-colors">
+      <IntentAnchor href={href} intent={intent} metadata={{ note: `Contact page — ${label}` }} className={className}>
         {content}
-      </a>
+      </IntentAnchor>
     );
   }
-  return content;
+  return (
+    <a href={href} className={className}>
+      {content}
+    </a>
+  );
 }

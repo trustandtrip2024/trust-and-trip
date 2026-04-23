@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, GitCompareArrows, Star, Clock, MapPin, Check, ArrowRight, MessageCircle } from "lucide-react";
 import { useWishlistStore } from "@/store/useWishlistStore";
+import { captureIntent } from "@/lib/capture-intent";
 
 const WA = "918115999588";
 
@@ -185,6 +186,13 @@ export default function CompareBar() {
                                 href={`https://wa.me/${WA}?text=${encodeURIComponent(`Hi Trust and Trip! 🙏\n\nI'd like to book the *${p.title}* package (₹${p.price.toLocaleString("en-IN")}/person · ${p.duration}).`)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={() =>
+                                  captureIntent("book_now_click", {
+                                    package_title: p.title,
+                                    package_slug: p.slug,
+                                    note: `Clicked Book Now from Compare Bar · ₹${p.price.toLocaleString("en-IN")} · ${p.duration}`,
+                                  })
+                                }
                                 className="flex items-center justify-center gap-1.5 w-full bg-[#25D366] text-white py-2.5 rounded-xl text-sm font-medium hover:bg-[#20ba5a] transition-colors"
                               >
                                 <MessageCircle className="h-3.5 w-3.5 fill-white" />

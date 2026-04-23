@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Home, MapPin, Search, MessageCircle, Heart } from "lucide-react";
 import clsx from "clsx";
 import { analytics } from "@/lib/analytics";
+import { captureIntent } from "@/lib/capture-intent";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useWishlistStore } from "@/store/useWishlistStore";
@@ -68,7 +69,10 @@ export default function MobileBottomNav() {
             {/* Centre WhatsApp FAB */}
             <a href={WHATSAPP} target="_blank" rel="noopener noreferrer"
               aria-label="Chat on WhatsApp"
-              onClick={() => analytics.whatsappClick("mobile_bottom_nav")}
+              onClick={() => {
+                analytics.whatsappClick("mobile_bottom_nav");
+                captureIntent("whatsapp_click", { note: "Mobile bottom nav — Chat FAB" });
+              }}
               className="flex flex-col items-center gap-1 flex-1 -mt-5 pb-0.5">
               <div className="relative h-14 w-14 rounded-full bg-[#25D366] shadow-[0_4px_20px_rgba(37,211,102,0.45)] flex items-center justify-center transition-transform active:scale-95">
                 <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />

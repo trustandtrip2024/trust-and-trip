@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { captureIntent } from "@/lib/capture-intent";
 import {
   Instagram, Facebook, Linkedin, Twitter, Youtube,
   MapPin, Mail, Phone, ArrowRight, Shield, Award,
@@ -155,7 +156,7 @@ export default function Footer() {
 
             {/* Contact */}
             <div className="space-y-2.5 mb-7">
-              <a href="tel:+918115999588" className="flex items-center gap-2.5 text-sm text-cream/55 hover:text-gold transition-colors">
+              <a href="tel:+918115999588" onClick={() => captureIntent("call_click", { note: "Footer contact call" })} className="flex items-center gap-2.5 text-sm text-cream/55 hover:text-gold transition-colors">
                 <div className="h-7 w-7 rounded-lg bg-cream/6 flex items-center justify-center shrink-0">
                   <Phone className="h-3.5 w-3.5 text-gold" />
                 </div>

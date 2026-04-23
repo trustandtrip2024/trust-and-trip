@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Quote, ArrowRight } from "lucide-react";
+import { captureIntent } from "@/lib/capture-intent";
 
 export default function FounderNote() {
   return (
@@ -71,6 +74,7 @@ export default function FounderNote() {
                 href="https://wa.me/918115999588?text=Hi%20Akash!%20I%27d%20love%20to%20chat%20about%20a%20trip."
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => captureIntent("whatsapp_click", { note: "About page — Founder note (chat with Akash)" })}
                 className="inline-flex items-center gap-2 text-sm font-medium text-ink/65 hover:text-gold transition-colors"
               >
                 Chat with me on WhatsApp

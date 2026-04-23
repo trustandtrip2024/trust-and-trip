@@ -5,7 +5,21 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-export type LeadSource = "package_enquiry" | "contact_form" | "trip_planner" | "exit_intent" | "newsletter" | "itinerary_generator";
+export type LeadSource =
+  // Full-form submissions (name + phone required)
+  | "package_enquiry"
+  | "contact_form"
+  | "trip_planner"
+  | "exit_intent"
+  | "newsletter"
+  | "itinerary_generator"
+  // Anonymous click-intent sources (no contact info required — fired on CTA clicks)
+  | "book_now_click"
+  | "call_click"
+  | "whatsapp_click"
+  | "customize_click"
+  | "enquire_click"
+  | "schedule_call_click";
 
 export interface Lead {
   id?: string;

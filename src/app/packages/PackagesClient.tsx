@@ -6,6 +6,7 @@ import PackageCard from "@/components/PackageCard";
 import type { Package, Destination } from "@/lib/data";
 import { SlidersHorizontal, X, ArrowUpDown, Star } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { captureIntent } from "@/lib/capture-intent";
 
 const durationRanges = [
   { label: "3 – 5 days", min: 3, max: 5 },
@@ -299,6 +300,7 @@ export default function PackagesClient({
                     href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I%20can't%20find%20what%20I'm%20looking%20for.%20Can%20you%20help?"
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => captureIntent("whatsapp_click", { note: "Packages list — no-results Ask a planner" })}
                     className="btn-outline"
                   >
                     Ask a planner

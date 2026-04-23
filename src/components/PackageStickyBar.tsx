@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { MessageCircle, ChevronUp } from "lucide-react";
+import { captureIntent } from "@/lib/capture-intent";
 
 interface Props {
   price: number;
@@ -41,6 +42,13 @@ export default function PackageStickyBar({ price, title, slug, duration }: Props
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() =>
+            captureIntent("book_now_click", {
+              package_title: title,
+              package_slug: slug,
+              note: `Clicked Book Now on sticky bar · ₹${price.toLocaleString("en-IN")} · ${duration}`,
+            })
+          }
           className="flex items-center gap-2 bg-gold text-ink font-semibold px-5 py-3 rounded-xl text-sm shrink-0 active:scale-95 transition-transform"
         >
           <MessageCircle className="h-4 w-4" />

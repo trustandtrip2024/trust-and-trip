@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, MessageCircle, X } from "lucide-react";
+import { captureIntent } from "@/lib/capture-intent";
 
 const WHATSAPP_NUMBER = "918115999588";
 const PHONE_NUMBER = "+918115999588";
@@ -54,6 +55,11 @@ export default function FloatingWhatsApp() {
                   href={`https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() =>
+                    captureIntent("whatsapp_click", {
+                      note: "Floating WhatsApp button (desktop)",
+                    })
+                  }
                   className="flex items-center gap-2.5 bg-[#25D366] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
                 >
                   <MessageCircle className="h-4 w-4" />
@@ -61,6 +67,11 @@ export default function FloatingWhatsApp() {
                 </a>
                 <a
                   href={`tel:${PHONE_NUMBER}`}
+                  onClick={() =>
+                    captureIntent("call_click", {
+                      note: "Floating contact call button (desktop)",
+                    })
+                  }
                   className="flex items-center gap-2.5 bg-ink text-cream px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gold hover:text-ink transition-colors"
                 >
                   <Phone className="h-4 w-4" />

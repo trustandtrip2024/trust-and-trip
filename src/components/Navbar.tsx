@@ -12,6 +12,7 @@ import clsx from "clsx";
 import { useTripPlanner } from "@/context/TripPlannerContext";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useUserStore } from "@/store/useUserStore";
+import { captureIntent } from "@/lib/capture-intent";
 import { supabase } from "@/lib/supabase";
 import dynamic from "next/dynamic";
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
@@ -171,7 +172,7 @@ export default function Navbar() {
         <div className="container-custom flex items-center justify-between gap-4">
           <p className="md:hidden text-gold text-center w-full text-[11px] font-medium tracking-wide">
             🎉 10% Off on bookings 60+ days in advance ·{" "}
-            <a href="tel:+918115999588" className="text-cream/80 hover:text-gold">Call +91 8115 999 588</a>
+            <a href="tel:+918115999588" onClick={() => captureIntent("call_click", { note: "Navbar top strip (mobile)" })} className="text-cream/80 hover:text-gold">Call +91 8115 999 588</a>
           </p>
           <div className="hidden md:flex items-center gap-5 opacity-75">
             <span className="flex items-center gap-1.5">
@@ -180,7 +181,7 @@ export default function Navbar() {
             </span>
           </div>
           <div className="hidden md:flex items-center gap-5">
-            <a href="tel:+918115999588" className="flex items-center gap-1.5 hover:text-gold transition-colors">
+            <a href="tel:+918115999588" onClick={() => captureIntent("call_click", { note: "Navbar top strip (desktop)" })} className="flex items-center gap-1.5 hover:text-gold transition-colors">
               <Phone className="h-3 w-3" />+91 8115 999 588
             </a>
             <span className="opacity-40">|</span>
@@ -357,7 +358,7 @@ export default function Navbar() {
             </button>
 
             {/* Mobile controls */}
-            <a href="tel:+918115999588" className="lg:hidden p-2 rounded-full hover:bg-gold/10 transition-colors" aria-label="Call">
+            <a href="tel:+918115999588" onClick={() => captureIntent("call_click", { note: "Navbar mobile call icon" })} className="lg:hidden p-2 rounded-full hover:bg-gold/10 transition-colors" aria-label="Call">
               <Phone className="h-[18px] w-[18px] text-ink" />
             </a>
             <button onClick={() => setMobileOpen(true)} className="lg:hidden p-2 rounded-full hover:bg-ink/5 transition-colors" aria-label="Menu">
@@ -476,7 +477,11 @@ export default function Navbar() {
                   </button>
                   <a
                     href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I'd%20love%20help%20planning%20my%20next%20trip."
-                    target="_blank" rel="noopener noreferrer" onClick={() => setMobileOpen(false)}
+                    target="_blank" rel="noopener noreferrer"
+                    onClick={() => {
+                      setMobileOpen(false);
+                      captureIntent("whatsapp_click", { note: "Navbar mobile menu — WhatsApp CTA" });
+                    }}
                     className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#25D366]/10 text-[#1a9e4e] font-semibold text-sm border border-[#25D366]/20"
                   >
                     <MessageCircle className="h-4 w-4 fill-[#25D366] text-[#25D366]" />
@@ -487,7 +492,7 @@ export default function Navbar() {
 
               {/* Footer contact */}
               <div className="border-t border-ink/8 px-6 py-5 bg-ink/[0.02] space-y-3">
-                <a href="tel:+918115999588" className="flex items-center gap-3 group">
+                <a href="tel:+918115999588" onClick={() => captureIntent("call_click", { note: "Navbar mobile menu footer call" })} className="flex items-center gap-3 group">
                   <div className="h-8 w-8 rounded-lg bg-gold/10 flex items-center justify-center shrink-0">
                     <Phone className="h-3.5 w-3.5 text-gold" />
                   </div>

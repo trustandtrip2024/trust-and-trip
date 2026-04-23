@@ -57,18 +57,53 @@ async function sendEmails(body: Lead) {
   }
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const body: Lead = await req.json();
+/** Click-intent sources don't require name/phone — they capture anonymous interest before a form is filled. */
+const INTENT_SOURCES = new Set([
+  "book_now_click",
+  "call_click",
+  "whatsapp_click",
+  "customize_click",
+  "enquire_click",
+  "schedule_call_click",
+]);
 
-    if (!body.name?.trim() || !body.phone?.trim()) {
-      return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
+export async function POST(req: NextRequest) {
+  // Rich error logging so 500s always tell us what broke (dev + prod).
+  const debug: string[] = [];
+  const mark = (s: string) => debug.push(`[${new Date().toISOString()}] ${s}`);
+
+  try {
+    mark("1. route entry");
+    const body: Lead = await req.json();
+    mark(`2. body parsed (source=${body.source ?? "(none)"})`);
+    const isIntent = INTENT_SOURCES.has(body.source ?? "");
+
+    if (!isIntent) {
+      // Full-form submissions require name + phone
+      if (!body.name?.trim() || !body.phone?.trim()) {
+        return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
+      }
     }
 
+    // For intent-only submissions use a human-readable placeholder so the admin
+    // panel and Bitrix24 both have sensible values (Supabase columns are NOT NULL).
+    const safeName  = body.name?.trim()  || "Website Visitor";
+    const safePhone = body.phone?.trim() || "";
+    const safeEmail = body.email?.trim() || "";
+
+    mark("3. validating env");
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json({
+        error: "Server misconfigured: Supabase env vars missing",
+        debug,
+      }, { status: 500 });
+    }
+
+    mark("4. calling supabase.from(leads).insert(...)");
     const { error } = await supabase.from("leads").insert({
-      name: body.name.trim(),
-      email: body.email?.trim() ?? "",
-      phone: body.phone.trim(),
+      name: safeName,
+      email: safeEmail,
+      phone: safePhone,
       message: body.message?.trim(),
       package_title: body.package_title,
       package_slug: body.package_slug,
@@ -87,18 +122,45 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       console.error("Supabase insert error:", error);
-      return NextResponse.json({ error: "Failed to save enquiry." }, { status: 500 });
+      return NextResponse.json({
+        error: "Failed to save enquiry.",
+        supabase_error: {
+          message: error.message,
+          code: (error as { code?: string }).code,
+          details: (error as { details?: string }).details,
+          hint: (error as { hint?: string }).hint,
+        },
+        debug,
+      }, { status: 500 });
     }
 
-    // Fire-and-forget emails
-    sendEmails(body);
+    mark("5. supabase insert OK");
 
-    // Fire-and-forget Bitrix24 sync — errors logged but never block response
-    pushLead(body).catch((e) => console.error("Bitrix24 pushLead error:", e));
+    // Fire-and-forget emails — skip for anonymous click intents (no one to confirm to)
+    if (!isIntent) {
+      sendEmails({ ...body, name: safeName, email: safeEmail, phone: safePhone });
+    }
+    mark("6. emails queued");
 
-    return NextResponse.json({ success: true });
+    // Fire-and-forget Bitrix24 sync — errors logged but never block response.
+    // Always push, even intents, so sales sees every click in the CRM.
+    pushLead({ ...body, name: safeName, email: safeEmail, phone: safePhone }).catch((e) =>
+      console.error("Bitrix24 pushLead error:", e)
+    );
+    mark("7. bitrix24 pushLead queued");
+
+    return NextResponse.json({ success: true, debug });
   } catch (err) {
-    console.error("Lead API error:", err);
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    const e = err as Error & { code?: string; digest?: string };
+    console.error("Lead API error:", e);
+    return NextResponse.json({
+      error: "Route threw an exception",
+      name: e?.name,
+      message: e?.message,
+      stack: e?.stack?.split("\n").slice(0, 8),
+      code: e?.code,
+      digest: e?.digest,
+      debug,
+    }, { status: 500 });
   }
 }

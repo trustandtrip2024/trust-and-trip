@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Sparkles, MessageCircle, Mail, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import { submitLead } from "@/lib/submit-lead";
+import { captureIntent } from "@/lib/capture-intent";
 
 const WHATSAPP = "https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I%27d%20love%20help%20planning%20a%20trip.";
 
@@ -82,6 +83,7 @@ export default function FinalCTA() {
             href={WHATSAPP}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => captureIntent("whatsapp_click", { note: "Homepage FinalCTA — Chat with a Planner" })}
             className="group bg-cream/8 hover:bg-cream/12 border border-cream/15 hover:border-[#25D366]/40 rounded-2xl p-6 transition-all"
           >
             <div className="h-12 w-12 rounded-xl bg-[#25D366]/15 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">

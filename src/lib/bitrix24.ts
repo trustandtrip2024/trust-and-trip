@@ -36,6 +36,15 @@ const SOURCE_MAP: Record<LeadSource, string> = {
   exit_intent: "WEB",
   newsletter: "WEB",
   itinerary_generator: "WEB",
+  // Click intents — map to WEB for now; if you've added "Website" / "WhatsApp" /
+  // "Phone (Inbound)" as custom sources in Bitrix24 (see 08-setup-custom-fields.ps1),
+  // switch these to the real STATUS_IDs.
+  book_now_click: "WEB",
+  call_click: "CALL",
+  whatsapp_click: "WEB",
+  customize_click: "WEB",
+  enquire_click: "WEB",
+  schedule_call_click: "CALL",
 };
 
 /** Human-readable source labels — shown in Bitrix24 under SOURCE_DESCRIPTION. */
@@ -46,7 +55,23 @@ const SOURCE_LABEL: Record<LeadSource, string> = {
   exit_intent: "Exit intent popup",
   newsletter: "Newsletter signup",
   itinerary_generator: "Itinerary generator",
+  book_now_click: "Book Now button (click intent)",
+  call_click: "Phone button (click intent)",
+  whatsapp_click: "WhatsApp button (click intent)",
+  customize_click: "Customize button (click intent)",
+  enquire_click: "Enquire button (click intent)",
+  schedule_call_click: "Schedule Call button (click intent)",
 };
+
+/** Which sources are intent-only clicks (no contact info expected yet). */
+const INTENT_ONLY_SOURCES = new Set<LeadSource>([
+  "book_now_click",
+  "call_click",
+  "whatsapp_click",
+  "customize_click",
+  "enquire_click",
+  "schedule_call_click",
+]);
 
 /** Custom field codes — update if your Bitrix24 codes differ. */
 const UF = {
@@ -122,8 +147,10 @@ function splitName(fullName: string): { first: string; last: string } {
 }
 
 function buildLeadTitle(lead: Bitrix24LeadPayload): string {
+  const isIntent = INTENT_ONLY_SOURCES.has(lead.source);
+  const prefix = isIntent ? `🖱️ Intent [${SOURCE_LABEL[lead.source] ?? lead.source}]` : lead.name;
   const parts = [
-    lead.name,
+    prefix,
     lead.package_title ? `— ${lead.package_title}` : lead.destination ? `— ${lead.destination}` : null,
     lead.num_travellers ? `· ${lead.num_travellers} pax` : null,
   ].filter(Boolean);
@@ -131,7 +158,7 @@ function buildLeadTitle(lead: Bitrix24LeadPayload): string {
 }
 
 function buildLeadFields(lead: Bitrix24LeadPayload): Record<string, unknown> {
-  const { first, last } = splitName(lead.name);
+  const { first, last } = splitName(lead.name || "Website Visitor");
   const fields: Record<string, unknown> = {
     TITLE: buildLeadTitle(lead),
     NAME: first,
@@ -140,10 +167,13 @@ function buildLeadFields(lead: Bitrix24LeadPayload): Record<string, unknown> {
     OPENED: "Y",
     SOURCE_ID: SOURCE_MAP[lead.source] ?? "WEB",
     SOURCE_DESCRIPTION: SOURCE_LABEL[lead.source] ?? "Website",
-    PHONE: [{ VALUE: lead.phone.trim(), VALUE_TYPE: "WORK" }],
     COMMENTS: lead.message?.trim() || "",
   };
 
+  // Only attach PHONE / EMAIL when we actually have them — intent clicks won't.
+  if (lead.phone?.trim()) {
+    fields.PHONE = [{ VALUE: lead.phone.trim(), VALUE_TYPE: "WORK" }];
+  }
   if (lead.email?.trim()) {
     fields.EMAIL = [{ VALUE: lead.email.trim(), VALUE_TYPE: "WORK" }];
   }
