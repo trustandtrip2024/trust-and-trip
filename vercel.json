@@ -8,6 +8,10 @@
     {
       "path": "/api/cron/cart-abandonment",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/review-request",
+      "schedule": "0 9 * * *"
     }
   ]
 }
