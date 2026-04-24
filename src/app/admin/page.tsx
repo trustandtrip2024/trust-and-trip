@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Users, Star, Gift, Sparkles } from "lucide-react";
+import { Users, Star, Gift, Sparkles, Wallet } from "lucide-react";
 
 export default function AdminHome() {
   return (
@@ -27,6 +27,11 @@ export default function AdminHome() {
             className="flex items-center gap-3 bg-white border border-gray-200 text-gray-700 px-5 py-3.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
             <Sparkles className="h-4 w-4 text-purple-500" />
             Creator Program
+          </Link>
+          <Link href="/admin/payouts"
+            className="flex items-center gap-3 bg-white border border-gray-200 text-gray-700 px-5 py-3.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
+            <Wallet className="h-4 w-4 text-emerald-500" />
+            Creator Payouts
           </Link>
         </div>
       </div>
