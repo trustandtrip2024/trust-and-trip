@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { Lead } from "@/lib/supabase";
 import { pushLead } from "@/lib/bitrix24";
 import { REF_COOKIE, isValidRefCode, findActiveCreator } from "@/lib/creator-attribution";
+import { rateLimit, clientIp } from "@/lib/redis";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -76,6 +77,12 @@ export async function POST(req: NextRequest) {
 
   try {
     mark("1. route entry");
+    // Rate limit by IP — prevent flood of spam leads. 30 / minute per IP.
+    const ip = clientIp(req);
+    const { allowed } = await rateLimit(`leads:${ip}`, { limit: 30, windowSeconds: 60 });
+    if (!allowed) {
+      return NextResponse.json({ error: "Too many requests. Try again in a minute." }, { status: 429 });
+    }
     const body: Lead = await req.json();
     mark(`2. body parsed (source=${body.source ?? "(none)"})`);
     const isIntent = INTENT_SOURCES.has(body.source ?? "");

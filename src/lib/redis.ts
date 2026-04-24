@@ -80,3 +80,17 @@ export async function rateLimit(
     return { allowed: true, remaining: limit, resetIn: windowSeconds };
   }
 }
+
+/**
+ * Extract client IP from a NextRequest. Falls back to "unknown" if no
+ * trusted header is present.
+ */
+export function clientIp(req: Request): string {
+  const xff = req.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+  const real = req.headers.get("x-real-ip");
+  if (real) return real;
+  const vercel = req.headers.get("x-vercel-forwarded-for");
+  if (vercel) return vercel.split(",")[0].trim();
+  return "unknown";
+}

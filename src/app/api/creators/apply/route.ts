@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { generateRefCode } from "@/lib/creator-attribution";
 import { pushLead } from "@/lib/bitrix24";
+import { rateLimit, clientIp } from "@/lib/redis";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,6 +23,8 @@ interface Body {
 
 export async function POST(req: NextRequest) {
   try {
+    const { allowed } = await rateLimit(`creatorapply:${clientIp(req)}`, { limit: 5, windowSeconds: 3600 });
+    if (!allowed) return NextResponse.json({ error: "Too many applications from this network. Try again later." }, { status: 429 });
     const body = (await req.json()) as Body;
 
     if (!body.full_name?.trim() || !body.email?.trim() || !body.phone?.trim() || !body.instagram_handle?.trim()) {

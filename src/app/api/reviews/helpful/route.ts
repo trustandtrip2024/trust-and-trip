@@ -7,17 +7,20 @@ const supabase = createClient(
 );
 
 export async function POST(req: NextRequest) {
-  const { id } = await req.json();
-  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+  try {
+    const { id } = await req.json();
+    if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
 
-  const { error } = await supabase.rpc("increment_helpful", { review_id: id });
-  if (error) {
-    // Fallback if RPC doesn't exist yet
-    await supabase
-      .from("reviews")
-      .update({ helpful_count: supabase.rpc("helpful_count") })
-      .eq("id", id);
+    const { error } = await supabase.rpc("increment_helpful", { review_id: id });
+    if (error) {
+      await supabase
+        .from("reviews")
+        .update({ helpful_count: supabase.rpc("helpful_count") })
+        .eq("id", id);
+    }
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("[reviews/helpful] error:", err);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
-
-  return NextResponse.json({ success: true });
 }

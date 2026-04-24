@@ -7,10 +7,15 @@ const admin = createClient(
 );
 
 export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
-  const { error } = await admin
-    .from("creators")
-    .update({ status: "rejected" })
-    .eq("id", params.id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ success: true });
+  try {
+    const { error } = await admin
+      .from("creators")
+      .update({ status: "rejected" })
+      .eq("id", params.id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("[admin/creators/reject] error:", err);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
 }

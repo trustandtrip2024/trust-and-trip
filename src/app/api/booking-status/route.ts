@@ -7,6 +7,7 @@ const supabase = createClient(
 );
 
 export async function GET(req: NextRequest) {
+  try {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   const phone = searchParams.get("phone");
@@ -37,4 +38,8 @@ export async function GET(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!data?.length) return NextResponse.json({ error: "No bookings found for this number." }, { status: 404 });
   return NextResponse.json({ bookings: data });
+  } catch (err) {
+    console.error("[booking-status] error:", err);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
 }

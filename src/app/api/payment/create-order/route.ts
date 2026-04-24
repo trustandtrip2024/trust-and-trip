@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import { pushBookingAsDeal } from "@/lib/bitrix24";
 import { REF_COOKIE, isValidRefCode } from "@/lib/creator-attribution";
+import { rateLimit, clientIp } from "@/lib/redis";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,6 +12,9 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit — 10 payment orders / minute / IP
+    const { allowed } = await rateLimit(`payorder:${clientIp(req)}`, { limit: 10, windowSeconds: 60 });
+    if (!allowed) return NextResponse.json({ error: "Too many requests." }, { status: 429 });
     const body = await req.json();
     const { package_slug, package_title, package_price,
             customer_name, customer_email, customer_phone,

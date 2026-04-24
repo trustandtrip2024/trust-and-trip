@@ -7,24 +7,29 @@ const adminClient = createClient(
 );
 
 export async function GET(req: NextRequest) {
-  const token = req.headers.get("authorization")?.replace("Bearer ", "");
-  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const token = req.headers.get("authorization")?.replace("Bearer ", "");
+    if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data: { user }, error: authErr } = await adminClient.auth.getUser(token);
-  if (authErr || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { data: { user }, error: authErr } = await adminClient.auth.getUser(token);
+    if (authErr || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const [pointsRes, logRes] = await Promise.all([
-    adminClient.from("user_points").select("*").eq("user_id", user.id).maybeSingle(),
-    adminClient.from("points_log").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
-  ]);
+    const [pointsRes, logRes] = await Promise.all([
+      adminClient.from("user_points").select("*").eq("user_id", user.id).maybeSingle(),
+      adminClient.from("points_log").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20),
+    ]);
 
-  const points = pointsRes.data ?? {
-    user_id: user.id,
-    total_points: 0,
-    lifetime_points: 0,
-    tier: "silver" as const,
-    updated_at: new Date().toISOString(),
-  };
+    const points = pointsRes.data ?? {
+      user_id: user.id,
+      total_points: 0,
+      lifetime_points: 0,
+      tier: "silver" as const,
+      updated_at: new Date().toISOString(),
+    };
 
-  return NextResponse.json({ points, log: logRes.data ?? [] });
+    return NextResponse.json({ points, log: logRes.data ?? [] });
+  } catch (err) {
+    console.error("[user/points] error:", err);
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
 }

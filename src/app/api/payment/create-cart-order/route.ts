@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
 import { pushBookingAsDeal } from "@/lib/bitrix24";
 import { REF_COOKIE, isValidRefCode } from "@/lib/creator-attribution";
+import { rateLimit, clientIp } from "@/lib/redis";
 
 const adminClient = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,6 +17,8 @@ function depositFor(pricePerPerson: number): number {
 
 export async function POST(req: NextRequest) {
   try {
+    const { allowed } = await rateLimit(`cartorder:${clientIp(req)}`, { limit: 10, windowSeconds: 60 });
+    if (!allowed) return NextResponse.json({ error: "Too many requests." }, { status: 429 });
     const token = req.headers.get("authorization")?.replace("Bearer ", "");
     if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
