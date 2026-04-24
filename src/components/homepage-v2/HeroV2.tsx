@@ -7,7 +7,7 @@ import Image from "next/image";
 import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import SearchBar from "../SearchBar";
 
-const CLIPS = [
+const CLIPS: { src: string | null; poster: string; label: string; tag: string }[] = [
   {
     src: "/hero/hero-1.mp4",
     poster: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=2400&q=85&auto=format&fit=crop",
@@ -15,13 +15,13 @@ const CLIPS = [
     tag: "Most Loved",
   },
   {
-    src: "/hero/hero-2.mp4",
+    src: null,
     poster: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2400&q=85&auto=format&fit=crop",
     label: "Himalayas, India",
     tag: "Adventure",
   },
   {
-    src: "/hero/hero-3.mp4",
+    src: null,
     poster: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=2400&q=85&auto=format&fit=crop",
     label: "Maldives",
     tag: "Luxury",
@@ -73,7 +73,7 @@ export default function HeroV2() {
             className="absolute inset-0 transition-opacity duration-[1200ms] ease-in-out"
             style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 1 : 0 }}
           >
-            {videoOk[i] && (
+            {videoOk[i] && clip.src && (
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
                 src={clip.src}
@@ -95,7 +95,7 @@ export default function HeroV2() {
               fill
               priority={i === 0}
               sizes="100vw"
-              className={`object-cover ${videoOk[i] ? "opacity-0" : "animate-[slowZoom_20s_ease-in-out_infinite_alternate]"}`}
+              className={`object-cover ${videoOk[i] && clip.src ? "opacity-0" : "animate-[slowZoom_20s_ease-in-out_infinite_alternate]"}`}
             />
           </div>
         ))}
