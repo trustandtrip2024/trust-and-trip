@@ -1,25 +1,28 @@
 import type { Metadata } from "next";
 import { Fraunces, DM_Sans } from "next/font/google";
+import dynamic from "next/dynamic";
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import MainWrapper from "@/components/MainWrapper";
-import Footer from "@/components/Footer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import MobileBottomNav from "@/components/MobileBottomNav";
-import TripPlannerModal from "@/components/TripPlannerModal";
-import ExitIntentPopup from "@/components/ExitIntentPopup";
 import JsonLd from "@/components/JsonLd";
 import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import VercelAnalytics from "@/components/VercelAnalytics";
-import CompareBar from "@/components/CompareBar";
+import WebVitalsReporter from "@/components/WebVitalsReporter";
 import ConditionalFooter from "@/components/ConditionalFooter";
 import SearchProvider from "@/components/SearchProvider";
-import AriaChatWidget from "@/components/AriaChatWidget";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import MetaPixel from "@/components/MetaPixel";
+
+// Lazy-load below-fold and interaction-triggered components — keeps initial JS lean.
+const TripPlannerModal = dynamic(() => import("@/components/TripPlannerModal"), { ssr: false });
+const ExitIntentPopup = dynamic(() => import("@/components/ExitIntentPopup"), { ssr: false });
+const CompareBar = dynamic(() => import("@/components/CompareBar"), { ssr: false });
+const AriaChatWidget = dynamic(() => import("@/components/AriaChatWidget"), { ssr: false });
+const CookieBanner = dynamic(() => import("@/components/CookieBanner"), { ssr: false });
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import { CookieConsentProvider } from "@/context/CookieConsentContext";
-import CookieBanner from "@/components/CookieBanner";
 import AuthProvider from "@/components/AuthProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "../styles/globals.css";
@@ -195,6 +198,7 @@ export default function RootLayout({
           <ScrollToTop />
           <GoogleAnalytics />
           <VercelAnalytics />
+          <WebVitalsReporter />
           <MetaPixel />
           <ServiceWorkerRegister />
           <CookieBanner />

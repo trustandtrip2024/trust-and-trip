@@ -1,5 +1,14 @@
+// Bundle analyzer — opt-in via ANALYZE=true npm run build
+const withBundleAnalyzer = process.env.ANALYZE === "true"
+  ? require("@next/bundle-analyzer")({ enabled: true, openAnalyzer: false })
+  : (cfg) => cfg;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Tree-shake unused exports from icon libs (lucide-react ships ~1k icons)
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
@@ -291,4 +300,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);
