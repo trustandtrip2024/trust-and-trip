@@ -15,6 +15,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { captureIntent } from "@/lib/capture-intent";
 import { supabase } from "@/lib/supabase";
 import dynamic from "next/dynamic";
+import ThemeToggle from "./ThemeToggle";
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
 
 // ── Dropdown data ──────────────────────────────────────────
@@ -291,6 +292,8 @@ export default function Navbar() {
               <kbd className="hidden xl:inline text-[10px] border border-ink/15 rounded px-1 py-0.5 text-ink/30">⌘K</kbd>
             </button>
 
+            <ThemeToggle className="hidden md:inline-flex" />
+
             <Link href="/wishlist" aria-label="Wishlist"
               className="relative hidden md:flex h-9 w-9 items-center justify-center rounded-full hover:bg-ink/5 transition-colors">
               <Heart className="h-4 w-4 text-ink/60" />
@@ -358,6 +361,7 @@ export default function Navbar() {
             </button>
 
             {/* Mobile controls */}
+            <ThemeToggle className="md:hidden !h-9 !w-9" />
             <a href="tel:+918115999588" onClick={() => captureIntent("call_click", { note: "Navbar mobile call icon" })} className="lg:hidden p-2 rounded-full hover:bg-gold/10 transition-colors" aria-label="Call">
               <Phone className="h-[18px] w-[18px] text-ink" />
             </a>

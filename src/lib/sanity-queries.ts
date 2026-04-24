@@ -173,6 +173,41 @@ function mapPackage(p: SanityPackage): Package {
 
   return {
     ...p,
+    title: p.title ?? "Curated journey",
+    slug: p.slug,
+    destinationSlug: p.destinationSlug ?? "",
+    destinationName: p.destinationName ?? "India",
+    price: p.price ?? 0,
+    duration: p.duration ?? "Multi-day",
+    nights: p.nights ?? 0,
+    days: p.days ?? 0,
+    travelType: (p.travelType as Package["travelType"]) ?? "Couple",
+    rating: p.rating ?? 4.8,
+    reviews: p.reviews ?? 0,
+    description: p.description ?? "A handpicked journey — full itinerary available on request.",
+    highlights: Array.isArray(p.highlights) ? p.highlights : [],
+    inclusions: Array.isArray(p.inclusions) ? p.inclusions : [],
+    exclusions: Array.isArray(p.exclusions) ? p.exclusions : [],
+    activities: Array.isArray(p.activities) ? p.activities : [],
+    itinerary: Array.isArray(p.itinerary)
+      ? p.itinerary.map((d) => ({
+          title: d?.title ?? "",
+          description: d?.description ?? "",
+        }))
+      : [],
+    hotel: p.hotel
+      ? {
+          name: p.hotel.name ?? "Handpicked stay",
+          stars: p.hotel.stars,
+          description: p.hotel.description ?? "Comfortable accommodation selected for this journey.",
+        }
+      : {
+          name: "Handpicked stay",
+          description: "Comfortable accommodation selected for this journey.",
+        },
+    trending: p.trending ?? false,
+    featured: p.featured ?? false,
+    limitedSlots: p.limitedSlots ?? false,
     image: destImage ?? (p.image ? urlFor(p.image).width(1200).quality(80).url() : FALLBACK_IMAGE),
     heroImage: destImage
       ? destImage.replace("w=1600", "w=2400")

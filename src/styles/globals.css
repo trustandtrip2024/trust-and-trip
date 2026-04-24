@@ -156,6 +156,66 @@ body {
   }
 }
 
+/* ─── Dark mode overrides ─────────────────────────────────
+   Class-based (html.dark). Remaps brand utility classes by
+   attribute selector so no per-component refactor needed.
+   Opacity variants match via [class*="…/"]. */
+html.dark {
+  color-scheme: dark;
+  --color-cream: #0B1C2C;
+  --color-ink: #FAF7F2;
+  --color-sand: #14243A;
+}
+html.dark body {
+  background-color: #0B1C2C;
+  color: #FAF7F2;
+}
+html.dark ::-webkit-scrollbar-track { background: #0B1C2C; }
+html.dark ::-webkit-scrollbar-thumb { background: #FAF7F2; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #E8A94C; }
+
+/* Backgrounds */
+html.dark .bg-cream { background-color: #0B1C2C; }
+html.dark .bg-white { background-color: #14243A; }
+html.dark .bg-sand { background-color: #14243A; }
+html.dark .bg-ink { background-color: #FAF7F2; }
+html.dark [class*="bg-cream/"] { background-color: rgba(11, 28, 44, 0.85); }
+html.dark [class*="bg-sand/"] { background-color: rgba(20, 36, 58, 0.6); }
+html.dark [class*="bg-white/"] { background-color: rgba(20, 36, 58, 0.8); }
+html.dark [class*="bg-ink/"] { background-color: rgba(250, 247, 242, 0.08); }
+
+/* Text */
+html.dark .text-ink,
+html.dark [class*="text-ink/"] { color: #FAF7F2; }
+html.dark .text-cream,
+html.dark [class*="text-cream/"] { color: #0B1C2C; }
+
+/* Placeholders */
+html.dark [class*="placeholder-ink/"]::placeholder,
+html.dark ::placeholder { color: rgba(250, 247, 242, 0.4); }
+
+/* Borders & dividers */
+html.dark [class*="border-ink/"] { border-color: rgba(250, 247, 242, 0.12); }
+html.dark [class*="divide-ink/"] > * + * { border-color: rgba(250, 247, 242, 0.1); }
+
+/* Form fields */
+html.dark input:not([type="checkbox"]):not([type="radio"]),
+html.dark textarea,
+html.dark select {
+  background-color: #14243A;
+  color: #FAF7F2;
+  border-color: rgba(250, 247, 242, 0.15);
+}
+html.dark .input-travel { background-color: #14243A; color: #FAF7F2; }
+html.dark .input-travel:focus { background-color: #1A2B3F; }
+
+/* Selection */
+html.dark ::selection { background: #E8A94C; color: #0B1C2C; }
+
+/* Hero gradients & sections that use `bg-ink` as dark overlay should
+   stay legible — `bg-ink` flipped to cream, but `from-ink/`, `to-ink/`
+   gradients stay via [class*="bg-ink/"] rule above. */
+
 /* Hide scrollbar utility for carousels */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

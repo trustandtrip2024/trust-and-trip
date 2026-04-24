@@ -21,7 +21,17 @@ import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import { CookieConsentProvider } from "@/context/CookieConsentContext";
 import CookieBanner from "@/components/CookieBanner";
 import AuthProvider from "@/components/AuthProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "../styles/globals.css";
+
+// Inline, pre-hydration theme setter — prevents light/dark flash.
+const THEME_INIT_SCRIPT = `
+try {
+  var t = localStorage.getItem('tt_theme');
+  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (t === 'dark' || (!t && prefersDark)) document.documentElement.classList.add('dark');
+} catch (e) {}
+`;
 
 const BASE_URL = "https://trustandtrip.com";
 
@@ -106,6 +116,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`}>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         {/* Preconnect to speed up third-party resources */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
@@ -166,6 +177,7 @@ export default function RootLayout({
             },
           },
         ]} />
+        <ThemeProvider>
         <CookieConsentProvider>
         <AuthProvider>
         <TripPlannerProvider>
@@ -188,6 +200,7 @@ export default function RootLayout({
         </TripPlannerProvider>
         </AuthProvider>
         </CookieConsentProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
         const resend = new Resend(resendKey);
 
         await resend.emails.send({
-          from: "Trust and Trip <deals@trustandtrip.com>",
+          from: process.env.RESEND_DEALS_FROM ?? process.env.RESEND_FROM ?? "Trust and Trip <deals@trustandtrip.com>",
           to: [user.email],
           subject: `${dropPct}% off ${trip.package_title} — your saved trip just dropped`,
           react: PriceDropEmail({
