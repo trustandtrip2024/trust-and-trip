@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { computeTier, pointsForRupees } from "@/lib/points";
 import { markDealPaid } from "@/lib/bitrix24";
 import { findActiveCreator } from "@/lib/creator-attribution";
+import { sendBookingConfirmationEmail } from "@/lib/emails/send-booking-confirmation";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -135,6 +136,13 @@ export async function POST(req: NextRequest) {
     markDealPaid(razorpay_order_id, razorpay_payment_id).catch((e) =>
       console.error("Bitrix24 markDealPaid error:", e)
     );
+
+    // Fire-and-forget booking confirmation email per booking
+    for (const b of bookings) {
+      sendBookingConfirmationEmail(b).catch((e) =>
+        console.error("Booking confirmation email error:", e)
+      );
+    }
 
     return NextResponse.json({
       success: true,

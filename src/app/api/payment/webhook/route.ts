@@ -4,6 +4,7 @@ import crypto from "crypto";
 import { computeTier, pointsForRupees } from "@/lib/points";
 import { markDealPaid } from "@/lib/bitrix24";
 import { findActiveCreator } from "@/lib/creator-attribution";
+import { sendBookingConfirmationEmail } from "@/lib/emails/send-booking-confirmation";
 
 // Razorpay server-to-server webhook. Fires independently of client-side
 // /verify call, so payments complete even if the user closes the tab.
@@ -140,6 +141,13 @@ async function finalizeOrder(orderId: string, paymentId: string) {
   markDealPaid(orderId, paymentId).catch((e) =>
     console.error("[webhook] Bitrix24 markDealPaid error:", e)
   );
+
+  // Fire-and-forget booking confirmation email
+  for (const b of bookings) {
+    sendBookingConfirmationEmail(b).catch((e) =>
+      console.error("[webhook] booking confirmation email error:", e)
+    );
+  }
 }
 
 export async function POST(req: NextRequest) {
