@@ -3,6 +3,15 @@ import { getAllPackageSlugs, getAllDestinationSlugs } from "@/lib/sanity-queries
 
 const BASE = "https://trustandtrip.com";
 
+// Mirror of the popular-destination matrix in
+// src/app/destinations/[slug]/[travelType]/page.tsx — kept in sync manually.
+const POPULAR_DESTINATION_SLUGS = [
+  "bali", "maldives", "thailand", "dubai", "singapore", "vietnam",
+  "kerala", "goa", "kashmir", "rajasthan", "himachal-pradesh", "andaman",
+  "ladakh", "sri-lanka", "switzerland", "santorini",
+];
+const TRAVEL_TYPE_SLUGS = ["honeymoon", "family", "group", "solo"];
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [packageSlugs, destinationSlugs] = await Promise.all([
     getAllPackageSlugs(),
@@ -37,5 +46,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "weekly",
   }));
 
-  return [...staticPages, ...packagePages, ...destinationPages];
+  // SEO landing pages: only emit URLs whose underlying destination exists
+  const destinationSet = new Set(destinationSlugs);
+  const seoLandingPages: MetadataRoute.Sitemap = [];
+  for (const slug of POPULAR_DESTINATION_SLUGS) {
+    if (!destinationSet.has(slug)) continue;
+    for (const travelType of TRAVEL_TYPE_SLUGS) {
+      seoLandingPages.push({
+        url: `${BASE}/destinations/${slug}/${travelType}`,
+        lastModified: now,
+        priority: 0.7,
+        changeFrequency: "weekly",
+      });
+    }
+  }
+
+  return [...staticPages, ...packagePages, ...destinationPages, ...seoLandingPages];
 }
