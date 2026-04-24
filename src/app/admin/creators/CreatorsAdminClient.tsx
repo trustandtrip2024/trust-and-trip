@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2, XCircle, Loader2, Copy, Check, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle2, XCircle, Loader2, Copy, Check, ExternalLink, Sparkles, ShieldCheck, Save } from "lucide-react";
 
 interface Creator {
   id: string;
@@ -11,6 +11,9 @@ interface Creator {
   phone: string | null;
   instagram_handle: string | null;
   audience_size: number | null;
+  audience_size_verified: number | null;
+  audience_verified_at: string | null;
+  audience_source: string | null;
   ref_code: string;
   commission_pct: number;
   status: "pending" | "active" | "paused" | "rejected" | "banned";
@@ -37,6 +40,9 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
   const [busyId, setBusyId] = useState<string>("");
   const [tempPasswords, setTempPasswords] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState<string>("");
+  const [editingAudience, setEditingAudience] = useState<string>("");
+  const [audienceDraft, setAudienceDraft] = useState<string>("");
+  const [savingAudience, setSavingAudience] = useState<string>("");
 
   const visible = filter ? creators.filter((c) => c.status === filter) : creators;
 
@@ -73,6 +79,35 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
     await navigator.clipboard.writeText(text);
     setCopied(id);
     setTimeout(() => setCopied(""), 2000);
+  };
+
+  const startEditAudience = (c: Creator) => {
+    setEditingAudience(c.id);
+    setAudienceDraft(c.audience_size_verified ? String(c.audience_size_verified) : "");
+  };
+
+  const saveAudience = async (c: Creator) => {
+    const n = audienceDraft.trim() === "" ? 0 : Number(audienceDraft.replace(/,/g, ""));
+    if (!Number.isFinite(n) || n < 0) { alert("Enter a non-negative number, or 0 to clear."); return; }
+    setSavingAudience(c.id);
+    try {
+      const res = await fetch(`/api/admin/creators/${c.id}/verify-audience`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ count: n }),
+      });
+      const data = await res.json();
+      if (!res.ok) { alert(data.error ?? "Failed to save"); return; }
+      setCreators((prev) => prev.map((x) => x.id === c.id ? {
+        ...x,
+        audience_size_verified: n === 0 ? null : n,
+        audience_verified_at: n === 0 ? null : new Date().toISOString(),
+        audience_source: n === 0 ? null : "manual",
+      } : x));
+      setEditingAudience("");
+    } finally {
+      setSavingAudience("");
+    }
   };
 
   const counts = {
@@ -154,8 +189,56 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                       {c.audience_size && (
                         <>
                           <span>·</span>
-                          <span>{c.audience_size.toLocaleString("en-IN")}+ followers</span>
+                          <span>{c.audience_size.toLocaleString("en-IN")}+ self-reported</span>
                         </>
+                      )}
+                      {c.audience_size_verified !== null && (
+                        <>
+                          <span>·</span>
+                          <span className="inline-flex items-center gap-1 text-emerald-700">
+                            <ShieldCheck className="h-3 w-3" />
+                            {c.audience_size_verified.toLocaleString("en-IN")} verified
+                          </span>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Audience verification editor */}
+                    <div className="mt-2 flex items-center gap-2 text-[11px]">
+                      {editingAudience === c.id ? (
+                        <>
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            value={audienceDraft}
+                            onChange={(e) => setAudienceDraft(e.target.value)}
+                            placeholder="e.g. 24500 (or 0 to clear)"
+                            className="w-44 px-2 py-1 border border-gray-200 rounded text-xs"
+                            autoFocus
+                          />
+                          <button
+                            onClick={() => saveAudience(c)}
+                            disabled={savingAudience === c.id}
+                            className="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[11px] font-semibold disabled:opacity-60"
+                          >
+                            {savingAudience === c.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditingAudience("")}
+                            className="text-gray-500 hover:text-gray-900 px-2 py-1 text-[11px]"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => startEditAudience(c)}
+                          className="inline-flex items-center gap-1 text-gray-500 hover:text-gray-900 underline decoration-dotted underline-offset-2"
+                        >
+                          <ShieldCheck className="h-3 w-3" />
+                          {c.audience_size_verified === null ? "Verify audience size" : "Update verified"}
+                        </button>
                       )}
                     </div>
                     {c.notes && (
