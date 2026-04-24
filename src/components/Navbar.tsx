@@ -16,6 +16,7 @@ import { captureIntent } from "@/lib/capture-intent";
 import { supabase } from "@/lib/supabase";
 import dynamic from "next/dynamic";
 import ThemeToggle from "./ThemeToggle";
+import CurrencySwitcher from "./CurrencySwitcher";
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
 
 // ── Dropdown data ──────────────────────────────────────────
@@ -293,6 +294,10 @@ export default function Navbar() {
             </button>
 
             <ThemeToggle className="hidden md:inline-flex" />
+
+            <span className="hidden md:inline-flex">
+              <CurrencySwitcher />
+            </span>
 
             <Link href="/wishlist" aria-label="Wishlist"
               className="relative hidden md:flex h-9 w-9 items-center justify-center rounded-full hover:bg-ink/5 transition-colors">
