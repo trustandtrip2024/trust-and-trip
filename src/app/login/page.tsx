@@ -11,7 +11,7 @@ type Mode = "signin" | "signup" | "reset";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { user, loading } = useUserStore();
+  const { user, loading, setSession } = useUserStore();
   const [mode, setMode] = useState<Mode>("signin");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -37,7 +37,13 @@ export default function LoginPage() {
     if (mode === "signin") {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setError(error.message);
-      else router.replace(dashboardFor(data.user));
+      else {
+        // Push the new session into the Zustand store immediately so the
+        // dashboard layout sees a valid user on first render and doesn't
+        // kick back to /login from its auth-gate effect.
+        setSession(data.session);
+        router.replace(dashboardFor(data.user));
+      }
     } else if (mode === "signup") {
       const { error } = await supabase.auth.signUp({
         email,
