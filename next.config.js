@@ -3,6 +3,22 @@ const withBundleAnalyzer = process.env.ANALYZE === "true"
   ? require("@next/bundle-analyzer")({ enabled: true, openAnalyzer: false })
   : (cfg) => cfg;
 
+// Sentry wrapper — only applied if SENTRY_DSN is set so local builds without
+// Sentry credentials don't fail.
+const sentryEnabled = !!(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN);
+const { withSentryConfig } = sentryEnabled ? require("@sentry/nextjs") : { withSentryConfig: (cfg) => cfg };
+const sentryWebpackPluginOptions = {
+  silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+};
+const sentryOptions = {
+  hideSourceMaps: true,
+  tunnelRoute: "/monitoring",
+  disableLogger: true,
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Tree-shake unused exports from icon libs (lucide-react ships ~1k icons)
@@ -300,4 +316,6 @@ const nextConfig = {
   },
 };
 
-module.exports = withBundleAnalyzer(nextConfig);
+module.exports = sentryEnabled
+  ? withSentryConfig(withBundleAnalyzer(nextConfig), sentryWebpackPluginOptions, sentryOptions)
+  : withBundleAnalyzer(nextConfig);
