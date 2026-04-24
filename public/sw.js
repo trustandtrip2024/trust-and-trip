@@ -1,4 +1,4 @@
-const CACHE = "tt-v1";
+const CACHE = "tt-v2";
 const STATIC = ["/", "/packages", "/destinations", "/offline"];
 
 self.addEventListener("install", (e) => {
@@ -18,6 +18,23 @@ self.addEventListener("fetch", (e) => {
 
   // Only handle same-origin GET requests
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
+
+  // Never cache Next.js build chunks — they are hash-named and must always match
+  // the currently-served HTML. Serving a stale chunk after a deploy causes
+  // ChunkLoadError / client-side exceptions. Let the browser handle them.
+  if (url.pathname.startsWith("/_next/")) return;
+
+  // Never cache auth / dashboard / admin / api routes — operational pages
+  // need fresh HTML every visit.
+  if (
+    url.pathname.startsWith("/dashboard") ||
+    url.pathname.startsWith("/creators") ||
+    url.pathname.startsWith("/admin") ||
+    url.pathname.startsWith("/login") ||
+    url.pathname.startsWith("/auth")
+  ) {
+    return;
+  }
 
   // Network-first for HTML pages and API calls
   if (request.headers.get("accept")?.includes("text/html") || url.pathname.startsWith("/api/")) {

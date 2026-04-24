@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Footer from "./Footer";
 
-const HIDDEN_ON = ["/dashboard", "/login"];
+const HIDDEN_ON = ["/dashboard", "/login", "/creators/dashboard", "/admin"];
 
 export default function ConditionalFooter() {
   const path = usePathname();

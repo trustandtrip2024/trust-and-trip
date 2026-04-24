@@ -46,7 +46,7 @@ function Tab({ href, icon: Icon, label, active, badge }: {
   );
 }
 
-const HIDDEN_ON = ["/dashboard", "/login"];
+const HIDDEN_ON = ["/dashboard", "/login", "/creators/dashboard", "/admin"];
 
 export default function MobileBottomNav() {
   const path = usePathname();

@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 
-const HIDDEN_ON = ["/dashboard", "/login"];
+const HIDDEN_ON = ["/dashboard", "/login", "/creators/dashboard", "/admin"];
 
 export default function ConditionalNavbar() {
   const path = usePathname();
