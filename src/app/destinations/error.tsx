@@ -8,10 +8,10 @@ export default function DestinationsError({ reset }: { error: Error; reset: () =
     <div className="min-h-[60vh] flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         <p className="text-5xl mb-6">🗺️</p>
-        <h2 className="font-display text-2xl font-medium text-ink mb-3">
+        <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-3">
           Couldn&apos;t load destinations
         </h2>
-        <p className="text-ink/60 mb-8 leading-relaxed">
+        <p className="text-tat-charcoal/60 mb-8 leading-relaxed">
           We hit a brief snag fetching destination data. Please try again.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">

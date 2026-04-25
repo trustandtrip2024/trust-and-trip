@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <>
-      <section className="pt-28 md:pt-36 pb-12 bg-cream">
+      <section className="pt-28 md:pt-36 pb-12 bg-tat-paper">
         <div className="container-custom max-w-3xl">
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-10 w-10 rounded-full bg-gold/20 text-gold flex items-center justify-center">
+            <div className="h-10 w-10 rounded-full bg-tat-gold/20 text-tat-gold flex items-center justify-center">
               <ShieldCheck className="h-5 w-5" />
             </div>
             <span className="eyebrow">Legal</span>
@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
           <h1 className="font-display text-display-md font-medium leading-[1.05] text-balance">
             Privacy Policy
           </h1>
-          <p className="mt-4 text-ink/60">
+          <p className="mt-4 text-tat-charcoal/60">
             Effective from <strong>01 September 2024</strong> · Trust and Trip Experiences Pvt. Ltd.
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function PrivacyPolicyPage() {
 
       <section className="pb-20">
         <div className="container-custom max-w-3xl">
-          <div className="prose max-w-none space-y-10 text-ink/80">
+          <div className="prose max-w-none space-y-10 text-tat-charcoal/80">
 
             <PolicySection title="Overview">
               <p>
@@ -111,7 +111,7 @@ export default function PrivacyPolicyPage() {
               <p>
                 You may access, update, or delete your personal data by logging into your account.
                 For privacy concerns, contact us at{" "}
-                <a href="mailto:support@trustandtrip.com" className="text-gold hover:underline">
+                <a href="mailto:support@trustandtrip.com" className="text-tat-gold hover:underline">
                   support@trustandtrip.com
                 </a>
                 .
@@ -126,10 +126,10 @@ export default function PrivacyPolicyPage() {
               </p>
             </PolicySection>
 
-            <div className="mt-12 p-6 bg-cream rounded-2xl border border-ink/8">
-              <p className="text-sm text-ink/60">
+            <div className="mt-12 p-6 bg-tat-paper rounded-2xl border border-tat-charcoal/8">
+              <p className="text-sm text-tat-charcoal/60">
                 <strong>Contact:</strong>{" "}
-                <a href="mailto:support@trustandtrip.com" className="text-gold hover:underline">
+                <a href="mailto:support@trustandtrip.com" className="text-tat-gold hover:underline">
                   support@trustandtrip.com
                 </a>{" "}
                 · Trust and Trip Experiences Pvt. Ltd., R-607, Amrapali Princely, Noida Sector 71,
@@ -152,10 +152,10 @@ function PolicySection({
 }) {
   return (
     <div>
-      <h2 className="font-display text-2xl font-medium text-ink mb-4 pb-3 border-b border-ink/8">
+      <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
         {title}
       </h2>
-      <div className="space-y-4 text-ink/75 leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_li]:leading-relaxed">
+      <div className="space-y-4 text-tat-charcoal/75 leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_li]:leading-relaxed">
         {children}
       </div>
     </div>

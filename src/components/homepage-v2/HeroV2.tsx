@@ -65,7 +65,7 @@ export default function HeroV2() {
   };
 
   return (
-    <section className="relative w-full min-h-[95vh] md:min-h-screen flex flex-col overflow-hidden bg-ink">
+    <section className="relative w-full min-h-[95vh] md:min-h-screen flex flex-col overflow-hidden bg-tat-charcoal">
       {/* Background media — crossfade */}
       <div className="absolute inset-0">
         {CLIPS.map((clip, i) => (
@@ -105,8 +105,8 @@ export default function HeroV2() {
         ))}
 
         {/* Gradient overlays for readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/50 to-ink/20 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-tat-charcoal/85 via-tat-charcoal/50 to-tat-charcoal/20 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal via-tat-charcoal/20 to-transparent z-10" />
         <div className="absolute inset-0 opacity-[0.08] mix-blend-overlay pointer-events-none bg-grain z-10" />
         {/* Aceternity-style spotlight glow */}
         <Spotlight className="-top-40 left-0 md:-top-20 md:left-60" fill="#E8A94C" />
@@ -121,12 +121,12 @@ export default function HeroV2() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 6 }}
             transition={{ duration: 0.45 }}
-            className="flex items-center gap-2 bg-cream/10 backdrop-blur-md border border-cream/15 rounded-full px-3.5 py-2"
+            className="flex items-center gap-2 bg-tat-paper/10 backdrop-blur-md border border-tat-paper/15 rounded-full px-3.5 py-2"
           >
-            <MapPin className="h-3.5 w-3.5 text-gold shrink-0" />
+            <MapPin className="h-3.5 w-3.5 text-tat-gold shrink-0" />
             <div className="flex items-center gap-2">
-              <span className="text-cream/90 text-xs font-medium">{CLIPS[current].label}</span>
-              <span className="text-[9px] text-gold/80 uppercase tracking-widest border-l border-cream/20 pl-2">
+              <span className="text-tat-paper/90 text-xs font-medium">{CLIPS[current].label}</span>
+              <span className="text-[9px] text-tat-gold/80 uppercase tracking-widest border-l border-tat-paper/20 pl-2">
                 {CLIPS[current].tag}
               </span>
             </div>
@@ -146,7 +146,7 @@ export default function HeroV2() {
             >
               <div
                 className={`h-0.5 rounded-full transition-all duration-500 ${
-                  i === current ? "w-10 bg-gold" : "w-4 bg-cream/30 group-hover:bg-cream/50"
+                  i === current ? "w-10 bg-tat-gold" : "w-4 bg-tat-paper/30 group-hover:bg-tat-paper/50"
                 }`}
               />
             </button>
@@ -160,9 +160,9 @@ export default function HeroV2() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.6 }}
-          className="flex items-center gap-2.5 text-gold mb-5"
+          className="flex items-center gap-2.5 text-tat-gold mb-5"
         >
-          <span className="h-px w-8 bg-gold/70" />
+          <span className="h-px w-8 bg-tat-gold/70" />
           <span className="text-[10px] uppercase tracking-[0.28em] font-medium">
             Crafting Reliable Travel
           </span>
@@ -172,20 +172,20 @@ export default function HeroV2() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display font-medium text-cream leading-[0.94] tracking-tight text-balance"
+          className="font-display font-medium text-tat-paper leading-[0.94] tracking-tight text-balance"
           style={{ fontSize: "clamp(2.6rem, 7vw, 5.5rem)" }}
         >
           Trips that feel
           <br />
           made just{" "}
-          <span className="italic text-gold font-light">for you.</span>
+          <span className="italic text-tat-gold font-light">for you.</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
-          className="mt-6 max-w-xl text-cream/75 text-base md:text-lg leading-relaxed font-light"
+          className="mt-6 max-w-xl text-tat-paper/75 text-base md:text-lg leading-relaxed font-light"
         >
           Real humans designing every itinerary. No bloated packages, no hidden
           markups — just journeys that match how you actually travel.
@@ -204,7 +204,7 @@ export default function HeroV2() {
           </Link>
           <Link
             href="/experiences"
-            className="inline-flex items-center gap-2 text-cream/85 hover:text-gold transition-colors text-sm font-medium border border-cream/20 hover:border-gold/40 px-5 py-2.5 rounded-full"
+            className="inline-flex items-center gap-2 text-tat-paper/85 hover:text-tat-gold transition-colors text-sm font-medium border border-tat-paper/20 hover:border-tat-gold/40 px-5 py-2.5 rounded-full"
           >
             Browse experiences
           </Link>

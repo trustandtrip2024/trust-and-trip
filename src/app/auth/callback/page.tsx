@@ -9,8 +9,8 @@ import { supabase } from "@/lib/supabase";
 export default function AuthCallbackPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-cream flex items-center justify-center">
-        <div className="flex items-center gap-2 text-ink/50 text-sm">
+      <div className="min-h-screen bg-tat-paper flex items-center justify-center">
+        <div className="flex items-center gap-2 text-tat-charcoal/50 text-sm">
           <Loader2 className="h-4 w-4 animate-spin" />
           Signing you in…
         </div>
@@ -66,14 +66,14 @@ function AuthCallbackInner() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+      <div className="min-h-screen bg-tat-paper flex items-center justify-center px-4">
         <div className="max-w-sm w-full bg-white border border-red-100 rounded-2xl p-6 text-center">
           <div className="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-3">
             <AlertCircle className="h-5 w-5 text-red-500" />
           </div>
-          <p className="font-medium text-ink mb-1">Sign-in link couldn't be used</p>
-          <p className="text-xs text-ink/60 mb-5 break-words">{error}</p>
-          <Link href="/login" className="inline-block px-4 py-2.5 bg-ink text-cream rounded-xl text-sm font-semibold hover:bg-gold hover:text-ink transition-colors">
+          <p className="font-medium text-tat-charcoal mb-1">Sign-in link couldn't be used</p>
+          <p className="text-xs text-tat-charcoal/60 mb-5 break-words">{error}</p>
+          <Link href="/login" className="inline-block px-4 py-2.5 bg-tat-charcoal text-tat-paper rounded-xl text-sm font-semibold hover:bg-tat-gold hover:text-tat-charcoal transition-colors">
             Back to sign in
           </Link>
         </div>
@@ -82,8 +82,8 @@ function AuthCallbackInner() {
   }
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center">
-      <div className="flex items-center gap-2 text-ink/50 text-sm">
+    <div className="min-h-screen bg-tat-paper flex items-center justify-center">
+      <div className="flex items-center gap-2 text-tat-charcoal/50 text-sm">
         <Loader2 className="h-4 w-4 animate-spin" />
         Signing you in…
       </div>

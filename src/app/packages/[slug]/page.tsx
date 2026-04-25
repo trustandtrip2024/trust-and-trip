@@ -6,15 +6,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPackageBySlug, getAllPackageSlugs, getRelatedPackages } from "@/lib/sanity-queries";
 import { getGalleryImages } from "@/lib/gallery-images";
-import Accordion from "@/components/Accordion";
+import PackageItinerary from "@/components/PackageItinerary";
 import PackageGallery from "@/components/PackageGallery";
 import PackageSlider from "@/components/PackageSlider";
 import PackageEnquiryCTA from "@/components/PackageEnquiryCTA";
 import PackageSectionNav from "@/components/PackageSectionNav";
 import ReviewsList from "@/components/ReviewsList";
 import ReviewForm from "@/components/ReviewForm";
-import BookingDeposit from "@/components/BookingDeposit";
-import PackageDetailCTAs, { PackageQuickQuestions } from "@/components/PackageDetailCTAs";
+import BookingAside from "@/components/BookingAside";
 import JsonLd from "@/components/JsonLd";
 import Image2 from "next/image";
 import {
@@ -87,34 +86,34 @@ export default async function PackageDetail({ params }: Props) {
       }} />
 
       {/* ── Compact Hero ───────────────────────────────────────── */}
-      <section className="relative h-[55vh] min-h-[380px] w-full overflow-hidden bg-ink">
+      <section className="relative h-[55vh] min-h-[380px] w-full overflow-hidden bg-tat-charcoal">
         <Image src={pkg.heroImage} alt={pkg.title} fill priority className="object-cover" sizes="100vw" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/40 to-ink/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/95 via-tat-charcoal/40 to-tat-charcoal/20" />
 
         {/* Breadcrumb */}
-        <div className="absolute top-20 md:top-24 inset-x-0 container-custom flex items-center gap-2 text-xs text-cream/60 z-10">
-          <Link href="/" className="hover:text-gold">Home</Link>
+        <div className="absolute top-20 md:top-24 inset-x-0 container-custom flex items-center gap-2 text-xs text-tat-paper/60 z-10">
+          <Link href="/" className="hover:text-tat-gold">Home</Link>
           <ChevronRight className="h-3 w-3" />
-          <Link href="/packages" className="hover:text-gold">Packages</Link>
+          <Link href="/packages" className="hover:text-tat-gold">Packages</Link>
           <ChevronRight className="h-3 w-3" />
-          <Link href={`/destinations/${pkg.destinationSlug}`} className="hover:text-gold">{pkg.destinationName}</Link>
+          <Link href={`/destinations/${pkg.destinationSlug}`} className="hover:text-tat-gold">{pkg.destinationName}</Link>
           <ChevronRight className="h-3 w-3" />
-          <span className="text-gold truncate max-w-[120px]">{pkg.title}</span>
+          <span className="text-tat-gold truncate max-w-[120px]">{pkg.title}</span>
         </div>
 
         {/* Hero content */}
-        <div className="relative h-full flex items-end pb-8 md:pb-10 container-custom text-cream z-10">
+        <div className="relative h-full flex items-end pb-8 md:pb-10 container-custom text-tat-paper z-10">
           <div className="max-w-3xl">
             {/* Tags */}
             <div className="flex items-center gap-2 flex-wrap mb-3">
-              <span className="inline-flex items-center gap-1.5 bg-gold/20 border border-gold/30 text-gold text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+              <span className="inline-flex items-center gap-1.5 bg-tat-gold/20 border border-tat-gold/30 text-tat-gold text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
                 <MapPin className="h-3 w-3" />{pkg.destinationName}
               </span>
-              <span className="inline-flex items-center gap-1.5 bg-cream/10 border border-cream/20 text-cream/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
-                <Clock className="h-3 w-3 text-gold" />{pkg.duration}
+              <span className="inline-flex items-center gap-1.5 bg-tat-paper/10 border border-tat-paper/20 text-tat-paper/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                <Clock className="h-3 w-3 text-tat-gold" />{pkg.duration}
               </span>
-              <span className="inline-flex items-center gap-1.5 bg-cream/10 border border-cream/20 text-cream/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
-                <Users className="h-3 w-3 text-gold" />{pkg.travelType}
+              <span className="inline-flex items-center gap-1.5 bg-tat-paper/10 border border-tat-paper/20 text-tat-paper/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                <Users className="h-3 w-3 text-tat-gold" />{pkg.travelType}
               </span>
               {pkg.limitedSlots && (
                 <span className="inline-flex items-center gap-1.5 bg-red-500/20 border border-red-400/30 text-red-300 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
@@ -122,24 +121,24 @@ export default async function PackageDetail({ params }: Props) {
                 </span>
               )}
               {pkg.trending && (
-                <span className="inline-flex items-center gap-1.5 bg-cream/10 border border-cream/20 text-cream/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
-                  <Flame className="h-3 w-3 text-gold" />Trending
+                <span className="inline-flex items-center gap-1.5 bg-tat-paper/10 border border-tat-paper/20 text-tat-paper/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                  <Flame className="h-3 w-3 text-tat-gold" />Trending
                 </span>
               )}
             </div>
-            <h1 className="font-display text-3xl md:text-5xl font-medium leading-tight text-balance text-cream">
+            <h1 className="font-display text-3xl md:text-5xl font-medium leading-tight text-balance text-tat-paper">
               {pkg.title}
             </h1>
             {/* Rating row */}
             <div className="flex items-center gap-4 mt-3">
               <div className="flex items-center gap-1.5">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={`h-3.5 w-3.5 ${i < Math.floor(pkg.rating ?? 0) ? "fill-gold text-gold" : "text-cream/30"}`} />
+                  <Star key={i} className={`h-3.5 w-3.5 ${i < Math.floor(pkg.rating ?? 0) ? "fill-tat-gold text-tat-gold" : "text-tat-paper/30"}`} />
                 ))}
-                <span className="text-sm font-medium text-cream ml-1">{pkg.rating}</span>
-                <span className="text-cream/50 text-xs">({pkg.reviews} reviews)</span>
+                <span className="text-sm font-medium text-tat-paper ml-1">{pkg.rating}</span>
+                <span className="text-tat-paper/50 text-xs">({pkg.reviews} reviews)</span>
               </div>
-              <span className="text-cream/40 text-xs">{viewedCount} people viewed this month</span>
+              <span className="text-tat-paper/40 text-xs">{viewedCount} people viewed this month</span>
             </div>
           </div>
         </div>
@@ -161,7 +160,7 @@ export default async function PackageDetail({ params }: Props) {
             </div>
 
             {/* What's included badges */}
-            <div className="flex flex-wrap gap-2 mb-10 pb-10 border-b border-ink/8">
+            <div className="flex flex-wrap gap-2 mb-10 pb-10 border-b border-tat-charcoal/8">
               {[
                 { icon: Car, label: "Transfers" },
                 { icon: Hotel, label: "Stay" },
@@ -169,8 +168,8 @@ export default async function PackageDetail({ params }: Props) {
                 { icon: Camera, label: "Sightseeing" },
                 { icon: Plane, label: "No Flights" },
               ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-2 bg-gold/8 border border-gold/20 text-ink text-xs font-medium px-3 py-2 rounded-xl">
-                  <Icon className="h-3.5 w-3.5 text-gold" />
+                <div key={label} className="flex items-center gap-2 bg-tat-gold/8 border border-tat-gold/20 text-tat-charcoal text-xs font-medium px-3 py-2 rounded-xl">
+                  <Icon className="h-3.5 w-3.5 text-tat-gold" />
                   {label} {label === "No Flights" ? "" : "Included"}
                 </div>
               ))}
@@ -181,74 +180,69 @@ export default async function PackageDetail({ params }: Props) {
               <span className="eyebrow">Overview</span>
               <h2 className="heading-section mt-2 mb-5 text-balance">
                 What makes this journey
-                <span className="italic text-gold font-light"> unforgettable.</span>
+                <span className="italic text-tat-gold font-light"> unforgettable.</span>
               </h2>
-              <p className="text-ink/70 leading-relaxed mb-8">{pkg.description}</p>
+              <p className="text-tat-charcoal/70 leading-relaxed mb-8">{pkg.description}</p>
 
               {/* Highlights grid */}
               <div className="grid sm:grid-cols-2 gap-3">
                 {pkg.highlights.map((h, i) => (
-                  <div key={i} className="flex items-start gap-3 bg-cream rounded-2xl p-4 border border-ink/5">
-                    <span className="shrink-0 h-6 w-6 rounded-full bg-gold/20 text-gold flex items-center justify-center mt-0.5">
+                  <div key={i} className="flex items-start gap-3 bg-tat-paper rounded-2xl p-4 border border-tat-charcoal/5">
+                    <span className="shrink-0 h-6 w-6 rounded-full bg-tat-gold/20 text-tat-gold flex items-center justify-center mt-0.5">
                       <Sparkles className="h-3 w-3" />
                     </span>
-                    <p className="text-sm text-ink/80 leading-relaxed">{h}</p>
+                    <p className="text-sm text-tat-charcoal/80 leading-relaxed">{h}</p>
                   </div>
                 ))}
               </div>
             </section>
 
             {/* ITINERARY */}
-            <section id="itinerary" className="mb-12 scroll-mt-32 pt-10 border-t border-ink/8">
-              <span className="eyebrow">Day-by-day Itinerary</span>
-              <h2 className="heading-section mt-2 mb-6 text-balance">
-                Your journey,
-                <span className="italic text-gold font-light"> unfolded.</span>
-              </h2>
-              <Accordion
-                items={pkg.itinerary.map((day, idx) => ({
-                  subtitle: `Day ${idx + 1}`,
+            <section id="itinerary" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+              <PackageItinerary
+                days={pkg.itinerary.map((day, idx) => ({
+                  day: day.day ?? idx + 1,
                   title: day.title,
-                  content: day.description,
+                  description: day.description,
                 }))}
               />
             </section>
 
             {/* INCLUSIONS */}
-            <section id="inclusions" className="mb-12 scroll-mt-32 pt-10 border-t border-ink/8">
+            <section id="inclusions" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <span className="eyebrow">Inclusions & Exclusions</span>
               <h2 className="heading-section mt-2 mb-6 text-balance">
                 What's in — and
-                <span className="italic text-gold font-light"> what's not.</span>
+                <span className="italic text-tat-gold font-light"> what's not.</span>
               </h2>
               <div className="grid md:grid-cols-2 gap-5">
-                <div className="bg-cream rounded-2xl p-6 border border-ink/5">
+                <div className="bg-tat-paper rounded-2xl p-6 border border-tat-charcoal/5">
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="h-7 w-7 rounded-full bg-gold/15 flex items-center justify-center">
-                      <Check className="h-4 w-4 text-gold" />
+                    <div className="h-7 w-7 rounded-full bg-tat-gold/15 flex items-center justify-center">
+                      <Check className="h-4 w-4 text-tat-gold" />
                     </div>
-                    <h3 className="font-medium text-ink">What's included</h3>
+                    <h3 className="font-medium text-tat-charcoal">What's included</h3>
                   </div>
                   <ul className="space-y-2.5">
                     {pkg.inclusions.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-sm text-ink/70">
-                        <Check className="h-4 w-4 text-gold shrink-0 mt-0.5" />
+                      <li key={i} className="flex items-start gap-2.5 text-sm text-tat-charcoal/70">
+                        <Check className="h-4 w-4 text-tat-gold shrink-0 mt-0.5" />
                         {item}
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div className="bg-cream rounded-2xl p-6 border border-ink/5">
+                <div className="bg-tat-paper rounded-2xl p-6 border border-tat-charcoal/5">
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="h-7 w-7 rounded-full bg-ink/8 flex items-center justify-center">
-                      <XIcon className="h-4 w-4 text-ink/50" />
+                    <div className="h-7 w-7 rounded-full bg-tat-charcoal/8 flex items-center justify-center">
+                      <XIcon className="h-4 w-4 text-tat-charcoal/50" />
                     </div>
-                    <h3 className="font-medium text-ink/60">Not included</h3>
+                    <h3 className="font-medium text-tat-charcoal/60">Not included</h3>
                   </div>
                   <ul className="space-y-2.5">
                     {pkg.exclusions.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-sm text-ink/50">
-                        <XIcon className="h-4 w-4 text-ink/30 shrink-0 mt-0.5" />
+                      <li key={i} className="flex items-start gap-2.5 text-sm text-tat-charcoal/50">
+                        <XIcon className="h-4 w-4 text-tat-charcoal/30 shrink-0 mt-0.5" />
                         {item}
                       </li>
                     ))}
@@ -258,35 +252,35 @@ export default async function PackageDetail({ params }: Props) {
             </section>
 
             {/* HOTEL */}
-            <section id="hotel" className="mb-12 scroll-mt-32 pt-10 border-t border-ink/8">
+            <section id="hotel" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <span className="eyebrow">Where you'll stay</span>
               <h2 className="heading-section mt-2 mb-6 text-balance">
                 Comfort you'll
-                <span className="italic text-gold font-light"> remember.</span>
+                <span className="italic text-tat-gold font-light"> remember.</span>
               </h2>
-              <div className="bg-sand/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
-                <div className="h-14 w-14 rounded-2xl bg-gold/15 flex items-center justify-center shrink-0">
-                  <Hotel className="h-7 w-7 text-gold" />
+              <div className="bg-tat-cream/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
+                <div className="h-14 w-14 rounded-2xl bg-tat-gold/15 flex items-center justify-center shrink-0">
+                  <Hotel className="h-7 w-7 text-tat-gold" />
                 </div>
                 <div>
                   <h3 className="font-display text-2xl font-medium">{pkg.hotel.name}</h3>
                   <div className="flex items-center gap-1 mt-1.5">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-gold text-gold" : "text-ink/15"}`} />
+                      <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} />
                     ))}
-                    <span className="text-xs text-ink/50 ml-1">{hotelStars}-star accommodation</span>
+                    <span className="text-xs text-tat-charcoal/50 ml-1">{hotelStars}-star accommodation</span>
                   </div>
-                  <p className="mt-3 text-ink/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
+                  <p className="mt-3 text-tat-charcoal/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
                 </div>
               </div>
 
               {/* Activities */}
               <div className="mt-6">
-                <p className="text-xs uppercase tracking-[0.2em] text-ink/50 mb-3 font-medium">Signature activities</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-tat-charcoal/50 mb-3 font-medium">Signature activities</p>
                 <div className="flex flex-wrap gap-2">
                   {pkg.activities.map((a) => (
-                    <span key={a} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink text-cream text-xs">
-                      <span className="h-1.5 w-1.5 rounded-full bg-gold" />{a}
+                    <span key={a} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal text-tat-paper text-xs">
+                      <span className="h-1.5 w-1.5 rounded-full bg-tat-gold" />{a}
                     </span>
                   ))}
                 </div>
@@ -294,13 +288,13 @@ export default async function PackageDetail({ params }: Props) {
             </section>
 
             {/* REVIEWS */}
-            <section id="reviews" className="mb-12 scroll-mt-32 pt-10 border-t border-ink/8">
+            <section id="reviews" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <div className="flex items-center justify-between gap-4 mb-6">
                 <div>
                   <span className="eyebrow">Traveler Reviews</span>
                   <h2 className="heading-section mt-2 text-balance">
                     Travelers who've
-                    <span className="italic text-gold font-light"> been there.</span>
+                    <span className="italic text-tat-gold font-light"> been there.</span>
                   </h2>
                 </div>
               </div>
@@ -311,16 +305,16 @@ export default async function PackageDetail({ params }: Props) {
             </section>
 
             {/* KNOW BEFORE YOU GO */}
-            <section className="mb-4 scroll-mt-32 pt-10 border-t border-ink/8">
+            <section className="mb-4 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <div className="flex items-center gap-2 mb-5">
-                <div className="h-8 w-8 rounded-full bg-gold/15 flex items-center justify-center shrink-0">
-                  <Info className="h-4 w-4 text-gold" />
+                <div className="h-8 w-8 rounded-full bg-tat-gold/15 flex items-center justify-center shrink-0">
+                  <Info className="h-4 w-4 text-tat-gold" />
                 </div>
                 <div>
                   <span className="eyebrow">Know before you go</span>
                 </div>
               </div>
-              <div className="bg-sand/50 rounded-2xl p-5 space-y-3 border border-ink/5">
+              <div className="bg-tat-cream/50 rounded-2xl p-5 space-y-3 border border-tat-charcoal/5">
                 {[
                   "Valid government-issued ID required for check-in at all hotels.",
                   "Package price is per person based on double/twin sharing occupancy.",
@@ -330,8 +324,8 @@ export default async function PackageDetail({ params }: Props) {
                   "Itinerary is subject to change due to weather or local conditions.",
                   "Visa assistance is available — contact your planner for guidance.",
                 ].map((note, i) => (
-                  <div key={i} className="flex items-start gap-3 text-sm text-ink/70">
-                    <span className="h-1.5 w-1.5 rounded-full bg-gold mt-2 shrink-0" />
+                  <div key={i} className="flex items-start gap-3 text-sm text-tat-charcoal/70">
+                    <span className="h-1.5 w-1.5 rounded-full bg-tat-gold mt-2 shrink-0" />
                     {note}
                   </div>
                 ))}
@@ -340,110 +334,31 @@ export default async function PackageDetail({ params }: Props) {
           </div>
 
           {/* ── Sticky Sidebar ─────────────────────────────────── */}
-          <aside className="lg:sticky lg:top-28 space-y-4">
-
-            {/* Price card */}
-            <div className="bg-white rounded-2xl p-6 border border-ink/8 shadow-soft-lg">
-              {/* Discount badge */}
-              <div className="flex items-center justify-between mb-4">
-                <span className="bg-gold/15 text-gold text-xs font-semibold px-3 py-1 rounded-full">
-                  {discount}% OFF
-                </span>
-                <div className="flex items-center gap-2">
-                  {pkg.limitedSlots && (
-                    <span className="flex items-center gap-1 bg-red-50 text-red-600 text-xs font-medium px-3 py-1 rounded-full">
-                      <Zap className="h-3 w-3" /> Limited seats
-                    </span>
-                  )}
-                  <SharePackage title={pkg.title} slug={pkg.slug} price={pkg.price} destination={pkg.destinationName} />
-                  <PackagePixelEvent title={pkg.title} price={pkg.price} />
-                </div>
-              </div>
-
-              {/* Price */}
-              <div className="mb-1">
-                <p className="text-xs text-ink/40 line-through">₹{originalPrice.toLocaleString("en-IN")}</p>
-                <div className="flex items-end gap-2">
-                  <p className="font-display text-4xl font-medium text-ink leading-none">
-                    ₹{pkg.price.toLocaleString("en-IN")}
-                  </p>
-                  <p className="text-xs text-ink/50 mb-1">per person</p>
-                </div>
-                <p className="text-xs text-ink/40 mt-1">Excluding flights · Taxes included</p>
-              </div>
-
-              {/* Quick stats */}
-              <div className="grid grid-cols-3 gap-2 my-4 pt-4 border-t border-ink/6">
-                <div className="text-center">
-                  <p className="text-[10px] text-ink/40 uppercase tracking-wider">Duration</p>
-                  <p className="text-xs font-semibold text-ink mt-0.5">{pkg.duration}</p>
-                </div>
-                <div className="text-center border-x border-ink/6">
-                  <p className="text-[10px] text-ink/40 uppercase tracking-wider">Type</p>
-                  <p className="text-xs font-semibold text-ink mt-0.5">{pkg.travelType}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-[10px] text-ink/40 uppercase tracking-wider">Rating</p>
-                  <p className="text-xs font-semibold text-ink mt-0.5">{pkg.rating} ★</p>
-                </div>
-              </div>
-
-              {/* CTAs (client component — fires Bitrix intent events) */}
-              <PackageDetailCTAs
-                packageSlug={pkg.slug}
-                packageTitle={pkg.title}
-                packagePrice={pkg.price}
-                duration={pkg.duration}
-                destinationName={pkg.destinationName}
-                travelType={pkg.travelType}
-                waNumber={WA}
-              />
-
-              {/* Social proof */}
-              <div className="flex items-center justify-center gap-3 mt-3 text-[11px] text-ink/40">
-                <span>{viewedCount} viewed this week</span>
-                <span className="text-ink/20">·</span>
-                <span className="text-gold/80 font-medium">{enquiredCount} enquired recently</span>
-              </div>
-            </div>
-
-            {/* Trust badges */}
-            <div className="bg-cream rounded-2xl p-5 border border-ink/5 space-y-3">
-              {[
-                { icon: ShieldCheck, text: "Free cancellation up to 30 days prior" },
-                { icon: IndianRupee, text: "No booking fee — pay only on confirmation" },
-                { icon: Star, text: "Best price guarantee on all packages" },
-              ].map(({ icon: Icon, text }) => (
-                <div key={text} className="flex items-start gap-3 text-xs text-ink/60">
-                  <Icon className="h-4 w-4 text-gold shrink-0 mt-0.5" />
-                  {text}
-                </div>
-              ))}
-            </div>
-
-            {/* Quick questions */}
-            <div className="bg-cream rounded-2xl p-5 border border-ink/5">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-ink/40 font-medium mb-3">Quick questions</p>
-              <PackageQuickQuestions
-                packageTitle={pkg.title}
-                packageSlug={pkg.slug}
-                destinationName={pkg.destinationName}
-                travelType={pkg.travelType}
-                waNumber={WA}
-              />
-            </div>
-          </aside>
+          <BookingAside
+            title={pkg.title}
+            slug={pkg.slug}
+            price={pkg.price}
+            originalPrice={originalPrice}
+            duration={pkg.duration}
+            travelType={pkg.travelType}
+            rating={pkg.rating}
+            reviews={pkg.reviews}
+            destinationName={pkg.destinationName}
+            viewedCount={viewedCount}
+            enquiredCount={enquiredCount}
+            waNumber={WA}
+          />
         </div>
       </div>
 
       {/* ── You'll Also Like ───────────────────────────────────── */}
       {relatedPackages.length > 0 && (
-        <section className="py-12 md:py-16 bg-sand/30">
+        <section className="py-12 md:py-16 bg-tat-cream/30">
           <div className="container-custom">
             <PackageSlider
               id="related-slider"
               eyebrow="You'll also like"
-              heading={`More journeys from <span class="italic text-gold font-light"> ${pkg.destinationName}.</span>`}
+              heading={`More journeys from <span class="italic text-tat-gold font-light"> ${pkg.destinationName}.</span>`}
               packages={relatedPackages}
               viewAllHref={`/destinations/${pkg.destinationSlug}`}
               viewAllLabel={`All ${pkg.destinationName}`}

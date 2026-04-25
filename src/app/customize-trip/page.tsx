@@ -33,18 +33,18 @@ const steps = [
 export default function CustomizeTripPage() {
   return (
     <>
-      <section className="relative pt-28 md:pt-36 pb-12 md:pb-16 bg-cream overflow-hidden">
+      <section className="relative pt-28 md:pt-36 pb-12 md:pb-16 bg-tat-paper overflow-hidden">
         <div
           aria-hidden
-          className="absolute -right-40 -top-20 w-96 h-96 rounded-full bg-gold/10 blur-3xl"
+          className="absolute -right-40 -top-20 w-96 h-96 rounded-full bg-tat-gold/10 blur-3xl"
         />
         <div className="container-custom max-w-5xl relative">
           <span className="eyebrow">Customize your trip</span>
           <h1 className="mt-3 font-display text-display-lg font-medium leading-[1.02] max-w-3xl text-balance">
             A trip so yours,
-            <span className="italic text-gold font-light"> nobody else could take it.</span>
+            <span className="italic text-tat-gold font-light"> nobody else could take it.</span>
           </h1>
-          <p className="mt-6 text-ink/60 max-w-xl leading-relaxed">
+          <p className="mt-6 text-tat-charcoal/60 max-w-xl leading-relaxed">
             Skip the templates. Tell us your idea, your budget, your people — and we'll build a
             journey that fits like a favorite jacket.
           </p>
@@ -57,15 +57,15 @@ export default function CustomizeTripPage() {
           <div className="grid md:grid-cols-4 gap-5 md:gap-6">
             {steps.map((s, i) => (
               <div key={i} className="relative">
-                <div className="bg-cream rounded-3xl p-6 border border-ink/5 h-full">
+                <div className="bg-tat-paper rounded-3xl p-6 border border-tat-charcoal/5 h-full">
                   <div className="flex items-center justify-between mb-5">
-                    <div className="h-11 w-11 rounded-full bg-gold/20 text-gold flex items-center justify-center">
+                    <div className="h-11 w-11 rounded-full bg-tat-gold/20 text-tat-gold flex items-center justify-center">
                       <s.icon className="h-5 w-5" />
                     </div>
-                    <span className="font-display text-3xl text-ink/10">0{i + 1}</span>
+                    <span className="font-display text-3xl text-tat-charcoal/10">0{i + 1}</span>
                   </div>
                   <h3 className="font-display text-xl font-medium mb-2">{s.title}</h3>
-                  <p className="text-sm text-ink/60 leading-relaxed">{s.description}</p>
+                  <p className="text-sm text-tat-charcoal/60 leading-relaxed">{s.description}</p>
                 </div>
               </div>
             ))}
@@ -74,7 +74,7 @@ export default function CustomizeTripPage() {
       </section>
 
       {/* Form */}
-      <section className="py-12 md:py-16 bg-sand/40">
+      <section className="py-12 md:py-16 bg-tat-cream/40">
         <div className="container-custom max-w-4xl">
           <LeadForm
             title="Get a free itinerary"
@@ -85,22 +85,22 @@ export default function CustomizeTripPage() {
       </section>
 
       {/* Reassurance band */}
-      <section className="py-16 bg-ink text-cream">
+      <section className="py-16 bg-tat-charcoal text-tat-paper">
         <div className="container-custom grid md:grid-cols-3 gap-10 text-center md:text-left">
           <div>
-            <p className="eyebrow text-gold">No commitment</p>
+            <p className="eyebrow text-tat-gold">No commitment</p>
             <p className="mt-3 font-display text-2xl">
               Proposals are always free. Pay only when you love it.
             </p>
           </div>
           <div>
-            <p className="eyebrow text-gold">Always a human</p>
+            <p className="eyebrow text-tat-gold">Always a human</p>
             <p className="mt-3 font-display text-2xl">
               You'll speak to a real planner who remembers your name.
             </p>
           </div>
           <div>
-            <p className="eyebrow text-gold">Flexible to the end</p>
+            <p className="eyebrow text-tat-gold">Flexible to the end</p>
             <p className="mt-3 font-display text-2xl">
               Tweak and refine as many times as it takes.
             </p>

@@ -41,52 +41,52 @@ export default function ProfilePage() {
   return (
     <div>
       <div className="mb-6">
-        <p className="text-xs uppercase tracking-widest text-ink/40 mb-1">Dashboard</p>
-        <h1 className="font-display text-2xl font-medium text-ink">Profile & Settings</h1>
-        <p className="text-sm text-ink/50 mt-1">Manage your account details.</p>
+        <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Dashboard</p>
+        <h1 className="font-display text-2xl font-medium text-tat-charcoal">Profile & Settings</h1>
+        <p className="text-sm text-tat-charcoal/50 mt-1">Manage your account details.</p>
       </div>
 
       <div className="space-y-4">
         {/* Profile info */}
-        <div className="bg-white rounded-2xl border border-ink/8 p-5 md:p-6">
+        <div className="bg-white rounded-2xl border border-tat-charcoal/8 p-5 md:p-6">
           <div className="flex items-center gap-2 mb-5">
-            <div className="h-8 w-8 rounded-xl bg-gold/10 flex items-center justify-center">
-              <User className="h-4 w-4 text-gold" />
+            <div className="h-8 w-8 rounded-xl bg-tat-gold/10 flex items-center justify-center">
+              <User className="h-4 w-4 text-tat-gold" />
             </div>
-            <p className="text-sm font-semibold text-ink">Personal Information</p>
+            <p className="text-sm font-semibold text-tat-charcoal">Personal Information</p>
           </div>
 
           <form onSubmit={saveProfile} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Full Name</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Full Name</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Phone / WhatsApp</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Phone / WhatsApp</label>
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Email</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Email</label>
                 <input
                   type="email"
                   value={user?.email ?? ""}
                   disabled
-                  className="w-full px-4 py-2.5 rounded-xl border border-ink/10 bg-ink/3 text-sm text-ink/50 cursor-not-allowed"
+                  className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/10 bg-tat-charcoal/3 text-sm text-tat-charcoal/50 cursor-not-allowed"
                 />
-                <p className="text-[11px] text-ink/35 mt-1">Email cannot be changed.</p>
+                <p className="text-[11px] text-tat-charcoal/35 mt-1">Email cannot be changed.</p>
               </div>
             </div>
 
@@ -94,7 +94,7 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={savingProfile}
-                className="flex items-center gap-2 px-5 py-2.5 bg-ink hover:bg-gold text-cream hover:text-ink rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
+                className="flex items-center gap-2 px-5 py-2.5 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
               >
                 {savingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 Save Changes
@@ -109,24 +109,24 @@ export default function ProfilePage() {
         </div>
 
         {/* Change password */}
-        <div className="bg-white rounded-2xl border border-ink/8 p-5 md:p-6">
+        <div className="bg-white rounded-2xl border border-tat-charcoal/8 p-5 md:p-6">
           <div className="flex items-center gap-2 mb-5">
             <div className="h-8 w-8 rounded-xl bg-blue-50 flex items-center justify-center">
               <Lock className="h-4 w-4 text-blue-600" />
             </div>
-            <p className="text-sm font-semibold text-ink">Change Password</p>
+            <p className="text-sm font-semibold text-tat-charcoal">Change Password</p>
           </div>
 
           <form onSubmit={changePassword} className="space-y-4 max-w-sm">
             <div>
-              <label className="block text-xs font-medium text-ink/60 mb-1.5">New Password</label>
+              <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">New Password</label>
               <input
                 type="password"
                 value={newPw}
                 onChange={(e) => setNewPw(e.target.value)}
                 placeholder="Min. 6 characters"
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
               />
             </div>
             {pwError && <p className="text-xs text-red-500">{pwError}</p>}
@@ -134,7 +134,7 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={savingPw}
-                className="flex items-center gap-2 px-5 py-2.5 bg-ink hover:bg-gold text-cream hover:text-ink rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
+                className="flex items-center gap-2 px-5 py-2.5 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
               >
                 {savingPw ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 Update Password
@@ -154,11 +154,11 @@ export default function ProfilePage() {
             <div className="h-8 w-8 rounded-xl bg-red-50 flex items-center justify-center">
               <Trash2 className="h-4 w-4 text-red-500" />
             </div>
-            <p className="text-sm font-semibold text-ink">Danger Zone</p>
+            <p className="text-sm font-semibold text-tat-charcoal">Danger Zone</p>
           </div>
-          <p className="text-sm text-ink/50 mb-4">
+          <p className="text-sm text-tat-charcoal/50 mb-4">
             To delete your account or request data export, contact us at{" "}
-            <a href="mailto:hello@trustandtrip.com" className="text-gold hover:underline">
+            <a href="mailto:hello@trustandtrip.com" className="text-tat-gold hover:underline">
               hello@trustandtrip.com
             </a>
           </p>

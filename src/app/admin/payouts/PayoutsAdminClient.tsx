@@ -92,14 +92,14 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
-        <Link href="/admin" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-4">
+        <Link href="/admin" className="inline-flex items-center gap-1.5 text-sm text-tat-slate hover:text-tat-charcoal mb-4">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to admin
         </Link>
         <div className="flex items-center gap-2 mb-1">
           <Wallet className="h-5 w-5 text-emerald-500" />
-          <h1 className="text-2xl font-bold text-gray-900">Creator Payouts</h1>
+          <h1 className="text-2xl font-bold text-tat-charcoal">Creator Payouts</h1>
         </div>
-        <p className="text-sm text-gray-500 mb-6">{rows.length} creators · {eligibleCreators} ready to pay</p>
+        <p className="text-sm text-tat-slate mb-6">{rows.length} creators · {eligibleCreators} ready to pay</p>
 
         {/* KPI strip */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
@@ -113,7 +113,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
           <button
             onClick={releaseAll}
             disabled={busyId === "release"}
-            className="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-800 hover:border-gray-300 px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-60"
+            className="inline-flex items-center gap-2 bg-white border border-gray-200 text-tat-charcoal hover:border-gray-300 px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-60"
           >
             {busyId === "release" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             Release pending earnings (cool-off elapsed)
@@ -126,7 +126,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
         {/* Table */}
         <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
           {rows.length === 0 && (
-            <div className="p-10 text-center text-sm text-gray-500">No active creators yet.</div>
+            <div className="p-10 text-center text-sm text-tat-slate">No active creators yet.</div>
           )}
           {rows.map((r) => {
             const open = expanded.has(r.id);
@@ -136,10 +136,10 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-3 flex-wrap">
-                        <p className="font-semibold text-gray-900">{r.full_name}</p>
-                        <span className="text-xs font-mono text-gray-500">{r.ref_code}</span>
+                        <p className="font-semibold text-tat-charcoal">{r.full_name}</p>
+                        <span className="text-xs font-mono text-tat-slate">{r.ref_code}</span>
                       </div>
-                      <p className="mt-1 text-xs text-gray-500">{r.email}</p>
+                      <p className="mt-1 text-xs text-tat-slate">{r.email}</p>
                       <p className="mt-1.5 text-[11px] text-gray-400">
                         Payout: {r.payout_method ?? "—"} {r.payout_details_raw ?? ""}
                       </p>
@@ -152,7 +152,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
                             Pending: {fmtINR(r.pending_paise)}
                           </span>
                         )}
-                        <span className="text-gray-500">Lifetime paid: {fmtINR(r.total_paid_paise)}</span>
+                        <span className="text-tat-slate">Lifetime paid: {fmtINR(r.total_paid_paise)}</span>
                       </div>
                     </div>
 
@@ -170,7 +170,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
                       {r.payouts.length > 0 && (
                         <button
                           onClick={() => toggleExpand(r.id)}
-                          className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900 px-2 py-1.5"
+                          className="inline-flex items-center gap-1 text-xs text-tat-slate hover:text-tat-charcoal px-2 py-1.5"
                         >
                           History {r.payouts.length}
                           {open ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
@@ -182,22 +182,22 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
 
                 {open && r.payouts.length > 0 && (
                   <div className="bg-gray-50 px-5 py-4 border-t border-gray-100">
-                    <p className="text-[10px] uppercase tracking-widest text-gray-500 font-semibold mb-2">Payout history</p>
+                    <p className="text-[10px] uppercase tracking-widest text-tat-slate font-semibold mb-2">Payout history</p>
                     <div className="space-y-2">
                       {r.payouts.map((p) => (
                         <div key={p.id} className="flex items-center justify-between gap-3 bg-white rounded-lg p-3 border border-gray-100">
                           <div className="min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-semibold text-sm text-gray-900">{fmtINR(p.amount_paise)}</span>
+                              <span className="font-semibold text-sm text-tat-charcoal">{fmtINR(p.amount_paise)}</span>
                               <span className={`text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded font-semibold ${STATUS_BADGE[p.status]}`}>
                                 {p.status}
                               </span>
                             </div>
-                            <p className="text-[11px] text-gray-500 mt-0.5">
+                            <p className="text-[11px] text-tat-slate mt-0.5">
                               Period: {fmtDate(p.period_start)} → {fmtDate(p.period_end)} · Created {fmtDate(p.created_at)}
                               {p.paid_at ? ` · Paid ${fmtDate(p.paid_at)}` : ""}
                             </p>
-                            {p.txn_ref && <p className="text-[11px] text-gray-500 font-mono mt-0.5">UTR: {p.txn_ref}</p>}
+                            {p.txn_ref && <p className="text-[11px] text-tat-slate font-mono mt-0.5">UTR: {p.txn_ref}</p>}
                           </div>
                           {p.status === "processing" && (
                             <button
@@ -224,10 +224,10 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
 }
 
 function Card({ label, value, tone }: { label: string; value: string; tone: "emerald" | "amber" | "slate" }) {
-  const toneCls = tone === "emerald" ? "text-emerald-700" : tone === "amber" ? "text-amber-700" : "text-gray-900";
+  const toneCls = tone === "emerald" ? "text-emerald-700" : tone === "amber" ? "text-amber-700" : "text-tat-charcoal";
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4">
-      <p className="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">{label}</p>
+      <p className="text-[10px] uppercase tracking-widest text-tat-slate font-semibold">{label}</p>
       <p className={`text-xl font-bold mt-1 ${toneCls}`}>{value}</p>
     </div>
   );

@@ -27,14 +27,14 @@ export default async function PackagesPage({
 
   return (
     <>
-      <section className="pt-28 md:pt-36 pb-12 md:pb-16 bg-cream border-b border-ink/5">
+      <section className="pt-28 md:pt-36 pb-12 md:pb-16 bg-tat-paper border-b border-tat-charcoal/5">
         <div className="container-custom">
           <span className="eyebrow">Our Packages</span>
           <h1 className="mt-3 font-display text-display-lg font-medium leading-[1.02] max-w-4xl text-balance">
             Signature journeys.
-            <span className="italic text-gold font-light"> Ready to live.</span>
+            <span className="italic text-tat-gold font-light"> Ready to live.</span>
           </h1>
-          <p className="mt-6 text-ink/60 max-w-xl leading-relaxed">
+          <p className="mt-6 text-tat-charcoal/60 max-w-xl leading-relaxed">
             Every package here was designed by a planner who&apos;s been there. Filter by what
             matters, or let us build one from scratch.
           </p>

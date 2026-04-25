@@ -73,8 +73,8 @@ export default function Header() {
       className={clsx(
         "shrink-0 whitespace-nowrap relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 group",
         isActive(l.href)
-          ? "text-ink"
-          : "text-ink/70 hover:text-ink"
+          ? "text-tat-charcoal"
+          : "text-tat-charcoal/70 hover:text-tat-charcoal"
       )}
     >
       {l.label}
@@ -90,16 +90,16 @@ export default function Header() {
   return (
     <>
       {/* Top strip */}
-      <div className="relative bg-ink text-cream text-xs py-2 md:py-2.5 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-plum to-ink opacity-95 pointer-events-none" />
-        <div className="absolute inset-y-0 left-1/3 w-1/3 bg-gradient-to-r from-transparent via-ember/15 to-transparent blur-2xl pointer-events-none" />
+      <div className="relative bg-tat-charcoal text-tat-paper text-xs py-2 md:py-2.5 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-tat-charcoal via-tat-charcoal to-tat-charcoal opacity-95 pointer-events-none" />
+        <div className="absolute inset-y-0 left-1/3 w-1/3 bg-gradient-to-r from-transparent via-tat-orange/15 to-transparent blur-2xl pointer-events-none" />
         <div className="relative container-custom flex items-center justify-between gap-4">
           <p className="md:hidden text-center w-full text-[11px] font-semibold tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">
             <span className="text-gradient-aurora">10% Off · book 60+ days ahead</span>
           </p>
           <div className="hidden md:flex items-center gap-5 opacity-90">
             <span className="flex items-center gap-1.5 whitespace-nowrap">
-              <MapPin className="h-3 w-3 text-ember" />
+              <MapPin className="h-3 w-3 text-tat-orange" />
               Curating journeys across 60+ destinations
             </span>
           </div>
@@ -107,7 +107,7 @@ export default function Header() {
             <a
               href="tel:+918115999588"
               onClick={() => captureIntent("call_click", { note: "Header top strip" })}
-              className="flex items-center gap-1.5 hover:text-gold transition-colors"
+              className="flex items-center gap-1.5 hover:text-tat-gold transition-colors"
             >
               <Phone className="h-3 w-3" />+91 8115 999 588
             </a>
@@ -125,7 +125,7 @@ export default function Header() {
         className={clsx(
           "sticky top-0 z-50 w-full transition-all duration-500",
           scrolled
-            ? "bg-cream/85 backdrop-blur-2xl border-b border-ember/15 shadow-[0_8px_32px_-12px_rgba(45,26,55,0.18)]"
+            ? "bg-tat-paper/85 backdrop-blur-2xl border-b border-tat-orange/15 shadow-[0_8px_32px_-12px_rgba(45,26,55,0.18)]"
             : "bg-transparent"
         )}
       >
@@ -136,13 +136,13 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group shrink-0">
             <div className="relative">
-              <div className="h-9 w-9 rounded-full bg-ink flex items-center justify-center transition-all duration-500 group-hover:scale-105 group-hover:shadow-glow-ember ring-1 ring-ember/0 group-hover:ring-ember/40">
+              <div className="h-9 w-9 rounded-full bg-tat-charcoal flex items-center justify-center transition-all duration-500 group-hover:scale-105 group-hover:shadow-glow-ember ring-1 ring-tat-orange/0 group-hover:ring-tat-orange/40">
                 <span className="text-gradient-aurora text-lg font-display font-semibold transition-colors duration-500">T</span>
               </div>
               <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-gradient-passion shadow-[0_0_10px_rgba(242,107,31,0.7)]" />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="font-display text-lg md:text-xl font-semibold tracking-tight text-ink whitespace-nowrap">
+              <span className="font-display text-lg md:text-xl font-semibold tracking-tight text-tat-charcoal whitespace-nowrap">
                 Trust<span className="text-gradient-passion italic font-bold">&</span>Trip
               </span>
               <span className="eyebrow-ember text-[8.5px] tracking-[0.28em] mt-1 hidden sm:block whitespace-nowrap">
@@ -174,23 +174,23 @@ export default function Header() {
               <DropdownMenu.Trigger asChild>
                 <button
                   aria-label="More options"
-                  className="hidden md:inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-ink/8 transition-colors"
+                  className="hidden md:inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-tat-charcoal/8 transition-colors"
                 >
-                  <MoreVertical className="h-4 w-4 text-ink/75" />
+                  <MoreVertical className="h-4 w-4 text-tat-charcoal/75" />
                 </button>
               </DropdownMenu.Trigger>
               <DropdownMenu.Portal>
                 <DropdownMenu.Content
                   align="end"
                   sideOffset={8}
-                  className="z-[60] min-w-[220px] rounded-2xl bg-white border border-ink/10 shadow-soft-lg p-2"
+                  className="z-[60] min-w-[220px] rounded-2xl bg-white border border-tat-charcoal/10 shadow-soft-lg p-2"
                 >
                   {moreItems.map((it) => {
                     if (it.render === "currency") {
                       return (
-                        <div key="currency" className="flex items-center justify-between px-3 py-2.5 text-sm text-ink/75">
+                        <div key="currency" className="flex items-center justify-between px-3 py-2.5 text-sm text-tat-charcoal/75">
                           <span className="inline-flex items-center gap-2.5">
-                            <it.icon className="h-4 w-4 text-ember" />
+                            <it.icon className="h-4 w-4 text-tat-orange" />
                             {it.label}
                           </span>
                           <CurrencySwitcher />
@@ -202,9 +202,9 @@ export default function Header() {
                         <DropdownMenu.Item
                           key={it.label}
                           onSelect={() => it.onClick?.()}
-                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-ink/75 hover:bg-sand/60 hover:text-ink outline-none cursor-pointer data-[highlighted]:bg-sand/60"
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-tat-charcoal/75 hover:bg-tat-cream/60 hover:text-tat-charcoal outline-none cursor-pointer data-[highlighted]:bg-tat-cream/60"
                         >
-                          <it.icon className="h-4 w-4 text-ember" />
+                          <it.icon className="h-4 w-4 text-tat-orange" />
                           {it.label}
                         </DropdownMenu.Item>
                       );
@@ -214,24 +214,24 @@ export default function Header() {
                         <Link
                           href={it.href!}
                           aria-current={isActive(it.href!) ? "page" : undefined}
-                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-ink/75 hover:bg-sand/60 hover:text-ink outline-none data-[highlighted]:bg-sand/60"
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-tat-charcoal/75 hover:bg-tat-cream/60 hover:text-tat-charcoal outline-none data-[highlighted]:bg-tat-cream/60"
                         >
-                          <it.icon className="h-4 w-4 text-ember" />
+                          <it.icon className="h-4 w-4 text-tat-orange" />
                           {it.label}
                         </Link>
                       </DropdownMenu.Item>
                     );
                   })}
 
-                  <DropdownMenu.Separator className="my-1.5 h-px bg-ink/8" />
+                  <DropdownMenu.Separator className="my-1.5 h-px bg-tat-charcoal/8" />
                   {user ? (
                     <>
                       <DropdownMenu.Item asChild>
                         <Link
                           href="/dashboard"
-                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-ink/75 hover:bg-sand/60 hover:text-ink outline-none data-[highlighted]:bg-sand/60"
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-tat-charcoal/75 hover:bg-tat-cream/60 hover:text-tat-charcoal outline-none data-[highlighted]:bg-tat-cream/60"
                         >
-                          <User className="h-4 w-4 text-ember" />
+                          <User className="h-4 w-4 text-tat-orange" />
                           Dashboard
                         </Link>
                       </DropdownMenu.Item>
@@ -247,9 +247,9 @@ export default function Header() {
                     <DropdownMenu.Item asChild>
                       <Link
                         href="/login"
-                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-ink/75 hover:bg-sand/60 hover:text-ink outline-none data-[highlighted]:bg-sand/60"
+                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-tat-charcoal/75 hover:bg-tat-cream/60 hover:text-tat-charcoal outline-none data-[highlighted]:bg-tat-cream/60"
                       >
-                        <User className="h-4 w-4 text-ember" />
+                        <User className="h-4 w-4 text-tat-orange" />
                         Sign In
                       </Link>
                     </DropdownMenu.Item>
@@ -271,10 +271,10 @@ export default function Header() {
             <a
               href="tel:+918115999588"
               onClick={() => captureIntent("call_click", { note: "Header mobile call icon" })}
-              className="md:hidden p-2 rounded-full hover:bg-ember/10 transition-colors"
+              className="md:hidden p-2 rounded-full hover:bg-tat-orange/10 transition-colors"
               aria-label="Call"
             >
-              <Phone className="h-[18px] w-[18px] text-ink" />
+              <Phone className="h-[18px] w-[18px] text-tat-charcoal" />
             </a>
 
             {/* Mobile hamburger — Radix Dialog */}
@@ -282,23 +282,23 @@ export default function Header() {
               <Dialog.Trigger asChild>
                 <button
                   aria-label="Menu"
-                  className="md:hidden p-2 rounded-full hover:bg-ink/5 transition-colors"
+                  className="md:hidden p-2 rounded-full hover:bg-tat-charcoal/5 transition-colors"
                 >
-                  <Menu className="h-5 w-5 text-ink" />
+                  <Menu className="h-5 w-5 text-tat-charcoal" />
                 </button>
               </Dialog.Trigger>
               <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 z-[60] bg-ink/70 backdrop-blur-sm data-[state=open]:animate-fade-in" />
+                <Dialog.Overlay className="fixed inset-0 z-[60] bg-tat-charcoal/70 backdrop-blur-sm data-[state=open]:animate-fade-in" />
                 <Dialog.Content
-                  className="fixed right-0 top-0 bottom-0 z-[70] w-[88vw] max-w-sm bg-cream flex flex-col overflow-hidden focus:outline-none data-[state=open]:animate-slide-up"
+                  className="fixed right-0 top-0 bottom-0 z-[70] w-[88vw] max-w-sm bg-tat-paper flex flex-col overflow-hidden focus:outline-none data-[state=open]:animate-slide-up"
                 >
-                  <div className="flex items-center justify-between px-6 py-5 border-b border-ink/8">
-                    <Dialog.Title className="font-display text-xl font-semibold text-ink">
+                  <div className="flex items-center justify-between px-6 py-5 border-b border-tat-charcoal/8">
+                    <Dialog.Title className="font-display text-xl font-semibold text-tat-charcoal">
                       Trust<span className="text-gradient-passion italic font-bold">&</span>Trip
                     </Dialog.Title>
                     <Dialog.Close asChild>
-                      <button aria-label="Close menu" className="h-9 w-9 rounded-full bg-ink/6 flex items-center justify-center">
-                        <X className="h-4 w-4 text-ink" />
+                      <button aria-label="Close menu" className="h-9 w-9 rounded-full bg-tat-charcoal/6 flex items-center justify-center">
+                        <X className="h-4 w-4 text-tat-charcoal" />
                       </button>
                     </Dialog.Close>
                   </div>
@@ -316,7 +316,7 @@ export default function Header() {
                           onClick={() => setDrawerOpen(false)}
                           className={clsx(
                             "flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium transition-colors",
-                            isActive(l.href) ? "bg-ember/10 text-ember" : "text-ink/80 hover:bg-ink/5 hover:text-ink"
+                            isActive(l.href) ? "bg-tat-orange/10 text-tat-orange" : "text-tat-charcoal/80 hover:bg-tat-charcoal/5 hover:text-tat-charcoal"
                           )}
                         >
                           {l.label}
@@ -326,7 +326,7 @@ export default function Header() {
 
                       <button
                         onClick={() => { setDrawerOpen(false); setSearchOpen(true); }}
-                        className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium text-ink/80 hover:bg-ink/5 hover:text-ink"
+                        className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium text-tat-charcoal/80 hover:bg-tat-charcoal/5 hover:text-tat-charcoal"
                       >
                         Search
                         <Search className="h-4 w-4 opacity-50" />
@@ -336,7 +336,7 @@ export default function Header() {
                         <Link
                           href="/login"
                           onClick={() => setDrawerOpen(false)}
-                          className="flex items-center gap-2 px-4 py-3.5 rounded-xl text-base font-medium text-ink/80 hover:bg-ink/5"
+                          className="flex items-center gap-2 px-4 py-3.5 rounded-xl text-base font-medium text-tat-charcoal/80 hover:bg-tat-charcoal/5"
                         >
                           <User className="h-4 w-4" /> Sign In / Register
                         </Link>
@@ -344,7 +344,7 @@ export default function Header() {
                         <Link
                           href="/dashboard"
                           onClick={() => setDrawerOpen(false)}
-                          className="flex items-center gap-2 px-4 py-3.5 rounded-xl text-base font-medium text-ink/80 hover:bg-ink/5"
+                          className="flex items-center gap-2 px-4 py-3.5 rounded-xl text-base font-medium text-tat-charcoal/80 hover:bg-tat-charcoal/5"
                         >
                           <User className="h-4 w-4" /> My Dashboard
                         </Link>
@@ -374,34 +374,34 @@ export default function Header() {
                     </div>
                   </nav>
 
-                  <div className="border-t border-ink/8 px-6 py-5 bg-ink/[0.02] space-y-3">
+                  <div className="border-t border-tat-charcoal/8 px-6 py-5 bg-tat-charcoal/[0.02] space-y-3">
                     <a
                       href="tel:+918115999588"
                       onClick={() => captureIntent("call_click", { note: "Header drawer call" })}
                       className="flex items-center gap-3 group"
                     >
-                      <div className="h-8 w-8 rounded-lg bg-ember/10 flex items-center justify-center shrink-0">
-                        <Phone className="h-3.5 w-3.5 text-ember" />
+                      <div className="h-8 w-8 rounded-lg bg-tat-orange/10 flex items-center justify-center shrink-0">
+                        <Phone className="h-3.5 w-3.5 text-tat-orange" />
                       </div>
                       <div>
-                        <p className="text-[10px] text-ink/55 uppercase tracking-wider">Call</p>
-                        <p className="text-sm font-medium text-ink group-hover:text-ember transition-colors">+91 811 5999 588</p>
+                        <p className="text-[10px] text-tat-charcoal/55 uppercase tracking-wider">Call</p>
+                        <p className="text-sm font-medium text-tat-charcoal group-hover:text-tat-orange transition-colors">+91 811 5999 588</p>
                       </div>
                     </a>
                     <a href="mailto:hello@trustandtrip.com" className="flex items-center gap-3 group">
-                      <div className="h-8 w-8 rounded-lg bg-ember/10 flex items-center justify-center shrink-0">
-                        <Mail className="h-3.5 w-3.5 text-ember" />
+                      <div className="h-8 w-8 rounded-lg bg-tat-orange/10 flex items-center justify-center shrink-0">
+                        <Mail className="h-3.5 w-3.5 text-tat-orange" />
                       </div>
                       <div>
-                        <p className="text-[10px] text-ink/55 uppercase tracking-wider">Email</p>
-                        <p className="text-sm font-medium text-ink group-hover:text-ember transition-colors">hello@trustandtrip.com</p>
+                        <p className="text-[10px] text-tat-charcoal/55 uppercase tracking-wider">Email</p>
+                        <p className="text-sm font-medium text-tat-charcoal group-hover:text-tat-orange transition-colors">hello@trustandtrip.com</p>
                       </div>
                     </a>
                     <a
                       href="https://instagram.com/trust_and_trip"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[11px] text-ink/65 hover:text-ember transition-colors pt-1"
+                      className="inline-flex items-center gap-1.5 text-[11px] text-tat-charcoal/65 hover:text-tat-orange transition-colors pt-1"
                     >
                       <Instagram className="h-3.5 w-3.5" />
                       @trust_and_trip

@@ -26,8 +26,8 @@ export default function CurrencySwitcher({ variant = "navbar" }: Props) {
   if (!ready) return null;
 
   const trigger = variant === "navbar"
-    ? "flex items-center gap-1.5 text-xs font-medium text-ink/65 hover:text-ink px-2 py-1 rounded-lg hover:bg-ink/5 transition-colors"
-    : "flex items-center gap-1.5 text-xs text-cream/60 hover:text-cream";
+    ? "flex items-center gap-1.5 text-xs font-medium text-tat-charcoal/65 hover:text-tat-charcoal px-2 py-1 rounded-lg hover:bg-tat-charcoal/5 transition-colors"
+    : "flex items-center gap-1.5 text-xs text-tat-paper/60 hover:text-tat-paper";
 
   return (
     <div ref={ref} className="relative">
@@ -46,7 +46,7 @@ export default function CurrencySwitcher({ variant = "navbar" }: Props) {
       {open && (
         <div
           role="listbox"
-          className="absolute top-full right-0 mt-2 w-52 bg-white rounded-xl border border-ink/10 shadow-lg overflow-hidden z-50"
+          className="absolute top-full right-0 mt-2 w-52 bg-white rounded-xl border border-tat-charcoal/10 shadow-lg overflow-hidden z-50"
         >
           {(Object.values(CURRENCIES)).map((c) => {
             const active = c.code === currency;
@@ -57,17 +57,17 @@ export default function CurrencySwitcher({ variant = "navbar" }: Props) {
                 aria-selected={active}
                 onClick={() => { setCurrency(c.code as CurrencyCode); setOpen(false); }}
                 className={`w-full text-left px-3 py-2.5 text-sm flex items-center gap-2.5 transition-colors ${
-                  active ? "bg-gold/10 text-ink" : "text-ink/75 hover:bg-ink/5"
+                  active ? "bg-tat-gold/10 text-tat-charcoal" : "text-tat-charcoal/75 hover:bg-tat-charcoal/5"
                 }`}
               >
-                <span className="font-mono w-7 text-center text-ink/50 text-xs">{c.symbol}</span>
+                <span className="font-mono w-7 text-center text-tat-charcoal/50 text-xs">{c.symbol}</span>
                 <span className="font-medium">{c.code}</span>
-                <span className="text-[11px] text-ink/45 truncate">{c.label}</span>
-                {active && <Check className="ml-auto h-3.5 w-3.5 text-gold" />}
+                <span className="text-[11px] text-tat-charcoal/45 truncate">{c.label}</span>
+                {active && <Check className="ml-auto h-3.5 w-3.5 text-tat-gold" />}
               </button>
             );
           })}
-          <p className="text-[10px] text-ink/40 px-3 py-2 border-t border-ink/8 leading-relaxed">
+          <p className="text-[10px] text-tat-charcoal/40 px-3 py-2 border-t border-tat-charcoal/8 leading-relaxed">
             Charged in INR. Converted price for reference only.
           </p>
         </div>

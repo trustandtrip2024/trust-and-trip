@@ -25,7 +25,7 @@ export default function CompareBar() {
         exit={{ y: 80, opacity: 0 }}
         className="fixed bottom-16 md:bottom-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none"
       >
-        <div className="bg-ink text-cream rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-3 pointer-events-auto max-w-xl w-full">
+        <div className="bg-tat-charcoal text-tat-paper rounded-2xl shadow-2xl px-4 py-3 flex items-center gap-3 pointer-events-auto max-w-xl w-full">
           {/* Thumbnails */}
           <div className="flex gap-2 flex-1 min-w-0">
             {compareList.map((p) => (
@@ -42,23 +42,23 @@ export default function CompareBar() {
               </div>
             ))}
             {Array.from({ length: 3 - compareList.length }).map((_, i) => (
-              <div key={i} className="h-10 w-14 rounded-lg border border-cream/20 border-dashed" />
+              <div key={i} className="h-10 w-14 rounded-lg border border-tat-paper/20 border-dashed" />
             ))}
           </div>
 
-          <span className="text-xs text-cream/60 shrink-0">
+          <span className="text-xs text-tat-paper/60 shrink-0">
             {compareList.length}/3
           </span>
 
           <button
             onClick={() => setOpen(true)}
-            className="shrink-0 flex items-center gap-1.5 bg-gold text-ink px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gold/90 transition-colors"
+            className="shrink-0 flex items-center gap-1.5 bg-tat-gold text-tat-charcoal px-4 py-2 rounded-xl text-sm font-semibold hover:bg-tat-gold/90 transition-colors"
           >
             <GitCompareArrows className="h-4 w-4" />
             Compare
           </button>
 
-          <button onClick={clearCompare} className="shrink-0 text-cream/40 hover:text-cream transition-colors">
+          <button onClick={clearCompare} className="shrink-0 text-tat-paper/40 hover:text-tat-paper transition-colors">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -71,7 +71,7 @@ export default function CompareBar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[90] bg-ink/80 backdrop-blur-sm overflow-y-auto"
+            className="fixed inset-0 z-[90] bg-tat-charcoal/80 backdrop-blur-sm overflow-y-auto"
             onClick={() => setOpen(false)}
           >
             <motion.div
@@ -82,16 +82,16 @@ export default function CompareBar() {
               className="min-h-screen flex items-start justify-center p-4 md:p-8"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="bg-cream rounded-3xl w-full max-w-5xl overflow-hidden shadow-2xl my-8">
+              <div className="bg-tat-paper rounded-3xl w-full max-w-5xl overflow-hidden shadow-2xl my-8">
                 {/* Header */}
-                <div className="flex items-center justify-between px-6 py-5 border-b border-ink/8">
+                <div className="flex items-center justify-between px-6 py-5 border-b border-tat-charcoal/8">
                   <div>
                     <h2 className="font-display text-2xl font-medium">Compare Packages</h2>
-                    <p className="text-sm text-ink/50 mt-0.5">Side-by-side breakdown</p>
+                    <p className="text-sm text-tat-charcoal/50 mt-0.5">Side-by-side breakdown</p>
                   </div>
                   <button
                     onClick={() => setOpen(false)}
-                    className="h-9 w-9 rounded-full bg-ink/8 hover:bg-ink/15 flex items-center justify-center transition-colors"
+                    className="h-9 w-9 rounded-full bg-tat-charcoal/8 hover:bg-tat-charcoal/15 flex items-center justify-center transition-colors"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -103,7 +103,7 @@ export default function CompareBar() {
                     {/* Package images + names */}
                     <thead>
                       <tr>
-                        <th className="w-36 px-6 py-5 text-left text-[11px] uppercase tracking-[0.2em] text-ink/40 font-medium align-top">
+                        <th className="w-36 px-6 py-5 text-left text-[11px] uppercase tracking-[0.2em] text-tat-charcoal/40 font-medium align-top">
                           Package
                         </th>
                         {compareList.map((p) => (
@@ -117,13 +117,13 @@ export default function CompareBar() {
                       </tr>
                     </thead>
 
-                    <tbody className="divide-y divide-ink/5">
+                    <tbody className="divide-y divide-tat-charcoal/5">
                       <CompareRow
                         label="Price"
                         values={compareList.map((p) => (
                           <span key={p.slug} className="font-display text-lg font-medium">
                             ₹{p.price.toLocaleString("en-IN")}
-                            <span className="text-xs text-ink/50 font-sans font-normal ml-1">/person</span>
+                            <span className="text-xs text-tat-charcoal/50 font-sans font-normal ml-1">/person</span>
                           </span>
                         ))}
                         highlight={compareList.map((p) => p.price === Math.min(...compareList.map((x) => x.price)))}
@@ -145,7 +145,7 @@ export default function CompareBar() {
                       />
                       <CompareRow
                         label="Rating"
-                        icon={<Star className="h-3.5 w-3.5 fill-gold text-gold" />}
+                        icon={<Star className="h-3.5 w-3.5 fill-tat-gold text-tat-gold" />}
                         values={compareList.map((p) =>
                           p.rating ? `${p.rating} / 5 · ${p.reviews} reviews` : "—"
                         )}
@@ -158,8 +158,8 @@ export default function CompareBar() {
                           p.highlights?.length ? (
                             <ul key={p.slug} className="space-y-1">
                               {p.highlights.slice(0, 4).map((h, i) => (
-                                <li key={i} className="flex items-start gap-1.5 text-xs text-ink/70">
-                                  <Check className="h-3 w-3 text-gold shrink-0 mt-0.5" />
+                                <li key={i} className="flex items-start gap-1.5 text-xs text-tat-charcoal/70">
+                                  <Check className="h-3 w-3 text-tat-gold shrink-0 mt-0.5" />
                                   {h}
                                 </li>
                               ))}
@@ -170,14 +170,14 @@ export default function CompareBar() {
 
                       {/* CTAs */}
                       <tr>
-                        <td className="px-6 py-5 text-[11px] uppercase tracking-[0.2em] text-ink/40 font-medium align-top" />
+                        <td className="px-6 py-5 text-[11px] uppercase tracking-[0.2em] text-tat-charcoal/40 font-medium align-top" />
                         {compareList.map((p) => (
                           <td key={p.slug} className="px-4 py-5 align-top">
                             <div className="space-y-2">
                               <Link
                                 href={`/packages/${p.slug}`}
                                 onClick={() => setOpen(false)}
-                                className="flex items-center justify-center gap-1.5 w-full bg-ink text-cream py-2.5 rounded-xl text-sm font-medium hover:bg-gold hover:text-ink transition-colors"
+                                className="flex items-center justify-center gap-1.5 w-full bg-tat-charcoal text-tat-paper py-2.5 rounded-xl text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-colors"
                               >
                                 View Details
                                 <ArrowRight className="h-3.5 w-3.5" />
@@ -230,19 +230,19 @@ function CompareRow({
   return (
     <tr>
       <td className="px-6 py-4 align-top">
-        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-ink/40 font-medium">
+        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-tat-charcoal/40 font-medium">
           {icon}
           {label}
         </div>
       </td>
       {values.map((v, i) => (
-        <td key={i} className={`px-4 py-4 align-top text-sm ${highlight?.[i] ? "bg-gold/8" : ""}`}>
+        <td key={i} className={`px-4 py-4 align-top text-sm ${highlight?.[i] ? "bg-tat-gold/8" : ""}`}>
           {highlight?.[i] && (
-            <span className="inline-block text-[10px] bg-gold text-ink px-2 py-0.5 rounded-full font-medium mb-1.5">
+            <span className="inline-block text-[10px] bg-tat-gold text-tat-charcoal px-2 py-0.5 rounded-full font-medium mb-1.5">
               {highlightLabel}
             </span>
           )}
-          <div className="text-ink/80">{v}</div>
+          <div className="text-tat-charcoal/80">{v}</div>
         </td>
       ))}
     </tr>

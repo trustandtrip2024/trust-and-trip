@@ -120,14 +120,14 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
-        <Link href="/admin" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-4">
+        <Link href="/admin" className="inline-flex items-center gap-1.5 text-sm text-tat-slate hover:text-tat-charcoal mb-4">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to admin
         </Link>
         <div className="flex items-center gap-2 mb-1">
           <Sparkles className="h-5 w-5 text-purple-500" />
-          <h1 className="text-2xl font-bold text-gray-900">Creator Program</h1>
+          <h1 className="text-2xl font-bold text-tat-charcoal">Creator Program</h1>
         </div>
-        <p className="text-sm text-gray-500 mb-6">{counts.all} total · {counts.pending} pending · {counts.active} active</p>
+        <p className="text-sm text-tat-slate mb-6">{counts.all} total · {counts.pending} pending · {counts.active} active</p>
 
         {/* Filter tabs */}
         <div className="flex flex-wrap gap-2 mb-5">
@@ -141,7 +141,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
               key={t.k}
               onClick={() => setFilter(t.k as "" | Creator["status"])}
               className={`px-4 py-2 rounded-lg text-sm font-medium border transition ${
-                filter === t.k ? "bg-gray-900 text-white border-gray-900" : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+                filter === t.k ? "bg-gray-900 text-white border-gray-900" : "bg-white text-tat-slate border-gray-200 hover:border-gray-300"
               }`}
             >
               {t.label} <span className="text-xs opacity-60">({t.count})</span>
@@ -152,7 +152,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
         {/* List */}
         <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
           {visible.length === 0 && (
-            <div className="p-10 text-center text-sm text-gray-500">No creators in this view.</div>
+            <div className="p-10 text-center text-sm text-tat-slate">No creators in this view.</div>
           )}
           {visible.map((c) => {
             const tempPw = tempPasswords[c.id];
@@ -161,14 +161,14 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-3 flex-wrap">
-                      <p className="font-semibold text-gray-900">{c.full_name}</p>
+                      <p className="font-semibold text-tat-charcoal">{c.full_name}</p>
                       <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full font-semibold ${STATUS_CFG[c.status]}`}>
                         {c.status}
                       </span>
-                      <span className="text-xs font-mono text-gray-500">{c.ref_code}</span>
+                      <span className="text-xs font-mono text-tat-slate">{c.ref_code}</span>
                       <span className="text-xs text-gray-400">{c.commission_pct}%</span>
                     </div>
-                    <div className="mt-1 text-xs text-gray-500 flex items-center gap-3 flex-wrap">
+                    <div className="mt-1 text-xs text-tat-slate flex items-center gap-3 flex-wrap">
                       <span>{c.email}</span>
                       <span>·</span>
                       <span>{c.phone}</span>
@@ -226,7 +226,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                           </button>
                           <button
                             onClick={() => setEditingAudience("")}
-                            className="text-gray-500 hover:text-gray-900 px-2 py-1 text-[11px]"
+                            className="text-tat-slate hover:text-tat-charcoal px-2 py-1 text-[11px]"
                           >
                             Cancel
                           </button>
@@ -234,7 +234,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                       ) : (
                         <button
                           onClick={() => startEditAudience(c)}
-                          className="inline-flex items-center gap-1 text-gray-500 hover:text-gray-900 underline decoration-dotted underline-offset-2"
+                          className="inline-flex items-center gap-1 text-tat-slate hover:text-tat-charcoal underline decoration-dotted underline-offset-2"
                         >
                           <ShieldCheck className="h-3 w-3" />
                           {c.audience_size_verified === null ? "Verify audience size" : "Update verified"}
@@ -242,7 +242,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                       )}
                     </div>
                     {c.notes && (
-                      <p className="mt-2 text-xs text-gray-500 whitespace-pre-line bg-gray-50 rounded-lg p-2.5 max-w-2xl">{c.notes}</p>
+                      <p className="mt-2 text-xs text-tat-slate whitespace-pre-line bg-gray-50 rounded-lg p-2.5 max-w-2xl">{c.notes}</p>
                     )}
                     {c.payout_method && (
                       <p className="mt-1.5 text-[11px] text-gray-400">
@@ -276,7 +276,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                     {c.status === "active" && (
                       <button
                         onClick={() => copyText(c.id, `https://trustandtrip.com/?ref=${c.ref_code}`)}
-                        className="inline-flex items-center gap-1.5 bg-white border border-gray-200 text-gray-700 hover:border-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold"
+                        className="inline-flex items-center gap-1.5 bg-white border border-gray-200 text-tat-charcoal hover:border-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold"
                       >
                         {copied === c.id ? <><Check className="h-3.5 w-3.5 text-emerald-600" />Copied</> : <><Copy className="h-3.5 w-3.5" />Copy link</>}
                       </button>

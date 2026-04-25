@@ -90,13 +90,13 @@ export default function TravellerForm({ existing, onClose, onSaved }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-tat-charcoal/50 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-soft-lg max-w-lg w-full max-h-[92vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-5 border-b border-ink/8 sticky top-0 bg-white z-10">
-          <h2 className="font-display text-lg font-medium text-ink">
+        <div className="flex items-center justify-between p-5 border-b border-tat-charcoal/8 sticky top-0 bg-white z-10">
+          <h2 className="font-display text-lg font-medium text-tat-charcoal">
             {existing ? "Edit traveller" : "Add a traveller"}
           </h2>
-          <button onClick={onClose} aria-label="Close" className="h-8 w-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink/60">
+          <button onClick={onClose} aria-label="Close" className="h-8 w-8 rounded-full bg-tat-charcoal/5 hover:bg-tat-charcoal/10 flex items-center justify-center text-tat-charcoal/60">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -104,22 +104,22 @@ export default function TravellerForm({ existing, onClose, onSaved }: Props) {
         <form onSubmit={save} className="p-5 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-medium text-ink/65 mb-1.5">Full name *</label>
+              <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Full name *</label>
               <input
                 type="text"
                 value={form.full_name}
                 onChange={(e) => set("full_name", e.target.value)}
                 placeholder="As on passport / ID"
                 required
-                className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-ink/65 mb-1.5">Relation</label>
+              <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Relation</label>
               <select
                 value={form.relation}
                 onChange={(e) => set("relation", e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
               >
                 {RELATIONS.map((r) => (
                   <option key={r} value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>
@@ -127,69 +127,69 @@ export default function TravellerForm({ existing, onClose, onSaved }: Props) {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-ink/65 mb-1.5">Date of birth</label>
+              <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Date of birth</label>
               <input
                 type="date"
                 value={form.dob}
                 onChange={(e) => set("dob", e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-ink/65 mb-1.5">Gender</label>
+              <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Gender</label>
               <select
                 value={form.gender}
                 onChange={(e) => set("gender", e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
               >
                 <option value="">Select…</option>
                 {GENDERS.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-ink/65 mb-1.5">Nationality</label>
+              <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Nationality</label>
               <input
                 type="text"
                 value={form.nationality}
                 onChange={(e) => set("nationality", e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
               />
             </div>
           </div>
 
-          <div className="border-t border-ink/8 pt-4">
-            <p className="text-xs font-semibold text-ink/60 uppercase tracking-wider mb-3">Passport (optional)</p>
+          <div className="border-t border-tat-charcoal/8 pt-4">
+            <p className="text-xs font-semibold text-tat-charcoal/60 uppercase tracking-wider mb-3">Passport (optional)</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-ink/65 mb-1.5">Passport number</label>
+                <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Passport number</label>
                 <input
                   type="text"
                   value={form.passport_number}
                   onChange={(e) => set("passport_number", e.target.value.toUpperCase())}
                   placeholder="K12345678"
-                  className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition uppercase font-mono"
+                  className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition uppercase font-mono"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-ink/65 mb-1.5">Expiry date</label>
+                <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Expiry date</label>
                 <input
                   type="date"
                   value={form.passport_expiry}
                   onChange={(e) => set("passport_expiry", e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 />
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-ink/65 mb-1.5">Notes <span className="text-ink/35">(dietary, medical, preferences)</span></label>
+            <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Notes <span className="text-tat-charcoal/35">(dietary, medical, preferences)</span></label>
             <textarea
               value={form.notes}
               onChange={(e) => set("notes", e.target.value)}
               rows={2}
               placeholder="Vegetarian · lactose-intolerant · wheelchair-accessible…"
-              className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition resize-none"
+              className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition resize-none"
             />
           </div>
 
@@ -199,7 +199,7 @@ export default function TravellerForm({ existing, onClose, onSaved }: Props) {
             <button
               type="submit"
               disabled={saving}
-              className="flex-1 flex items-center justify-center gap-2 bg-ink hover:bg-gold text-cream hover:text-ink py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
+              className="flex-1 flex items-center justify-center gap-2 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               {existing ? "Save changes" : "Add traveller"}
@@ -207,7 +207,7 @@ export default function TravellerForm({ existing, onClose, onSaved }: Props) {
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-3 text-sm font-medium text-ink/60 hover:text-ink"
+              className="px-5 py-3 text-sm font-medium text-tat-charcoal/60 hover:text-tat-charcoal"
             >
               Cancel
             </button>

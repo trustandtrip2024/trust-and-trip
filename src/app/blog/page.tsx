@@ -46,17 +46,17 @@ export default async function BlogPage({
 
   return (
     <>
-      <section className="pt-28 md:pt-36 pb-10 bg-cream border-b border-ink/5">
+      <section className="pt-28 md:pt-36 pb-10 bg-tat-paper border-b border-tat-charcoal/5">
         <div className="container-custom">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
               <span className="eyebrow">Our Journal</span>
               <h1 className="mt-3 font-display text-display-lg font-medium leading-[1.02] max-w-3xl text-balance">
                 Stories, guides,
-                <span className="italic text-gold font-light"> and the road less planned.</span>
+                <span className="italic text-tat-gold font-light"> and the road less planned.</span>
               </h1>
             </div>
-            <p className="text-ink/50 text-sm max-w-xs leading-relaxed md:text-right">
+            <p className="text-tat-charcoal/50 text-sm max-w-xs leading-relaxed md:text-right">
               {posts.length} articles · Updated weekly
             </p>
           </div>
@@ -69,8 +69,8 @@ export default async function BlogPage({
                 href={cat === "All" ? "/blog" : `/blog?category=${encodeURIComponent(cat)}`}
                 className={`shrink-0 px-4 py-2 rounded-full text-xs font-medium transition-all border ${
                   activeCategory === cat
-                    ? "bg-ink text-cream border-ink"
-                    : "bg-white border-ink/10 text-ink/60 hover:border-ink/30 hover:text-ink"
+                    ? "bg-tat-charcoal text-tat-paper border-tat-charcoal"
+                    : "bg-white border-tat-charcoal/10 text-tat-charcoal/60 hover:border-tat-charcoal/30 hover:text-tat-charcoal"
                 }`}
               >
                 {cat}
@@ -86,7 +86,7 @@ export default async function BlogPage({
           <div className="container-custom">
             <Link
               href={`/blog/${featured.slug}`}
-              className="group grid md:grid-cols-[1.2fr_1fr] rounded-3xl overflow-hidden border border-ink/8 bg-cream hover:shadow-soft-lg transition-all duration-300"
+              className="group grid md:grid-cols-[1.2fr_1fr] rounded-3xl overflow-hidden border border-tat-charcoal/8 bg-tat-paper hover:shadow-soft-lg transition-all duration-300"
             >
               <div className="relative aspect-[4/3] md:aspect-auto overflow-hidden">
                 {featured.image ? (
@@ -98,26 +98,26 @@ export default async function BlogPage({
                     className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="w-full h-full bg-sand" />
+                  <div className="w-full h-full bg-tat-cream" />
                 )}
-                <span className="absolute top-5 left-5 text-[10px] uppercase tracking-[0.25em] bg-gold text-ink px-3 py-1.5 rounded-full font-semibold">
+                <span className="absolute top-5 left-5 text-[10px] uppercase tracking-[0.25em] bg-tat-gold text-tat-charcoal px-3 py-1.5 rounded-full font-semibold">
                   Featured
                 </span>
               </div>
               <div className="p-7 md:p-10 flex flex-col justify-center">
-                <span className="text-[10px] uppercase tracking-[0.25em] text-gold font-medium">{featured.category}</span>
-                <h2 className="mt-3 font-display text-2xl md:text-3xl font-medium leading-tight text-balance group-hover:text-gold transition-colors">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium">{featured.category}</span>
+                <h2 className="mt-3 font-display text-2xl md:text-3xl font-medium leading-tight text-balance group-hover:text-tat-gold transition-colors">
                   {featured.title}
                 </h2>
-                <p className="mt-4 text-ink/60 text-sm leading-relaxed line-clamp-3">{featured.excerpt}</p>
-                <div className="flex items-center gap-3 mt-6 pt-5 border-t border-ink/8 text-xs text-ink/50">
+                <p className="mt-4 text-tat-charcoal/60 text-sm leading-relaxed line-clamp-3">{featured.excerpt}</p>
+                <div className="flex items-center gap-3 mt-6 pt-5 border-t border-tat-charcoal/8 text-xs text-tat-charcoal/50">
                   <span>{featured.author}</span>
-                  <span className="text-ink/20">·</span>
+                  <span className="text-tat-charcoal/20">·</span>
                   <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{featured.readTime}</span>
-                  <span className="text-ink/20">·</span>
+                  <span className="text-tat-charcoal/20">·</span>
                   <span>{featured.date}</span>
                 </div>
-                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-ink group-hover:text-gold transition-colors">
+                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors">
                   Read article <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
               </div>
@@ -151,9 +151,9 @@ function PostCard({ post }: { post: ReturnType<typeof normalizePosts>[0] }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-ink/6 hover:shadow-soft-lg transition-all duration-300"
+      className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-tat-charcoal/6 hover:shadow-soft-lg transition-all duration-300"
     >
-      <div className="relative aspect-[16/10] overflow-hidden bg-sand">
+      <div className="relative aspect-[16/10] overflow-hidden bg-tat-cream">
         {post.image && (
           <Image
             src={post.image}
@@ -163,18 +163,18 @@ function PostCard({ post }: { post: ReturnType<typeof normalizePosts>[0] }) {
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         )}
-        <span className="absolute top-3 left-3 text-[10px] uppercase tracking-wider bg-ink/70 backdrop-blur-sm text-cream px-2.5 py-1 rounded-full">
+        <span className="absolute top-3 left-3 text-[10px] uppercase tracking-wider bg-tat-charcoal/70 backdrop-blur-sm text-tat-paper px-2.5 py-1 rounded-full">
           {post.category}
         </span>
       </div>
       <div className="p-5 flex flex-col flex-1">
-        <h3 className="font-display text-lg font-medium leading-tight text-balance group-hover:text-gold transition-colors line-clamp-2 flex-1">
+        <h3 className="font-display text-lg font-medium leading-tight text-balance group-hover:text-tat-gold transition-colors line-clamp-2 flex-1">
           {post.title}
         </h3>
-        <p className="mt-2 text-sm text-ink/55 line-clamp-2 leading-relaxed">{post.excerpt}</p>
-        <div className="flex items-center gap-3 mt-4 pt-4 border-t border-ink/6 text-[11px] text-ink/40">
+        <p className="mt-2 text-sm text-tat-charcoal/55 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+        <div className="flex items-center gap-3 mt-4 pt-4 border-t border-tat-charcoal/6 text-[11px] text-tat-charcoal/40">
           <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{post.readTime}</span>
-          <span className="text-ink/20">·</span>
+          <span className="text-tat-charcoal/20">·</span>
           <span>{post.date}</span>
         </div>
       </div>

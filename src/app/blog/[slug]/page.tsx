@@ -51,24 +51,24 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <>
       {/* Hero */}
-      <section className="pt-24 md:pt-32 pb-8 bg-cream">
+      <section className="pt-24 md:pt-32 pb-8 bg-tat-paper">
         <div className="container-custom max-w-3xl">
-          <div className="flex items-center gap-2 text-xs text-ink/60 mb-6">
-            <Link href="/" className="hover:text-gold">Home</Link>
+          <div className="flex items-center gap-2 text-xs text-tat-charcoal/60 mb-6">
+            <Link href="/" className="hover:text-tat-gold">Home</Link>
             <ChevronRight className="h-3 w-3" />
-            <Link href="/blog" className="hover:text-gold">Journal</Link>
+            <Link href="/blog" className="hover:text-tat-gold">Journal</Link>
             <ChevronRight className="h-3 w-3" />
-            <span className="text-gold truncate">{post.category}</span>
+            <span className="text-tat-gold truncate">{post.category}</span>
           </div>
-          <span className="text-[10px] uppercase tracking-[0.25em] text-gold font-medium">{post.category}</span>
+          <span className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium">{post.category}</span>
           <h1 className="mt-3 font-display text-display-md font-medium leading-[1.05] text-balance">
             {post.title}
           </h1>
-          <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-ink/50">
-            <span className="font-medium text-ink">{post.author}</span>
-            <span className="text-ink/20">·</span>
+          <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-tat-charcoal/50">
+            <span className="font-medium text-tat-charcoal">{post.author}</span>
+            <span className="text-tat-charcoal/20">·</span>
             <span>{post.date}</span>
-            <span className="text-ink/20">·</span>
+            <span className="text-tat-charcoal/20">·</span>
             <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" />{post.readTime}</span>
           </div>
 
@@ -76,8 +76,8 @@ export default async function BlogPostPage({ params }: Props) {
           {(post as any).tags?.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-4">
               {(post as any).tags.map((tag: string) => (
-                <span key={tag} className="inline-flex items-center gap-1 text-[11px] px-3 py-1 rounded-full bg-gold/10 text-ink/70 border border-gold/20">
-                  <Tag className="h-2.5 w-2.5 text-gold" />{tag}
+                <span key={tag} className="inline-flex items-center gap-1 text-[11px] px-3 py-1 rounded-full bg-tat-gold/10 text-tat-charcoal/70 border border-tat-gold/20">
+                  <Tag className="h-2.5 w-2.5 text-tat-gold" />{tag}
                 </span>
               ))}
             </div>
@@ -101,15 +101,15 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="container-custom grid lg:grid-cols-[1fr_280px] gap-12 items-start max-w-5xl">
           {/* Content */}
           <article>
-            <p className="font-display text-xl md:text-2xl italic font-light leading-snug text-ink/70 mb-8 text-balance border-l-4 border-gold pl-6">
+            <p className="font-display text-xl md:text-2xl italic font-light leading-snug text-tat-charcoal/70 mb-8 text-balance border-l-4 border-tat-gold pl-6">
               {post.excerpt}
             </p>
 
-            <div className="space-y-5 text-ink/80 leading-relaxed text-base">
+            <div className="space-y-5 text-tat-charcoal/80 leading-relaxed text-base">
               {post.content.split("\n\n").map((para: string, i: number) => {
                 if (para.startsWith('"') && para.endsWith('"')) {
                   return (
-                    <blockquote key={i} className="border-l-4 border-gold pl-6 italic font-display text-xl text-ink/80 my-6">
+                    <blockquote key={i} className="border-l-4 border-tat-gold pl-6 italic font-display text-xl text-tat-charcoal/80 my-6">
                       {para}
                     </blockquote>
                   );
@@ -118,8 +118,8 @@ export default async function BlogPostPage({ params }: Props) {
               })}
             </div>
 
-            <div className="mt-10 pt-8 border-t border-ink/10 flex items-center justify-between flex-wrap gap-4">
-              <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-ink hover:text-gold transition-colors group">
+            <div className="mt-10 pt-8 border-t border-tat-charcoal/10 flex items-center justify-between flex-wrap gap-4">
+              <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-tat-charcoal hover:text-tat-gold transition-colors group">
                 <ArrowRight className="h-4 w-4 rotate-180 transition-transform group-hover:-translate-x-1" />
                 Back to Journal
               </Link>
@@ -132,33 +132,33 @@ export default async function BlogPostPage({ params }: Props) {
           {/* Sticky sidebar */}
           <aside className="lg:sticky lg:top-28 space-y-5">
             {/* Newsletter */}
-            <div className="bg-ink text-cream rounded-2xl p-6">
-              <p className="eyebrow text-gold mb-2">Newsletter</p>
+            <div className="bg-tat-charcoal text-tat-paper rounded-2xl p-6">
+              <p className="eyebrow text-tat-gold mb-2">Newsletter</p>
               <h3 className="font-display text-lg font-medium mb-3 text-balance">Get stories like this in your inbox</h3>
               <form action="/api/newsletter" method="POST" className="space-y-2">
                 <input type="email" name="email" required placeholder="your@email.com"
-                  className="w-full bg-cream/10 border border-cream/20 text-cream placeholder:text-cream/40 text-sm rounded-xl px-4 py-2.5 outline-none focus:border-gold" />
+                  className="w-full bg-tat-paper/10 border border-tat-paper/20 text-tat-paper placeholder:text-tat-paper/40 text-sm rounded-xl px-4 py-2.5 outline-none focus:border-tat-gold" />
                 <button type="submit"
-                  className="w-full bg-gold text-ink text-sm font-semibold py-2.5 rounded-xl hover:bg-gold/90 transition-colors">
+                  className="w-full bg-tat-gold text-tat-charcoal text-sm font-semibold py-2.5 rounded-xl hover:bg-tat-gold/90 transition-colors">
                   Subscribe — Free
                 </button>
               </form>
             </div>
 
             {/* Related posts */}
-            <div className="bg-cream rounded-2xl p-5 border border-ink/6">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-ink/40 font-medium mb-4">More from the journal</p>
+            <div className="bg-tat-paper rounded-2xl p-5 border border-tat-charcoal/6">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-tat-charcoal/40 font-medium mb-4">More from the journal</p>
               <div className="space-y-4">
                 {related.slice(0, 3).map((p: any) => {
                   const pSlug = p.slug?.current ?? p.slug;
                   return (
                     <Link key={pSlug} href={`/blog/${pSlug}`} className="flex gap-3 group">
-                      <div className="relative h-14 w-16 rounded-xl overflow-hidden shrink-0 bg-sand">
+                      <div className="relative h-14 w-16 rounded-xl overflow-hidden shrink-0 bg-tat-cream">
                         {(p.image) && <Image src={p.image} alt={p.title} fill className="object-cover" sizes="64px" />}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs font-medium text-ink group-hover:text-gold transition-colors line-clamp-2 leading-tight">{p.title}</p>
-                        <p className="text-[10px] text-ink/40 mt-1">{p.readTime}</p>
+                        <p className="text-xs font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors line-clamp-2 leading-tight">{p.title}</p>
+                        <p className="text-[10px] text-tat-charcoal/40 mt-1">{p.readTime}</p>
                       </div>
                     </Link>
                   );
@@ -167,10 +167,10 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
 
             {/* CTA */}
-            <div className="bg-gold/10 border border-gold/20 rounded-2xl p-5">
+            <div className="bg-tat-gold/10 border border-tat-gold/20 rounded-2xl p-5">
               <p className="font-display text-base font-medium text-balance mb-2">Ready to plan your next trip?</p>
-              <p className="text-xs text-ink/60 mb-3">Talk to a planner — free consultation.</p>
-              <Link href="/customize-trip" className="block text-center bg-ink text-cream text-xs font-medium py-2.5 rounded-xl hover:bg-gold hover:text-ink transition-colors">
+              <p className="text-xs text-tat-charcoal/60 mb-3">Talk to a planner — free consultation.</p>
+              <Link href="/customize-trip" className="block text-center bg-tat-charcoal text-tat-paper text-xs font-medium py-2.5 rounded-xl hover:bg-tat-gold hover:text-tat-charcoal transition-colors">
                 Get Free Itinerary
               </Link>
             </div>
@@ -180,7 +180,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* Related posts grid */}
       {related.length > 0 && (
-        <section className="py-14 bg-sand/40">
+        <section className="py-14 bg-tat-cream/40">
           <div className="container-custom">
             <h3 className="font-display text-2xl font-medium mb-8">Keep reading</h3>
             <div className="grid md:grid-cols-3 gap-6">
@@ -188,11 +188,11 @@ export default async function BlogPostPage({ params }: Props) {
                 const pSlug = p.slug?.current ?? p.slug;
                 return (
                   <Link key={pSlug} href={`/blog/${pSlug}`} className="group">
-                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-3 bg-sand">
+                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-3 bg-tat-cream">
                       {p.image && <Image src={p.image} alt={p.title} fill sizes="33vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
                     </div>
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-gold">{p.category}</span>
-                    <h4 className="mt-1 font-display text-lg font-medium group-hover:text-gold transition-colors leading-tight line-clamp-2">{p.title}</h4>
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-tat-gold">{p.category}</span>
+                    <h4 className="mt-1 font-display text-lg font-medium group-hover:text-tat-gold transition-colors leading-tight line-clamp-2">{p.title}</h4>
                   </Link>
                 );
               })}

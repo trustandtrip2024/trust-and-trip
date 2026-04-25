@@ -41,12 +41,12 @@ export default function FloatingWhatsApp() {
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="bg-white rounded-2xl p-5 shadow-soft-lg max-w-[280px] border border-ink/5"
+              className="bg-white rounded-2xl p-5 shadow-soft-lg max-w-[280px] border border-tat-charcoal/5"
             >
               <p className="font-display text-lg leading-tight mb-1">
                 Talk to a planner
               </p>
-              <p className="text-xs text-ink/60 mb-4">
+              <p className="text-xs text-tat-charcoal/60 mb-4">
                 Real people, instant replies, 24/7.
               </p>
               <div className="flex flex-col gap-2">
@@ -71,7 +71,7 @@ export default function FloatingWhatsApp() {
                       note: "Floating contact call button (desktop)",
                     })
                   }
-                  className="flex items-center gap-2.5 bg-ink text-cream px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gold hover:text-ink transition-colors"
+                  className="flex items-center gap-2.5 bg-tat-charcoal text-tat-paper px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-colors"
                 >
                   <Phone className="h-4 w-4" />
                   Call Now

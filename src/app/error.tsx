@@ -16,15 +16,15 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <div className="min-h-[70vh] flex items-center justify-center bg-cream px-4">
+    <div className="min-h-[70vh] flex items-center justify-center bg-tat-paper px-4">
       <div className="text-center max-w-md">
-        <div className="font-display text-8xl text-gold/30 font-medium leading-none mb-6 select-none">
+        <div className="font-display text-8xl text-tat-gold/30 font-medium leading-none mb-6 select-none">
           Oops.
         </div>
-        <h1 className="font-display text-2xl md:text-3xl font-medium text-ink mb-4">
+        <h1 className="font-display text-2xl md:text-3xl font-medium text-tat-charcoal mb-4">
           Something went wrong.
         </h1>
-        <p className="text-ink/60 leading-relaxed mb-8">
+        <p className="text-tat-charcoal/60 leading-relaxed mb-8">
           We hit an unexpected snag loading this page. This is likely temporary —
           please try again or head back home.
         </p>
@@ -42,7 +42,7 @@ export default function GlobalError({
           </Link>
         </div>
         {error.digest && (
-          <p className="mt-6 text-[11px] text-ink/30 font-mono">
+          <p className="mt-6 text-[11px] text-tat-charcoal/30 font-mono">
             Error ID: {error.digest}
           </p>
         )}

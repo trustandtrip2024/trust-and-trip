@@ -22,9 +22,9 @@ interface Props {
 }
 
 const ACCENT: Record<string, string> = {
-  ember:   "hover:bg-ember hover:text-cream hover:border-ember",
-  gold:    "hover:bg-gold hover:text-ink hover:border-gold",
-  crimson: "hover:bg-crimson hover:text-cream hover:border-crimson",
+  ember:   "hover:bg-tat-orange hover:text-tat-paper hover:border-tat-orange",
+  gold:    "hover:bg-tat-gold hover:text-tat-charcoal hover:border-tat-gold",
+  crimson: "hover:bg-tat-orange hover:text-tat-paper hover:border-tat-orange",
 };
 
 export default function TaggedPackageSlider({
@@ -41,7 +41,7 @@ export default function TaggedPackageSlider({
               <Link
                 key={t.href}
                 href={t.href}
-                className={`shrink-0 snap-start inline-flex items-center gap-1.5 whitespace-nowrap px-4 py-2 rounded-full border border-ink/12 bg-cream text-ink/75 text-xs font-medium tracking-wide transition-all duration-200 ${ACCENT[tagAccent]}`}
+                className={`shrink-0 snap-start inline-flex items-center gap-1.5 whitespace-nowrap px-4 py-2 rounded-full border border-tat-charcoal/12 bg-tat-paper text-tat-charcoal/75 text-xs font-medium tracking-wide transition-all duration-200 ${ACCENT[tagAccent]}`}
               >
                 {t.emoji && <span className="text-sm leading-none">{t.emoji}</span>}
                 {t.label}

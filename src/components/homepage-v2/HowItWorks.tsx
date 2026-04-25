@@ -24,15 +24,15 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-20 md:py-28 bg-sand/25" aria-labelledby="how-heading">
+    <section className="py-20 md:py-28 bg-tat-cream/25" aria-labelledby="how-heading">
       <div className="container-custom">
         <div className="max-w-xl mb-12 md:mb-16">
           <p className="eyebrow">How it works</p>
           <h2 id="how-heading" className="heading-section mt-2 text-balance">
             Three steps. One planner.
-            <span className="italic text-gold font-light"> Zero stress.</span>
+            <span className="italic text-tat-gold font-light"> Zero stress.</span>
           </h2>
-          <p className="mt-4 text-ink/60 leading-relaxed">
+          <p className="mt-4 text-tat-charcoal/60 leading-relaxed">
             No tour-group feeling. No hidden fees. Just a trip that fits, backed by
             humans who answer their phones.
           </p>
@@ -40,15 +40,15 @@ export default function HowItWorks() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 relative">
           {/* Connector line (desktop) */}
-          <div className="hidden md:block absolute top-[68px] left-[16%] right-[16%] h-px bg-gradient-to-r from-transparent via-ink/15 to-transparent" aria-hidden="true" />
+          <div className="hidden md:block absolute top-[68px] left-[16%] right-[16%] h-px bg-gradient-to-r from-transparent via-tat-charcoal/15 to-transparent" aria-hidden="true" />
 
           {STEPS.map(({ icon: Icon, title, body, color }, i) => (
             <div
               key={i}
-              className="relative bg-white rounded-2xl md:rounded-3xl border border-ink/8 p-6 md:p-7 hover:shadow-soft transition-all"
+              className="relative bg-white rounded-2xl md:rounded-3xl border border-tat-charcoal/8 p-6 md:p-7 hover:shadow-soft transition-all"
             >
               {/* Step number */}
-              <div className="absolute -top-3 left-6 bg-cream border border-ink/8 text-[10px] uppercase tracking-widest text-ink/50 px-2.5 py-0.5 rounded-full">
+              <div className="absolute -top-3 left-6 bg-tat-paper border border-tat-charcoal/8 text-[10px] uppercase tracking-widest text-tat-charcoal/50 px-2.5 py-0.5 rounded-full">
                 Step {i + 1}
               </div>
 
@@ -58,10 +58,10 @@ export default function HowItWorks() {
                 <Icon className="h-6 w-6" />
               </div>
 
-              <h3 className="font-display text-xl font-medium text-ink leading-tight mb-2.5">
+              <h3 className="font-display text-xl font-medium text-tat-charcoal leading-tight mb-2.5">
                 {title}
               </h3>
-              <p className="text-sm text-ink/60 leading-relaxed">{body}</p>
+              <p className="text-sm text-tat-charcoal/60 leading-relaxed">{body}</p>
             </div>
           ))}
         </div>
@@ -69,7 +69,7 @@ export default function HowItWorks() {
         <div className="mt-10 flex justify-center">
           <Link
             href="/plan"
-            className="inline-flex items-center gap-2 bg-ink text-cream hover:bg-gold hover:text-ink px-6 py-3 rounded-full text-sm font-semibold transition-all group"
+            className="inline-flex items-center gap-2 bg-tat-charcoal text-tat-paper hover:bg-tat-gold hover:text-tat-charcoal px-6 py-3 rounded-full text-sm font-semibold transition-all group"
           >
             Start planning free
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

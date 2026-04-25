@@ -41,7 +41,7 @@ export default function PackageDetailCTAs({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => captureIntent("book_now_click", { ...baseMeta, note: "Book This Journey (WhatsApp)" })}
-          className="flex items-center justify-center gap-2 w-full bg-gold hover:bg-gold/90 text-ink font-semibold py-3.5 rounded-xl transition-colors text-sm"
+          className="flex items-center justify-center gap-2 w-full bg-tat-gold hover:bg-tat-gold/90 text-tat-charcoal font-semibold py-3.5 rounded-xl transition-colors text-sm"
         >
           <MessageCircle className="h-4 w-4" />
           Book This Journey
@@ -56,16 +56,16 @@ export default function PackageDetailCTAs({
         <Link
           href="/customize-trip"
           onClick={() => captureIntent("customize_click", { ...baseMeta, note: "Customize This Trip (package detail)" })}
-          className="flex items-center justify-center gap-2 w-full bg-ink/5 hover:bg-ink/10 text-ink font-medium py-3.5 rounded-xl transition-colors text-sm border border-ink/10"
+          className="flex items-center justify-center gap-2 w-full bg-tat-charcoal/5 hover:bg-tat-charcoal/10 text-tat-charcoal font-medium py-3.5 rounded-xl transition-colors text-sm border border-tat-charcoal/10"
         >
-          <Sparkles className="h-4 w-4 text-gold" />
+          <Sparkles className="h-4 w-4 text-tat-gold" />
           Customize This Trip
         </Link>
 
         <a
           href="tel:+918115999588"
           onClick={() => captureIntent("call_click", { ...baseMeta, note: "Call a Planner (package detail)" })}
-          className="flex items-center justify-center gap-2 w-full border border-ink/10 hover:border-ink/25 text-ink/60 hover:text-ink font-medium py-3 rounded-xl transition-colors text-sm"
+          className="flex items-center justify-center gap-2 w-full border border-tat-charcoal/10 hover:border-tat-charcoal/25 text-tat-charcoal/60 hover:text-tat-charcoal font-medium py-3 rounded-xl transition-colors text-sm"
         >
           <Phone className="h-4 w-4" />
           Call a Planner
@@ -93,7 +93,7 @@ export function PackageQuickQuestions({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => captureIntent("enquire_click", { ...baseMeta, note: `Quick question: ${q}` })}
-          className="inline-flex items-center gap-1 text-[11px] px-3 py-1.5 rounded-full border border-ink/12 text-ink/60 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
+          className="inline-flex items-center gap-1 text-[11px] px-3 py-1.5 rounded-full border border-tat-charcoal/12 text-tat-charcoal/60 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
         >
           <MessageCircle className="h-3 w-3" />{q}
         </a>

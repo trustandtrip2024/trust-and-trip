@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-ink: #0B1C2C;
-  --color-gold: #F2B340;
-  --color-ember: #F26B1F;
-  --color-crimson: #C9183B;
-  --color-plum: #2D1A37;
-  --color-cream: #FAF7F2;
-  --color-sand: #EDE4D3;
-}
-
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -22,11 +12,15 @@ html {
 }
 
 body {
-  background-color: var(--color-cream);
-  color: var(--color-ink);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-feature-settings: "ss01", "ss02", "cv01", "cv11";
+  font-family: theme('fontFamily.body');
+  background-color: theme('colors.tat.paper');
+  color: theme('colors.tat.charcoal');
   overflow-x: hidden;
+}
+
+/* Default headings to display font */
+h1, h2, h3 {
+  font-family: theme('fontFamily.display');
 }
 
 /* Custom scrollbar */
@@ -35,20 +29,20 @@ body {
   height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-cream);
+  background: theme('colors.tat.paper');
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-ink);
+  background: theme('colors.tat.charcoal');
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold);
+  background: theme('colors.tat.teal');
 }
 
 /* Selection */
 ::selection {
-  background: var(--color-gold);
-  color: var(--color-ink);
+  background: theme('colors.tat.teal');
+  color: white;
 }
 
 @layer components {
@@ -57,39 +51,39 @@ body {
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 bg-ink text-cream px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-gold hover:text-ink hover:-translate-y-0.5 hover:shadow-glow-gold;
+    @apply inline-flex items-center gap-2 bg-tat-charcoal text-tat-paper px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-gold hover:text-tat-charcoal hover:-translate-y-0.5 hover:shadow-glow-gold;
   }
 
   .btn-gold {
-    @apply inline-flex items-center gap-2 bg-gold text-ink px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-ink hover:text-cream hover:-translate-y-0.5;
+    @apply inline-flex items-center gap-2 bg-tat-gold text-tat-charcoal px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-charcoal hover:text-tat-paper hover:-translate-y-0.5;
   }
 
   .btn-ember {
-    @apply inline-flex items-center gap-2 bg-ember text-cream px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-ember focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember/60;
+    @apply inline-flex items-center gap-2 bg-tat-orange text-tat-paper px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-ember focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange/60;
   }
 
   .btn-passion {
-    @apply inline-flex items-center gap-2 bg-gradient-passion text-cream px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-crimson;
+    @apply inline-flex items-center gap-2 bg-gradient-passion text-tat-paper px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-crimson;
   }
 
   .btn-outline {
-    @apply inline-flex items-center gap-2 border border-ink/20 text-ink px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-ink hover:text-cream hover:border-ink;
+    @apply inline-flex items-center gap-2 border border-tat-charcoal/20 text-tat-charcoal px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center gap-2 text-ink px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-ink/5;
+    @apply inline-flex items-center gap-2 text-tat-charcoal px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-charcoal/5;
   }
 
   .eyebrow {
-    @apply text-[11px] uppercase tracking-[0.25em] font-semibold text-gold-700;
+    @apply text-[11px] uppercase tracking-[0.25em] font-semibold text-tat-gold;
   }
 
   .eyebrow-ink {
-    @apply text-[11px] uppercase tracking-[0.25em] font-semibold text-ink/75;
+    @apply text-[11px] uppercase tracking-[0.25em] font-semibold text-tat-charcoal/75;
   }
 
   .eyebrow-ember {
-    @apply text-[11px] uppercase tracking-[0.28em] font-bold text-ember-700;
+    @apply text-[11px] uppercase tracking-[0.28em] font-bold text-tat-orange;
   }
 
   .text-gradient-passion {
@@ -117,17 +111,17 @@ body {
   }
 
   .prose-travel {
-    @apply text-ink/70 leading-relaxed;
+    @apply text-tat-charcoal/70 leading-relaxed;
   }
 
   /* Divider with gold dot */
   .gold-divider {
-    @apply flex items-center gap-3 text-ink/40;
+    @apply flex items-center gap-3 text-tat-charcoal/40;
   }
   .gold-divider::before,
   .gold-divider::after {
     content: "";
-    @apply flex-1 h-px bg-ink/10;
+    @apply flex-1 h-px bg-tat-charcoal/10;
   }
 
   /* Card base */
@@ -137,10 +131,10 @@ body {
 
   /* Form inputs */
   .input-travel {
-    @apply w-full px-4 py-3.5 rounded-xl bg-cream border border-ink/10 text-ink text-sm outline-none transition-all duration-200;
+    @apply w-full px-4 py-3.5 rounded-xl bg-tat-paper border border-tat-charcoal/10 text-tat-charcoal text-sm outline-none transition-all duration-200;
   }
   .input-travel:focus {
-    @apply border-gold bg-white shadow-[0_0_0_3px_rgba(245,158,11,0.15)];
+    @apply border-tat-gold bg-white shadow-[0_0_0_3px_rgba(245,158,11,0.15)];
   }
   .input-travel::placeholder {
     color: rgba(11, 28, 44, 0.4);
@@ -157,6 +151,51 @@ body {
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
   }
+
+  /* ─── Trust & Trip — shared section vocabulary ─────────────
+     Use these classes everywhere instead of one-off Tailwind
+     stacks so we can swap palettes later by editing tokens. */
+
+  /* Master card (no padding — pair with tt-card-p when needed) */
+  .tt-card        { @apply bg-white rounded-card border border-stone-200/70 shadow-card; }
+  .tt-card-p      { @apply p-5 md:p-8; }
+  .tt-card + .tt-card { @apply mt-6; }
+
+  /* Eyebrow + title + italic flourish */
+  .tt-eyebrow     { @apply text-[12px] tracking-[0.15em] uppercase font-medium text-amber-700/90; }
+  .tt-title       { @apply mt-2 font-serif text-[22px] md:text-[28px] leading-[1.2] text-stone-900; }
+  .tt-title em    { @apply not-italic font-serif italic text-amber-700/80; }
+  .tt-lede        { @apply mt-3 text-[15px] md:text-[17px] leading-[1.6] text-stone-700 max-w-[68ch]; }
+
+  /* Chip row */
+  .tt-chip-row    { @apply flex flex-wrap gap-2 mt-4; }
+  .tt-chip        { @apply inline-flex items-center gap-1.5 h-8 px-3 rounded-pill bg-amber-50 text-stone-800 text-[13px] font-medium transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2; }
+  .tt-chip svg    { @apply w-4 h-4 text-amber-700; }
+  .tt-chip--active{ @apply bg-stone-900 text-white; }
+  .tt-chip--active svg { @apply text-white; }
+  .tt-link        { @apply text-stone-700 hover:text-stone-900 underline-offset-4 hover:underline; }
+
+  /* Sub-card (used inside itinerary days, stays, reviews) */
+  .tt-subcard     { @apply rounded-sub border border-stone-200/70 bg-white p-4 md:p-5; }
+
+  /* Mini meta row (icon tile + label/value) */
+  .tt-meta        { @apply flex items-start gap-3; }
+  .tt-meta-ico    { @apply w-8 h-8 rounded-lg bg-amber-50 grid place-items-center shrink-0; }
+  .tt-meta-ico svg{ @apply w-4 h-4 text-amber-700; }
+  .tt-meta-lbl    { @apply text-[12px] uppercase tracking-wide text-stone-500; }
+  .tt-meta-val    { @apply text-[14px] font-medium text-stone-900; }
+
+  /* Day pill */
+  .tt-day-pill    { @apply inline-flex items-center justify-center h-7 px-3 rounded-pill bg-stone-900 text-white text-[12px] tracking-wide font-medium; }
+
+  /* Inclusion / exclusion bullets */
+  .tt-inc         { @apply flex items-start gap-3 py-2 text-[14px] text-stone-800; }
+  .tt-inc svg     { @apply w-5 h-5 shrink-0 mt-0.5 text-emerald-600; }
+  .tt-exc svg     { @apply w-5 h-5 shrink-0 mt-0.5 text-rose-500; }
+
+  /* Buttons */
+  .tt-cta         { @apply inline-flex items-center justify-center gap-2 h-12 px-5 w-full rounded-pill font-medium text-white bg-amber-600 hover:bg-amber-700 transition; }
+  .tt-cta-alt     { @apply inline-flex items-center justify-center gap-2 h-11 px-5 w-full rounded-pill font-medium text-stone-900 bg-white border border-stone-300 hover:border-stone-900 transition; }
 }
 
 @layer utilities {
@@ -187,86 +226,22 @@ body {
   }
 }
 
-/* ─── Dark mode overrides ─────────────────────────────────
-   Class-based (html.dark). Remaps brand utility classes by
-   attribute selector so no per-component refactor needed.
-   Opacity variants match via [class*="…/"]. */
+/* ─── Dark mode overrides (tat brand) ─────────────────────
+   Minimal: flip body bg + text and scrollbar/selection. The
+   tat palette is light-mode-tuned; for now dark mode just
+   inverts the canvas. Component-level overrides can be added
+   if specific surfaces need different dark treatments. */
 html.dark {
   color-scheme: dark;
-  --color-cream: #0B1C2C;
-  --color-ink: #FAF7F2;
-  --color-sand: #14243A;
-  /* Punch slightly down for dark eye-comfort, keep saturation */
-  --color-gold: #F4BD55;
-  --color-ember: #FF8443;
-  --color-crimson: #E0405E;
-  --color-plum: #43295A;
 }
 html.dark body {
-  background-color: #0B1C2C;
-  color: #FAF7F2;
+  background-color: #1B1B1B;
+  color: #F2EAD9;
 }
-html.dark ::-webkit-scrollbar-track { background: #0B1C2C; }
-html.dark ::-webkit-scrollbar-thumb { background: #FAF7F2; }
-html.dark ::-webkit-scrollbar-thumb:hover { background: #E8A94C; }
-
-/* Backgrounds */
-html.dark .bg-cream { background-color: #0B1C2C; }
-html.dark .bg-white { background-color: #14243A; }
-html.dark .bg-sand { background-color: #14243A; }
-html.dark .bg-ink { background-color: #FAF7F2; }
-html.dark [class*="bg-cream/"] { background-color: rgba(11, 28, 44, 0.85); }
-html.dark [class*="bg-sand/"] { background-color: rgba(20, 36, 58, 0.6); }
-html.dark [class*="bg-white/"] { background-color: rgba(20, 36, 58, 0.8); }
-html.dark [class*="bg-ink/"] { background-color: rgba(250, 247, 242, 0.08); }
-
-/* Text */
-html.dark .text-ink,
-html.dark [class*="text-ink/"] { color: #FAF7F2; }
-html.dark .text-cream,
-html.dark [class*="text-cream/"] { color: #0B1C2C; }
-
-/* Placeholders */
-html.dark [class*="placeholder-ink/"]::placeholder,
-html.dark ::placeholder { color: rgba(250, 247, 242, 0.4); }
-
-/* Borders & dividers */
-html.dark [class*="border-ink/"] { border-color: rgba(250, 247, 242, 0.12); }
-html.dark [class*="divide-ink/"] > * + * { border-color: rgba(250, 247, 242, 0.1); }
-
-/* Form fields */
-html.dark input:not([type="checkbox"]):not([type="radio"]),
-html.dark textarea,
-html.dark select {
-  background-color: #14243A;
-  color: #FAF7F2;
-  border-color: rgba(250, 247, 242, 0.15);
-}
-html.dark .input-travel { background-color: #14243A; color: #FAF7F2; }
-html.dark .input-travel:focus { background-color: #1A2B3F; }
-
-/* Selection */
-html.dark ::selection { background: #F2B340; color: #0B1C2C; }
-
-/* Ember / Crimson / Plum — slight tone shift in dark for legibility */
-html.dark .bg-ember { background-color: #FF8443; }
-html.dark .text-ember,
-html.dark [class*="text-ember/"] { color: #FF8443; }
-html.dark [class*="bg-ember/"] { background-color: rgba(255, 132, 67, 0.18); }
-html.dark [class*="border-ember/"] { border-color: rgba(255, 132, 67, 0.4); }
-
-html.dark .bg-crimson { background-color: #E0405E; }
-html.dark .text-crimson,
-html.dark [class*="text-crimson/"] { color: #E0405E; }
-html.dark [class*="bg-crimson/"] { background-color: rgba(224, 64, 94, 0.18); }
-
-html.dark .bg-plum { background-color: #43295A; }
-html.dark .text-plum,
-html.dark [class*="text-plum/"] { color: #C2A5D1; }
-
-/* Hero gradients & sections that use `bg-ink` as dark overlay should
-   stay legible — `bg-ink` flipped to cream, but `from-ink/`, `to-ink/`
-   gradients stay via [class*="bg-ink/"] rule above. */
+html.dark ::-webkit-scrollbar-track { background: #1B1B1B; }
+html.dark ::-webkit-scrollbar-thumb { background: #F2EAD9; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #0E7C7B; }
+html.dark ::selection { background: #0E7C7B; color: white; }
 
 /* Hide scrollbar utility for carousels */
 .no-scrollbar::-webkit-scrollbar {

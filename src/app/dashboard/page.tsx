@@ -132,11 +132,11 @@ export default function DashboardPage() {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <p className="text-xs uppercase tracking-widest text-ink/40 mb-1">Dashboard</p>
-        <h1 className="font-display text-2xl md:text-3xl font-medium text-ink">
+        <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Dashboard</p>
+        <h1 className="font-display text-2xl md:text-3xl font-medium text-tat-charcoal">
           Welcome back, {displayName} 👋
         </h1>
-        <p className="text-sm text-ink/50 mt-1.5">Here&apos;s a summary of your travel activity.</p>
+        <p className="text-sm text-tat-charcoal/50 mt-1.5">Here&apos;s a summary of your travel activity.</p>
       </div>
 
       {/* Rewards banner */}
@@ -146,7 +146,7 @@ export default function DashboardPage() {
         return (
           <Link
             href="/dashboard/rewards"
-            className="group block bg-white rounded-2xl border border-ink/8 hover:border-gold/40 hover:shadow-soft p-4 md:p-5 mb-6 transition-all"
+            className="group block bg-white rounded-2xl border border-tat-charcoal/8 hover:border-tat-gold/40 hover:shadow-soft p-4 md:p-5 mb-6 transition-all"
           >
             <div className="flex items-center justify-between gap-4 flex-wrap">
               <div className="flex items-center gap-3 min-w-0">
@@ -158,20 +158,20 @@ export default function DashboardPage() {
                     <span className={`text-[10px] uppercase tracking-widest font-semibold ${tierCfg.accent}`}>
                       {tierCfg.label} tier
                     </span>
-                    <span className="text-[10px] text-ink/35">·</span>
-                    <span className="text-[11px] text-ink/55">{tierCfg.discount}</span>
+                    <span className="text-[10px] text-tat-charcoal/35">·</span>
+                    <span className="text-[11px] text-tat-charcoal/55">{tierCfg.discount}</span>
                   </div>
-                  <p className="font-display text-lg font-medium text-ink mt-0.5">
+                  <p className="font-display text-lg font-medium text-tat-charcoal mt-0.5">
                     {pointsSummary.total_points.toLocaleString("en-IN")} points
                   </p>
                   {next && (
-                    <p className="text-[11px] text-ink/45 mt-0.5">
+                    <p className="text-[11px] text-tat-charcoal/45 mt-0.5">
                       {needed.toLocaleString("en-IN")} pts to {TIER_PERKS[next].label}
                     </p>
                   )}
                 </div>
               </div>
-              <span className="text-xs text-ink/45 group-hover:text-gold transition-colors flex items-center gap-1">
+              <span className="text-xs text-tat-charcoal/45 group-hover:text-tat-gold transition-colors flex items-center gap-1">
                 View rewards <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </span>
             </div>
@@ -188,19 +188,19 @@ export default function DashboardPage() {
         return (
           <Link
             href="/dashboard/bookings"
-            className="group relative block bg-gradient-to-br from-ink to-ink/90 text-cream rounded-2xl p-5 md:p-6 mb-6 overflow-hidden hover:shadow-soft transition-all"
+            className="group relative block bg-gradient-to-br from-tat-charcoal to-tat-charcoal/90 text-tat-paper rounded-2xl p-5 md:p-6 mb-6 overflow-hidden hover:shadow-soft transition-all"
           >
-            <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gold/15 blur-2xl" />
+            <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-tat-gold/15 blur-2xl" />
             <div className="relative flex items-start justify-between gap-4 flex-wrap">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <Plane className="h-4 w-4 text-gold" />
-                  <p className="text-[10px] uppercase tracking-widest text-gold/80">Upcoming Trip</p>
+                  <Plane className="h-4 w-4 text-tat-gold" />
+                  <p className="text-[10px] uppercase tracking-widest text-tat-gold/80">Upcoming Trip</p>
                 </div>
                 <h2 className="font-display text-lg md:text-xl font-medium leading-tight mb-1.5 line-clamp-1">
                   {upcoming.package_title}
                 </h2>
-                <div className="flex items-center gap-3 text-xs text-cream/70 flex-wrap">
+                <div className="flex items-center gap-3 text-xs text-tat-paper/70 flex-wrap">
                   <span className="inline-flex items-center gap-1">
                     <CalendarCheck className="h-3 w-3" />
                     {dateLabel}
@@ -211,7 +211,7 @@ export default function DashboardPage() {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5 text-xs text-cream/70 group-hover:text-gold transition-colors shrink-0">
+              <div className="flex items-center gap-1.5 text-xs text-tat-paper/70 group-hover:text-tat-gold transition-colors shrink-0">
                 View details
                 <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </div>
@@ -226,19 +226,19 @@ export default function DashboardPage() {
           <Link
             key={href}
             href={href}
-            className="bg-white rounded-2xl p-4 md:p-5 border border-ink/8 hover:border-ink/15 hover:shadow-soft transition-all group"
+            className="bg-white rounded-2xl p-4 md:p-5 border border-tat-charcoal/8 hover:border-tat-charcoal/15 hover:shadow-soft transition-all group"
           >
             <div className={`h-9 w-9 rounded-xl flex items-center justify-center mb-3 ${color}`}>
               <Icon className="h-[18px] w-[18px]" />
             </div>
             {value !== null && (
-              <p className="font-display text-2xl font-medium text-ink mb-0.5">
+              <p className="font-display text-2xl font-medium text-tat-charcoal mb-0.5">
                 {loadingStats ? "—" : value}
               </p>
             )}
-            <p className="text-xs font-medium text-ink/70">{label}</p>
-            <p className="text-[11px] text-ink/40 mt-0.5 hidden md:block">{desc}</p>
-            <div className="flex items-center gap-1 mt-2 text-[11px] text-ink/35 group-hover:text-gold transition-colors">
+            <p className="text-xs font-medium text-tat-charcoal/70">{label}</p>
+            <p className="text-[11px] text-tat-charcoal/40 mt-0.5 hidden md:block">{desc}</p>
+            <div className="flex items-center gap-1 mt-2 text-[11px] text-tat-charcoal/35 group-hover:text-tat-gold transition-colors">
               View <ArrowRight className="h-3 w-3" />
             </div>
           </Link>
@@ -246,34 +246,34 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick links */}
-      <div className="bg-white rounded-2xl border border-ink/8 p-5 md:p-6">
-        <p className="text-sm font-semibold text-ink mb-4">Quick Actions</p>
+      <div className="bg-white rounded-2xl border border-tat-charcoal/8 p-5 md:p-6">
+        <p className="text-sm font-semibold text-tat-charcoal mb-4">Quick Actions</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <Link href="/packages" className="flex items-center gap-3 p-3 rounded-xl hover:bg-sand/40 transition-colors group">
-            <div className="h-9 w-9 rounded-xl bg-gold/10 flex items-center justify-center shrink-0">
-              <MapPin className="h-4 w-4 text-gold" />
+          <Link href="/packages" className="flex items-center gap-3 p-3 rounded-xl hover:bg-tat-cream/40 transition-colors group">
+            <div className="h-9 w-9 rounded-xl bg-tat-gold/10 flex items-center justify-center shrink-0">
+              <MapPin className="h-4 w-4 text-tat-gold" />
             </div>
             <div>
-              <p className="text-sm font-medium text-ink group-hover:text-gold transition-colors">Browse Experiences</p>
-              <p className="text-[11px] text-ink/40">Explore 60+ destinations</p>
+              <p className="text-sm font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors">Browse Experiences</p>
+              <p className="text-[11px] text-tat-charcoal/40">Explore 60+ destinations</p>
             </div>
           </Link>
-          <Link href="/offers" className="flex items-center gap-3 p-3 rounded-xl hover:bg-sand/40 transition-colors group">
+          <Link href="/offers" className="flex items-center gap-3 p-3 rounded-xl hover:bg-tat-cream/40 transition-colors group">
             <div className="h-9 w-9 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
               <Tag className="h-4 w-4 text-green-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-ink group-hover:text-gold transition-colors">Current Offers</p>
-              <p className="text-[11px] text-ink/40">Save up to 25%</p>
+              <p className="text-sm font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors">Current Offers</p>
+              <p className="text-[11px] text-tat-charcoal/40">Save up to 25%</p>
             </div>
           </Link>
-          <Link href="/plan" className="flex items-center gap-3 p-3 rounded-xl hover:bg-sand/40 transition-colors group">
+          <Link href="/plan" className="flex items-center gap-3 p-3 rounded-xl hover:bg-tat-cream/40 transition-colors group">
             <div className="h-9 w-9 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
               <CalendarCheck className="h-4 w-4 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-ink group-hover:text-gold transition-colors">Plan a Trip</p>
-              <p className="text-[11px] text-ink/40">AI itinerary builder</p>
+              <p className="text-sm font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors">Plan a Trip</p>
+              <p className="text-[11px] text-tat-charcoal/40">AI itinerary builder</p>
             </div>
           </Link>
         </div>

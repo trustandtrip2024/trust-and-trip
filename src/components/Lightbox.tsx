@@ -47,7 +47,7 @@ export default function Lightbox({ images, index, title, onClose, onPrev, onNext
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] bg-ink/95 backdrop-blur-sm flex items-center justify-center"
+        className="fixed inset-0 z-[100] bg-tat-charcoal/95 backdrop-blur-sm flex items-center justify-center"
         onClick={onClose}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
@@ -55,21 +55,21 @@ export default function Lightbox({ images, index, title, onClose, onPrev, onNext
         {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 h-10 w-10 rounded-full bg-cream/10 hover:bg-cream/20 flex items-center justify-center text-cream transition-colors"
+          className="absolute top-4 right-4 z-10 h-10 w-10 rounded-full bg-tat-paper/10 hover:bg-tat-paper/20 flex items-center justify-center text-tat-paper transition-colors"
           aria-label="Close"
         >
           <X className="h-5 w-5" />
         </button>
 
         {/* Counter */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 text-xs text-cream/60 tabular-nums">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 text-xs text-tat-paper/60 tabular-nums">
           {index + 1} / {images.length}
         </div>
 
         {/* Prev */}
         <button
           onClick={(e) => { e.stopPropagation(); onPrev(); }}
-          className="absolute left-3 md:left-6 z-10 h-11 w-11 rounded-full bg-cream/10 hover:bg-cream/20 flex items-center justify-center text-cream transition-colors"
+          className="absolute left-3 md:left-6 z-10 h-11 w-11 rounded-full bg-tat-paper/10 hover:bg-tat-paper/20 flex items-center justify-center text-tat-paper transition-colors"
           aria-label="Previous"
         >
           <ChevronLeft className="h-6 w-6" />
@@ -97,7 +97,7 @@ export default function Lightbox({ images, index, title, onClose, onPrev, onNext
         {/* Next */}
         <button
           onClick={(e) => { e.stopPropagation(); onNext(); }}
-          className="absolute right-3 md:right-6 z-10 h-11 w-11 rounded-full bg-cream/10 hover:bg-cream/20 flex items-center justify-center text-cream transition-colors"
+          className="absolute right-3 md:right-6 z-10 h-11 w-11 rounded-full bg-tat-paper/10 hover:bg-tat-paper/20 flex items-center justify-center text-tat-paper transition-colors"
           aria-label="Next"
         >
           <ChevronRight className="h-6 w-6" />
@@ -110,7 +110,7 @@ export default function Lightbox({ images, index, title, onClose, onPrev, onNext
               key={i}
               onClick={(e) => { e.stopPropagation(); if (i < index) { for (let x = index; x > i; x--) onPrev(); } else { for (let x = index; x < i; x++) onNext(); } }}
               className={`relative h-12 w-16 shrink-0 rounded-lg overflow-hidden transition-all ${
-                i === index ? "ring-2 ring-gold opacity-100" : "opacity-50 hover:opacity-80"
+                i === index ? "ring-2 ring-tat-gold opacity-100" : "opacity-50 hover:opacity-80"
               }`}
             >
               <Image src={img} alt="" fill className="object-cover" sizes="64px" />

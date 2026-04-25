@@ -56,7 +56,7 @@ export default async function OffersPage() {
   return (
     <>
       {/* Urgency banner */}
-      <div className="bg-gold text-ink py-3 text-center text-sm font-medium">
+      <div className="bg-tat-gold text-tat-charcoal py-3 text-center text-sm font-medium">
         <span className="flex items-center justify-center gap-2">
           <Zap className="h-4 w-4" />
           Summer Sale — Save up to 25% on select packages. Limited availability.
@@ -65,14 +65,14 @@ export default async function OffersPage() {
       </div>
 
       {/* Hero */}
-      <section className="pt-24 md:pt-32 pb-12 bg-cream">
+      <section className="pt-24 md:pt-32 pb-12 bg-tat-paper">
         <div className="container-custom max-w-4xl">
           <span className="eyebrow">Limited offers</span>
           <h1 className="mt-3 font-display text-display-lg font-medium leading-[1.02] text-balance">
             Exceptional trips,
-            <span className="italic text-gold font-light"> exceptional pricing.</span>
+            <span className="italic text-tat-gold font-light"> exceptional pricing.</span>
           </h1>
-          <p className="mt-5 text-ink/60 max-w-xl leading-relaxed">
+          <p className="mt-5 text-tat-charcoal/60 max-w-xl leading-relaxed">
             For a limited time, we've negotiated special rates on our most-loved journeys.
             When they're gone, they're gone.
           </p>
@@ -84,7 +84,7 @@ export default async function OffersPage() {
         <section className="pb-4 md:pb-6" id="deals">
           <div className="container-custom">
             <div className="flex items-center gap-2 mb-5">
-              <Flame className="h-5 w-5 text-gold" />
+              <Flame className="h-5 w-5 text-tat-gold" />
               <h2 className="font-display text-xl font-medium">Flash Deals — Ending Soon</h2>
             </div>
             <div className="grid md:grid-cols-3 gap-4 md:gap-5">
@@ -103,9 +103,9 @@ export default async function OffersPage() {
             <h2 className="font-display text-xl font-medium mb-6">All Current Deals</h2>
           )}
           {offers.length === 0 ? (
-            <div className="text-center py-20 bg-cream rounded-3xl border border-ink/5">
+            <div className="text-center py-20 bg-tat-paper rounded-3xl border border-tat-charcoal/5">
               <p className="font-display text-2xl mb-2">New offers dropping soon</p>
-              <p className="text-ink/60 mb-6">Check back shortly or talk to a planner for exclusive rates.</p>
+              <p className="text-tat-charcoal/60 mb-6">Check back shortly or talk to a planner for exclusive rates.</p>
               <Link href="/contact" className="btn-primary">Talk to a planner</Link>
             </div>
           ) : (
@@ -119,10 +119,10 @@ export default async function OffersPage() {
       </section>
 
       {/* WhatsApp CTA band */}
-      <section className="bg-ink text-cream py-10">
+      <section className="bg-tat-charcoal text-tat-paper py-10">
         <div className="container-custom flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <p className="eyebrow text-gold">Exclusive rates</p>
+            <p className="eyebrow text-tat-gold">Exclusive rates</p>
             <h2 className="font-display text-2xl md:text-3xl font-medium mt-1 text-balance">
               Don't see your destination? Ask for an unlisted deal.
             </h2>
@@ -150,7 +150,7 @@ function OfferCard({ offer, size }: { offer: any; size: "sm" | "lg" }) {
   return (
     <Link
       href={`/packages/${offer.slug}`}
-      className={`group relative overflow-hidden rounded-3xl bg-ink block`}
+      className={`group relative overflow-hidden rounded-3xl bg-tat-charcoal block`}
     >
       <div className={`relative ${isLg ? "aspect-[16/10]" : "aspect-[4/3]"}`}>
         <Image
@@ -160,11 +160,11 @@ function OfferCard({ offer, size }: { offer: any; size: "sm" | "lg" }) {
           sizes={isLg ? "(max-width: 768px) 100vw, 50vw" : "33vw"}
           className="object-cover transition-transform duration-1000 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal via-tat-charcoal/40 to-transparent" />
 
         {/* Badges */}
         <div className="absolute top-4 left-4 flex items-center gap-2">
-          <div className="bg-gold text-ink px-3 py-1.5 rounded-full text-xs font-display font-bold flex items-center gap-1">
+          <div className="bg-tat-gold text-tat-charcoal px-3 py-1.5 rounded-full text-xs font-display font-bold flex items-center gap-1">
             <Tag className="h-3 w-3" />{offer.discount}% OFF
           </div>
           {offer.hot && (
@@ -175,29 +175,29 @@ function OfferCard({ offer, size }: { offer: any; size: "sm" | "lg" }) {
         </div>
 
         {/* Countdown */}
-        <div className="absolute top-4 right-4 bg-ink/70 backdrop-blur-md border border-cream/20 px-3 py-1.5 rounded-full flex items-center gap-2">
-          <Clock className="h-3 w-3 text-gold shrink-0" />
+        <div className="absolute top-4 right-4 bg-tat-charcoal/70 backdrop-blur-md border border-tat-paper/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+          <Clock className="h-3 w-3 text-tat-gold shrink-0" />
           <CountdownTimer endsAt={offer.endsAt} />
         </div>
 
-        <div className={`absolute inset-x-0 bottom-0 ${isLg ? "p-6 md:p-8" : "p-5"} text-cream`}>
-          <p className="text-[10px] uppercase tracking-[0.25em] text-gold mb-1.5">{offer.tag}</p>
+        <div className={`absolute inset-x-0 bottom-0 ${isLg ? "p-6 md:p-8" : "p-5"} text-tat-paper`}>
+          <p className="text-[10px] uppercase tracking-[0.25em] text-tat-gold mb-1.5">{offer.tag}</p>
           <h3 className={`font-display ${isLg ? "text-2xl md:text-3xl" : "text-lg"} font-medium leading-tight mb-2`}>
             {offer.title}
           </h3>
           <div className="flex items-center gap-1.5 mb-3">
-            <Star className="h-3 w-3 fill-gold text-gold" />
-            <span className="text-xs text-cream/70">{offer.rating} · {offer.reviews} reviews · {offer.duration}</span>
+            <Star className="h-3 w-3 fill-tat-gold text-tat-gold" />
+            <span className="text-xs text-tat-paper/70">{offer.rating} · {offer.reviews} reviews · {offer.duration}</span>
           </div>
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-[10px] text-cream/50 uppercase tracking-wider">Starting from</p>
+              <p className="text-[10px] text-tat-paper/50 uppercase tracking-wider">Starting from</p>
               <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="font-display text-xl text-gold">₹{offer.price.toLocaleString("en-IN")}</span>
-                <span className="text-sm text-cream/40 line-through">₹{offer.originalPrice.toLocaleString("en-IN")}</span>
+                <span className="font-display text-xl text-tat-gold">₹{offer.price.toLocaleString("en-IN")}</span>
+                <span className="text-sm text-tat-paper/40 line-through">₹{offer.originalPrice.toLocaleString("en-IN")}</span>
               </div>
             </div>
-            <span className="inline-flex items-center gap-1 text-sm text-cream/80 group-hover:text-gold transition-colors">
+            <span className="inline-flex items-center gap-1 text-sm text-tat-paper/80 group-hover:text-tat-gold transition-colors">
               View <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </span>
           </div>

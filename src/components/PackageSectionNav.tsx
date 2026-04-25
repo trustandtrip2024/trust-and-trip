@@ -38,7 +38,7 @@ export default function PackageSectionNav() {
   };
 
   return (
-    <div className="sticky top-[64px] z-30 bg-white border-b border-ink/8 shadow-sm">
+    <div className="sticky top-[64px] z-30 bg-white border-b border-tat-charcoal/8 shadow-sm">
       <div className="container-custom">
         <div className="flex gap-0 overflow-x-auto no-scrollbar">
           {SECTIONS.map(({ id, label }) => (
@@ -47,8 +47,8 @@ export default function PackageSectionNav() {
               onClick={() => scrollTo(id)}
               className={`px-5 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-all duration-200 shrink-0 ${
                 active === id
-                  ? "border-gold text-ink"
-                  : "border-transparent text-ink/50 hover:text-ink"
+                  ? "border-tat-gold text-tat-charcoal"
+                  : "border-transparent text-tat-charcoal/50 hover:text-tat-charcoal"
               }`}
             >
               {label}

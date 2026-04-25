@@ -33,19 +33,19 @@ export default function ReferPage() {
   const waShare = `https://wa.me/?text=${encodeURIComponent(`Hey! 🌍 I'm using Trust and Trip for my next vacation — they craft amazing handpicked trips!\n\nUse my link and get ₹500 off your first booking:\n${referralUrl}`)}`;
 
   return (
-    <div className="min-h-screen bg-cream pt-24 pb-16">
+    <div className="min-h-screen bg-tat-paper pt-24 pb-16">
       <div className="container-custom max-w-2xl">
         {/* Hero */}
         <div className="text-center mb-12">
-          <div className="h-16 w-16 rounded-2xl bg-gold/15 flex items-center justify-center mx-auto mb-5">
-            <Gift className="h-8 w-8 text-gold" />
+          <div className="h-16 w-16 rounded-2xl bg-tat-gold/15 flex items-center justify-center mx-auto mb-5">
+            <Gift className="h-8 w-8 text-tat-gold" />
           </div>
           <span className="eyebrow">Referral Program</span>
           <h1 className="mt-3 font-display text-display-md font-medium text-balance">
             Share the joy of travel,
-            <span className="italic text-gold font-light"> earn rewards.</span>
+            <span className="italic text-tat-gold font-light"> earn rewards.</span>
           </h1>
-          <p className="mt-4 text-ink/60 leading-relaxed max-w-md mx-auto">
+          <p className="mt-4 text-tat-charcoal/60 leading-relaxed max-w-md mx-auto">
             Refer a friend to Trust and Trip. When they book, you both get ₹500 off — no limit on referrals.
           </p>
         </div>
@@ -57,34 +57,34 @@ export default function ReferPage() {
             { icon: Users, step: "2", title: "Share it", desc: "Send to friends via WhatsApp, chat, or socials" },
             { icon: IndianRupee, step: "3", title: "Both save ₹500", desc: "You and your friend get ₹500 off next booking" },
           ].map(({ icon: Icon, step, title, desc }) => (
-            <div key={step} className="bg-white rounded-2xl p-5 border border-ink/6 text-center">
-              <div className="h-10 w-10 rounded-full bg-gold/15 flex items-center justify-center mx-auto mb-3">
-                <Icon className="h-5 w-5 text-gold" />
+            <div key={step} className="bg-white rounded-2xl p-5 border border-tat-charcoal/6 text-center">
+              <div className="h-10 w-10 rounded-full bg-tat-gold/15 flex items-center justify-center mx-auto mb-3">
+                <Icon className="h-5 w-5 text-tat-gold" />
               </div>
               <p className="font-display text-lg font-medium">{title}</p>
-              <p className="text-xs text-ink/50 mt-1 leading-relaxed">{desc}</p>
+              <p className="text-xs text-tat-charcoal/50 mt-1 leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
 
         {!code ? (
-          <div className="bg-white rounded-2xl border border-ink/8 p-7">
+          <div className="bg-white rounded-2xl border border-tat-charcoal/8 p-7">
             <h2 className="font-display text-xl font-medium mb-5">Get your referral link</h2>
             <form onSubmit={generate} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[11px] uppercase tracking-wider text-ink/50 block mb-1.5">Full Name *</label>
+                  <label className="text-[11px] uppercase tracking-wider text-tat-charcoal/50 block mb-1.5">Full Name *</label>
                   <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="Rahul Mehta" className="input-travel" />
                 </div>
                 <div>
-                  <label className="text-[11px] uppercase tracking-wider text-ink/50 block mb-1.5">Email *</label>
+                  <label className="text-[11px] uppercase tracking-wider text-tat-charcoal/50 block mb-1.5">Email *</label>
                   <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
                     placeholder="you@example.com" className="input-travel" />
                 </div>
               </div>
               <div>
-                <label className="text-[11px] uppercase tracking-wider text-ink/50 block mb-1.5">Phone (optional)</label>
+                <label className="text-[11px] uppercase tracking-wider text-tat-charcoal/50 block mb-1.5">Phone (optional)</label>
                 <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   placeholder="+91 98765 43210" className="input-travel" />
               </div>
@@ -95,21 +95,21 @@ export default function ReferPage() {
             </form>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-ink/8 p-7">
+          <div className="bg-white rounded-2xl border border-tat-charcoal/8 p-7">
             <div className="text-center mb-6">
-              <p className="text-sm text-ink/50 mb-1">Your referral code</p>
-              <p className="font-display text-4xl font-medium text-gold tracking-wider">{code}</p>
+              <p className="text-sm text-tat-charcoal/50 mb-1">Your referral code</p>
+              <p className="font-display text-4xl font-medium text-tat-gold tracking-wider">{code}</p>
             </div>
 
-            <div className="bg-cream rounded-xl p-4 border border-ink/6 mb-4">
-              <p className="text-xs text-ink/40 mb-1.5">Your referral link</p>
-              <p className="text-sm font-medium text-ink break-all">{referralUrl}</p>
+            <div className="bg-tat-paper rounded-xl p-4 border border-tat-charcoal/6 mb-4">
+              <p className="text-xs text-tat-charcoal/40 mb-1.5">Your referral link</p>
+              <p className="text-sm font-medium text-tat-charcoal break-all">{referralUrl}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <button onClick={copy}
                 className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-colors border ${
-                  copied ? "bg-green-50 border-green-200 text-green-700" : "border-ink/15 text-ink hover:bg-ink/5"
+                  copied ? "bg-green-50 border-green-200 text-green-700" : "border-tat-charcoal/15 text-tat-charcoal hover:bg-tat-charcoal/5"
                 }`}>
                 {copied ? <><Check className="h-4 w-4" />Copied!</> : <><Copy className="h-4 w-4" />Copy Link</>}
               </button>
@@ -119,7 +119,7 @@ export default function ReferPage() {
               </a>
             </div>
 
-            <p className="text-center text-xs text-ink/40 mt-4">
+            <p className="text-center text-xs text-tat-charcoal/40 mt-4">
               Share this link with friends. When they book, you both save ₹500!
             </p>
           </div>

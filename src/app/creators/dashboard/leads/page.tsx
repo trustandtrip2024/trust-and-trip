@@ -20,7 +20,7 @@ const STATUS_LABEL: Record<Lead["status"], { label: string; cls: string }> = {
   contacted: { label: "Contacted",  cls: "bg-amber-50 text-amber-700 border-amber-100" },
   qualified: { label: "Qualified",  cls: "bg-indigo-50 text-indigo-700 border-indigo-100" },
   booked:    { label: "Booked",     cls: "bg-emerald-50 text-emerald-700 border-emerald-100" },
-  lost:      { label: "Lost",       cls: "bg-ink/5 text-ink/55 border-ink/10" },
+  lost:      { label: "Lost",       cls: "bg-tat-charcoal/5 text-tat-charcoal/55 border-tat-charcoal/10" },
 };
 
 const SOURCE_LABEL: Record<string, string> = {
@@ -64,9 +64,9 @@ export default function CreatorLeadsPage() {
   return (
     <div>
       <div className="mb-6">
-        <p className="text-xs uppercase tracking-widest text-ink/40 mb-1">Creator dashboard</p>
-        <h1 className="font-display text-2xl font-medium text-ink">Lead activity</h1>
-        <p className="text-sm text-ink/55 mt-1">
+        <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Creator dashboard</p>
+        <h1 className="font-display text-2xl font-medium text-tat-charcoal">Lead activity</h1>
+        <p className="text-sm text-tat-charcoal/55 mt-1">
           Every visitor who landed via your referral link and submitted a form. Names are partially masked for privacy.
         </p>
       </div>
@@ -82,31 +82,31 @@ export default function CreatorLeadsPage() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-20"><Loader2 className="h-5 w-5 animate-spin text-ink/30" /></div>
+        <div className="flex items-center justify-center py-20"><Loader2 className="h-5 w-5 animate-spin text-tat-charcoal/30" /></div>
       ) : visible.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-ink/8 p-10 text-center">
-          <Megaphone className="h-10 w-10 text-ink/20 mx-auto mb-3" />
-          <p className="font-medium text-ink">No leads yet</p>
-          <p className="text-sm text-ink/50 mt-1">
+        <div className="bg-white rounded-2xl border border-tat-charcoal/8 p-10 text-center">
+          <Megaphone className="h-10 w-10 text-tat-charcoal/20 mx-auto mb-3" />
+          <p className="font-medium text-tat-charcoal">No leads yet</p>
+          <p className="text-sm text-tat-charcoal/50 mt-1">
             Share your link in stories, posts, bio. Leads will appear here in real time.
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-ink/8 divide-y divide-ink/8 overflow-hidden">
+        <div className="bg-white rounded-2xl border border-tat-charcoal/8 divide-y divide-tat-charcoal/8 overflow-hidden">
           {visible.map((l) => {
             const cfg = STATUS_LABEL[l.status];
             return (
               <div key={l.id} className="p-4 md:p-5 flex items-center gap-4 flex-wrap">
-                <div className="h-9 w-9 rounded-full bg-gold/15 flex items-center justify-center shrink-0">
-                  <span className="text-xs font-semibold text-ink">{l.name.charAt(0).toUpperCase()}</span>
+                <div className="h-9 w-9 rounded-full bg-tat-gold/15 flex items-center justify-center shrink-0">
+                  <span className="text-xs font-semibold text-tat-charcoal">{l.name.charAt(0).toUpperCase()}</span>
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium text-ink">{l.name}</p>
-                  <div className="flex items-center gap-2 mt-0.5 text-[11px] text-ink/55 flex-wrap">
+                  <p className="text-sm font-medium text-tat-charcoal">{l.name}</p>
+                  <div className="flex items-center gap-2 mt-0.5 text-[11px] text-tat-charcoal/55 flex-wrap">
                     <span>{SOURCE_LABEL[l.source] ?? l.source}</span>
                     {l.destination && (
                       <>
-                        <span className="text-ink/25">·</span>
+                        <span className="text-tat-charcoal/25">·</span>
                         <span className="inline-flex items-center gap-1">
                           <MapPin className="h-2.5 w-2.5" />
                           {l.destination}
@@ -115,7 +115,7 @@ export default function CreatorLeadsPage() {
                     )}
                     {l.package_title && (
                       <>
-                        <span className="text-ink/25">·</span>
+                        <span className="text-tat-charcoal/25">·</span>
                         <span className="truncate max-w-[200px]">{l.package_title}</span>
                       </>
                     )}
@@ -125,7 +125,7 @@ export default function CreatorLeadsPage() {
                   <span className={`inline-flex items-center text-[10px] font-medium px-2.5 py-1 rounded-full border ${cfg.cls}`}>
                     {cfg.label}
                   </span>
-                  <p className="text-[10px] text-ink/40 mt-1">
+                  <p className="text-[10px] text-tat-charcoal/40 mt-1">
                     {new Date(l.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
                   </p>
                 </div>
@@ -152,11 +152,11 @@ function FilterBtn({
     <button
       onClick={() => onClick(value)}
       className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-        active ? "bg-ink text-cream border-ink" : "bg-white text-ink/60 border-ink/15 hover:border-ink/30"
+        active ? "bg-tat-charcoal text-tat-paper border-tat-charcoal" : "bg-white text-tat-charcoal/60 border-tat-charcoal/15 hover:border-tat-charcoal/30"
       }`}
     >
       {children}
-      <span className={`text-[10px] ${active ? "text-cream/70" : "text-ink/40"}`}>{count}</span>
+      <span className={`text-[10px] ${active ? "text-tat-paper/70" : "text-tat-charcoal/40"}`}>{count}</span>
     </button>
   );
 }

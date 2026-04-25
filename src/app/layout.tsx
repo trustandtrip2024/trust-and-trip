@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Fraunces, DM_Sans } from "next/font/google";
 import dynamic from "next/dynamic";
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import MainWrapper from "@/components/MainWrapper";
@@ -37,21 +36,6 @@ try {
 `;
 
 const BASE_URL = "https://trustandtrip.com";
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-display",
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-});
-
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -117,9 +101,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${dmSans.variable}`}>
+    <html lang="en">
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {/* Google Fonts — Fraunces / Manrope / Caveat */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600&family=Caveat:wght@500;700&display=swap"
+          rel="stylesheet"
+        />
         {/* Preconnect to speed up third-party resources */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
@@ -127,13 +118,13 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://lekxoexyebfvngllpeqx.supabase.co" />
         {/* PWA */}
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#0B1C2C" />
+        <meta name="theme-color" content="#2A2A2A" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Trust and Trip" />
       </head>
-      <body className="min-h-screen flex flex-col bg-cream text-ink">
+      <body className="min-h-screen flex flex-col">
         <JsonLd data={[
           {
             "@context": "https://schema.org",

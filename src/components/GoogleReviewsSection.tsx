@@ -37,7 +37,7 @@ function StarRow({ rating, size = "sm" }: { rating: number; size?: "sm" | "md" }
   return (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((s) => (
-        <Star key={s} className={`${cls} ${s <= rating ? "fill-gold text-gold" : "fill-ink/10 text-ink/10"}`} />
+        <Star key={s} className={`${cls} ${s <= rating ? "fill-tat-gold text-tat-gold" : "fill-tat-charcoal/10 text-tat-charcoal/10"}`} />
       ))}
     </div>
   );
@@ -46,10 +46,10 @@ function StarRow({ rating, size = "sm" }: { rating: number; size?: "sm" | "md" }
 function ReviewCard({ review }: { review: GoogleReview }) {
   const initial = review.author_name.charAt(0).toUpperCase();
   return (
-    <div className="w-[280px] md:w-[300px] shrink-0 bg-white rounded-2xl p-5 border border-ink/6 flex flex-col gap-3 shadow-soft">
+    <div className="w-[280px] md:w-[300px] shrink-0 bg-white rounded-2xl p-5 border border-tat-charcoal/6 flex flex-col gap-3 shadow-soft">
       {/* Author */}
       <div className="flex items-center gap-3">
-        <div className="relative h-9 w-9 rounded-full overflow-hidden shrink-0 ring-2 ring-gold/15">
+        <div className="relative h-9 w-9 rounded-full overflow-hidden shrink-0 ring-2 ring-tat-gold/15">
           {review.profile_photo_url ? (
             <Image
               src={review.profile_photo_url}
@@ -60,14 +60,14 @@ function ReviewCard({ review }: { review: GoogleReview }) {
               unoptimized
             />
           ) : (
-            <div className="h-full w-full bg-gold/15 flex items-center justify-center">
-              <span className="font-display font-semibold text-gold text-sm">{initial}</span>
+            <div className="h-full w-full bg-tat-gold/15 flex items-center justify-center">
+              <span className="font-display font-semibold text-tat-gold text-sm">{initial}</span>
             </div>
           )}
         </div>
         <div className="min-w-0">
-          <p className="text-sm font-medium text-ink truncate">{review.author_name}</p>
-          <p className="text-[11px] text-ink/40">{review.relative_time_description}</p>
+          <p className="text-sm font-medium text-tat-charcoal truncate">{review.author_name}</p>
+          <p className="text-[11px] text-tat-charcoal/40">{review.relative_time_description}</p>
         </div>
         <div className="ml-auto shrink-0">
           <GoogleIcon size={18} />
@@ -78,7 +78,7 @@ function ReviewCard({ review }: { review: GoogleReview }) {
       <StarRow rating={review.rating} />
 
       {/* Text */}
-      <p className="text-sm text-ink/75 leading-relaxed line-clamp-4 flex-1">
+      <p className="text-sm text-tat-charcoal/75 leading-relaxed line-clamp-4 flex-1">
         &ldquo;{review.text}&rdquo;
       </p>
     </div>
@@ -144,7 +144,7 @@ export default async function GoogleReviewsSection() {
   const doubled = [...reviews, ...reviews];
 
   return (
-    <section className="py-14 md:py-20 bg-sand/20 overflow-hidden" aria-labelledby="platform-reviews-heading">
+    <section className="py-14 md:py-20 bg-tat-cream/20 overflow-hidden" aria-labelledby="platform-reviews-heading">
       <div className="container-custom mb-8 md:mb-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           {/* Heading */}
@@ -152,7 +152,7 @@ export default async function GoogleReviewsSection() {
             <span className="eyebrow">Verified by Travelers</span>
             <h2 id="platform-reviews-heading" className="heading-section mt-2 text-balance">
               Trusted on every
-              <span className="italic text-gold font-light"> platform.</span>
+              <span className="italic text-tat-gold font-light"> platform.</span>
             </h2>
           </div>
 
@@ -163,16 +163,16 @@ export default async function GoogleReviewsSection() {
               href="https://www.google.com/maps/search/Trust+And+Trip+Experiences+PVT+LTD"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 border border-ink/8 hover:border-gold/30 hover:shadow-soft transition-all duration-300 group"
+              className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 border border-tat-charcoal/8 hover:border-tat-gold/30 hover:shadow-soft transition-all duration-300 group"
               aria-label="View Trust and Trip on Google"
             >
               <GoogleIcon size={24} />
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-display text-xl font-semibold text-ink">{rating.toFixed(1)}</span>
+                  <span className="font-display text-xl font-semibold text-tat-charcoal">{rating.toFixed(1)}</span>
                   <StarRow rating={5} size="sm" />
                 </div>
-                <p className="text-[11px] text-ink/40 mt-0.5">{totalRatings > 0 ? `${totalRatings}+ reviews` : "Google Reviews"}</p>
+                <p className="text-[11px] text-tat-charcoal/40 mt-0.5">{totalRatings > 0 ? `${totalRatings}+ reviews` : "Google Reviews"}</p>
               </div>
             </a>
 
@@ -181,16 +181,16 @@ export default async function GoogleReviewsSection() {
               href="https://www.tripadvisor.in/Search?q=Trust+And+Trip+Experiences"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 border border-ink/8 hover:border-[#34E0A1]/50 hover:shadow-soft transition-all duration-300 group"
+              className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 border border-tat-charcoal/8 hover:border-[#34E0A1]/50 hover:shadow-soft transition-all duration-300 group"
               aria-label="View Trust and Trip on Tripadvisor"
             >
               <TripAdvisorIcon size={28} />
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-display text-xl font-semibold text-ink">4.9</span>
+                  <span className="font-display text-xl font-semibold text-tat-charcoal">4.9</span>
                   <StarRow rating={5} size="sm" />
                 </div>
-                <p className="text-[11px] text-ink/40 mt-0.5">Travelers&apos; Choice</p>
+                <p className="text-[11px] text-tat-charcoal/40 mt-0.5">Travelers&apos; Choice</p>
               </div>
             </a>
           </div>

@@ -32,12 +32,12 @@ export default function PackageGallery({ images, title }: Props) {
             <span className="eyebrow">Photo Gallery</span>
             <h2 className="heading-section mt-1 text-balance">
               See it
-              <span className="italic text-gold font-light"> before you go.</span>
+              <span className="italic text-tat-gold font-light"> before you go.</span>
             </h2>
           </div>
           <button
             onClick={() => open(0)}
-            className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink/60 hover:text-ink transition-colors"
+            className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-tat-charcoal/60 hover:text-tat-charcoal transition-colors"
           >
             <Grid2x2 className="h-4 w-4" />
             View all {images.length} photos
@@ -58,7 +58,7 @@ export default function PackageGallery({ images, title }: Props) {
               className="object-cover transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-            <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/20 transition-colors duration-300" />
+            <div className="absolute inset-0 bg-tat-charcoal/0 group-hover:bg-tat-charcoal/20 transition-colors duration-300" />
           </div>
 
           {/* Side thumbnails */}
@@ -77,9 +77,9 @@ export default function PackageGallery({ images, title }: Props) {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
-                <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/20 transition-colors duration-300" />
+                <div className="absolute inset-0 bg-tat-charcoal/0 group-hover:bg-tat-charcoal/20 transition-colors duration-300" />
                 {isLast && remaining > 0 && (
-                  <div className="absolute inset-0 bg-ink/60 flex flex-col items-center justify-center text-cream">
+                  <div className="absolute inset-0 bg-tat-charcoal/60 flex flex-col items-center justify-center text-tat-paper">
                     <Images className="h-6 w-6 mb-1 opacity-80" />
                     <span className="text-lg font-display font-medium">+{remaining}</span>
                     <span className="text-[11px] opacity-70">more photos</span>
@@ -93,7 +93,7 @@ export default function PackageGallery({ images, title }: Props) {
         {/* Mobile view all */}
         <button
           onClick={() => open(0)}
-          className="md:hidden mt-3 w-full py-3 rounded-xl border border-ink/12 text-sm font-medium text-ink/70 hover:border-ink/30 hover:text-ink transition-colors flex items-center justify-center gap-2"
+          className="md:hidden mt-3 w-full py-3 rounded-xl border border-tat-charcoal/12 text-sm font-medium text-tat-charcoal/70 hover:border-tat-charcoal/30 hover:text-tat-charcoal transition-colors flex items-center justify-center gap-2"
         >
           <Grid2x2 className="h-4 w-4" />
           View all {images.length} photos

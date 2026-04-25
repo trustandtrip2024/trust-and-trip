@@ -110,12 +110,12 @@ export default function LeadForm({
   const isPopup = variant === "popup";
 
   return (
-    <div className={isPopup ? "" : "bg-white rounded-3xl p-6 md:p-10 border border-ink/5 shadow-soft"}>
+    <div className={isPopup ? "" : "bg-white rounded-3xl p-6 md:p-10 border border-tat-charcoal/5 shadow-soft"}>
       {!isPopup && (
         <div className="mb-8">
           <span className="eyebrow">Plan Your Trip</span>
           <h3 className="heading-section mt-3 text-balance">{title}</h3>
-          <p className="mt-3 text-ink/60 leading-relaxed">{subtitle}</p>
+          <p className="mt-3 text-tat-charcoal/60 leading-relaxed">{subtitle}</p>
         </div>
       )}
 
@@ -125,11 +125,11 @@ export default function LeadForm({
           animate={{ opacity: 1, scale: 1 }}
           className="py-12 text-center"
         >
-          <div className="h-16 w-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 className="h-8 w-8 text-gold" />
+          <div className="h-16 w-16 rounded-full bg-tat-gold/20 flex items-center justify-center mx-auto mb-4">
+            <CheckCircle2 className="h-8 w-8 text-tat-gold" />
           </div>
           <h4 className="font-display text-2xl mb-2">Opening WhatsApp…</h4>
-          <p className="text-ink/60 text-sm">
+          <p className="text-tat-charcoal/60 text-sm">
             Your message is ready to send. A planner will reply within 2 hours.
           </p>
         </motion.div>
@@ -245,7 +245,7 @@ export default function LeadForm({
             )}
           </button>
 
-          <p className="text-[11px] text-ink/40 text-center mt-3">
+          <p className="text-[11px] text-tat-charcoal/40 text-center mt-3">
             By submitting, you agree to our privacy policy. We'll never share your data.
           </p>
         </form>
@@ -265,7 +265,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-[11px] uppercase tracking-[0.15em] text-ink/60 font-medium mb-1.5">
+      <label className="block text-[11px] uppercase tracking-[0.15em] text-tat-charcoal/60 font-medium mb-1.5">
         {label}
       </label>
       {children}

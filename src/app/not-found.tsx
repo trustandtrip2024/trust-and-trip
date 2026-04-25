@@ -58,29 +58,29 @@ export default function NotFound() {
   const best = matches[0];
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center bg-cream px-4">
+    <div className="min-h-[85vh] flex items-center justify-center bg-tat-paper px-4">
       <div className="text-center max-w-2xl py-20">
-        <p className="font-display font-medium leading-none select-none text-gold/15"
+        <p className="font-display font-medium leading-none select-none text-tat-gold/15"
           style={{ fontSize: "clamp(6rem, 22vw, 16rem)" }}>
           404
         </p>
 
-        <h1 className="font-display text-3xl md:text-4xl font-medium text-ink -mt-4 text-balance">
+        <h1 className="font-display text-3xl md:text-4xl font-medium text-tat-charcoal -mt-4 text-balance">
           This page took a detour.
         </h1>
-        <p className="mt-4 text-ink/65 leading-relaxed max-w-md mx-auto">
+        <p className="mt-4 text-tat-charcoal/65 leading-relaxed max-w-md mx-auto">
           Some of the best trips begin with a wrong turn — but this isn&apos;t
           one of them. Let&apos;s get you somewhere worth going.
         </p>
 
         {/* Smart suggestion — closest match */}
         {best && (
-          <div className="mt-8 inline-flex items-center gap-3 bg-gold/10 border border-gold/30 rounded-full pl-4 pr-1.5 py-1.5 text-sm">
-            <Wand2 className="h-3.5 w-3.5 text-gold-700 shrink-0" aria-hidden />
-            <span className="text-ink/70">Did you mean</span>
+          <div className="mt-8 inline-flex items-center gap-3 bg-tat-gold/10 border border-tat-gold/30 rounded-full pl-4 pr-1.5 py-1.5 text-sm">
+            <Wand2 className="h-3.5 w-3.5 text-tat-gold shrink-0" aria-hidden />
+            <span className="text-tat-charcoal/70">Did you mean</span>
             <Link
               href={best.path}
-              className="inline-flex items-center gap-1 bg-ink hover:bg-gold text-cream hover:text-ink rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
+              className="inline-flex items-center gap-1 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal rounded-full px-3 py-1.5 text-xs font-semibold transition-colors"
             >
               {best.label} <ArrowRight className="h-3 w-3" />
             </Link>
@@ -95,8 +95,8 @@ export default function NotFound() {
 
         {/* Other close matches */}
         {matches.length > 1 && (
-          <div className="mt-12 pt-8 border-t border-ink/8">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-ink/55 mb-4 flex items-center justify-center gap-2">
+          <div className="mt-12 pt-8 border-t border-tat-charcoal/8">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-tat-charcoal/55 mb-4 flex items-center justify-center gap-2">
               <Search className="h-3 w-3" /> Or try one of these
             </p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -104,7 +104,7 @@ export default function NotFound() {
                 <Link
                   key={m.path}
                   href={m.path}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ink/5 hover:bg-gold/15 text-sm text-ink/75 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-tat-charcoal/5 hover:bg-tat-gold/15 text-sm text-tat-charcoal/75 transition-colors"
                 >
                   {m.label}
                 </Link>
@@ -115,8 +115,8 @@ export default function NotFound() {
 
         {/* Fallback popular destinations row when no match */}
         {matches.length === 0 && (
-          <div className="mt-14 pt-10 border-t border-ink/8">
-            <p className="text-[10px] uppercase tracking-[0.25em] text-ink/55 mb-5 flex items-center justify-center gap-2">
+          <div className="mt-14 pt-10 border-t border-tat-charcoal/8">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-tat-charcoal/55 mb-5 flex items-center justify-center gap-2">
               <MapPin className="h-3 w-3" /> Popular destinations
             </p>
             <div className="flex flex-wrap justify-center gap-2">
@@ -124,7 +124,7 @@ export default function NotFound() {
                 <Link
                   key={d}
                   href={`/destinations/${d.toLowerCase()}`}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ink/5 hover:bg-gold/15 hover:text-ink transition-colors text-sm text-ink/75 group"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-tat-charcoal/5 hover:bg-tat-gold/15 hover:text-tat-charcoal transition-colors text-sm text-tat-charcoal/75 group"
                 >
                   {d}
                   <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />

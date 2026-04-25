@@ -25,18 +25,18 @@ export default function PopularDestinations({ india, international }: Props) {
             <p className="eyebrow">Popular right now</p>
             <h2 id="popular-heading" className="heading-section mt-2 max-w-lg text-balance">
               Destinations our travellers
-              <span className="italic text-gold font-light"> keep coming back to.</span>
+              <span className="italic text-tat-gold font-light"> keep coming back to.</span>
             </h2>
           </div>
 
           {/* Tabs */}
-          <div className="flex items-center gap-1 p-1 bg-ink/5 rounded-full shrink-0">
+          <div className="flex items-center gap-1 p-1 bg-tat-charcoal/5 rounded-full shrink-0">
             <button
               onClick={() => setTab("india")}
               className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 tab === "india"
-                  ? "bg-white text-ink shadow-soft"
-                  : "text-ink/55 hover:text-ink"
+                  ? "bg-white text-tat-charcoal shadow-soft"
+                  : "text-tat-charcoal/55 hover:text-tat-charcoal"
               }`}
             >
               <Mountain className="h-3.5 w-3.5" />
@@ -46,8 +46,8 @@ export default function PopularDestinations({ india, international }: Props) {
               onClick={() => setTab("world")}
               className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
                 tab === "world"
-                  ? "bg-white text-ink shadow-soft"
-                  : "text-ink/55 hover:text-ink"
+                  ? "bg-white text-tat-charcoal shadow-soft"
+                  : "text-tat-charcoal/55 hover:text-tat-charcoal"
               }`}
             >
               <Plane className="h-3.5 w-3.5" />
@@ -65,7 +65,7 @@ export default function PopularDestinations({ india, international }: Props) {
         <div className="mt-10 flex justify-center">
           <Link
             href="/destinations"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-ink hover:text-gold transition-colors group"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-tat-charcoal hover:text-tat-gold transition-colors group"
           >
             Browse all 60+ destinations
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

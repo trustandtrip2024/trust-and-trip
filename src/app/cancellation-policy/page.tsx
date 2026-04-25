@@ -19,10 +19,10 @@ const cancellationSchedule = [
 export default function CancellationPolicyPage() {
   return (
     <>
-      <section className="pt-28 md:pt-36 pb-12 bg-cream">
+      <section className="pt-28 md:pt-36 pb-12 bg-tat-paper">
         <div className="container-custom max-w-3xl">
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-10 w-10 rounded-full bg-gold/20 text-gold flex items-center justify-center">
+            <div className="h-10 w-10 rounded-full bg-tat-gold/20 text-tat-gold flex items-center justify-center">
               <RotateCcw className="h-5 w-5" />
             </div>
             <span className="eyebrow">Legal</span>
@@ -30,7 +30,7 @@ export default function CancellationPolicyPage() {
           <h1 className="font-display text-display-md font-medium leading-[1.05] text-balance">
             Cancellation &amp; Refund Policy
           </h1>
-          <p className="mt-4 text-ink/60">
+          <p className="mt-4 text-tat-charcoal/60">
             Trust and Trip Experiences Pvt. Ltd. · Last updated 01 September 2024
           </p>
         </div>
@@ -41,10 +41,10 @@ export default function CancellationPolicyPage() {
 
           {/* Overview */}
           <div>
-            <h2 className="font-display text-2xl font-medium text-ink mb-4 pb-3 border-b border-ink/8">
+            <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
               Overview
             </h2>
-            <p className="text-ink/75 leading-relaxed">
+            <p className="text-tat-charcoal/75 leading-relaxed">
               Customers eligible for refunds will receive the refund amount within{" "}
               <strong>90 working days</strong> from the date of cancellation or supplier processing,
               whichever occurs later. Exchange rates may affect refund amounts based on international
@@ -54,13 +54,13 @@ export default function CancellationPolicyPage() {
 
           {/* Cancellation Fee Schedule */}
           <div>
-            <h2 className="font-display text-2xl font-medium text-ink mb-4 pb-3 border-b border-ink/8">
+            <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
               Cancellation Fee Schedule
             </h2>
-            <div className="bg-white rounded-2xl border border-ink/8 overflow-hidden">
+            <div className="bg-white rounded-2xl border border-tat-charcoal/8 overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-ink text-cream">
+                  <tr className="bg-tat-charcoal text-tat-paper">
                     <th className="text-left px-5 py-4 font-medium text-[11px] uppercase tracking-wider">
                       When You Cancel
                     </th>
@@ -71,15 +71,15 @@ export default function CancellationPolicyPage() {
                 </thead>
                 <tbody>
                   {cancellationSchedule.map((row, i) => (
-                    <tr key={i} className={i % 2 === 0 ? "bg-cream/50" : "bg-white"}>
-                      <td className="px-5 py-4 font-medium text-ink">{row.timeline}</td>
-                      <td className="px-5 py-4 text-ink/70">{row.fee}</td>
+                    <tr key={i} className={i % 2 === 0 ? "bg-tat-paper/50" : "bg-white"}>
+                      <td className="px-5 py-4 font-medium text-tat-charcoal">{row.timeline}</td>
+                      <td className="px-5 py-4 text-tat-charcoal/70">{row.fee}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <p className="mt-3 text-xs text-ink/50">
+            <p className="mt-3 text-xs text-tat-charcoal/50">
               All cancellation charges are non-refundable and non-transferable.
             </p>
           </div>
@@ -130,29 +130,29 @@ export default function CancellationPolicyPage() {
           </PolicySection>
 
           {/* How to Cancel */}
-          <div className="bg-ink text-cream rounded-3xl p-8">
+          <div className="bg-tat-charcoal text-tat-paper rounded-3xl p-8">
             <h2 className="font-display text-2xl font-medium mb-4">How to Request a Cancellation</h2>
-            <ol className="space-y-3 text-cream/80 text-sm leading-relaxed list-decimal pl-5">
-              <li>Email <a href="mailto:support@trustandtrip.com" className="text-gold hover:underline">support@trustandtrip.com</a> with your booking reference and reason for cancellation.</li>
+            <ol className="space-y-3 text-tat-paper/80 text-sm leading-relaxed list-decimal pl-5">
+              <li>Email <a href="mailto:support@trustandtrip.com" className="text-tat-gold hover:underline">support@trustandtrip.com</a> with your booking reference and reason for cancellation.</li>
               <li>Our team will confirm receipt within 24 hours and initiate the cancellation with all suppliers.</li>
               <li>You will receive a final cancellation summary with the applicable fees and refund amount (if any) within 3–5 working days.</li>
               <li>Approved refunds are processed within 90 working days of supplier confirmation.</li>
             </ol>
-            <p className="mt-6 text-sm text-cream/60">
+            <p className="mt-6 text-sm text-tat-paper/60">
               You can also call us at{" "}
-              <IntentAnchor href="tel:+918115999588" intent="call_click" metadata={{ note: "Cancellation policy — call us" }} className="text-gold">+91 8115 999 588</IntentAnchor> during
+              <IntentAnchor href="tel:+918115999588" intent="call_click" metadata={{ note: "Cancellation policy — call us" }} className="text-tat-gold">+91 8115 999 588</IntentAnchor> during
               office hours (8 AM – 10 PM, Tuesday closed).
             </p>
           </div>
 
-          <div className="text-sm text-ink/50 leading-relaxed">
+          <div className="text-sm text-tat-charcoal/50 leading-relaxed">
             <p>
               This policy is subject to change. For the most current version, visit{" "}
-              <Link href="/cancellation-policy" className="text-gold hover:underline">
+              <Link href="/cancellation-policy" className="text-tat-gold hover:underline">
                 trustandtrip.com/cancellation-policy
               </Link>
               . For disputes, see our{" "}
-              <Link href="/terms-and-conditions" className="text-gold hover:underline">
+              <Link href="/terms-and-conditions" className="text-tat-gold hover:underline">
                 Terms &amp; Conditions
               </Link>
               .
@@ -174,10 +174,10 @@ function PolicySection({
 }) {
   return (
     <div>
-      <h2 className="font-display text-2xl font-medium text-ink mb-4 pb-3 border-b border-ink/8">
+      <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
         {title}
       </h2>
-      <div className="space-y-4 text-ink/75 leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_li]:leading-relaxed">
+      <div className="space-y-4 text-tat-charcoal/75 leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_li]:leading-relaxed">
         {children}
       </div>
     </div>

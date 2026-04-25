@@ -95,21 +95,21 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#0b1c2c] text-cream overflow-hidden relative">
+    <footer className="bg-[#0b1c2c] text-tat-paper overflow-hidden relative">
 
       {/* ── Newsletter strip ───────────────────────────────────── */}
-      <div className="border-b border-cream/8">
+      <div className="border-b border-tat-paper/8">
         <div className="container-custom py-10 md:py-12">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-              <p className="eyebrow text-gold mb-1">Travel updates</p>
+              <p className="eyebrow text-tat-gold mb-1">Travel updates</p>
               <h3 className="font-display text-xl md:text-2xl font-medium">
                 Get exclusive deals in your inbox.
               </h3>
-              <p className="text-sm text-cream/45 mt-1">Early-bird offers, new destinations, travel tips. No spam.</p>
+              <p className="text-sm text-tat-paper/45 mt-1">Early-bird offers, new destinations, travel tips. No spam.</p>
             </div>
             {subState === "done" ? (
-              <div className="flex items-center gap-2 text-sm text-gold font-medium shrink-0">
+              <div className="flex items-center gap-2 text-sm text-tat-gold font-medium shrink-0">
                 <CheckCircle2 className="h-5 w-5" /> You're on the list!
               </div>
             ) : (
@@ -120,12 +120,12 @@ export default function Footer() {
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 bg-cream/8 border border-cream/15 text-cream placeholder:text-cream/30 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-gold"
+                  className="flex-1 bg-tat-paper/8 border border-tat-paper/15 text-tat-paper placeholder:text-tat-paper/30 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-tat-gold"
                 />
                 <button
                   type="submit"
                   disabled={subState === "loading"}
-                  className="bg-gold text-ink text-sm font-semibold px-5 py-3 rounded-xl hover:bg-gold/90 transition-colors shrink-0"
+                  className="bg-tat-gold text-tat-charcoal text-sm font-semibold px-5 py-3 rounded-xl hover:bg-tat-gold/90 transition-colors shrink-0"
                 >
                   {subState === "loading" ? "…" : "Subscribe"}
                 </button>
@@ -136,42 +136,42 @@ export default function Footer() {
       </div>
 
       {/* ── Main link grid ─────────────────────────────────────── */}
-      <div className="container-custom pt-14 pb-10 border-b border-cream/8">
+      <div className="container-custom pt-14 pb-10 border-b border-tat-paper/8">
         <div className="grid grid-cols-2 md:grid-cols-[1.6fr_1fr_1fr_1fr] gap-10 md:gap-8">
 
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-5">
-              <div className="h-9 w-9 rounded-full bg-gold text-ink flex items-center justify-center shrink-0">
+              <div className="h-9 w-9 rounded-full bg-tat-gold text-tat-charcoal flex items-center justify-center shrink-0">
                 <span className="font-display text-lg font-semibold">T</span>
               </div>
               <div className="flex flex-col leading-none">
-                <span className="font-display text-lg font-medium">Trust<span className="text-gold">&</span>Trip</span>
-                <span className="text-[9px] uppercase tracking-[0.22em] text-cream/35 mt-0.5">Crafting Reliable Travel</span>
+                <span className="font-display text-lg font-medium">Trust<span className="text-tat-gold">&</span>Trip</span>
+                <span className="text-[9px] uppercase tracking-[0.22em] text-tat-paper/35 mt-0.5">Crafting Reliable Travel</span>
               </div>
             </Link>
 
-            <p className="text-sm text-cream/45 leading-relaxed mb-6 max-w-xs">
+            <p className="text-sm text-tat-paper/45 leading-relaxed mb-6 max-w-xs">
               Handcrafted journeys for families, couples, and groups — 23 destinations, 150+ packages, zero hidden costs.
             </p>
 
             {/* Contact */}
             <div className="space-y-2.5 mb-7">
-              <a href="tel:+918115999588" onClick={() => captureIntent("call_click", { note: "Footer contact call" })} className="flex items-center gap-2.5 text-sm text-cream/55 hover:text-gold transition-colors">
-                <div className="h-7 w-7 rounded-lg bg-cream/6 flex items-center justify-center shrink-0">
-                  <Phone className="h-3.5 w-3.5 text-gold" />
+              <a href="tel:+918115999588" onClick={() => captureIntent("call_click", { note: "Footer contact call" })} className="flex items-center gap-2.5 text-sm text-tat-paper/55 hover:text-tat-gold transition-colors">
+                <div className="h-7 w-7 rounded-lg bg-tat-paper/6 flex items-center justify-center shrink-0">
+                  <Phone className="h-3.5 w-3.5 text-tat-gold" />
                 </div>
                 +91 8115 999 588
               </a>
-              <a href="mailto:hello@trustandtrip.com" className="flex items-center gap-2.5 text-sm text-cream/55 hover:text-gold transition-colors">
-                <div className="h-7 w-7 rounded-lg bg-cream/6 flex items-center justify-center shrink-0">
-                  <Mail className="h-3.5 w-3.5 text-gold" />
+              <a href="mailto:hello@trustandtrip.com" className="flex items-center gap-2.5 text-sm text-tat-paper/55 hover:text-tat-gold transition-colors">
+                <div className="h-7 w-7 rounded-lg bg-tat-paper/6 flex items-center justify-center shrink-0">
+                  <Mail className="h-3.5 w-3.5 text-tat-gold" />
                 </div>
                 hello@trustandtrip.com
               </a>
-              <div className="flex items-start gap-2.5 text-sm text-cream/40">
-                <div className="h-7 w-7 rounded-lg bg-cream/6 flex items-center justify-center shrink-0 mt-0.5">
-                  <MapPin className="h-3.5 w-3.5 text-gold" />
+              <div className="flex items-start gap-2.5 text-sm text-tat-paper/40">
+                <div className="h-7 w-7 rounded-lg bg-tat-paper/6 flex items-center justify-center shrink-0 mt-0.5">
+                  <MapPin className="h-3.5 w-3.5 text-tat-gold" />
                 </div>
                 <span className="text-xs leading-relaxed">R-607, Amrapali Princely, Noida Sector 71, UP 201301</span>
               </div>
@@ -186,7 +186,7 @@ export default function Footer() {
                   aria-label={s.label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`h-9 w-9 rounded-full border border-cream/15 flex items-center justify-center text-cream/60 hover:text-white transition-all duration-200 ${s.color}`}
+                  className={`h-9 w-9 rounded-full border border-tat-paper/15 flex items-center justify-center text-tat-paper/60 hover:text-white transition-all duration-200 ${s.color}`}
                 >
                   <s.icon className="h-4 w-4" />
                 </a>
@@ -196,11 +196,11 @@ export default function Footer() {
 
           {/* Explore */}
           <div>
-            <h4 className="text-[10px] uppercase tracking-[0.25em] text-gold font-medium mb-5">Explore</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium mb-5">Explore</h4>
             <ul className="space-y-3">
               {EXPLORE.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-sm text-cream/50 hover:text-gold transition-colors flex items-center gap-1.5 group">
+                  <Link href={l.href} className="text-sm text-tat-paper/50 hover:text-tat-gold transition-colors flex items-center gap-1.5 group">
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all duration-200" />
                     {l.label}
                   </Link>
@@ -208,11 +208,11 @@ export default function Footer() {
               ))}
             </ul>
 
-            <h4 className="text-[10px] uppercase tracking-[0.25em] text-gold font-medium mt-8 mb-5">International</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium mt-8 mb-5">International</h4>
             <ul className="space-y-3">
               {HONEYMOON.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-sm text-cream/50 hover:text-gold transition-colors flex items-center gap-1.5 group">
+                  <Link href={l.href} className="text-sm text-tat-paper/50 hover:text-tat-gold transition-colors flex items-center gap-1.5 group">
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all duration-200" />
                     {l.label}
                   </Link>
@@ -223,11 +223,11 @@ export default function Footer() {
 
           {/* Pilgrim & Adventure */}
           <div>
-            <h4 className="text-[10px] uppercase tracking-[0.25em] text-gold font-medium mb-5">Pilgrim & Adventure</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium mb-5">Pilgrim & Adventure</h4>
             <ul className="space-y-3">
               {PILGRIM.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-sm text-cream/50 hover:text-gold transition-colors flex items-center gap-1.5 group">
+                  <Link href={l.href} className="text-sm text-tat-paper/50 hover:text-tat-gold transition-colors flex items-center gap-1.5 group">
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all duration-200" />
                     {l.label}
                   </Link>
@@ -238,11 +238,11 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="text-[10px] uppercase tracking-[0.25em] text-gold font-medium mb-5">Support</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium mb-5">Support</h4>
             <ul className="space-y-3">
               {SUPPORT.map((l) => (
                 <li key={l.label}>
-                  <Link href={l.href} className="text-sm text-cream/50 hover:text-gold transition-colors flex items-center gap-1.5 group">
+                  <Link href={l.href} className="text-sm text-tat-paper/50 hover:text-tat-gold transition-colors flex items-center gap-1.5 group">
                     <ArrowRight className="h-3 w-3 opacity-0 group-hover:opacity-100 -ml-4 group-hover:ml-0 transition-all duration-200" />
                     {l.label}
                   </Link>
@@ -251,24 +251,24 @@ export default function Footer() {
             </ul>
 
             {/* Hours */}
-            <div className="mt-8 p-4 rounded-xl bg-cream/5 border border-cream/8">
-              <p className="text-[10px] uppercase tracking-wider text-gold font-medium mb-2">We're available</p>
-              <p className="text-sm text-cream/60 font-medium">Mon – Sun: 8 AM – 10 PM</p>
-              <p className="text-xs text-cream/35 mt-1">Call, WhatsApp, or email anytime.</p>
+            <div className="mt-8 p-4 rounded-xl bg-tat-paper/5 border border-tat-paper/8">
+              <p className="text-[10px] uppercase tracking-wider text-tat-gold font-medium mb-2">We're available</p>
+              <p className="text-sm text-tat-paper/60 font-medium">Mon – Sun: 8 AM – 10 PM</p>
+              <p className="text-xs text-tat-paper/35 mt-1">Call, WhatsApp, or email anytime.</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* ── Popular destinations strip ─────────────────────────── */}
-      <div className="container-custom py-7 border-b border-cream/8">
-        <p className="text-[10px] uppercase tracking-[0.25em] text-cream/30 font-medium mb-4">Popular destinations</p>
+      <div className="container-custom py-7 border-b border-tat-paper/8">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-tat-paper/30 font-medium mb-4">Popular destinations</p>
         <div className="flex flex-wrap gap-2">
           {DESTINATIONS.map((d) => (
             <Link
               key={d.label}
               href={d.href}
-              className="text-xs text-cream/45 hover:text-gold border border-cream/10 hover:border-gold/30 px-3 py-1.5 rounded-full transition-all duration-200"
+              className="text-xs text-tat-paper/45 hover:text-tat-gold border border-tat-paper/10 hover:border-tat-gold/30 px-3 py-1.5 rounded-full transition-all duration-200"
             >
               {d.label}
             </Link>
@@ -277,26 +277,26 @@ export default function Footer() {
       </div>
 
       {/* ── Trust badges ──────────────────────────────────────── */}
-      <div className="container-custom py-7 border-b border-cream/8">
+      <div className="container-custom py-7 border-b border-tat-paper/8">
         <div className="flex flex-wrap items-center gap-6 md:gap-10">
-          <div className="flex items-center gap-2.5 text-cream/40">
-            <Award className="h-4 w-4 text-gold/60 shrink-0" />
+          <div className="flex items-center gap-2.5 text-tat-paper/40">
+            <Award className="h-4 w-4 text-tat-gold/60 shrink-0" />
             <span className="text-xs">IATA Accredited Agency</span>
           </div>
-          <div className="flex items-center gap-2.5 text-cream/40">
-            <Shield className="h-4 w-4 text-gold/60 shrink-0" />
+          <div className="flex items-center gap-2.5 text-tat-paper/40">
+            <Shield className="h-4 w-4 text-tat-gold/60 shrink-0" />
             <span className="text-xs">SSL Secured Payments</span>
           </div>
-          <div className="flex items-center gap-2.5 text-cream/40">
-            <CheckCircle2 className="h-4 w-4 text-gold/60 shrink-0" />
+          <div className="flex items-center gap-2.5 text-tat-paper/40">
+            <CheckCircle2 className="h-4 w-4 text-tat-gold/60 shrink-0" />
             <span className="text-xs">Razorpay Payment Gateway</span>
           </div>
-          <div className="flex items-center gap-2.5 text-cream/40">
-            <Shield className="h-4 w-4 text-gold/60 shrink-0" />
+          <div className="flex items-center gap-2.5 text-tat-paper/40">
+            <Shield className="h-4 w-4 text-tat-gold/60 shrink-0" />
             <span className="text-xs">100% Secure Booking</span>
           </div>
-          <div className="flex items-center gap-2.5 text-cream/40">
-            <Award className="h-4 w-4 text-gold/60 shrink-0" />
+          <div className="flex items-center gap-2.5 text-tat-paper/40">
+            <Award className="h-4 w-4 text-tat-gold/60 shrink-0" />
             <span className="text-xs">4.9★ on Google & TripAdvisor</span>
           </div>
         </div>
@@ -306,13 +306,13 @@ export default function Footer() {
       {/* pb-24 on mobile so content clears the fixed bottom nav bar */}
       <div className="container-custom pt-5 pb-24 lg:pb-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-cream/30">
+          <p className="text-xs text-tat-paper/30">
             © {new Date().getFullYear()} Trust and Trip Pvt. Ltd. · All rights reserved.
           </p>
-          <div className="flex items-center gap-4 text-xs text-cream/30">
-            <Link href="/privacy-policy" className="hover:text-gold transition-colors">Privacy</Link>
-            <Link href="/terms-and-conditions" className="hover:text-gold transition-colors">Terms</Link>
-            <Link href="/cancellation-policy" className="hover:text-gold transition-colors">Cancellation</Link>
+          <div className="flex items-center gap-4 text-xs text-tat-paper/30">
+            <Link href="/privacy-policy" className="hover:text-tat-gold transition-colors">Privacy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-tat-gold transition-colors">Terms</Link>
+            <Link href="/cancellation-policy" className="hover:text-tat-gold transition-colors">Cancellation</Link>
           </div>
         </div>
       </div>
@@ -320,7 +320,7 @@ export default function Footer() {
       {/* Subtle wordmark */}
       <div
         aria-hidden
-        className="absolute -bottom-6 left-1/2 -translate-x-1/2 font-display text-[16vw] leading-none font-medium text-cream/[0.02] tracking-tighter pointer-events-none select-none whitespace-nowrap"
+        className="absolute -bottom-6 left-1/2 -translate-x-1/2 font-display text-[16vw] leading-none font-medium text-tat-paper/[0.02] tracking-tighter pointer-events-none select-none whitespace-nowrap"
       >
         Trust & Trip
       </div>

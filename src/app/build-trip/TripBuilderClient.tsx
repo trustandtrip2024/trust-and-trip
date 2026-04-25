@@ -71,12 +71,12 @@ export default function TripBuilderClient({ packages, destinations }: { packages
   };
 
   return (
-    <div className="min-h-screen bg-cream pt-24 pb-16">
+    <div className="min-h-screen bg-tat-paper pt-24 pb-16">
       <div className="container-custom max-w-3xl">
         {/* Progress */}
         <div className="flex items-center gap-1.5 mb-8">
           {STEPS.slice(0,-1).map((s, i) => (
-            <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${i <= stepIdx ? "bg-gold" : "bg-ink/10"}`} />
+            <div key={s} className={`h-1 flex-1 rounded-full transition-colors ${i <= stepIdx ? "bg-tat-gold" : "bg-tat-charcoal/10"}`} />
           ))}
         </div>
 
@@ -91,17 +91,17 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                 <h1 className="heading-section mt-2 mb-6 text-balance">Where do you want to go?</h1>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[60vh] overflow-y-auto pr-1">
                   <button onClick={() => { setSel({ ...sel, destination: "" }); go("style"); }}
-                    className={`p-4 rounded-2xl border-2 text-left transition-all ${!sel.destination ? "border-gold bg-gold/8" : "border-ink/10 hover:border-ink/30"}`}>
+                    className={`p-4 rounded-2xl border-2 text-left transition-all ${!sel.destination ? "border-tat-gold bg-tat-gold/8" : "border-tat-charcoal/10 hover:border-tat-charcoal/30"}`}>
                     <p className="text-2xl mb-1">🌏</p>
                     <p className="font-medium text-sm">Anywhere</p>
-                    <p className="text-xs text-ink/50">Surprise me!</p>
+                    <p className="text-xs text-tat-charcoal/50">Surprise me!</p>
                   </button>
                   {destinations.map((d) => (
                     <button key={d.slug} onClick={() => { setSel({ ...sel, destination: d.slug }); go("style"); }}
-                      className={`p-4 rounded-2xl border-2 text-left transition-all ${sel.destination === d.slug ? "border-gold bg-gold/8" : "border-ink/10 hover:border-ink/30"}`}>
+                      className={`p-4 rounded-2xl border-2 text-left transition-all ${sel.destination === d.slug ? "border-tat-gold bg-tat-gold/8" : "border-tat-charcoal/10 hover:border-tat-charcoal/30"}`}>
                       <p className="font-medium text-sm">{d.name}</p>
-                      <p className="text-xs text-ink/40">{d.country}</p>
-                      <p className="text-xs text-gold mt-1">From ₹{d.priceFrom.toLocaleString("en-IN")}</p>
+                      <p className="text-xs text-tat-charcoal/40">{d.country}</p>
+                      <p className="text-xs text-tat-gold mt-1">From ₹{d.priceFrom.toLocaleString("en-IN")}</p>
                     </button>
                   ))}
                 </div>
@@ -116,13 +116,13 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                 <div className="grid sm:grid-cols-2 gap-4">
                   {STYLES.map((s) => (
                     <button key={s.value} onClick={() => { setSel({ ...sel, style: s.value }); go("duration"); }}
-                      className={`p-6 rounded-2xl border-2 text-left flex items-center gap-4 transition-all ${sel.style === s.value ? "border-gold bg-gold/8" : "border-ink/10 hover:border-ink/30"}`}>
+                      className={`p-6 rounded-2xl border-2 text-left flex items-center gap-4 transition-all ${sel.style === s.value ? "border-tat-gold bg-tat-gold/8" : "border-tat-charcoal/10 hover:border-tat-charcoal/30"}`}>
                       <span className="text-4xl">{s.emoji}</span>
                       <div>
                         <p className="font-display text-lg font-medium">{s.label}</p>
-                        <p className="text-xs text-ink/50 mt-0.5">{s.desc}</p>
+                        <p className="text-xs text-tat-charcoal/50 mt-0.5">{s.desc}</p>
                       </div>
-                      {sel.style === s.value && <Check className="h-5 w-5 text-gold ml-auto" />}
+                      {sel.style === s.value && <Check className="h-5 w-5 text-tat-gold ml-auto" />}
                     </button>
                   ))}
                 </div>
@@ -139,7 +139,7 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                   {DURATIONS.map((d) => (
                     <button key={d.label}
                       onClick={() => { setSel({ ...sel, duration: d.days as [number,number] }); go("budget"); }}
-                      className={`p-5 rounded-2xl border-2 text-center transition-all ${JSON.stringify(sel.duration) === JSON.stringify(d.days) ? "border-gold bg-gold/8" : "border-ink/10 hover:border-ink/30"}`}>
+                      className={`p-5 rounded-2xl border-2 text-center transition-all ${JSON.stringify(sel.duration) === JSON.stringify(d.days) ? "border-tat-gold bg-tat-gold/8" : "border-tat-charcoal/10 hover:border-tat-charcoal/30"}`}>
                       <span className="text-3xl block mb-2">{d.icon}</span>
                       <p className="font-medium text-sm">{d.label}</p>
                     </button>
@@ -158,9 +158,9 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                   {BUDGETS.map((b) => (
                     <button key={b.value}
                       onClick={() => { setSel({ ...sel, budget: [b.min, b.max] }); go("dates"); }}
-                      className={`p-6 rounded-2xl border-2 text-left transition-all ${sel.budget[0] === b.min ? "border-gold bg-gold/8" : "border-ink/10 hover:border-ink/30"}`}>
-                      <p className="font-display text-2xl font-medium text-gold">{b.label}</p>
-                      <p className="text-sm text-ink/60 mt-1">{b.range} / person</p>
+                      className={`p-6 rounded-2xl border-2 text-left transition-all ${sel.budget[0] === b.min ? "border-tat-gold bg-tat-gold/8" : "border-tat-charcoal/10 hover:border-tat-charcoal/30"}`}>
+                      <p className="font-display text-2xl font-medium text-tat-gold">{b.label}</p>
+                      <p className="text-sm text-tat-charcoal/60 mt-1">{b.range} / person</p>
                     </button>
                   ))}
                 </div>
@@ -177,13 +177,13 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                   {["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"].map((m) => (
                     <button key={m}
                       onClick={() => { setSel({ ...sel }); setStep("results"); }}
-                      className={`py-4 rounded-2xl border-2 font-medium transition-all ${sel.month === m ? "border-gold bg-gold/8 text-ink" : "border-ink/10 hover:border-ink/30 text-ink/70"}`}
+                      className={`py-4 rounded-2xl border-2 font-medium transition-all ${sel.month === m ? "border-tat-gold bg-tat-gold/8 text-tat-charcoal" : "border-tat-charcoal/10 hover:border-tat-charcoal/30 text-tat-charcoal/70"}`}
                       onMouseDown={() => setSel({ ...sel, month: m })}>
                       {m} 2026
                     </button>
                   ))}
                   <button onClick={() => { setStep("results"); }}
-                    className="py-4 rounded-2xl border-2 border-ink/10 hover:border-ink/30 text-ink/50 text-sm transition-all col-span-2">
+                    className="py-4 rounded-2xl border-2 border-tat-charcoal/10 hover:border-tat-charcoal/30 text-tat-charcoal/50 text-sm transition-all col-span-2">
                     Not sure yet
                   </button>
                 </div>
@@ -197,28 +197,28 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                 <span className="eyebrow">Your matches</span>
                 <h1 className="heading-section mt-2 mb-2">
                   {matched.length > 0 ? `${matched.length} experiences found` : "No exact matches"}
-                  <span className="italic text-gold font-light"> for you.</span>
+                  <span className="italic text-tat-gold font-light"> for you.</span>
                 </h1>
-                <p className="text-ink/60 text-sm mb-6">Based on your preferences. A planner can also build a custom one.</p>
+                <p className="text-tat-charcoal/60 text-sm mb-6">Based on your preferences. A planner can also build a custom one.</p>
 
                 {matched.length > 0 ? (
                   <div className="grid sm:grid-cols-2 gap-4 mb-8">
                     {matched.map((p) => (
                       <Link key={p.slug} href={`/packages/${p.slug}`}
-                        className="group bg-white rounded-2xl border border-ink/8 overflow-hidden hover:shadow-soft-lg transition-all">
+                        className="group bg-white rounded-2xl border border-tat-charcoal/8 overflow-hidden hover:shadow-soft-lg transition-all">
                         <div className="relative aspect-[16/9] overflow-hidden">
                           <Image src={p.image} alt={p.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="50vw" />
                         </div>
                         <div className="p-4">
-                          <p className="text-xs text-ink/50 mb-1">{p.destinationName} · {p.travelType}</p>
+                          <p className="text-xs text-tat-charcoal/50 mb-1">{p.destinationName} · {p.travelType}</p>
                           <p className="font-display font-medium leading-tight line-clamp-2">{p.title}</p>
                           <div className="flex items-center justify-between mt-3">
                             <div>
-                              <p className="text-[10px] text-ink/40">From</p>
-                              <p className="font-display text-lg font-medium text-gold">₹{p.price.toLocaleString("en-IN")}</p>
+                              <p className="text-[10px] text-tat-charcoal/40">From</p>
+                              <p className="font-display text-lg font-medium text-tat-gold">₹{p.price.toLocaleString("en-IN")}</p>
                             </div>
-                            <div className="flex items-center gap-1 text-xs text-ink/50">
-                              <Star className="h-3 w-3 fill-gold text-gold" />{p.rating}
+                            <div className="flex items-center gap-1 text-xs text-tat-charcoal/50">
+                              <Star className="h-3 w-3 fill-tat-gold text-tat-gold" />{p.rating}
                               <span className="mx-1">·</span>
                               <Clock className="h-3 w-3" />{p.duration}
                             </div>
@@ -228,28 +228,28 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-cream rounded-2xl p-8 border border-ink/5 text-center mb-8">
+                  <div className="bg-tat-paper rounded-2xl p-8 border border-tat-charcoal/5 text-center mb-8">
                     <p className="text-4xl mb-3">🧭</p>
                     <p className="font-display text-xl mb-2">No exact matches</p>
-                    <p className="text-ink/60 text-sm mb-4">Our planners can build a custom itinerary just for you.</p>
+                    <p className="text-tat-charcoal/60 text-sm mb-4">Our planners can build a custom itinerary just for you.</p>
                   </div>
                 )}
 
                 {/* Lead capture */}
                 {!submitted ? (
-                  <div className="bg-ink text-cream rounded-2xl p-6">
+                  <div className="bg-tat-charcoal text-tat-paper rounded-2xl p-6">
                     <p className="font-display text-lg font-medium mb-1">Get a personalised quote</p>
-                    <p className="text-cream/50 text-sm mb-4">A planner will call you back within 2 hours.</p>
+                    <p className="text-tat-paper/50 text-sm mb-4">A planner will call you back within 2 hours.</p>
                     <form onSubmit={handleSubmit} className="space-y-3">
                       <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name"
-                        className="w-full bg-cream/10 border border-cream/20 text-cream placeholder:text-cream/40 text-sm rounded-xl px-4 py-3 outline-none focus:border-gold" />
+                        className="w-full bg-tat-paper/10 border border-tat-paper/20 text-tat-paper placeholder:text-tat-paper/40 text-sm rounded-xl px-4 py-3 outline-none focus:border-tat-gold" />
                       <div className="grid grid-cols-2 gap-3">
                         <input required type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 phone"
-                          className="w-full bg-cream/10 border border-cream/20 text-cream placeholder:text-cream/40 text-sm rounded-xl px-4 py-3 outline-none focus:border-gold" />
+                          className="w-full bg-tat-paper/10 border border-tat-paper/20 text-tat-paper placeholder:text-tat-paper/40 text-sm rounded-xl px-4 py-3 outline-none focus:border-tat-gold" />
                         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email (optional)"
-                          className="w-full bg-cream/10 border border-cream/20 text-cream placeholder:text-cream/40 text-sm rounded-xl px-4 py-3 outline-none focus:border-gold" />
+                          className="w-full bg-tat-paper/10 border border-tat-paper/20 text-tat-paper placeholder:text-tat-paper/40 text-sm rounded-xl px-4 py-3 outline-none focus:border-tat-gold" />
                       </div>
-                      <button type="submit" className="w-full bg-gold text-ink font-semibold py-3 rounded-xl hover:bg-gold/90 transition-colors text-sm flex items-center justify-center gap-2">
+                      <button type="submit" className="w-full bg-tat-gold text-tat-charcoal font-semibold py-3 rounded-xl hover:bg-tat-gold/90 transition-colors text-sm flex items-center justify-center gap-2">
                         <ArrowRight className="h-4 w-4" />Get My Free Quote
                       </button>
                     </form>
@@ -265,7 +265,7 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                 )}
 
                 <button onClick={() => { setStep("destination"); setSel({ destination: "", style: "", duration: [0,99], budget: [0,9999999], month: "" }); }}
-                  className="mt-4 text-sm text-ink/50 hover:text-ink transition-colors underline-offset-2 hover:underline">
+                  className="mt-4 text-sm text-tat-charcoal/50 hover:text-tat-charcoal transition-colors underline-offset-2 hover:underline">
                   Start over
                 </button>
               </div>
@@ -279,7 +279,7 @@ export default function TripBuilderClient({ packages, destinations }: { packages
 
 function BackBtn({ onClick }: { onClick: () => void }) {
   return (
-    <button onClick={onClick} className="mt-6 flex items-center gap-1.5 text-sm text-ink/50 hover:text-ink transition-colors">
+    <button onClick={onClick} className="mt-6 flex items-center gap-1.5 text-sm text-tat-charcoal/50 hover:text-tat-charcoal transition-colors">
       <ArrowLeft className="h-4 w-4" />Back
     </button>
   );

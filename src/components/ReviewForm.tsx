@@ -48,32 +48,32 @@ export default function ReviewForm({ packageSlug, packageTitle }: Props) {
 
   if (state === "success") {
     return (
-      <div className="bg-cream rounded-2xl p-8 border border-ink/5 text-center">
-        <CheckCircle2 className="h-10 w-10 text-gold mx-auto mb-3" />
+      <div className="bg-tat-paper rounded-2xl p-8 border border-tat-charcoal/5 text-center">
+        <CheckCircle2 className="h-10 w-10 text-tat-gold mx-auto mb-3" />
         <h3 className="font-display text-xl font-medium mb-2">Thank you for your review!</h3>
-        <p className="text-sm text-ink/60">It will appear after a quick review by our team (usually within 24 hours).</p>
+        <p className="text-sm text-tat-charcoal/60">It will appear after a quick review by our team (usually within 24 hours).</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-cream rounded-2xl border border-ink/5 overflow-hidden">
+    <div className="bg-tat-paper rounded-2xl border border-tat-charcoal/5 overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-6 text-left hover:bg-ink/2 transition-colors"
+        className="w-full flex items-center justify-between p-6 text-left hover:bg-tat-charcoal/2 transition-colors"
       >
         <div>
           <p className="font-display text-lg font-medium">Write a Review</p>
-          <p className="text-sm text-ink/50 mt-0.5">Share your experience to help other travelers</p>
+          <p className="text-sm text-tat-charcoal/50 mt-0.5">Share your experience to help other travelers</p>
         </div>
-        <span className={`text-gold transition-transform duration-200 text-lg ${open ? "rotate-180" : ""}`}>▾</span>
+        <span className={`text-tat-gold transition-transform duration-200 text-lg ${open ? "rotate-180" : ""}`}>▾</span>
       </button>
 
       {open && (
-        <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-4 border-t border-ink/6 pt-5">
+        <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-4 border-t border-tat-charcoal/6 pt-5">
           {/* Star rating */}
           <div>
-            <label className="block text-[11px] uppercase tracking-[0.15em] text-ink/50 mb-2">Your Rating *</label>
+            <label className="block text-[11px] uppercase tracking-[0.15em] text-tat-charcoal/50 mb-2">Your Rating *</label>
             <div className="flex gap-1">
               {[1, 2, 3, 4, 5].map((s) => (
                 <button key={s} type="button"
@@ -81,12 +81,12 @@ export default function ReviewForm({ packageSlug, packageTitle }: Props) {
                   onMouseEnter={() => setHover(s)}
                   onMouseLeave={() => setHover(0)}
                   className="transition-transform hover:scale-110">
-                  <Star className={`h-8 w-8 transition-colors ${s <= (hover || rating) ? "fill-gold text-gold" : "text-ink/20"}`} />
+                  <Star className={`h-8 w-8 transition-colors ${s <= (hover || rating) ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/20"}`} />
                 </button>
               ))}
             </div>
             {rating > 0 && (
-              <p className="text-xs text-ink/50 mt-1">{["", "Poor", "Fair", "Good", "Very Good", "Excellent"][rating]}</p>
+              <p className="text-xs text-tat-charcoal/50 mt-1">{["", "Poor", "Fair", "Good", "Very Good", "Excellent"][rating]}</p>
             )}
           </div>
 
@@ -128,7 +128,7 @@ export default function ReviewForm({ packageSlug, packageTitle }: Props) {
               onChange={(e) => setForm({ ...form, review_body: e.target.value })}
               placeholder="Tell others about your experience — the highlights, hotels, food, service..."
               className="input-travel resize-none" />
-            <p className="text-[10px] text-ink/35 mt-1">Min. 20 characters · {form.review_body.length} typed</p>
+            <p className="text-[10px] text-tat-charcoal/35 mt-1">Min. 20 characters · {form.review_body.length} typed</p>
           </Field>
 
           {errorMsg && <p className="text-sm text-red-500">{errorMsg}</p>}
@@ -141,7 +141,7 @@ export default function ReviewForm({ packageSlug, packageTitle }: Props) {
               <><Send className="h-4 w-4" />Submit Review</>
             )}
           </button>
-          <p className="text-[11px] text-ink/40 text-center">Reviews are moderated before publishing (24–48 hrs).</p>
+          <p className="text-[11px] text-tat-charcoal/40 text-center">Reviews are moderated before publishing (24–48 hrs).</p>
         </form>
       )}
     </div>
@@ -151,7 +151,7 @@ export default function ReviewForm({ packageSlug, packageTitle }: Props) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-[11px] uppercase tracking-[0.15em] text-ink/50 font-medium mb-1.5">{label}</label>
+      <label className="block text-[11px] uppercase tracking-[0.15em] text-tat-charcoal/50 font-medium mb-1.5">{label}</label>
       {children}
     </div>
   );

@@ -30,19 +30,19 @@ export default function PackageEnquiryCTA({ packageTitle, price, duration }: Pro
     >
       <div className="mx-3 mb-2 rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(11,28,44,0.18)] border border-white/60">
         {/* Price strip */}
-        <div className="bg-ink px-4 py-2.5 flex items-center justify-between">
+        <div className="bg-tat-charcoal px-4 py-2.5 flex items-center justify-between">
           <div>
-            <p className="text-[9px] uppercase tracking-[0.2em] text-cream/50">Starting from</p>
+            <p className="text-[9px] uppercase tracking-[0.2em] text-tat-paper/50">Starting from</p>
             <div className="flex items-baseline gap-1 mt-0.5">
-              <span className="font-display text-xl font-medium text-cream leading-none">
+              <span className="font-display text-xl font-medium text-tat-paper leading-none">
                 ₹{price.toLocaleString("en-IN")}
               </span>
-              <span className="text-[10px] text-cream/40 font-sans">/person</span>
+              <span className="text-[10px] text-tat-paper/40 font-sans">/person</span>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-[9px] uppercase tracking-[0.15em] text-gold">{duration}</p>
-            <p className="text-[9px] text-cream/40 mt-0.5">All inclusive</p>
+            <p className="text-[9px] uppercase tracking-[0.15em] text-tat-gold">{duration}</p>
+            <p className="text-[9px] text-tat-paper/40 mt-0.5">All inclusive</p>
           </div>
         </div>
 
@@ -57,7 +57,7 @@ export default function PackageEnquiryCTA({ packageTitle, price, duration }: Pro
                 note: `Tapped Call on package CTA · ₹${price.toLocaleString("en-IN")} · ${duration}`,
               })
             }
-            className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-xl bg-ink/6 border border-ink/10 text-ink text-xs font-medium shrink-0"
+            className="flex items-center justify-center gap-1.5 h-11 px-4 rounded-xl bg-tat-charcoal/6 border border-tat-charcoal/10 text-tat-charcoal text-xs font-medium shrink-0"
             aria-label="Call us"
           >
             <Phone className="h-3.5 w-3.5" />

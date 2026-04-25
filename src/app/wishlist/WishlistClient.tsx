@@ -13,14 +13,14 @@ export default function WishlistClient({ allPackages }: { allPackages: Package[]
 
   return (
     <>
-      <section className="pt-28 md:pt-36 pb-10 bg-cream border-b border-ink/5">
+      <section className="pt-28 md:pt-36 pb-10 bg-tat-paper border-b border-tat-charcoal/5">
         <div className="container-custom">
           <span className="eyebrow">Your Wishlist</span>
           <h1 className="mt-3 font-display text-display-lg font-medium leading-[1.02] max-w-3xl text-balance">
             Trips you're
-            <span className="italic text-gold font-light"> dreaming about.</span>
+            <span className="italic text-tat-gold font-light"> dreaming about.</span>
           </h1>
-          <p className="mt-4 text-ink/60 max-w-xl leading-relaxed">
+          <p className="mt-4 text-tat-charcoal/60 max-w-xl leading-relaxed">
             {saved.length > 0
               ? `${saved.length} package${saved.length > 1 ? "s" : ""} saved. Ready to turn them into a real trip?`
               : "Heart any package to save it here for later."}
@@ -36,7 +36,7 @@ export default function WishlistClient({ allPackages }: { allPackages: Package[]
                 <Heart className="h-9 w-9 text-red-300" />
               </div>
               <h2 className="font-display text-2xl font-medium mb-3">Nothing saved yet</h2>
-              <p className="text-ink/60 mb-8 leading-relaxed">
+              <p className="text-tat-charcoal/60 mb-8 leading-relaxed">
                 Browse our packages and tap the heart icon to save the ones you love.
               </p>
               <div className="flex flex-wrap gap-3 justify-center">
@@ -75,7 +75,7 @@ export default function WishlistClient({ allPackages }: { allPackages: Package[]
               </div>
 
               <div className="mt-14 text-center">
-                <p className="text-ink/50 text-sm mb-4">Ready to book? Talk to a planner.</p>
+                <p className="text-tat-charcoal/50 text-sm mb-4">Ready to book? Talk to a planner.</p>
                 <a
                   href={`https://wa.me/918115999588?text=${encodeURIComponent(
                     `Hi Trust and Trip! 🙏\n\nI've saved these packages on my wishlist:\n${saved.map((p) => `• ${p.title} (₹${p.price.toLocaleString("en-IN")})`).join("\n")}\n\nCan you help me decide or customise one of these?`

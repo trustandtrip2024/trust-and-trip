@@ -79,20 +79,20 @@ function LoginPageInner() {
   if (loading) return null;
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-4 py-16">
+    <div className="min-h-screen bg-tat-paper flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-sm">
         {/* Back to home */}
-        <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-ink/50 hover:text-ink transition-colors mb-8">
+        <Link href="/" className="inline-flex items-center gap-1.5 text-sm text-tat-charcoal/50 hover:text-tat-charcoal transition-colors mb-8">
           <ArrowLeft className="h-3.5 w-3.5" />
           Back to home
         </Link>
 
         {/* Logo / brand */}
         <div className="mb-8">
-          <p className="font-display text-2xl font-medium text-ink">
+          <p className="font-display text-2xl font-medium text-tat-charcoal">
             Trust & Trip
           </p>
-          <p className="text-sm text-ink/50 mt-1">
+          <p className="text-sm text-tat-charcoal/50 mt-1">
             {mode === "signin" && "Sign in to your account"}
             {mode === "signup" && "Create a free account"}
             {mode === "reset" && "Reset your password"}
@@ -104,10 +104,10 @@ function LoginPageInner() {
             <div className="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center">
               <CheckCircle2 className="h-6 w-6 text-green-600" />
             </div>
-            <p className="text-sm text-ink/70 leading-relaxed">{success}</p>
+            <p className="text-sm text-tat-charcoal/70 leading-relaxed">{success}</p>
             <button
               onClick={() => { setSuccess(""); setMode("signin"); }}
-              className="text-sm font-medium text-gold hover:underline"
+              className="text-sm font-medium text-tat-gold hover:underline"
             >
               Back to sign in
             </button>
@@ -116,33 +116,33 @@ function LoginPageInner() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "signup" && (
               <div>
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Full Name</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Full Name</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your name"
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-4 py-3 rounded-xl border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-medium text-ink/60 mb-1.5">Email address</label>
+              <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Email address</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                className="w-full px-4 py-3 rounded-xl border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
               />
             </div>
 
             {mode !== "reset" && (
               <div>
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Password</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Password</label>
                 <div className="relative">
                   <input
                     type={showPass ? "text" : "password"}
@@ -151,12 +151,12 @@ function LoginPageInner() {
                     placeholder="••••••••"
                     required
                     minLength={6}
-                    className="w-full px-4 py-3 pr-10 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                    className="w-full px-4 py-3 pr-10 rounded-xl border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-ink/35 hover:text-ink/60 transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-tat-charcoal/35 hover:text-tat-charcoal/60 transition-colors"
                   >
                     {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -165,7 +165,7 @@ function LoginPageInner() {
                   <button
                     type="button"
                     onClick={() => setMode("reset")}
-                    className="mt-1.5 text-xs text-ink/45 hover:text-gold transition-colors"
+                    className="mt-1.5 text-xs text-tat-charcoal/45 hover:text-tat-gold transition-colors"
                   >
                     Forgot password?
                   </button>
@@ -180,7 +180,7 @@ function LoginPageInner() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full flex items-center justify-center gap-2 py-3.5 bg-ink hover:bg-gold text-cream hover:text-ink rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-60 mt-2"
+              className="w-full flex items-center justify-center gap-2 py-3.5 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-60 mt-2"
             >
               {submitting ? (
                 <><Loader2 className="h-4 w-4 animate-spin" /> Please wait…</>
@@ -191,19 +191,19 @@ function LoginPageInner() {
 
         {/* Toggle */}
         {!success && mode !== "reset" && (
-          <p className="text-center text-sm text-ink/50 mt-6">
+          <p className="text-center text-sm text-tat-charcoal/50 mt-6">
             {mode === "signin" ? "New here?" : "Already have an account?"}{" "}
             <button
               onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(""); }}
-              className="font-medium text-ink hover:text-gold transition-colors"
+              className="font-medium text-tat-charcoal hover:text-tat-gold transition-colors"
             >
               {mode === "signin" ? "Create account" : "Sign in"}
             </button>
           </p>
         )}
         {!success && mode === "reset" && (
-          <p className="text-center text-sm text-ink/50 mt-6">
-            <button onClick={() => setMode("signin")} className="font-medium text-ink hover:text-gold transition-colors">
+          <p className="text-center text-sm text-tat-charcoal/50 mt-6">
+            <button onClick={() => setMode("signin")} className="font-medium text-tat-charcoal hover:text-tat-gold transition-colors">
               Back to sign in
             </button>
           </p>

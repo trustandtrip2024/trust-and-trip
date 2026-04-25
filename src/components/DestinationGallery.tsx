@@ -24,7 +24,7 @@ export default function DestinationGallery({ images, name }: Props) {
 
   return (
     <>
-      <section className="bg-ink py-3">
+      <section className="bg-tat-charcoal py-3">
         <div className="flex gap-1.5 overflow-x-auto no-scrollbar px-4 md:px-0 md:container-custom">
           {shown.map((img, i) => {
             const isLast = i === shown.length - 1 && images.length > shown.length;
@@ -34,7 +34,7 @@ export default function DestinationGallery({ images, name }: Props) {
                 key={i}
                 onClick={() => open(i)}
                 aria-label={`View ${name} photo ${i + 1}`}
-                className="relative shrink-0 rounded-xl overflow-hidden group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                className="relative shrink-0 rounded-xl overflow-hidden group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold"
                 style={{ width: i === 0 ? 280 : 160, height: "clamp(112px, 9vw, 144px)" }}
               >
                 <Image
@@ -44,9 +44,9 @@ export default function DestinationGallery({ images, name }: Props) {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes={i === 0 ? "280px" : "160px"}
                 />
-                <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/30 transition-colors duration-300" />
+                <div className="absolute inset-0 bg-tat-charcoal/0 group-hover:bg-tat-charcoal/30 transition-colors duration-300" />
                 {isLast && remaining > 0 && (
-                  <div className="absolute inset-0 bg-ink/60 flex flex-col items-center justify-center text-cream pointer-events-none">
+                  <div className="absolute inset-0 bg-tat-charcoal/60 flex flex-col items-center justify-center text-tat-paper pointer-events-none">
                     <Images className="h-5 w-5 mb-1 opacity-80" />
                     <span className="text-sm font-display font-medium">+{remaining}</span>
                   </div>

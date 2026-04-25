@@ -26,8 +26,8 @@ export default async function AdminReviewsPage() {
       <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Reviews Moderation</h1>
-            <p className="text-gray-500 text-sm mt-1">Approve or reject customer reviews</p>
+            <h1 className="text-2xl font-bold text-tat-charcoal">Reviews Moderation</h1>
+            <p className="text-tat-slate text-sm mt-1">Approve or reject customer reviews</p>
           </div>
           <div className="flex gap-3">
             <span className="bg-yellow-100 text-yellow-800 px-3 py-1.5 rounded-full text-sm font-medium">

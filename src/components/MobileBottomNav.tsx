@@ -29,8 +29,8 @@ function Tab({ href, icon: Icon, label, active, badge }: {
   return (
     <Link href={href}
       className={clsx("flex flex-col items-center gap-1 flex-1 py-2 transition-all duration-200 min-h-[56px] justify-center relative",
-        active ? "text-gold" : "text-ink/40 hover:text-ink/70")}>
-      <div className={clsx("flex items-center justify-center rounded-xl w-10 h-7 transition-all duration-200 relative", active && "bg-gold/12")}>
+        active ? "text-tat-gold" : "text-tat-charcoal/40 hover:text-tat-charcoal/70")}>
+      <div className={clsx("flex items-center justify-center rounded-xl w-10 h-7 transition-all duration-200 relative", active && "bg-tat-gold/12")}>
         <Icon className={clsx("h-[18px] w-[18px] transition-transform duration-200", active && "scale-110")} />
         {!!badge && (
           <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center">
@@ -39,7 +39,7 @@ function Tab({ href, icon: Icon, label, active, badge }: {
         )}
       </div>
       <span className={clsx("text-[9px] uppercase tracking-[0.12em] font-medium leading-none",
-        active ? "text-gold" : "text-ink/40")}>
+        active ? "text-tat-gold" : "text-tat-charcoal/40")}>
         {label}
       </span>
     </Link>
@@ -59,7 +59,7 @@ export default function MobileBottomNav() {
   return (
     <>
       <nav className="fixed bottom-0 inset-x-0 z-50 lg:hidden" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
-        <div className="bg-white/95 backdrop-blur-md border-t border-ink/8 shadow-[0_-4px_24px_rgba(11,28,44,0.10)]">
+        <div className="bg-white/95 backdrop-blur-md border-t border-tat-charcoal/8 shadow-[0_-4px_24px_rgba(11,28,44,0.10)]">
           <div className="flex items-end justify-around h-16 px-1 max-w-lg mx-auto">
             {leftTabs.map((t) => (
               <Tab key={t.href} {...t} active={isActive(t.href)}
@@ -78,17 +78,17 @@ export default function MobileBottomNav() {
                 <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
                 <MessageCircle className="h-6 w-6 text-white relative fill-white" />
               </div>
-              <span className="text-[9px] uppercase tracking-[0.12em] font-medium text-ink/40 leading-none mt-0.5">Chat</span>
+              <span className="text-[9px] uppercase tracking-[0.12em] font-medium text-tat-charcoal/40 leading-none mt-0.5">Chat</span>
             </a>
 
             {/* Search button */}
             <button onClick={() => setSearchOpen(true)}
               className={clsx("flex flex-col items-center gap-1 flex-1 py-2 transition-all duration-200 min-h-[56px] justify-center",
-                "text-ink/40 hover:text-ink/70")}>
+                "text-tat-charcoal/40 hover:text-tat-charcoal/70")}>
               <div className="flex items-center justify-center rounded-xl w-10 h-7">
                 <Search className="h-[18px] w-[18px]" />
               </div>
-              <span className="text-[9px] uppercase tracking-[0.12em] font-medium leading-none text-ink/40">Search</span>
+              <span className="text-[9px] uppercase tracking-[0.12em] font-medium leading-none text-tat-charcoal/40">Search</span>
             </button>
 
             {rightTabs.map((t) => (

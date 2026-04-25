@@ -176,12 +176,12 @@ export default function PackagesClient({
         <div className="flex items-center justify-between gap-3 mb-6 md:hidden">
           <button
             onClick={() => setFiltersOpen(!filtersOpen)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-ink text-cream text-sm"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-tat-charcoal text-tat-paper text-sm"
           >
             <SlidersHorizontal className="h-4 w-4" />
             Filters{" "}
             {activeFilterCount > 0 && (
-              <span className="bg-gold text-ink h-5 w-5 rounded-full text-xs flex items-center justify-center">
+              <span className="bg-tat-gold text-tat-charcoal h-5 w-5 rounded-full text-xs flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -190,11 +190,11 @@ export default function PackagesClient({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none pl-8 pr-6 py-2.5 rounded-full border border-ink/15 text-sm text-ink bg-cream focus:outline-none focus:ring-2 focus:ring-gold/40"
+              className="appearance-none pl-8 pr-6 py-2.5 rounded-full border border-tat-charcoal/15 text-sm text-tat-charcoal bg-tat-paper focus:outline-none focus:ring-2 focus:ring-tat-gold/40"
             >
               {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
-            <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink/50 pointer-events-none" />
+            <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-tat-charcoal/50 pointer-events-none" />
           </div>
         </div>
 
@@ -229,14 +229,14 @@ export default function PackagesClient({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setFiltersOpen(false)}
-                  className="fixed inset-0 bg-ink/60 backdrop-blur-sm z-[60] md:hidden"
+                  className="fixed inset-0 bg-tat-charcoal/60 backdrop-blur-sm z-[60] md:hidden"
                 />
                 <motion.aside
                   initial={{ x: "-100%" }}
                   animate={{ x: 0 }}
                   exit={{ x: "-100%" }}
                   transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                  className="fixed left-0 top-0 bottom-0 w-full max-w-sm bg-cream z-[70] overflow-y-auto p-6 md:hidden"
+                  className="fixed left-0 top-0 bottom-0 w-full max-w-sm bg-tat-paper z-[70] overflow-y-auto p-6 md:hidden"
                 >
                   <FilterPanel
                     destinations={destinations}
@@ -262,34 +262,34 @@ export default function PackagesClient({
           <div>
             {/* Desktop results header */}
             <div className="hidden md:flex items-center justify-between mb-6 gap-4 flex-wrap">
-              <p className="text-sm text-ink/60">
-                <span className="font-medium text-ink">{filtered.length}</span> packages
+              <p className="text-sm text-tat-charcoal/60">
+                <span className="font-medium text-tat-charcoal">{filtered.length}</span> packages
                 {activeFilterCount > 0 && (
-                  <span className="text-ink/45"> · {activeFilterCount} filter{activeFilterCount > 1 ? "s" : ""} applied</span>
+                  <span className="text-tat-charcoal/45"> · {activeFilterCount} filter{activeFilterCount > 1 ? "s" : ""} applied</span>
                 )}
               </p>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-ink/50">Sort by:</span>
+                <span className="text-xs text-tat-charcoal/50">Sort by:</span>
                 <div className="relative">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none pl-3 pr-8 py-2 rounded-lg border border-ink/15 text-sm text-ink bg-white hover:border-ink/30 focus:outline-none focus:ring-2 focus:ring-gold/40 transition-colors"
+                    className="appearance-none pl-3 pr-8 py-2 rounded-lg border border-tat-charcoal/15 text-sm text-tat-charcoal bg-white hover:border-tat-charcoal/30 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 transition-colors"
                   >
                     {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </select>
-                  <ArrowUpDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink/50 pointer-events-none" />
+                  <ArrowUpDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-tat-charcoal/50 pointer-events-none" />
                 </div>
               </div>
             </div>
 
             {filtered.length === 0 ? (
-              <div className="text-center py-20 bg-cream rounded-3xl border border-ink/5 px-6">
+              <div className="text-center py-20 bg-tat-paper rounded-3xl border border-tat-charcoal/5 px-6">
                 <p className="text-5xl mb-5">🧭</p>
                 <p className="font-display text-2xl font-medium mb-2">
                   No packages match these filters
                 </p>
-                <p className="text-ink/60 mb-8 max-w-sm mx-auto leading-relaxed">
+                <p className="text-tat-charcoal/60 mb-8 max-w-sm mx-auto leading-relaxed">
                   Try relaxing a filter or two — we have 130+ packages across 23 destinations.
                 </p>
                 <div className="flex flex-wrap gap-3 justify-center">
@@ -368,14 +368,14 @@ function FilterPanel({
           {activeFilterCount > 0 && (
             <button
               onClick={clearAll}
-              className="text-xs text-gold underline-offset-2 hover:underline flex items-center gap-1"
+              className="text-xs text-tat-gold underline-offset-2 hover:underline flex items-center gap-1"
             >
               <X className="h-3 w-3" />
               Clear all
             </button>
           )}
           {onClose && (
-            <button onClick={onClose} className="md:hidden p-2 rounded-full hover:bg-ink/5">
+            <button onClick={onClose} className="md:hidden p-2 rounded-full hover:bg-tat-charcoal/5">
               <X className="h-5 w-5" />
             </button>
           )}
@@ -432,8 +432,8 @@ function FilterPanel({
             onClick={() => setFilterRating("")}
             className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
               !filterRating
-                ? "bg-ink text-cream border-ink"
-                : "bg-cream text-ink/65 border-ink/15 hover:border-ink/30"
+                ? "bg-tat-charcoal text-tat-paper border-tat-charcoal"
+                : "bg-tat-paper text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30"
             }`}
           >
             Any
@@ -444,11 +444,11 @@ function FilterPanel({
               onClick={() => setFilterRating(r.value)}
               className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
                 filterRating === r.value
-                  ? "bg-gold/15 text-ink border-gold"
-                  : "bg-cream text-ink/65 border-ink/15 hover:border-ink/30"
+                  ? "bg-tat-gold/15 text-tat-charcoal border-tat-gold"
+                  : "bg-tat-paper text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30"
               }`}
             >
-              <Star className="h-3 w-3 fill-gold text-gold" />
+              <Star className="h-3 w-3 fill-tat-gold text-tat-gold" />
               {r.label}
             </button>
           ))}
@@ -460,8 +460,8 @@ function FilterPanel({
 
 function FilterGroup({ label, children, last }: { label: string; children: React.ReactNode; last?: boolean }) {
   return (
-    <div className={`pb-6 mb-6 ${!last ? "border-b border-ink/10" : ""}`}>
-      <h4 className="text-[10px] uppercase tracking-[0.25em] text-ink/50 font-medium mb-4">{label}</h4>
+    <div className={`pb-6 mb-6 ${!last ? "border-b border-tat-charcoal/10" : ""}`}>
+      <h4 className="text-[10px] uppercase tracking-[0.25em] text-tat-charcoal/50 font-medium mb-4">{label}</h4>
       <div className="space-y-2.5">{children}</div>
     </div>
   );
@@ -487,10 +487,10 @@ function RadioRow({
             onChange={(e) => onChange(e.target.value)}
             className="sr-only peer"
           />
-          <span className="h-4 w-4 rounded-full border-2 border-ink/20 peer-checked:border-gold peer-checked:bg-gold flex items-center justify-center transition-colors">
-            <span className={`h-1.5 w-1.5 rounded-full ${value === o.value ? "bg-ink" : ""}`} />
+          <span className="h-4 w-4 rounded-full border-2 border-tat-charcoal/20 peer-checked:border-tat-gold peer-checked:bg-tat-gold flex items-center justify-center transition-colors">
+            <span className={`h-1.5 w-1.5 rounded-full ${value === o.value ? "bg-tat-charcoal" : ""}`} />
           </span>
-          <span className="text-ink/80 group-hover:text-ink peer-checked:text-ink peer-checked:font-medium">
+          <span className="text-tat-charcoal/80 group-hover:text-tat-charcoal peer-checked:text-tat-charcoal peer-checked:font-medium">
             {o.label}
           </span>
         </label>

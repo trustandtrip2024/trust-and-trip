@@ -110,69 +110,69 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
       {/* Trigger button */}
       <button
         onClick={() => setOpen(true)}
-        className="w-full flex items-center justify-center gap-2 bg-ink/5 hover:bg-ink text-ink hover:text-cream border border-ink/15 font-medium py-3 rounded-xl transition-all duration-200 text-sm group"
+        className="w-full flex items-center justify-center gap-2 bg-tat-charcoal/5 hover:bg-tat-charcoal text-tat-charcoal hover:text-tat-paper border border-tat-charcoal/15 font-medium py-3 rounded-xl transition-all duration-200 text-sm group"
       >
         <CreditCard className="h-4 w-4" />
         Pay {depositDisplay} Deposit to Confirm Slot
       </button>
-      <p className="text-center text-[11px] text-ink/40 mt-1.5">100% refundable · No hidden charges</p>
+      <p className="text-center text-[11px] text-tat-charcoal/40 mt-1.5">100% refundable · No hidden charges</p>
 
       {/* Modal */}
       {open && (
-        <div className="fixed inset-0 z-[90] bg-ink/70 backdrop-blur-sm flex items-center justify-center p-4"
+        <div className="fixed inset-0 z-[90] bg-tat-charcoal/70 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setOpen(false)}>
           <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl" onClick={(e) => e.stopPropagation()}>
             {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-ink/8">
+            <div className="flex items-center justify-between p-5 border-b border-tat-charcoal/8">
               <div>
                 <h3 className="font-display text-lg font-medium">Secure your slot</h3>
-                <p className="text-xs text-ink/50 mt-0.5">Pay {depositDisplay} deposit · Balance due later</p>
+                <p className="text-xs text-tat-charcoal/50 mt-0.5">Pay {depositDisplay} deposit · Balance due later</p>
               </div>
-              <button onClick={() => setOpen(false)} className="h-8 w-8 rounded-full bg-ink/5 flex items-center justify-center hover:bg-ink/10 transition-colors">
+              <button onClick={() => setOpen(false)} className="h-8 w-8 rounded-full bg-tat-charcoal/5 flex items-center justify-center hover:bg-tat-charcoal/10 transition-colors">
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             {/* Package summary */}
-            <div className="px-5 py-4 bg-gold/8 border-b border-gold/15">
-              <p className="text-xs text-ink/50 uppercase tracking-wider">Booking for</p>
-              <p className="font-medium text-ink mt-0.5">{packageTitle}</p>
+            <div className="px-5 py-4 bg-tat-gold/8 border-b border-tat-gold/15">
+              <p className="text-xs text-tat-charcoal/50 uppercase tracking-wider">Booking for</p>
+              <p className="font-medium text-tat-charcoal mt-0.5">{packageTitle}</p>
               <div className="flex items-center justify-between mt-2">
-                <span className="text-xs text-ink/50">Package price</span>
+                <span className="text-xs text-tat-charcoal/50">Package price</span>
                 <span className="text-sm font-medium">₹{packagePrice.toLocaleString("en-IN")}/person</span>
               </div>
               <div className="flex items-center justify-between mt-1">
-                <span className="text-xs text-gold font-medium">Deposit now</span>
-                <span className="text-sm font-bold text-gold">{depositDisplay}</span>
+                <span className="text-xs text-tat-gold font-medium">Deposit now</span>
+                <span className="text-sm font-bold text-tat-gold">{depositDisplay}</span>
               </div>
             </div>
 
             <form onSubmit={handlePay} className="p-5 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-ink/50 block mb-1">Full Name *</label>
+                  <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Full Name *</label>
                   <input required value={form.customer_name} onChange={(e) => setForm({ ...form, customer_name: e.target.value })}
                     placeholder="Rahul Mehta" className="input-travel text-sm" />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-ink/50 block mb-1">Phone *</label>
+                  <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Phone *</label>
                   <input required type="tel" value={form.customer_phone} onChange={(e) => setForm({ ...form, customer_phone: e.target.value })}
                     placeholder="+91 98765 43210" className="input-travel text-sm" />
                 </div>
               </div>
               <div>
-                <label className="text-[10px] uppercase tracking-wider text-ink/50 block mb-1">Email *</label>
+                <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Email *</label>
                 <input required type="email" value={form.customer_email} onChange={(e) => setForm({ ...form, customer_email: e.target.value })}
                   placeholder="you@example.com" className="input-travel text-sm" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-ink/50 block mb-1">Travel Date</label>
+                  <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Travel Date</label>
                   <input value={form.travel_date} onChange={(e) => setForm({ ...form, travel_date: e.target.value })}
                     placeholder="e.g. June 2026" className="input-travel text-sm" />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-ink/50 block mb-1">Travellers</label>
+                  <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Travellers</label>
                   <input type="number" min="1" max="20" value={form.num_travellers}
                     onChange={(e) => setForm({ ...form, num_travellers: e.target.value })} className="input-travel text-sm" />
                 </div>
@@ -181,11 +181,11 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
               {error && <p className="text-sm text-red-500 bg-red-50 rounded-xl px-3 py-2">{error}</p>}
 
               <button type="submit" disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-gold text-ink font-semibold py-3.5 rounded-xl hover:bg-gold/90 transition-colors text-sm disabled:opacity-70">
+                className="w-full flex items-center justify-center gap-2 bg-tat-gold text-tat-charcoal font-semibold py-3.5 rounded-xl hover:bg-tat-gold/90 transition-colors text-sm disabled:opacity-70">
                 {loading ? <><Loader2 className="h-4 w-4 animate-spin" />Processing…</> : <><IndianRupee className="h-4 w-4" />Pay {depositDisplay} Deposit</>}
               </button>
 
-              <div className="flex items-center justify-center gap-2 text-[11px] text-ink/40">
+              <div className="flex items-center justify-center gap-2 text-[11px] text-tat-charcoal/40">
                 <Shield className="h-3 w-3 text-green-500" />
                 Secured by Razorpay · 256-bit SSL encryption
               </div>

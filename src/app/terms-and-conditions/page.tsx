@@ -10,10 +10,10 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <>
-      <section className="pt-28 md:pt-36 pb-12 bg-cream">
+      <section className="pt-28 md:pt-36 pb-12 bg-tat-paper">
         <div className="container-custom max-w-3xl">
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-10 w-10 rounded-full bg-gold/20 text-gold flex items-center justify-center">
+            <div className="h-10 w-10 rounded-full bg-tat-gold/20 text-tat-gold flex items-center justify-center">
               <FileText className="h-5 w-5" />
             </div>
             <span className="eyebrow">Legal</span>
@@ -21,7 +21,7 @@ export default function TermsPage() {
           <h1 className="font-display text-display-md font-medium leading-[1.05] text-balance">
             Terms &amp; Conditions
           </h1>
-          <p className="mt-4 text-ink/60">
+          <p className="mt-4 text-tat-charcoal/60">
             Trust and Trip Experiences Pvt. Ltd. (TTEPL) · Last updated 01 September 2024
           </p>
         </div>
@@ -29,7 +29,7 @@ export default function TermsPage() {
 
       <section className="pb-20">
         <div className="container-custom max-w-3xl">
-          <div className="space-y-10 text-ink/80">
+          <div className="space-y-10 text-tat-charcoal/80">
 
             <PolicySection title="Applicability of This Agreement">
               <p>
@@ -112,7 +112,7 @@ export default function TermsPage() {
               </p>
               <p>
                 Please refer to our{" "}
-                <a href="/cancellation-policy" className="text-gold hover:underline">
+                <a href="/cancellation-policy" className="text-tat-gold hover:underline">
                   Cancellation Policy
                 </a>{" "}
                 for full details on the cancellation fee schedule.
@@ -136,7 +136,7 @@ export default function TermsPage() {
                 The User agrees that TTEPL may use photos, videos, or other media shared by the
                 User during or after their trip for promotional purposes on social media or other
                 platforms, unless the User explicitly requests otherwise via email to{" "}
-                <a href="mailto:support@trustandtrip.com" className="text-gold hover:underline">
+                <a href="mailto:support@trustandtrip.com" className="text-tat-gold hover:underline">
                   support@trustandtrip.com
                 </a>
                 .
@@ -162,12 +162,12 @@ export default function TermsPage() {
             <PolicySection title="Contact">
               <p>
                 For any concerns or disputes, please contact{" "}
-                <a href="mailto:support@trustandtrip.com" className="text-gold hover:underline">
+                <a href="mailto:support@trustandtrip.com" className="text-tat-gold hover:underline">
                   support@trustandtrip.com
                 </a>
                 . TTEPL will make every effort to resolve the issue promptly.
               </p>
-              <p className="text-sm text-ink/50 mt-2">
+              <p className="text-sm text-tat-charcoal/50 mt-2">
                 Trust and Trip Experiences Pvt. Ltd. · R-607, Amrapali Princely, Noida Sector 71,
                 Gautambuddh Nagar 201301 · +91 8115 999 588
               </p>
@@ -189,7 +189,7 @@ function PolicySection({
 }) {
   return (
     <div>
-      <h2 className="font-display text-2xl font-medium text-ink mb-4 pb-3 border-b border-ink/8">
+      <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
         {title}
       </h2>
       <div className="space-y-4 leading-relaxed">

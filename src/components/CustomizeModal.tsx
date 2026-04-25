@@ -81,62 +81,62 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
               <CheckCircle2 className="h-7 w-7 text-green-600" />
             </div>
             <div>
-              <p className="font-display text-lg font-medium text-ink">Request received!</p>
-              <p className="text-sm text-ink/55 mt-1">We&apos;ll send your custom itinerary within 24 hours.</p>
+              <p className="font-display text-lg font-medium text-tat-charcoal">Request received!</p>
+              <p className="text-sm text-tat-charcoal/55 mt-1">We&apos;ll send your custom itinerary within 24 hours.</p>
             </div>
             <button
               onClick={onClose}
-              className="mt-2 px-6 py-2.5 bg-ink text-cream rounded-full text-sm font-medium hover:bg-gold hover:text-ink transition-all"
+              className="mt-2 px-6 py-2.5 bg-tat-charcoal text-tat-paper rounded-full text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all"
             >
               Close
             </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <p className="text-sm text-ink/55 leading-relaxed">
+            <p className="text-sm text-tat-charcoal/55 leading-relaxed">
               Tell us how you&apos;d like to tailor this trip. We&apos;ll build a custom itinerary just for you.
             </p>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2">
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Your Name *</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Your Name *</label>
                 <input
                   type="text"
                   value={form.name}
                   onChange={set("name")}
                   placeholder="Full name"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 />
               </div>
 
               <div className="col-span-2">
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">WhatsApp / Phone *</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">WhatsApp / Phone *</label>
                 <input
                   type="tel"
                   value={form.phone}
                   onChange={set("phone")}
                   placeholder="+91 98765 43210"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 />
               </div>
 
               <div className="col-span-2">
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Preferred Travel Dates</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Preferred Travel Dates</label>
                 <input
                   type="text"
                   value={form.travelDates}
                   onChange={set("travelDates")}
                   placeholder="e.g. Dec 20–27, flexible in Jan"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Adults</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Adults</label>
                 <select
                   value={form.adults}
                   onChange={set("adults")}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 >
                   {["1","2","3","4","5","6","7","8","9","10+"].map((n) => (
                     <option key={n} value={n}>{n}</option>
@@ -145,11 +145,11 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Children</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Children</label>
                 <select
                   value={form.children}
                   onChange={set("children")}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 >
                   {["0","1","2","3","4","5+"].map((n) => (
                     <option key={n} value={n}>{n}</option>
@@ -158,7 +158,7 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
               </div>
 
               <div className="col-span-2">
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Accommodation Preference</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Accommodation Preference</label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
                     { value: "budget", label: "Budget" },
@@ -171,8 +171,8 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
                       onClick={() => setForm((f) => ({ ...f, accommodation: opt.value }))}
                       className={`py-2 rounded-xl border text-xs font-medium transition-all ${
                         form.accommodation === opt.value
-                          ? "bg-gold/15 border-gold text-ink"
-                          : "border-ink/12 text-ink/55 hover:border-ink/25"
+                          ? "bg-tat-gold/15 border-tat-gold text-tat-charcoal"
+                          : "border-tat-charcoal/12 text-tat-charcoal/55 hover:border-tat-charcoal/25"
                       }`}
                     >
                       {opt.label}
@@ -182,13 +182,13 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
               </div>
 
               <div className="col-span-2">
-                <label className="block text-xs font-medium text-ink/60 mb-1.5">Special Requests</label>
+                <label className="block text-xs font-medium text-tat-charcoal/60 mb-1.5">Special Requests</label>
                 <textarea
                   value={form.notes}
                   onChange={set("notes")}
                   rows={3}
                   placeholder="Honeymoon setup, dietary needs, accessibility, specific hotels…"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition resize-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition resize-none"
                 />
               </div>
             </div>
@@ -198,7 +198,7 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-ink hover:bg-gold text-cream hover:text-ink rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-60"
+              className="w-full flex items-center justify-center gap-2 py-3 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-60"
             >
               {loading ? (
                 <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>

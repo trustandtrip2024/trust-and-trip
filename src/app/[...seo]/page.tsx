@@ -182,24 +182,24 @@ export default async function SeoPage({ params }: Props) {
   return (
     <>
       {/* Hero */}
-      <section className="pt-28 md:pt-36 pb-12 bg-cream border-b border-ink/5">
+      <section className="pt-28 md:pt-36 pb-12 bg-tat-paper border-b border-tat-charcoal/5">
         <div className="container-custom max-w-4xl">
-          <div className="flex items-center gap-2 text-xs text-ink/50 mb-4">
-            <Link href="/" className="hover:text-gold">Home</Link>
+          <div className="flex items-center gap-2 text-xs text-tat-charcoal/50 mb-4">
+            <Link href="/" className="hover:text-tat-gold">Home</Link>
             <span>/</span>
-            <Link href="/packages" className="hover:text-gold">Packages</Link>
+            <Link href="/packages" className="hover:text-tat-gold">Packages</Link>
             <span>/</span>
-            <span className="text-ink/70">{route.h1}</span>
+            <span className="text-tat-charcoal/70">{route.h1}</span>
           </div>
           <span className="eyebrow">{route.travelType ?? "Best Deals"}</span>
           <h1 className="mt-3 font-display text-display-lg font-medium leading-[1.02] max-w-3xl text-balance">
             {route.h1}
-            <span className="italic text-gold font-light"> from India.</span>
+            <span className="italic text-tat-gold font-light"> from India.</span>
           </h1>
-          <p className="mt-5 text-ink/60 max-w-xl leading-relaxed">{route.description}</p>
+          <p className="mt-5 text-tat-charcoal/60 max-w-xl leading-relaxed">{route.description}</p>
 
           {dest && (
-            <div className="flex flex-wrap gap-3 mt-6 text-sm text-ink/60">
+            <div className="flex flex-wrap gap-3 mt-6 text-sm text-tat-charcoal/60">
               <span>📍 {dest.country}</span>
               <span>·</span>
               <span>⏱️ {dest.idealDuration}</span>
@@ -216,18 +216,18 @@ export default async function SeoPage({ params }: Props) {
       <section className="py-12 md:py-16">
         <div className="container-custom">
           <div className="flex items-center justify-between mb-8">
-            <p className="text-sm text-ink/60">
-              <span className="font-semibold text-ink">{packages.length}</span> packages available
+            <p className="text-sm text-tat-charcoal/60">
+              <span className="font-semibold text-tat-charcoal">{packages.length}</span> packages available
             </p>
-            <Link href="/packages" className="inline-flex items-center gap-1.5 text-sm text-ink/60 hover:text-gold transition-colors">
+            <Link href="/packages" className="inline-flex items-center gap-1.5 text-sm text-tat-charcoal/60 hover:text-tat-gold transition-colors">
               Browse all packages <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
           {packages.length === 0 ? (
-            <div className="text-center py-16 bg-cream rounded-3xl border border-ink/5">
+            <div className="text-center py-16 bg-tat-paper rounded-3xl border border-tat-charcoal/5">
               <p className="font-display text-2xl mb-3">Building this collection</p>
-              <p className="text-ink/60 mb-6">Our planners are curating the best options — check back soon or talk to us directly.</p>
+              <p className="text-tat-charcoal/60 mb-6">Our planners are curating the best options — check back soon or talk to us directly.</p>
               <Link href="/customize-trip" className="btn-primary inline-flex">Customize a trip</Link>
             </div>
           ) : (

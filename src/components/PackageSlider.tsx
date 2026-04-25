@@ -80,7 +80,7 @@ export default function PackageSlider({
               onClick={scrollPrev}
               disabled={!canPrev}
               aria-label="Previous packages"
-              className="h-9 w-9 rounded-full border border-ink/15 flex items-center justify-center hover:bg-gold hover:border-gold transition-all disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="h-9 w-9 rounded-full border border-tat-charcoal/15 flex items-center justify-center hover:bg-tat-gold hover:border-tat-gold transition-all disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -88,7 +88,7 @@ export default function PackageSlider({
               onClick={scrollNext}
               disabled={!canNext}
               aria-label="Next packages"
-              className="h-9 w-9 rounded-full border border-ink/15 flex items-center justify-center hover:bg-gold hover:border-gold transition-all disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="h-9 w-9 rounded-full border border-tat-charcoal/15 flex items-center justify-center hover:bg-tat-gold hover:border-tat-gold transition-all disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -96,7 +96,7 @@ export default function PackageSlider({
           <Link
             href={viewAllHref}
             aria-label={viewAllLabel}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-ember transition-colors group"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-tat-charcoal hover:text-tat-orange transition-colors group"
           >
             <span className="hidden sm:inline">{viewAllLabel}</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -153,7 +153,7 @@ export default function PackageSlider({
             >
               <span
                 className={`block rounded-full transition-all duration-300 ${
-                  selectedIndex === i ? "w-5 h-1.5 bg-gold" : "w-1.5 h-1.5 bg-ink/20"
+                  selectedIndex === i ? "w-5 h-1.5 bg-tat-gold" : "w-1.5 h-1.5 bg-tat-charcoal/20"
                 }`}
               />
             </button>

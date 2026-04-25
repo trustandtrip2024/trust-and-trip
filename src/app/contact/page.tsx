@@ -10,14 +10,14 @@ export const metadata = {
 export default function ContactPage() {
   return (
     <>
-      <section className="pt-28 md:pt-36 pb-12 bg-cream">
+      <section className="pt-28 md:pt-36 pb-12 bg-tat-paper">
         <div className="container-custom max-w-5xl">
           <span className="eyebrow">Get in touch</span>
           <h1 className="mt-3 font-display text-display-lg font-medium leading-[1.02] text-balance">
             Let's talk
-            <span className="italic text-gold font-light"> itineraries.</span>
+            <span className="italic text-tat-gold font-light"> itineraries.</span>
           </h1>
-          <p className="mt-6 text-ink/60 max-w-xl leading-relaxed">
+          <p className="mt-6 text-tat-charcoal/60 max-w-xl leading-relaxed">
             Drop a line, a voice note, or a half-formed idea. Our planners will pick it up and
             turn it into something worth traveling for.
           </p>
@@ -57,12 +57,12 @@ export default function ContactPage() {
               value="8:00 AM – 10:00 PM (Tuesday Closed)"
             />
 
-            <div className="bg-ink rounded-3xl p-8 text-cream mt-8">
-              <p className="eyebrow text-gold mb-4">Why call us?</p>
+            <div className="bg-tat-charcoal rounded-3xl p-8 text-tat-paper mt-8">
+              <p className="eyebrow text-tat-gold mb-4">Why call us?</p>
               <p className="font-display text-2xl leading-tight mb-4">
                 Because trip planning is a conversation — not a form.
               </p>
-              <p className="text-cream/70 text-sm leading-relaxed">
+              <p className="text-tat-paper/70 text-sm leading-relaxed">
                 Some of the best trips in our history started with "I don't know where I
                 want to go, but I know how I want to feel." We'll take it from there.
               </p>
@@ -95,12 +95,12 @@ function InfoBlock({
 }) {
   const content = (
     <div className="flex items-start gap-4">
-      <div className="shrink-0 h-11 w-11 rounded-full bg-gold/20 text-gold flex items-center justify-center">
+      <div className="shrink-0 h-11 w-11 rounded-full bg-tat-gold/20 text-tat-gold flex items-center justify-center">
         <Icon className="h-5 w-5" />
       </div>
       <div>
-        <p className="text-[10px] uppercase tracking-[0.25em] text-ink/50 font-medium">{label}</p>
-        <p className="mt-1 font-display text-xl text-ink">{value}</p>
+        <p className="text-[10px] uppercase tracking-[0.25em] text-tat-charcoal/50 font-medium">{label}</p>
+        <p className="mt-1 font-display text-xl text-tat-charcoal">{value}</p>
       </div>
     </div>
   );
@@ -113,7 +113,7 @@ function InfoBlock({
       ? "whatsapp_click"
       : null;
 
-  const className = "block group hover:bg-cream rounded-2xl p-2 -m-2 transition-colors";
+  const className = "block group hover:bg-tat-paper rounded-2xl p-2 -m-2 transition-colors";
 
   if (intent) {
     return (

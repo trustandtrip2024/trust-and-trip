@@ -16,15 +16,15 @@ export default function DashboardError({
   }, [error]);
 
   return (
-    <div className="min-h-screen bg-cream flex items-center justify-center px-4">
+    <div className="min-h-screen bg-tat-paper flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-white rounded-2xl border border-red-100 p-6 md:p-8 shadow-soft">
         <div className="h-12 w-12 rounded-2xl bg-red-50 flex items-center justify-center mb-4">
           <AlertTriangle className="h-6 w-6 text-red-500" />
         </div>
-        <h1 className="font-display text-xl md:text-2xl font-medium text-ink mb-2">
+        <h1 className="font-display text-xl md:text-2xl font-medium text-tat-charcoal mb-2">
           Dashboard couldn&apos;t load
         </h1>
-        <p className="text-sm text-ink/60 leading-relaxed mb-4">
+        <p className="text-sm text-tat-charcoal/60 leading-relaxed mb-4">
           Something went wrong while loading this page. You can try again, or head back home.
         </p>
 
@@ -42,14 +42,14 @@ export default function DashboardError({
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={reset}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-ink text-cream hover:bg-gold hover:text-ink rounded-xl text-sm font-semibold transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-tat-charcoal text-tat-paper hover:bg-tat-gold hover:text-tat-charcoal rounded-xl text-sm font-semibold transition-all"
           >
             <RefreshCw className="h-4 w-4" />
             Try again
           </button>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 border border-ink/15 text-ink/70 hover:border-ink/30 rounded-xl text-sm font-medium transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 border border-tat-charcoal/15 text-tat-charcoal/70 hover:border-tat-charcoal/30 rounded-xl text-sm font-medium transition-all"
           >
             <Home className="h-4 w-4" />
             Go home
@@ -57,7 +57,7 @@ export default function DashboardError({
         </div>
 
         {error.digest && (
-          <p className="mt-5 text-[11px] text-ink/30 font-mono">
+          <p className="mt-5 text-[11px] text-tat-charcoal/30 font-mono">
             Ref: {error.digest}
           </p>
         )}

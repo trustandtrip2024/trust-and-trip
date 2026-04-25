@@ -117,13 +117,13 @@ export default function CartCheckoutModal({ totalDeposit, itemCount, onClose, on
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/50 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-tat-charcoal/50 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-soft-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-ink/8">
+        <div className="flex items-center justify-between p-5 border-b border-tat-charcoal/8">
           <div>
-            <h2 className="font-display text-lg font-medium text-ink">Confirm & pay</h2>
-            <p className="text-xs text-ink/55 mt-0.5">
+            <h2 className="font-display text-lg font-medium text-tat-charcoal">Confirm & pay</h2>
+            <p className="text-xs text-tat-charcoal/55 mt-0.5">
               {itemCount} {itemCount === 1 ? "trip" : "trips"} · ₹{totalDeposit.toLocaleString("en-IN")} deposit
             </p>
           </div>
@@ -131,7 +131,7 @@ export default function CartCheckoutModal({ totalDeposit, itemCount, onClose, on
             onClick={onClose}
             disabled={loading && stage !== "done"}
             aria-label="Close"
-            className="h-8 w-8 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center text-ink/60 disabled:opacity-50"
+            className="h-8 w-8 rounded-full bg-tat-charcoal/5 hover:bg-tat-charcoal/10 flex items-center justify-center text-tat-charcoal/60 disabled:opacity-50"
           >
             <X className="h-4 w-4" />
           </button>
@@ -144,46 +144,46 @@ export default function CartCheckoutModal({ totalDeposit, itemCount, onClose, on
               <div className="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="h-7 w-7 text-green-600" />
               </div>
-              <h3 className="font-display text-lg font-medium text-ink mb-1">Payment confirmed</h3>
-              <p className="text-sm text-ink/60">Redirecting to your bookings…</p>
+              <h3 className="font-display text-lg font-medium text-tat-charcoal mb-1">Payment confirmed</h3>
+              <p className="text-sm text-tat-charcoal/60">Redirecting to your bookings…</p>
             </div>
           ) : stage === "paying" ? (
             <div className="text-center py-10">
-              <Loader2 className="h-8 w-8 animate-spin text-gold mx-auto mb-4" />
-              <p className="text-sm text-ink/65">Opening secure payment window…</p>
+              <Loader2 className="h-8 w-8 animate-spin text-tat-gold mx-auto mb-4" />
+              <p className="text-sm text-tat-charcoal/65">Opening secure payment window…</p>
             </div>
           ) : (
             <form onSubmit={submit} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-ink/65 mb-1.5">Full name *</label>
+                <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Full name *</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="As on ID"
                   required
-                  className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-ink/65 mb-1.5">Phone / WhatsApp *</label>
+                <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Phone / WhatsApp *</label>
                 <input
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98765 43210"
                   required
-                  className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-ink/65 mb-1.5">Notes <span className="text-ink/35">(optional)</span></label>
+                <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">Notes <span className="text-tat-charcoal/35">(optional)</span></label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Dietary, accessibility, anniversary surprises…"
                   rows={2}
-                  className="w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition resize-none"
                 />
               </div>
 
@@ -191,9 +191,9 @@ export default function CartCheckoutModal({ totalDeposit, itemCount, onClose, on
                 <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
               )}
 
-              <div className="bg-sand/30 rounded-xl p-3 flex items-start gap-2.5">
+              <div className="bg-tat-cream/30 rounded-xl p-3 flex items-start gap-2.5">
                 <ShieldCheck className="h-4 w-4 text-green-600 shrink-0 mt-0.5" />
-                <div className="text-[11px] text-ink/65 leading-relaxed">
+                <div className="text-[11px] text-tat-charcoal/65 leading-relaxed">
                   You&apos;ll be charged <strong>₹{totalDeposit.toLocaleString("en-IN")}</strong> now as a 30% deposit. Balance due 14 days before departure. Refundable within 14 days of booking.
                 </div>
               </div>
@@ -201,12 +201,12 @@ export default function CartCheckoutModal({ totalDeposit, itemCount, onClose, on
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-ink hover:bg-gold text-cream hover:text-ink py-3.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
+                className="w-full flex items-center justify-center gap-2 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal py-3.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
                 Pay ₹{totalDeposit.toLocaleString("en-IN")} securely
               </button>
-              <p className="text-center text-[10px] text-ink/40">Powered by Razorpay · UPI · Cards · Netbanking</p>
+              <p className="text-center text-[10px] text-tat-charcoal/40">Powered by Razorpay · UPI · Cards · Netbanking</p>
             </form>
           )}
         </div>

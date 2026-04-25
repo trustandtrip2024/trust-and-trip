@@ -30,7 +30,7 @@ const STATUS_COLORS: Record<string, string> = {
   contacted: "bg-blue-100 text-blue-800",
   qualified: "bg-purple-100 text-purple-800",
   booked:    "bg-green-100 text-green-800",
-  lost:      "bg-gray-100 text-gray-500",
+  lost:      "bg-gray-100 text-tat-slate",
 };
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -134,7 +134,7 @@ export default function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
           {["all", ...STATUSES].map((s) => (
             <button key={s} onClick={() => setFilter(s)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-                filter === s ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                filter === s ? "bg-gray-900 text-white" : "bg-gray-100 text-tat-slate hover:bg-gray-200"
               }`}
             >{s}</button>
           ))}
@@ -160,7 +160,7 @@ export default function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
           <button
             onClick={bulkUpdate}
             disabled={!bulkStatus || bulkUpdating}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-tat-teal text-white hover:bg-tat-teal-deep disabled:opacity-50 transition-colors"
           >
             {bulkUpdating && <Loader2 className="h-3 w-3 animate-spin" />}
             Apply
@@ -174,7 +174,7 @@ export default function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide">
+          <thead className="bg-gray-50 text-xs text-tat-slate uppercase tracking-wide">
             <tr>
               <th className="pl-5 py-3 w-8">
                 <button onClick={toggleAll}>
@@ -182,19 +182,19 @@ export default function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
                 </button>
               </th>
               <th className="px-5 py-3 text-left">
-                <button onClick={() => toggleSort("name")} className="flex items-center gap-1 hover:text-gray-800">
+                <button onClick={() => toggleSort("name")} className="flex items-center gap-1 hover:text-tat-charcoal">
                   Lead <SortIcon k="name" />
                 </button>
               </th>
               <th className="px-5 py-3 text-left">Trip Details</th>
               <th className="px-5 py-3 text-left">Source</th>
               <th className="px-5 py-3 text-left">
-                <button onClick={() => toggleSort("status")} className="flex items-center gap-1 hover:text-gray-800">
+                <button onClick={() => toggleSort("status")} className="flex items-center gap-1 hover:text-tat-charcoal">
                   Status <SortIcon k="status" />
                 </button>
               </th>
               <th className="px-5 py-3 text-left">
-                <button onClick={() => toggleSort("created_at")} className="flex items-center gap-1 hover:text-gray-800">
+                <button onClick={() => toggleSort("created_at")} className="flex items-center gap-1 hover:text-tat-charcoal">
                   Date <SortIcon k="created_at" />
                 </button>
               </th>
@@ -247,12 +247,12 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
     <tr className={`hover:bg-gray-50 transition-colors ${selected ? "bg-blue-50/40" : ""}`}>
       <td className="pl-5 py-4 w-8">
         <button onClick={onToggle}>
-          {selected ? <CheckSquare className="h-4 w-4 text-blue-600" /> : <Square className="h-4 w-4 text-gray-300 hover:text-gray-500" />}
+          {selected ? <CheckSquare className="h-4 w-4 text-blue-600" /> : <Square className="h-4 w-4 text-gray-300 hover:text-tat-slate" />}
         </button>
       </td>
       <td className="px-5 py-4">
-        <p className="font-semibold text-gray-900">{lead.name}</p>
-        <a href={`tel:${lead.phone}`} className="text-xs text-gray-500 hover:text-blue-600 flex items-center gap-1 mt-0.5">
+        <p className="font-semibold text-tat-charcoal">{lead.name}</p>
+        <a href={`tel:${lead.phone}`} className="text-xs text-tat-slate hover:text-blue-600 flex items-center gap-1 mt-0.5">
           <Phone className="h-3 w-3" />{lead.phone}
         </a>
         {lead.email && (
@@ -262,12 +262,12 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
         )}
       </td>
       <td className="px-5 py-4">
-        {lead.package_title && <p className="text-xs font-medium text-gray-800 truncate max-w-[180px]">{lead.package_title}</p>}
-        {lead.destination && <p className="text-xs text-gray-500 mt-0.5">{lead.destination}</p>}
+        {lead.package_title && <p className="text-xs font-medium text-tat-charcoal truncate max-w-[180px]">{lead.package_title}</p>}
+        {lead.destination && <p className="text-xs text-tat-slate mt-0.5">{lead.destination}</p>}
         <div className="flex gap-1.5 mt-1 flex-wrap">
-          {lead.travel_type && <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">{lead.travel_type}</span>}
-          {lead.num_travellers && <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">{lead.num_travellers} pax</span>}
-          {lead.budget && <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">{lead.budget}</span>}
+          {lead.travel_type && <span className="text-[10px] bg-gray-100 text-tat-slate px-1.5 py-0.5 rounded">{lead.travel_type}</span>}
+          {lead.num_travellers && <span className="text-[10px] bg-gray-100 text-tat-slate px-1.5 py-0.5 rounded">{lead.num_travellers} pax</span>}
+          {lead.budget && <span className="text-[10px] bg-gray-100 text-tat-slate px-1.5 py-0.5 rounded">{lead.budget}</span>}
           {lead.travel_date && <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">{lead.travel_date}</span>}
         </div>
         {lead.message && <p className="text-[11px] text-gray-400 mt-1 truncate max-w-[180px]" title={lead.message}>{lead.message}</p>}
@@ -281,13 +281,13 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
       <td className="px-5 py-4">
         <select
           value={status} onChange={(e) => updateStatus(e.target.value)} disabled={updating}
-          className={`text-xs px-2 py-1 rounded-full font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-300 ${STATUS_COLORS[status] ?? "bg-gray-100 text-gray-600"}`}
+          className={`text-xs px-2 py-1 rounded-full font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-300 ${STATUS_COLORS[status] ?? "bg-gray-100 text-tat-slate"}`}
         >
           {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
         {updating && <Loader2 className="h-3 w-3 animate-spin inline ml-1 text-gray-400" />}
       </td>
-      <td className="px-5 py-4 text-xs text-gray-500 whitespace-nowrap">
+      <td className="px-5 py-4 text-xs text-tat-slate whitespace-nowrap">
         {new Date(lead.created_at).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" })}
         <br />
         {new Date(lead.created_at).toLocaleTimeString("en-IN", { hour:"2-digit", minute:"2-digit" })}

@@ -268,7 +268,7 @@ export default function TripPlannerModal() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[80] bg-ink/70 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4"
+        className="fixed inset-0 z-[80] bg-tat-charcoal/70 backdrop-blur-sm flex items-end md:items-center justify-center p-0 md:p-4"
         onClick={(e) => e.target === e.currentTarget && close()}
       >
         <motion.div
@@ -277,35 +277,35 @@ export default function TripPlannerModal() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 60, opacity: 0 }}
           transition={{ type: "spring", damping: 28, stiffness: 280 }}
-          className="relative w-full max-w-2xl bg-cream rounded-t-3xl md:rounded-3xl overflow-hidden flex flex-col max-h-[92vh] md:max-h-[88vh]"
+          className="relative w-full max-w-2xl bg-tat-paper rounded-t-3xl md:rounded-3xl overflow-hidden flex flex-col max-h-[92vh] md:max-h-[88vh]"
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-ink/8 shrink-0">
+          <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-tat-charcoal/8 shrink-0">
             <div className="flex items-center gap-3">
               {stepIndex > 0 && step !== "results" && (
-                <button onClick={goBack} className="p-1.5 rounded-full hover:bg-ink/5 transition-colors">
-                  <ArrowLeft className="h-4 w-4 text-ink/60" />
+                <button onClick={goBack} className="p-1.5 rounded-full hover:bg-tat-charcoal/5 transition-colors">
+                  <ArrowLeft className="h-4 w-4 text-tat-charcoal/60" />
                 </button>
               )}
-              <span className="text-[11px] uppercase tracking-[0.2em] text-ink/50 font-medium">
+              <span className="text-[11px] uppercase tracking-[0.2em] text-tat-charcoal/50 font-medium">
                 {step === "results" ? "Your Trips" : `Step ${stepIndex + 1} of 4`}
               </span>
             </div>
             <button
               onClick={close}
-              className="p-2 rounded-full hover:bg-ink/5 transition-colors"
+              className="p-2 rounded-full hover:bg-tat-charcoal/5 transition-colors"
               aria-label="Close"
             >
-              <X className="h-5 w-5 text-ink/60" />
+              <X className="h-5 w-5 text-tat-charcoal/60" />
             </button>
           </div>
 
           {/* Progress bar */}
           {step !== "results" && (
-            <div className="h-1 bg-ink/8 shrink-0">
+            <div className="h-1 bg-tat-charcoal/8 shrink-0">
               <motion.div
-                className="h-full bg-gold rounded-full"
+                className="h-full bg-tat-gold rounded-full"
                 animate={{ width: `${((stepIndex + 1) / 4) * 100}%` }}
                 transition={{ duration: 0.4 }}
               />
@@ -403,7 +403,7 @@ function StepDestination({
       <h2 className="font-display text-2xl md:text-3xl font-medium text-balance">
         Where would you like to go?
       </h2>
-      <p className="mt-2 text-sm text-ink/55">Pick a destination or browse all packages.</p>
+      <p className="mt-2 text-sm text-tat-charcoal/55">Pick a destination or browse all packages.</p>
 
       {/* Tab switcher */}
       <div className="flex gap-2 mt-5 mb-5">
@@ -413,8 +413,8 @@ function StepDestination({
             onClick={() => setTab(t)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
               tab === t
-                ? "bg-ink text-cream"
-                : "bg-ink/8 text-ink/60 hover:bg-ink/12"
+                ? "bg-tat-charcoal text-tat-paper"
+                : "bg-tat-charcoal/8 text-tat-charcoal/60 hover:bg-tat-charcoal/12"
             }`}
           >
             {t === "india" ? "🇮🇳 India" : "🌍 International"}
@@ -424,7 +424,7 @@ function StepDestination({
 
       {loading ? (
         <div className="flex items-center justify-center h-48">
-          <Loader2 className="h-8 w-8 text-gold animate-spin" />
+          <Loader2 className="h-8 w-8 text-tat-gold animate-spin" />
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-2.5">
@@ -433,23 +433,23 @@ function StepDestination({
               key={d.slug}
               onClick={() => onSelect(d.slug, d.name)}
               className={`relative group overflow-hidden rounded-xl aspect-[4/3] text-left transition-all duration-200 ${
-                selected === d.slug ? "ring-2 ring-gold ring-offset-2" : ""
+                selected === d.slug ? "ring-2 ring-tat-gold ring-offset-2" : ""
               }`}
             >
               {d.image ? (
                 <Image src={d.image} alt={d.name} fill quality={65} className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="150px" />
               ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-ink/80 to-ink/40" />
+                <div className="absolute inset-0 bg-gradient-to-br from-tat-charcoal/80 to-tat-charcoal/40" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/90 via-tat-charcoal/20 to-transparent" />
               {selected === d.slug && (
                 <div className="absolute top-2 right-2">
-                  <CheckCircle2 className="h-4 w-4 text-gold fill-gold" />
+                  <CheckCircle2 className="h-4 w-4 text-tat-gold fill-tat-gold" />
                 </div>
               )}
               <div className="absolute bottom-0 inset-x-0 p-2">
-                <p className="text-cream text-[11px] font-medium leading-tight">{d.name}</p>
-                <p className="text-cream/55 text-[9px] mt-0.5">₹{d.priceFrom.toLocaleString("en-IN")}+</p>
+                <p className="text-tat-paper text-[11px] font-medium leading-tight">{d.name}</p>
+                <p className="text-tat-paper/55 text-[9px] mt-0.5">₹{d.priceFrom.toLocaleString("en-IN")}+</p>
               </div>
             </button>
           ))}
@@ -457,10 +457,10 @@ function StepDestination({
       )}
 
       <div className="mt-6 flex items-center justify-between">
-        <button onClick={onSkip} className="text-sm text-ink/50 hover:text-ink transition-colors">
+        <button onClick={onSkip} className="text-sm text-tat-charcoal/50 hover:text-tat-charcoal transition-colors">
           Skip — show all destinations
         </button>
-        <span className="text-xs text-ink/30">{destinations.length} destinations</span>
+        <span className="text-xs text-tat-charcoal/30">{destinations.length} destinations</span>
       </div>
     </div>
   );
@@ -480,7 +480,7 @@ function StepTravelers({
       <h2 className="font-display text-2xl md:text-3xl font-medium text-balance">
         Who&apos;s joining the adventure?
       </h2>
-      <p className="mt-2 text-sm text-ink/55">We&apos;ll tailor packages to your travel style.</p>
+      <p className="mt-2 text-sm text-tat-charcoal/55">We&apos;ll tailor packages to your travel style.</p>
 
       <div className="grid grid-cols-2 gap-3 mt-6">
         {TRAVEL_TYPES.map(({ value, emoji, label, desc }) => (
@@ -489,21 +489,21 @@ function StepTravelers({
             onClick={() => onSelect(value)}
             className={`flex flex-col items-center gap-2 p-5 rounded-2xl border-2 transition-all duration-200 text-center ${
               selected === value
-                ? "border-gold bg-gold/8"
-                : "border-ink/10 hover:border-ink/25 bg-white"
+                ? "border-tat-gold bg-tat-gold/8"
+                : "border-tat-charcoal/10 hover:border-tat-charcoal/25 bg-white"
             }`}
           >
             <span className="text-4xl">{emoji}</span>
             <span className="font-display text-lg font-medium">{label}</span>
-            <span className="text-xs text-ink/55 leading-snug">{desc}</span>
+            <span className="text-xs text-tat-charcoal/55 leading-snug">{desc}</span>
             {selected === value && (
-              <CheckCircle2 className="h-4 w-4 text-gold fill-gold mt-1" />
+              <CheckCircle2 className="h-4 w-4 text-tat-gold fill-tat-gold mt-1" />
             )}
           </button>
         ))}
       </div>
 
-      <button onClick={onSkip} className="mt-5 text-sm text-ink/50 hover:text-ink transition-colors">
+      <button onClick={onSkip} className="mt-5 text-sm text-tat-charcoal/50 hover:text-tat-charcoal transition-colors">
         Skip this step
       </button>
     </div>
@@ -527,11 +527,11 @@ function StepDuration({
       <h2 className="font-display text-2xl md:text-3xl font-medium text-balance">
         When are you planning?
       </h2>
-      <p className="mt-2 text-sm text-ink/55">Pick a rough timeframe — nothing is fixed yet.</p>
+      <p className="mt-2 text-sm text-tat-charcoal/55">Pick a rough timeframe — nothing is fixed yet.</p>
 
       {/* Month grid */}
       <div className="mt-5 mb-2">
-        <p className="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-medium mb-3">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-tat-charcoal/50 font-medium mb-3">
           Preferred Month
         </p>
         <div className="grid grid-cols-4 gap-2">
@@ -541,8 +541,8 @@ function StepDuration({
               onClick={() => onMonth(selectedMonth === m ? "" : m)}
               className={`py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                 selectedMonth === m
-                  ? "bg-gold text-ink"
-                  : "bg-ink/6 text-ink/70 hover:bg-ink/12"
+                  ? "bg-tat-gold text-tat-charcoal"
+                  : "bg-tat-charcoal/6 text-tat-charcoal/70 hover:bg-tat-charcoal/12"
               }`}
             >
               {m}
@@ -553,7 +553,7 @@ function StepDuration({
 
       {/* Duration */}
       <div className="mt-5">
-        <p className="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-medium mb-3">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-tat-charcoal/50 font-medium mb-3">
           Trip Duration
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -563,24 +563,24 @@ function StepDuration({
               onClick={() => onDuration(selectedDuration === d ? "" : d)}
               className={`py-3 px-4 rounded-xl text-sm font-medium text-left transition-all duration-200 flex items-center justify-between ${
                 selectedDuration === d
-                  ? "bg-gold/15 border-2 border-gold text-ink"
-                  : "bg-ink/6 border-2 border-transparent text-ink/70 hover:bg-ink/10"
+                  ? "bg-tat-gold/15 border-2 border-tat-gold text-tat-charcoal"
+                  : "bg-tat-charcoal/6 border-2 border-transparent text-tat-charcoal/70 hover:bg-tat-charcoal/10"
               }`}
             >
               {d}
-              {selectedDuration === d && <CheckCircle2 className="h-4 w-4 text-gold" />}
+              {selectedDuration === d && <CheckCircle2 className="h-4 w-4 text-tat-gold" />}
             </button>
           ))}
         </div>
       </div>
 
       <div className="mt-6 flex items-center justify-between">
-        <button onClick={onSkip} className="text-sm text-ink/50 hover:text-ink transition-colors">
+        <button onClick={onSkip} className="text-sm text-tat-charcoal/50 hover:text-tat-charcoal transition-colors">
           Skip
         </button>
         <button
           onClick={onNext}
-          className="inline-flex items-center gap-2 bg-ink text-cream px-6 py-2.5 rounded-full text-sm font-medium hover:bg-gold hover:text-ink transition-all duration-300"
+          className="inline-flex items-center gap-2 bg-tat-charcoal text-tat-paper px-6 py-2.5 rounded-full text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all duration-300"
         >
           Next <ArrowRight className="h-4 w-4" />
         </button>
@@ -603,7 +603,7 @@ function StepBudget({
       <h2 className="font-display text-2xl md:text-3xl font-medium text-balance">
         What&apos;s your budget per person?
       </h2>
-      <p className="mt-2 text-sm text-ink/55">Approximate is fine — we have options at every level.</p>
+      <p className="mt-2 text-sm text-tat-charcoal/55">Approximate is fine — we have options at every level.</p>
 
       <div className="grid grid-cols-2 gap-3 mt-6">
         {BUDGETS.map(({ value, label, symbol, range, desc }) => (
@@ -612,22 +612,22 @@ function StepBudget({
             onClick={() => onSelect(value)}
             className={`flex flex-col gap-2 p-5 rounded-2xl border-2 transition-all duration-200 text-left ${
               selected === value
-                ? "border-gold bg-gold/8"
-                : "border-ink/10 hover:border-ink/25 bg-white"
+                ? "border-tat-gold bg-tat-gold/8"
+                : "border-tat-charcoal/10 hover:border-tat-charcoal/25 bg-white"
             }`}
           >
-            <span className="font-display text-2xl text-gold">{symbol}</span>
+            <span className="font-display text-2xl text-tat-gold">{symbol}</span>
             <span className="font-display text-lg font-medium">{label}</span>
-            <span className="text-xs font-medium text-ink/70">{range}</span>
-            <span className="text-[11px] text-ink/45">{desc}</span>
+            <span className="text-xs font-medium text-tat-charcoal/70">{range}</span>
+            <span className="text-[11px] text-tat-charcoal/45">{desc}</span>
             {selected === value && (
-              <CheckCircle2 className="h-4 w-4 text-gold fill-gold mt-1" />
+              <CheckCircle2 className="h-4 w-4 text-tat-gold fill-tat-gold mt-1" />
             )}
           </button>
         ))}
       </div>
 
-      <button onClick={onSkip} className="mt-5 text-sm text-ink/50 hover:text-ink transition-colors">
+      <button onClick={onSkip} className="mt-5 text-sm text-tat-charcoal/50 hover:text-tat-charcoal transition-colors">
         Skip — show all budgets
       </button>
     </div>
@@ -657,8 +657,8 @@ function StepResults({
     <div className="px-6 py-6">
       {loading ? (
         <div className="flex flex-col items-center justify-center py-16 gap-4">
-          <Loader2 className="h-10 w-10 text-gold animate-spin" />
-          <p className="text-ink/60 text-sm">Finding your perfect trips…</p>
+          <Loader2 className="h-10 w-10 text-tat-gold animate-spin" />
+          <p className="text-tat-charcoal/60 text-sm">Finding your perfect trips…</p>
         </div>
       ) : (
         <>
@@ -670,7 +670,7 @@ function StepResults({
                   : "No exact matches"}
               </h2>
               {packages.length === 0 && (
-                <p className="mt-2 text-sm text-ink/55">
+                <p className="mt-2 text-sm text-tat-charcoal/55">
                   Try relaxing a few filters — or let us customize a trip for you.
                 </p>
               )}
@@ -680,7 +680,7 @@ function StepResults({
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-3">
               {tags.map((t) => (
-                <span key={t} className="bg-gold/15 text-ink text-[11px] font-medium px-3 py-1 rounded-full">
+                <span key={t} className="bg-tat-gold/15 text-tat-charcoal text-[11px] font-medium px-3 py-1 rounded-full">
                   {t}
                 </span>
               ))}
@@ -702,10 +702,10 @@ function StepResults({
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-display text-[13px] font-medium text-ink leading-snug line-clamp-2 group-hover:text-gold transition-colors">
+                  <p className="font-display text-[13px] font-medium text-tat-charcoal leading-snug line-clamp-2 group-hover:text-tat-gold transition-colors">
                     {p.title}
                   </p>
-                  <div className="flex items-center gap-2 mt-1 text-[11px] text-ink/50">
+                  <div className="flex items-center gap-2 mt-1 text-[11px] text-tat-charcoal/50">
                     <MapPin className="h-3 w-3" />
                     <span>{p.destinationName}</span>
                     <span>·</span>
@@ -713,15 +713,15 @@ function StepResults({
                     <span>{p.duration}</span>
                   </div>
                   <div className="flex items-center gap-1 mt-1">
-                    <Star className="h-3 w-3 fill-gold text-gold" />
-                    <span className="text-[11px] font-medium text-ink">{p.rating}</span>
+                    <Star className="h-3 w-3 fill-tat-gold text-tat-gold" />
+                    <span className="text-[11px] font-medium text-tat-charcoal">{p.rating}</span>
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="font-display text-base font-medium text-ink">
+                  <p className="font-display text-base font-medium text-tat-charcoal">
                     ₹{p.price.toLocaleString("en-IN")}
                   </p>
-                  <p className="text-[10px] text-ink/40">/person</p>
+                  <p className="text-[10px] text-tat-charcoal/40">/person</p>
                 </div>
               </Link>
             ))}
@@ -731,14 +731,14 @@ function StepResults({
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
             <button
               onClick={onViewAll}
-              className="flex-1 flex items-center justify-center gap-2 bg-ink text-cream py-3 rounded-full text-sm font-medium hover:bg-gold hover:text-ink transition-all duration-300"
+              className="flex-1 flex items-center justify-center gap-2 bg-tat-charcoal text-tat-paper py-3 rounded-full text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all duration-300"
             >
               See all matching packages
               <ArrowRight className="h-4 w-4" />
             </button>
             <Link
               href="/customize-trip"
-              className="flex-1 flex items-center justify-center gap-2 border border-ink/20 text-ink py-3 rounded-full text-sm font-medium hover:border-gold hover:text-gold transition-all duration-300"
+              className="flex-1 flex items-center justify-center gap-2 border border-tat-charcoal/20 text-tat-charcoal py-3 rounded-full text-sm font-medium hover:border-tat-gold hover:text-tat-gold transition-all duration-300"
             >
               Customize a trip instead
             </Link>
@@ -746,7 +746,7 @@ function StepResults({
 
           <button
             onClick={onReset}
-            className="mt-4 w-full text-center text-xs text-ink/40 hover:text-ink/70 transition-colors"
+            className="mt-4 w-full text-center text-xs text-tat-charcoal/40 hover:text-tat-charcoal/70 transition-colors"
           >
             ← Start over with different preferences
           </button>

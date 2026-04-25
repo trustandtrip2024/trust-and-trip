@@ -63,17 +63,17 @@ export default function CreatorApplyPage() {
 
   if (done) {
     return (
-      <section className="min-h-[80vh] flex items-center justify-center bg-cream px-4 py-20">
-        <div className="max-w-md w-full bg-white rounded-3xl border border-ink/8 p-8 md:p-10 text-center shadow-soft">
+      <section className="min-h-[80vh] flex items-center justify-center bg-tat-paper px-4 py-20">
+        <div className="max-w-md w-full bg-white rounded-3xl border border-tat-charcoal/8 p-8 md:p-10 text-center shadow-soft">
           <div className="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-5">
             <CheckCircle2 className="h-7 w-7 text-green-600" />
           </div>
-          <h1 className="font-display text-2xl font-medium text-ink mb-2">Application received</h1>
-          <p className="text-sm text-ink/60 leading-relaxed mb-6">
+          <h1 className="font-display text-2xl font-medium text-tat-charcoal mb-2">Application received</h1>
+          <p className="text-sm text-tat-charcoal/60 leading-relaxed mb-6">
             We&apos;ll review your audience and Instagram and get back within <strong>48 hours</strong>.
             If approved, you&apos;ll get your unique referral link + onboarding call invite.
           </p>
-          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-gold hover:underline">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-tat-gold hover:underline">
             Back to home <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -82,25 +82,25 @@ export default function CreatorApplyPage() {
   }
 
   return (
-    <section className="min-h-[80vh] bg-cream py-12 md:py-20">
+    <section className="min-h-[80vh] bg-tat-paper py-12 md:py-20">
       <div className="container-custom max-w-2xl">
-        <Link href="/creators" className="inline-flex items-center gap-1.5 text-sm text-ink/55 hover:text-ink mb-6 group">
+        <Link href="/creators" className="inline-flex items-center gap-1.5 text-sm text-tat-charcoal/55 hover:text-tat-charcoal mb-6 group">
           <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
           Back to program
         </Link>
 
         <p className="eyebrow flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-gold" />
+          <Sparkles className="h-3.5 w-3.5 text-tat-gold" />
           Creator application
         </p>
-        <h1 className="font-display text-3xl md:text-4xl font-medium text-ink mt-2 leading-[1.1] mb-3">
+        <h1 className="font-display text-3xl md:text-4xl font-medium text-tat-charcoal mt-2 leading-[1.1] mb-3">
           Tell us a bit about you.
         </h1>
-        <p className="text-sm text-ink/60 mb-8">
+        <p className="text-sm text-tat-charcoal/60 mb-8">
           Takes 2 minutes. Approval in 48 hours. We don&apos;t share your details with third parties.
         </p>
 
-        <form onSubmit={submit} className="space-y-5 bg-white rounded-3xl border border-ink/8 p-6 md:p-8 shadow-soft">
+        <form onSubmit={submit} className="space-y-5 bg-white rounded-3xl border border-tat-charcoal/8 p-6 md:p-8 shadow-soft">
           {/* Personal */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Full name *">
@@ -115,12 +115,12 @@ export default function CreatorApplyPage() {
           </div>
 
           {/* Instagram */}
-          <div className="border-t border-ink/8 pt-5">
-            <p className="text-xs font-semibold text-ink/60 uppercase tracking-wider mb-4">Instagram</p>
+          <div className="border-t border-tat-charcoal/8 pt-5">
+            <p className="text-xs font-semibold text-tat-charcoal/60 uppercase tracking-wider mb-4">Instagram</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Handle *">
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-ink/40 text-sm">@</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-tat-charcoal/40 text-sm">@</span>
                   <input
                     type="text"
                     value={form.instagram_handle}
@@ -161,8 +161,8 @@ export default function CreatorApplyPage() {
           </Field>
 
           {/* Payout */}
-          <div className="border-t border-ink/8 pt-5">
-            <p className="text-xs font-semibold text-ink/60 uppercase tracking-wider mb-4">Payout (we&apos;ll verify before first payment)</p>
+          <div className="border-t border-tat-charcoal/8 pt-5">
+            <p className="text-xs font-semibold text-tat-charcoal/60 uppercase tracking-wider mb-4">Payout (we&apos;ll verify before first payment)</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Method">
                 <select value={form.payout_method} onChange={(e) => set("payout_method", e.target.value)} className={INPUT}>
@@ -179,7 +179,7 @@ export default function CreatorApplyPage() {
                 />
               </Field>
             </div>
-            <p className="text-[11px] text-ink/40 mt-2">You can update this later. Bank IFSC asked at first payout.</p>
+            <p className="text-[11px] text-tat-charcoal/40 mt-2">You can update this later. Bank IFSC asked at first payout.</p>
           </div>
 
           {error && <p className="text-xs text-red-500 bg-red-50 px-3 py-2.5 rounded-lg">{error}</p>}
@@ -187,12 +187,12 @@ export default function CreatorApplyPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full flex items-center justify-center gap-2 bg-ink hover:bg-gold text-cream hover:text-ink py-4 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
+            className="w-full flex items-center justify-center gap-2 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal py-4 rounded-xl text-sm font-semibold transition-all disabled:opacity-60"
           >
             {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
             Submit application
           </button>
-          <p className="text-center text-[11px] text-ink/45">
+          <p className="text-center text-[11px] text-tat-charcoal/45">
             By submitting you agree to our partner T&amp;C — fair payout, no spam, mutual respect.
           </p>
         </form>
@@ -201,12 +201,12 @@ export default function CreatorApplyPage() {
   );
 }
 
-const INPUT = "w-full px-4 py-2.5 rounded-xl border border-ink/15 bg-cream text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition";
+const INPUT = "w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition";
 
 function Field({ label, children, full }: { label: string; children: React.ReactNode; full?: boolean }) {
   return (
     <div className={full ? "sm:col-span-2" : ""}>
-      <label className="block text-xs font-medium text-ink/65 mb-1.5">{label}</label>
+      <label className="block text-xs font-medium text-tat-charcoal/65 mb-1.5">{label}</label>
       {children}
     </div>
   );

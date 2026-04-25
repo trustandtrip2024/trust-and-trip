@@ -93,9 +93,9 @@ export default function SearchBar() {
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-controls="searchbar-listbox"
-        className="flex items-center bg-cream/95 backdrop-blur-xl rounded-2xl shadow-soft-lg border border-cream overflow-hidden"
+        className="flex items-center bg-tat-paper/95 backdrop-blur-xl rounded-2xl shadow-soft-lg border border-tat-paper overflow-hidden"
       >
-        <MapPin className="h-4 w-4 text-gold shrink-0 ml-5" />
+        <MapPin className="h-4 w-4 text-tat-gold shrink-0 ml-5" />
         <input
           type="text"
           value={query}
@@ -103,14 +103,14 @@ export default function SearchBar() {
           onFocus={() => setOpen(true)}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           placeholder={PLACEHOLDERS[phIdx]}
-          className="flex-1 bg-transparent text-ink text-sm font-medium placeholder:text-ink/40 placeholder:font-normal outline-none px-3 py-4"
+          className="flex-1 bg-transparent text-tat-charcoal text-sm font-medium placeholder:text-tat-charcoal/40 placeholder:font-normal outline-none px-3 py-4"
           aria-label="Search destinations"
           aria-autocomplete="list"
         />
         <button
           onClick={handleSearch}
           aria-label="Search"
-          className="m-1.5 bg-ink hover:bg-gold text-cream hover:text-ink transition-all duration-200 rounded-xl px-5 py-3 flex items-center gap-2 text-sm font-medium shrink-0"
+          className="m-1.5 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal transition-all duration-200 rounded-xl px-5 py-3 flex items-center gap-2 text-sm font-medium shrink-0"
         >
           <Search className="h-4 w-4" />
           <span className="hidden sm:inline">Search</span>
@@ -119,13 +119,13 @@ export default function SearchBar() {
 
       {/* Dropdown — opens upward since bar sits at bottom of hero */}
       {open && (
-        <div id="searchbar-listbox" role="listbox" className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-soft-lg border border-ink/8 overflow-hidden z-50">
+        <div id="searchbar-listbox" role="listbox" className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-soft-lg border border-tat-charcoal/8 overflow-hidden z-50">
           {!query.trim() && (
-            <div className="flex border-b border-ink/8">
+            <div className="flex border-b border-tat-charcoal/8">
               <button
                 onClick={() => setTab("domestic")}
                 className={`flex-1 py-3 text-sm font-medium transition-colors ${
-                  tab === "domestic" ? "text-ink border-b-2 border-gold -mb-px" : "text-ink/50 hover:text-ink"
+                  tab === "domestic" ? "text-tat-charcoal border-b-2 border-tat-gold -mb-px" : "text-tat-charcoal/50 hover:text-tat-charcoal"
                 }`}
               >
                 Domestic
@@ -133,7 +133,7 @@ export default function SearchBar() {
               <button
                 onClick={() => setTab("international")}
                 className={`flex-1 py-3 text-sm font-medium transition-colors ${
-                  tab === "international" ? "text-ink border-b-2 border-gold -mb-px" : "text-ink/50 hover:text-ink"
+                  tab === "international" ? "text-tat-charcoal border-b-2 border-tat-gold -mb-px" : "text-tat-charcoal/50 hover:text-tat-charcoal"
                 }`}
               >
                 International
@@ -143,25 +143,25 @@ export default function SearchBar() {
 
           <div className="p-3 flex flex-wrap gap-2 max-h-48 overflow-y-auto">
             {filtered.length === 0 ? (
-              <p className="text-sm text-ink/40 px-2 py-1">No destinations found</p>
+              <p className="text-sm text-tat-charcoal/40 px-2 py-1">No destinations found</p>
             ) : (
               filtered.map((d) => (
                 <button
                   key={d.slug}
                   onClick={() => go(d.slug)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-ink/5 hover:bg-gold hover:text-ink text-sm text-ink/70 transition-all duration-150 font-medium"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal/5 hover:bg-tat-gold hover:text-tat-charcoal text-sm text-tat-charcoal/70 transition-all duration-150 font-medium"
                 >
-                  <MapPin className="h-3 w-3 text-gold" />
+                  <MapPin className="h-3 w-3 text-tat-gold" />
                   {d.label}
                 </button>
               ))
             )}
           </div>
 
-          <div className="px-4 py-2.5 border-t border-ink/5 bg-ink/2">
+          <div className="px-4 py-2.5 border-t border-tat-charcoal/5 bg-tat-charcoal/2">
             <button
               onClick={() => { setOpen(false); router.push("/packages"); }}
-              className="text-xs text-ink/50 hover:text-gold transition-colors"
+              className="text-xs text-tat-charcoal/50 hover:text-tat-gold transition-colors"
             >
               Browse all packages →
             </button>

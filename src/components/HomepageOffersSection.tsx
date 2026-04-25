@@ -36,23 +36,23 @@ export default async function HomepageOffersSection() {
   });
 
   return (
-    <section className="py-20 md:py-28 bg-ink text-cream" aria-labelledby="offers-heading">
+    <section className="py-20 md:py-28 bg-tat-charcoal text-tat-paper" aria-labelledby="offers-heading">
       <div className="container-custom">
         {/* Header */}
         <div className="flex items-end justify-between gap-4 mb-10 md:mb-12">
           <div>
-            <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.25em] text-gold/70 font-medium mb-3">
+            <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.25em] text-tat-gold/70 font-medium mb-3">
               <Zap className="h-3 w-3" />
               Limited Time Offers
             </span>
-            <h2 id="offers-heading" className="heading-section text-cream max-w-sm text-balance">
+            <h2 id="offers-heading" className="heading-section text-tat-paper max-w-sm text-balance">
               Exceptional trips,
-              <span className="italic text-gold font-light"> exceptional savings.</span>
+              <span className="italic text-tat-gold font-light"> exceptional savings.</span>
             </h2>
           </div>
           <Link
             href="/offers"
-            className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-cream/50 hover:text-gold transition-colors group shrink-0"
+            className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-tat-paper/50 hover:text-tat-gold transition-colors group shrink-0"
           >
             All offers
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -76,11 +76,11 @@ export default async function HomepageOffersSection() {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/10 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/60 via-tat-charcoal/10 to-transparent" />
 
                 {/* Badges */}
                 <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                  <span className="inline-flex items-center gap-1 bg-gold text-ink text-[10px] font-semibold tracking-wide uppercase px-2.5 py-1 rounded-full">
+                  <span className="inline-flex items-center gap-1 bg-tat-gold text-tat-charcoal text-[10px] font-semibold tracking-wide uppercase px-2.5 py-1 rounded-full">
                     {offer.discount}% OFF
                   </span>
                   {offer.hot && (
@@ -93,7 +93,7 @@ export default async function HomepageOffersSection() {
 
                 {/* Tag */}
                 <div className="absolute bottom-3 left-3">
-                  <span className="text-[10px] font-medium text-cream/80 bg-ink/60 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
+                  <span className="text-[10px] font-medium text-tat-paper/80 bg-tat-charcoal/60 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/10">
                     {offer.tag}
                   </span>
                 </div>
@@ -101,11 +101,11 @@ export default async function HomepageOffersSection() {
 
               {/* Content */}
               <div className="p-4">
-                <h3 className="font-display text-base font-medium text-cream leading-snug group-hover:text-gold transition-colors line-clamp-2 mb-2">
+                <h3 className="font-display text-base font-medium text-tat-paper leading-snug group-hover:text-tat-gold transition-colors line-clamp-2 mb-2">
                   {offer.title}
                 </h3>
 
-                <div className="flex items-center gap-3 text-[11px] text-cream/45 mb-3">
+                <div className="flex items-center gap-3 text-[11px] text-tat-paper/45 mb-3">
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
                     {offer.duration}
@@ -118,16 +118,16 @@ export default async function HomepageOffersSection() {
 
                 <div className="flex items-end justify-between border-t border-white/8 pt-3">
                   <div>
-                    <p className="text-[10px] text-cream/35 line-through mb-0.5">
+                    <p className="text-[10px] text-tat-paper/35 line-through mb-0.5">
                       ₹{offer.originalPrice.toLocaleString("en-IN")}
                     </p>
-                    <p className="font-display text-lg text-cream">
+                    <p className="font-display text-lg text-tat-paper">
                       ₹{offer.price.toLocaleString("en-IN")}
-                      <span className="text-[11px] font-sans font-normal text-cream/45 ml-1">/ person</span>
+                      <span className="text-[11px] font-sans font-normal text-tat-paper/45 ml-1">/ person</span>
                     </p>
                   </div>
-                  <div className="h-8 w-8 rounded-full bg-gold/15 group-hover:bg-gold flex items-center justify-center transition-all duration-300">
-                    <ArrowRight className="h-3.5 w-3.5 text-gold group-hover:text-ink transition-colors" />
+                  <div className="h-8 w-8 rounded-full bg-tat-gold/15 group-hover:bg-tat-gold flex items-center justify-center transition-all duration-300">
+                    <ArrowRight className="h-3.5 w-3.5 text-tat-gold group-hover:text-tat-charcoal transition-colors" />
                   </div>
                 </div>
               </div>
@@ -138,7 +138,7 @@ export default async function HomepageOffersSection() {
         <div className="mt-8 flex md:hidden justify-center">
           <Link
             href="/offers"
-            className="inline-flex items-center gap-2 text-sm font-medium text-cream/55 hover:text-gold transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-medium text-tat-paper/55 hover:text-tat-gold transition-colors"
           >
             See all offers <ArrowRight className="h-3.5 w-3.5" />
           </Link>

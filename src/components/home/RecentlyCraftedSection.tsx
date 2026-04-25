@@ -1,0 +1,85 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import SectionHeader from "@/components/ui/SectionHeader";
+import ChipFilterGroup from "@/components/ui/ChipFilterGroup";
+import RecentItineraryCard from "@/components/ui/RecentItineraryCard";
+import { RECENT_ITINERARIES } from "@/data/recentItineraries";
+
+const CHIPS = [
+  { id: "all",        label: "All" },
+  { id: "under-50k",  label: "Under ₹50K" },
+  { id: "50k-1.5l",   label: "₹50K–1.5L" },
+  { id: "1.5l-2.5l",  label: "₹1.5L–2.5L" },
+  { id: "luxury",     label: "Luxury" },
+  { id: "yatra",      label: "Yatra" },
+  { id: "honeymoon",  label: "Honeymoon" },
+];
+
+export default function RecentlyCraftedSection() {
+  const [active, setActive] = useState("all");
+
+  const items = useMemo(() => {
+    if (active === "all") return RECENT_ITINERARIES.slice(0, 12);
+    return RECENT_ITINERARIES.filter((i) => i.priceBucket === active).slice(0, 12);
+  }, [active]);
+
+  return (
+    <section aria-labelledby="recent-title" className="py-18 md:py-22">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
+        <SectionHeader
+          eyebrow="Recently crafted"
+          title="Real itineraries,"
+          italicTail="fresh off the road."
+          lede="143 trips planned this month. These are the most recent. Tap any one — we'll build you something similar in 24 hours."
+        />
+
+        <div className="mt-7">
+          <ChipFilterGroup
+            chips={CHIPS}
+            activeId={active}
+            onChange={setActive}
+            ariaLabel="Filter recent itineraries by budget or style"
+          />
+        </div>
+
+        {items.length === 0 ? (
+          <p className="mt-10 text-body text-stone-600">
+            No recent itineraries match this filter yet — try another, or see all recent itineraries below.
+          </p>
+        ) : (
+          <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {items.map((it) => (
+              <li key={it.id}>
+                <RecentItineraryCard
+                  firstName={it.firstName}
+                  city={it.city}
+                  timeAgo={it.timeAgo}
+                  tripStyle={it.tripStyle}
+                  nights={it.nights}
+                  primaryDestination={it.primaryDestination}
+                  otherDestinationsCount={it.otherDestinationsCount}
+                  price={it.price}
+                  plannerName={it.plannerName}
+                  href={it.href}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="mt-10">
+          <Link
+            href="/packages?sort=recent"
+            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-stone-900 hover:text-amber-700 transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-sm"
+          >
+            See all recent itineraries
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}

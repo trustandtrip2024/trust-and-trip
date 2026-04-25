@@ -44,10 +44,10 @@ export default function CountdownTimer({ endsAt, label = "Offer ends in" }: Prop
 function Unit({ v, u }: { v: number; u: string }) {
   return (
     <div className="flex items-center gap-0.5">
-      <span className="font-display text-sm font-semibold tabular-nums text-cream w-5 text-center">
+      <span className="font-display text-sm font-semibold tabular-nums text-tat-paper w-5 text-center">
         {String(v).padStart(2, "0")}
       </span>
-      <span className="text-[9px] text-cream/50 uppercase">{u}</span>
+      <span className="text-[9px] text-tat-paper/50 uppercase">{u}</span>
     </div>
   );
 }

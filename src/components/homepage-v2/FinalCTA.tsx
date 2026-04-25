@@ -39,22 +39,22 @@ export default function FinalCTA() {
   };
 
   return (
-    <section className="py-20 md:py-28 bg-ink text-cream relative overflow-hidden">
+    <section className="py-20 md:py-28 bg-tat-charcoal text-tat-paper relative overflow-hidden">
       {/* Decorative gold glows */}
-      <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-gold/10 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-gold/5 blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-tat-gold/10 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-tat-gold/5 blur-3xl pointer-events-none" />
 
       <div className="container-custom relative">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-[10px] uppercase tracking-[0.28em] text-gold/80 mb-4">
+          <p className="text-[10px] uppercase tracking-[0.28em] text-tat-gold/80 mb-4">
             Three ways to start
           </p>
           <h2 className="font-display font-medium leading-[1.05] text-balance"
               style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}>
             Let&apos;s build something
-            <span className="italic text-gold font-light"> worth remembering.</span>
+            <span className="italic text-tat-gold font-light"> worth remembering.</span>
           </h2>
-          <p className="mt-5 text-cream/65 text-base md:text-lg leading-relaxed max-w-xl mx-auto">
+          <p className="mt-5 text-tat-paper/65 text-base md:text-lg leading-relaxed max-w-xl mx-auto">
             Free to plan. Refundable if plans change. Always backed by a real human who knows your trip end-to-end.
           </p>
         </div>
@@ -64,16 +64,16 @@ export default function FinalCTA() {
           {/* AI Planner */}
           <Link
             href="/plan"
-            className="group bg-cream/8 hover:bg-cream/12 border border-cream/15 hover:border-gold/40 rounded-2xl p-6 transition-all"
+            className="group bg-tat-paper/8 hover:bg-tat-paper/12 border border-tat-paper/15 hover:border-tat-gold/40 rounded-2xl p-6 transition-all"
           >
-            <div className="h-12 w-12 rounded-xl bg-gold/15 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-              <Sparkles className="h-5 w-5 text-gold" />
+            <div className="h-12 w-12 rounded-xl bg-tat-gold/15 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+              <Sparkles className="h-5 w-5 text-tat-gold" />
             </div>
             <h3 className="font-display text-lg font-medium mb-1.5">AI Trip Builder</h3>
-            <p className="text-xs text-cream/55 leading-relaxed mb-4">
+            <p className="text-xs text-tat-paper/55 leading-relaxed mb-4">
               Answer 4 quick prompts. Get a draft itinerary in 20 seconds.
             </p>
-            <span className="inline-flex items-center gap-1.5 text-xs text-gold font-medium group-hover:gap-2 transition-all">
+            <span className="inline-flex items-center gap-1.5 text-xs text-tat-gold font-medium group-hover:gap-2 transition-all">
               Start free <ArrowRight className="h-3.5 w-3.5" />
             </span>
           </Link>
@@ -84,13 +84,13 @@ export default function FinalCTA() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => captureIntent("whatsapp_click", { note: "Homepage FinalCTA — Chat with a Planner" })}
-            className="group bg-cream/8 hover:bg-cream/12 border border-cream/15 hover:border-[#25D366]/40 rounded-2xl p-6 transition-all"
+            className="group bg-tat-paper/8 hover:bg-tat-paper/12 border border-tat-paper/15 hover:border-[#25D366]/40 rounded-2xl p-6 transition-all"
           >
             <div className="h-12 w-12 rounded-xl bg-[#25D366]/15 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
               <MessageCircle className="h-5 w-5 text-[#25D366] fill-[#25D366]/40" />
             </div>
             <h3 className="font-display text-lg font-medium mb-1.5">Chat with a Planner</h3>
-            <p className="text-xs text-cream/55 leading-relaxed mb-4">
+            <p className="text-xs text-tat-paper/55 leading-relaxed mb-4">
               A real human replies in minutes. Weekdays 9am–9pm IST.
             </p>
             <span className="inline-flex items-center gap-1.5 text-xs text-[#25D366] font-medium group-hover:gap-2 transition-all">
@@ -99,12 +99,12 @@ export default function FinalCTA() {
           </a>
 
           {/* Newsletter */}
-          <div className="bg-cream/8 border border-cream/15 rounded-2xl p-6">
-            <div className="h-12 w-12 rounded-xl bg-cream/10 flex items-center justify-center mb-4">
-              <Mail className="h-5 w-5 text-cream/80" />
+          <div className="bg-tat-paper/8 border border-tat-paper/15 rounded-2xl p-6">
+            <div className="h-12 w-12 rounded-xl bg-tat-paper/10 flex items-center justify-center mb-4">
+              <Mail className="h-5 w-5 text-tat-paper/80" />
             </div>
             <h3 className="font-display text-lg font-medium mb-1.5">Monthly Wanderlust</h3>
-            <p className="text-xs text-cream/55 leading-relaxed mb-4">
+            <p className="text-xs text-tat-paper/55 leading-relaxed mb-4">
               One email a month — offbeat routes + member-only deals.
             </p>
             {done ? (
@@ -119,14 +119,14 @@ export default function FinalCTA() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@inbox.com"
-                  className="flex-1 min-w-0 bg-cream/5 border border-cream/15 text-cream placeholder-cream/35 text-xs px-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-gold/50 focus:border-gold/50"
+                  className="flex-1 min-w-0 bg-tat-paper/5 border border-tat-paper/15 text-tat-paper placeholder-tat-paper/35 text-xs px-3 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-tat-gold/50 focus:border-tat-gold/50"
                   required
                 />
                 <button
                   type="submit"
                   disabled={submitting}
                   aria-label="Subscribe"
-                  className="shrink-0 h-8 w-8 rounded-lg bg-gold hover:bg-gold/90 text-ink flex items-center justify-center transition-colors disabled:opacity-60"
+                  className="shrink-0 h-8 w-8 rounded-lg bg-tat-gold hover:bg-tat-gold/90 text-tat-charcoal flex items-center justify-center transition-colors disabled:opacity-60"
                 >
                   {submitting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ArrowRight className="h-3.5 w-3.5" />}
                 </button>
@@ -137,7 +137,7 @@ export default function FinalCTA() {
         </div>
 
         {/* Reassurance row */}
-        <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-cream/45">
+        <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-tat-paper/45">
           <span className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             30% deposit · refundable 14 days
