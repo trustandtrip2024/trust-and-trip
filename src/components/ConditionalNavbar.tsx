@@ -1,12 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Navbar from "./Navbar";
+import Header from "./Header";
 
-const HIDDEN_ON = ["/dashboard", "/login", "/creators/dashboard", "/admin"];
+const HIDDEN_ON = ["/dashboard", "/login", "/register", "/creators/dashboard", "/admin"];
 
 export default function ConditionalNavbar() {
   const path = usePathname();
   if (HIDDEN_ON.some((p) => path.startsWith(p))) return null;
-  return <Navbar />;
+  return <Header />;
 }

@@ -41,6 +41,16 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
 
+  async rewrites() {
+    return [
+      // Friendly aliases — serve existing pages under newer URLs without redirecting
+      { source: "/journal", destination: "/blog" },
+      { source: "/journal/:slug*", destination: "/blog/:slug*" },
+      { source: "/plan-a-trip", destination: "/plan" },
+      { source: "/sign-in", destination: "/login" },
+    ];
+  },
+
   async redirects() {
     return [
       // ─── Old site main pages ──────────────────────────────────────────────
