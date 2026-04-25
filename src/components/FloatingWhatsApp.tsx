@@ -14,13 +14,12 @@ export default function FloatingWhatsApp() {
   const [expanded, setExpanded] = useState(false);
   const [show, setShow] = useState(false);
 
-  if (path.startsWith("/dashboard") || path.startsWith("/login")) return null;
-
   useEffect(() => {
     const t = setTimeout(() => setShow(true), 1500);
     return () => clearTimeout(t);
   }, []);
 
+  if (path.startsWith("/dashboard") || path.startsWith("/login")) return null;
   if (!show) return null;
 
   const waMessage = encodeURIComponent(

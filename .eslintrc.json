@@ -1,0 +1,11 @@
+{
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/no-unescaped-entities": "warn",
+    "react/jsx-key": "warn",
+    "@next/next/no-img-element": "warn",
+    "jsx-a11y/role-supports-aria-props": "warn"
+  }
+}

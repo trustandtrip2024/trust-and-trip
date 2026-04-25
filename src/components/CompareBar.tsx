@@ -121,7 +121,7 @@ export default function CompareBar() {
                       <CompareRow
                         label="Price"
                         values={compareList.map((p) => (
-                          <span className="font-display text-lg font-medium">
+                          <span key={p.slug} className="font-display text-lg font-medium">
                             ₹{p.price.toLocaleString("en-IN")}
                             <span className="text-xs text-ink/50 font-sans font-normal ml-1">/person</span>
                           </span>
@@ -156,7 +156,7 @@ export default function CompareBar() {
                         label="Highlights"
                         values={compareList.map((p) =>
                           p.highlights?.length ? (
-                            <ul className="space-y-1">
+                            <ul key={p.slug} className="space-y-1">
                               {p.highlights.slice(0, 4).map((h, i) => (
                                 <li key={i} className="flex items-start gap-1.5 text-xs text-ink/70">
                                   <Check className="h-3 w-3 text-gold shrink-0 mt-0.5" />

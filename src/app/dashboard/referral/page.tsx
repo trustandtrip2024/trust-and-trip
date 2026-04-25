@@ -25,19 +25,20 @@ export default function ReferralDashboardPage() {
   const referralUrl = referral ? `https://trustandtrip.com?ref=${referral.code}` : "";
 
   useEffect(() => {
-    if (!user?.email) return;
-    checkExisting();
-  }, [user]);
-
-  async function checkExisting() {
-    setLoading(true);
-    const res = await fetch(`/api/referral?email=${encodeURIComponent(user!.email!)}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.referral) setReferral(data.referral);
-    }
-    setLoading(false);
-  }
+    const email = user?.email;
+    if (!email) return;
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      const res = await fetch(`/api/referral?email=${encodeURIComponent(email)}`);
+      if (res.ok && !cancelled) {
+        const data = await res.json();
+        if (data.referral) setReferral(data.referral);
+      }
+      if (!cancelled) setLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, [user?.email]);
 
   async function generate() {
     setGenerating(true); setError("");
