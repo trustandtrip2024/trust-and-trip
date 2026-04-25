@@ -29,6 +29,7 @@ export default function DestinationTile({ destination, index = 0 }: Props) {
             alt={destination.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
+            quality={70}
             className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
         ) : (

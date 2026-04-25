@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import PackageCard from "./PackageCard";
@@ -23,53 +24,44 @@ export default function PackageSlider({
   viewAllLabel = "View all",
   id,
 }: Props) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [canLeft, setCanLeft] = useState(false);
-  const [canRight, setCanRight] = useState(true);
-  const cardWidthRef = useRef(300);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
+    dragFree: true,
+    skipSnaps: false,
+    containScroll: "trimSnaps",
+  });
 
-  // Measure card width once and keep it updated on resize
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(true);
+  const [snapCount, setSnapCount] = useState(0);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+    setCanPrev(emblaApi.canScrollPrev());
+    setCanNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
   useEffect(() => {
-    const measure = () => {
-      const card = scrollRef.current?.querySelector("[data-card]") as HTMLElement | null;
-      if (card) cardWidthRef.current = card.offsetWidth + 16;
+    if (!emblaApi) return;
+    setSnapCount(emblaApi.scrollSnapList().length);
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
     };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, []);
+  }, [emblaApi, onSelect]);
 
-  const updateState = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const idx = Math.round(el.scrollLeft / cardWidthRef.current);
-    setActiveIndex(idx);
-    setCanLeft(el.scrollLeft > 4);
-    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  }, []);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", updateState, { passive: true });
-    updateState();
-    return () => el.removeEventListener("scroll", updateState);
-  }, [updateState]);
-
-  const scrollTo = (dir: "left" | "right") => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir === "left" ? -cardWidthRef.current : cardWidthRef.current, behavior: "smooth" });
-  };
-
-  const scrollToIndex = (i: number) => {
-    scrollRef.current?.scrollTo({ left: i * cardWidthRef.current, behavior: "smooth" });
-  };
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  const scrollTo = useCallback((i: number) => emblaApi?.scrollTo(i), [emblaApi]);
 
   if (!packages.length) return null;
 
-  const dotCount = Math.min(packages.length, 8);
+  const dotCount = Math.min(snapCount, 8);
 
   return (
     <div>
@@ -85,16 +77,16 @@ export default function PackageSlider({
         <div className="flex items-center gap-2 shrink-0">
           <div className="hidden sm:flex items-center gap-1.5">
             <button
-              onClick={() => scrollTo("left")}
-              disabled={!canLeft}
+              onClick={scrollPrev}
+              disabled={!canPrev}
               aria-label="Previous packages"
               className="h-9 w-9 rounded-full border border-ink/15 flex items-center justify-center hover:bg-gold hover:border-gold transition-all disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
-              onClick={() => scrollTo("right")}
-              disabled={!canRight}
+              onClick={scrollNext}
+              disabled={!canNext}
               aria-label="Next packages"
               className="h-9 w-9 rounded-full border border-ink/15 flex items-center justify-center hover:bg-gold hover:border-gold transition-all disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             >
@@ -111,56 +103,58 @@ export default function PackageSlider({
         </div>
       </div>
 
-      {/* Slider */}
+      {/* Embla viewport */}
       <div
-        ref={scrollRef}
+        ref={emblaRef}
         id={id}
         role="list"
         aria-label={eyebrow}
-        className="flex gap-4 overflow-x-auto snap-x snap-proximity scroll-smooth no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 pb-2"
-        style={{ WebkitOverflowScrolling: "touch" }}
+        className="overflow-hidden -mx-5 px-5 md:mx-0 md:px-0"
       >
-        {packages.map((p, i) => (
-          <div
-            key={p.slug}
-            role="listitem"
-            data-card
-            className="snap-start shrink-0 w-[73vw] sm:w-[44vw] md:w-[42vw] lg:w-[calc(33.333%-11px)]"
-          >
-            <PackageCard
-              title={p.title}
-              slug={p.slug}
-              image={p.image}
-              duration={p.duration}
-              price={p.price}
-              rating={p.rating}
-              reviews={p.reviews}
-              destinationName={p.destinationName}
-              travelType={p.travelType}
-              trending={p.trending}
-              limitedSlots={p.limitedSlots}
-              highlights={p.highlights}
-              inclusions={p.inclusions}
-              index={i}
-              inSlider
-            />
-          </div>
-        ))}
+        <div className="flex gap-4 pb-2">
+          {packages.map((p, i) => (
+            <div
+              key={p.slug}
+              role="listitem"
+              className="shrink-0 w-[73vw] sm:w-[44vw] md:w-[42vw] lg:w-[calc(33.333%-11px)]"
+            >
+              <PackageCard
+                title={p.title}
+                slug={p.slug}
+                image={p.image}
+                duration={p.duration}
+                price={p.price}
+                rating={p.rating}
+                reviews={p.reviews}
+                destinationName={p.destinationName}
+                travelType={p.travelType}
+                trending={p.trending}
+                limitedSlots={p.limitedSlots}
+                highlights={p.highlights}
+                inclusions={p.inclusions}
+                index={i}
+                inSlider
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Progress dots */}
-      <div className="mt-4 flex items-center justify-center gap-1.5 lg:hidden">
-        {Array.from({ length: dotCount }).map((_, i) => (
-          <button
-            key={i}
-            aria-label={`Go to package ${i + 1}`}
-            onClick={() => scrollToIndex(i)}
-            className={`rounded-full transition-all duration-300 ${
-              activeIndex === i ? "w-5 h-1.5 bg-gold" : "w-1.5 h-1.5 bg-ink/20 hover:bg-ink/40"
-            }`}
-          />
-        ))}
-      </div>
+      {dotCount > 1 && (
+        <div className="mt-4 flex items-center justify-center gap-1.5 lg:hidden">
+          {Array.from({ length: dotCount }).map((_, i) => (
+            <button
+              key={i}
+              aria-label={`Go to package ${i + 1}`}
+              onClick={() => scrollTo(i)}
+              className={`rounded-full transition-all duration-300 ${
+                selectedIndex === i ? "w-5 h-1.5 bg-gold" : "w-1.5 h-1.5 bg-ink/20 hover:bg-ink/40"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -3,7 +3,6 @@ import { Fraunces, DM_Sans } from "next/font/google";
 import dynamic from "next/dynamic";
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import MainWrapper from "@/components/MainWrapper";
-import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import JsonLd from "@/components/JsonLd";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -21,6 +20,7 @@ const ExitIntentPopup = dynamic(() => import("@/components/ExitIntentPopup"), { 
 const CompareBar = dynamic(() => import("@/components/CompareBar"), { ssr: false });
 const AriaChatWidget = dynamic(() => import("@/components/AriaChatWidget"), { ssr: false });
 const CookieBanner = dynamic(() => import("@/components/CookieBanner"), { ssr: false });
+const FloatingWhatsApp = dynamic(() => import("@/components/FloatingWhatsApp"), { ssr: false });
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import { CookieConsentProvider } from "@/context/CookieConsentContext";
 import AuthProvider from "@/components/AuthProvider";

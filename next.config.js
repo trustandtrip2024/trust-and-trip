@@ -34,7 +34,7 @@ const nextConfig = {
       { protocol: "https", hostname: "cdn.sanity.io" },
     ],
     formats: ["image/avif", "image/webp"],
-    deviceSizes: [390, 640, 750, 828, 1080, 1200, 1920],
+    deviceSizes: [360, 640, 828, 1200, 1920],
     minimumCacheTTL: 86400,
   },
   reactStrictMode: true,

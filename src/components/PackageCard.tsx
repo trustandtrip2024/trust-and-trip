@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -78,8 +77,6 @@ export default function PackageCard({
   const [showSchedule, setShowSchedule] = useState(false);
   const [inCart, setInCart] = useState(false);
   const [addingCart, setAddingCart] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -106,7 +103,8 @@ export default function PackageCard({
       whileInView={inSlider ? undefined : { opacity: 1, y: 0 }}
       viewport={inSlider ? undefined : { once: true, margin: "-80px" }}
       transition={inSlider ? undefined : { delay: index * 0.08, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="card-travel group h-full flex flex-col"
+      whileTap={{ scale: 0.98 }}
+      className="card-travel group h-full flex flex-col touch-manipulation"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <Image
@@ -114,6 +112,7 @@ export default function PackageCard({
           alt={title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+          quality={70}
           className="object-cover transition-transform duration-1000 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -262,23 +261,21 @@ export default function PackageCard({
       </div>
     </motion.article>
 
-    {mounted && showCustomize && createPortal(
+    {showCustomize && (
       <CustomizeModal
         packageTitle={title}
         packageSlug={slug}
         destinationName={destinationName}
         onClose={() => setShowCustomize(false)}
-      />,
-      document.body
+      />
     )}
-    {mounted && showSchedule && createPortal(
+    {showSchedule && (
       <ScheduleCallModal
         packageTitle={title}
         packageSlug={slug}
         destinationName={destinationName}
         onClose={() => setShowSchedule(false)}
-      />,
-      document.body
+      />
     )}
     </>
   );

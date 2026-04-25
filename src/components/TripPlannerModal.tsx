@@ -437,7 +437,7 @@ function StepDestination({
               }`}
             >
               {d.image ? (
-                <Image src={d.image} alt={d.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="150px" />
+                <Image src={d.image} alt={d.name} fill quality={65} className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="150px" />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-ink/80 to-ink/40" />
               )}
@@ -698,7 +698,7 @@ function StepResults({
               >
                 <div className="relative w-20 h-16 rounded-xl overflow-hidden shrink-0">
                   {p.image && (
-                    <Image src={p.image} alt={p.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="80px" />
+                    <Image src={p.image} alt={p.title} fill quality={65} className="object-cover group-hover:scale-105 transition-transform duration-500" sizes="80px" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">

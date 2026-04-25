@@ -7,14 +7,17 @@ export const metadata = {
   alternates: { canonical: "https://trustandtrip.com" },
 };
 
+import dynamic from "next/dynamic";
 import HeroV2 from "@/components/homepage-v2/HeroV2";
 import TrustRow from "@/components/homepage-v2/TrustRow";
 import PopularDestinations from "@/components/homepage-v2/PopularDestinations";
 import HowItWorks from "@/components/homepage-v2/HowItWorks";
-import FinalCTA from "@/components/homepage-v2/FinalCTA";
 import PackageSlider from "@/components/PackageSlider";
-import GoogleReviewsSection from "@/components/GoogleReviewsSection";
-import HomepageOffersSection from "@/components/HomepageOffersSection";
+
+// Below-fold — chunk-split, still SSR'd for SEO
+const FinalCTA = dynamic(() => import("@/components/homepage-v2/FinalCTA"));
+const GoogleReviewsSection = dynamic(() => import("@/components/GoogleReviewsSection"));
+const HomepageOffersSection = dynamic(() => import("@/components/HomepageOffersSection"));
 import { experiences } from "@/lib/data";
 import {
   getDestinations,

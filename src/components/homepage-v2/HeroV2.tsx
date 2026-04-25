@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import SearchBar from "../SearchBar";
+import Spotlight from "../ui/Spotlight";
 
 const CLIPS: { src: string | null; poster: string; label: string; tag: string }[] = [
   {
@@ -76,17 +77,19 @@ export default function HeroV2() {
             {videoOk[i] && clip.src && (
               <video
                 ref={(el) => { videoRefs.current[i] = el; }}
-                src={clip.src}
                 poster={clip.poster}
                 muted
                 loop
                 playsInline
-                preload={i === 0 ? "auto" : "metadata"}
+                autoPlay={i === 0}
+                preload="metadata"
                 onError={() => markVideoMissing(i)}
                 onStalled={() => markVideoMissing(i)}
                 className="absolute inset-0 h-full w-full object-cover"
                 aria-hidden="true"
-              />
+              >
+                <source src={clip.src} type="video/mp4" />
+              </video>
             )}
             {/* Always render poster beneath video for fallback + instant paint */}
             <Image
@@ -95,6 +98,7 @@ export default function HeroV2() {
               fill
               priority={i === 0}
               sizes="100vw"
+              quality={70}
               className={`object-cover ${videoOk[i] && clip.src ? "opacity-0" : "animate-[slowZoom_20s_ease-in-out_infinite_alternate]"}`}
             />
           </div>
@@ -104,6 +108,8 @@ export default function HeroV2() {
         <div className="absolute inset-0 bg-gradient-to-r from-ink/85 via-ink/50 to-ink/20 z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent z-10" />
         <div className="absolute inset-0 opacity-[0.08] mix-blend-overlay pointer-events-none bg-grain z-10" />
+        {/* Aceternity-style spotlight glow */}
+        <Spotlight className="-top-40 left-0 md:-top-20 md:left-60" fill="#E8A94C" />
       </div>
 
       {/* Active destination label — top-right */}
@@ -206,7 +212,7 @@ export default function HeroV2() {
       </div>
 
       {/* Search bar — bottom */}
-      <div className="relative z-20 container-custom pb-6 md:pb-10">
+      <div className="relative z-20 container-custom pb-8 md:pb-16">
         <SearchBar />
       </div>
     </section>

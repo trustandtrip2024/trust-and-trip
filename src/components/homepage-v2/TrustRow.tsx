@@ -12,14 +12,14 @@ export default function TrustRow() {
   return (
     <section
       aria-label="Trust at a glance"
-      className="relative -mt-14 md:-mt-16 z-30 container-custom"
+      className="relative mt-6 md:-mt-16 z-30 container-custom"
     >
-      <div className="bg-white rounded-2xl md:rounded-3xl border border-ink/8 shadow-soft px-4 md:px-8 py-5 md:py-6">
-        <ul className="flex items-center justify-between gap-3 md:gap-6 overflow-x-auto no-scrollbar">
+      <div className="bg-white rounded-2xl md:rounded-3xl border border-ink/8 shadow-soft px-4 md:px-8 py-4 md:py-6">
+        <ul className="flex items-center md:justify-between gap-4 md:gap-6 overflow-x-auto no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 snap-x snap-mandatory md:snap-none">
           {BADGES.map(({ icon: Icon, value, label, accent }, i) => (
             <li
               key={i}
-              className="flex items-center gap-2.5 md:gap-3 shrink-0 first:pl-0"
+              className="flex items-center gap-2.5 md:gap-3 shrink-0 snap-start"
             >
               <div
                 className={`h-9 w-9 md:h-10 md:w-10 rounded-xl flex items-center justify-center shrink-0 ${

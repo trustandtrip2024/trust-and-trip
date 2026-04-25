@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { X, CheckCircle2, Loader2, Sliders } from "lucide-react";
+import { CheckCircle2, Loader2, Sliders } from "lucide-react";
 import { submitLead } from "@/lib/submit-lead";
+import MobileSheet from "./ui/MobileSheet";
 
 interface Props {
   packageTitle: string;
@@ -66,167 +67,148 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="absolute inset-0 bg-ink/60 backdrop-blur-sm" />
-      <div
-        className="relative bg-cream rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="sticky top-0 bg-cream border-b border-ink/8 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-full bg-gold/15 flex items-center justify-center">
-              <Sliders className="h-4 w-4 text-gold" />
+    <MobileSheet
+      open
+      onClose={onClose}
+      eyebrow="Customize Package"
+      title={packageTitle}
+      icon={<Sliders className="h-4 w-4" />}
+    >
+      <div className="px-6 py-5">
+        {success ? (
+          <div className="flex flex-col items-center gap-4 py-8 text-center">
+            <div className="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center">
+              <CheckCircle2 className="h-7 w-7 text-green-600" />
             </div>
             <div>
-              <p className="text-xs text-ink/45 uppercase tracking-widest">Customize Package</p>
-              <p className="text-sm font-medium text-ink leading-tight line-clamp-1">{packageTitle}</p>
+              <p className="font-display text-lg font-medium text-ink">Request received!</p>
+              <p className="text-sm text-ink/55 mt-1">We&apos;ll send your custom itinerary within 24 hours.</p>
             </div>
+            <button
+              onClick={onClose}
+              className="mt-2 px-6 py-2.5 bg-ink text-cream rounded-full text-sm font-medium hover:bg-gold hover:text-ink transition-all"
+            >
+              Close
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="h-8 w-8 rounded-full hover:bg-ink/8 flex items-center justify-center transition-colors"
-          >
-            <X className="h-4 w-4 text-ink/60" />
-          </button>
-        </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <p className="text-sm text-ink/55 leading-relaxed">
+              Tell us how you&apos;d like to tailor this trip. We&apos;ll build a custom itinerary just for you.
+            </p>
 
-        <div className="px-6 py-5">
-          {success ? (
-            <div className="flex flex-col items-center gap-4 py-8 text-center">
-              <div className="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center">
-                <CheckCircle2 className="h-7 w-7 text-green-600" />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="col-span-2">
+                <label className="block text-xs font-medium text-ink/60 mb-1.5">Your Name *</label>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={set("name")}
+                  placeholder="Full name"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                />
               </div>
+
+              <div className="col-span-2">
+                <label className="block text-xs font-medium text-ink/60 mb-1.5">WhatsApp / Phone *</label>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={set("phone")}
+                  placeholder="+91 98765 43210"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                />
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-xs font-medium text-ink/60 mb-1.5">Preferred Travel Dates</label>
+                <input
+                  type="text"
+                  value={form.travelDates}
+                  onChange={set("travelDates")}
+                  placeholder="e.g. Dec 20–27, flexible in Jan"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                />
+              </div>
+
               <div>
-                <p className="font-display text-lg font-medium text-ink">Request received!</p>
-                <p className="text-sm text-ink/55 mt-1">We&apos;ll send your custom itinerary within 24 hours.</p>
+                <label className="block text-xs font-medium text-ink/60 mb-1.5">Adults</label>
+                <select
+                  value={form.adults}
+                  onChange={set("adults")}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                >
+                  {["1","2","3","4","5","6","7","8","9","10+"].map((n) => (
+                    <option key={n} value={n}>{n}</option>
+                  ))}
+                </select>
               </div>
-              <button
-                onClick={onClose}
-                className="mt-2 px-6 py-2.5 bg-ink text-cream rounded-full text-sm font-medium hover:bg-gold hover:text-ink transition-all"
-              >
-                Close
-              </button>
+
+              <div>
+                <label className="block text-xs font-medium text-ink/60 mb-1.5">Children</label>
+                <select
+                  value={form.children}
+                  onChange={set("children")}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
+                >
+                  {["0","1","2","3","4","5+"].map((n) => (
+                    <option key={n} value={n}>{n}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-xs font-medium text-ink/60 mb-1.5">Accommodation Preference</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { value: "budget", label: "Budget" },
+                    { value: "comfort", label: "Comfort" },
+                    { value: "luxury", label: "Luxury" },
+                  ].map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setForm((f) => ({ ...f, accommodation: opt.value }))}
+                      className={`py-2 rounded-xl border text-xs font-medium transition-all ${
+                        form.accommodation === opt.value
+                          ? "bg-gold/15 border-gold text-ink"
+                          : "border-ink/12 text-ink/55 hover:border-ink/25"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="col-span-2">
+                <label className="block text-xs font-medium text-ink/60 mb-1.5">Special Requests</label>
+                <textarea
+                  value={form.notes}
+                  onChange={set("notes")}
+                  rows={3}
+                  placeholder="Honeymoon setup, dietary needs, accessibility, specific hotels…"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition resize-none"
+                />
+              </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <p className="text-sm text-ink/55 leading-relaxed">
-                Tell us how you&apos;d like to tailor this trip. We&apos;ll build a custom itinerary just for you.
-              </p>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="col-span-2">
-                  <label className="block text-xs font-medium text-ink/60 mb-1.5">Your Name *</label>
-                  <input
-                    type="text"
-                    value={form.name}
-                    onChange={set("name")}
-                    placeholder="Full name"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
-                  />
-                </div>
+            {error && <p className="text-xs text-red-500">{error}</p>}
 
-                <div className="col-span-2">
-                  <label className="block text-xs font-medium text-ink/60 mb-1.5">WhatsApp / Phone *</label>
-                  <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={set("phone")}
-                    placeholder="+91 98765 43210"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
-                  />
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-xs font-medium text-ink/60 mb-1.5">Preferred Travel Dates</label>
-                  <input
-                    type="text"
-                    value={form.travelDates}
-                    onChange={set("travelDates")}
-                    placeholder="e.g. Dec 20–27, flexible in Jan"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-ink/60 mb-1.5">Adults</label>
-                  <select
-                    value={form.adults}
-                    onChange={set("adults")}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
-                  >
-                    {["1","2","3","4","5","6","7","8","9","10+"].map((n) => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-ink/60 mb-1.5">Children</label>
-                  <select
-                    value={form.children}
-                    onChange={set("children")}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition"
-                  >
-                    {["0","1","2","3","4","5+"].map((n) => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-xs font-medium text-ink/60 mb-1.5">Accommodation Preference</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { value: "budget", label: "Budget" },
-                      { value: "comfort", label: "Comfort" },
-                      { value: "luxury", label: "Luxury" },
-                    ].map((opt) => (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => setForm((f) => ({ ...f, accommodation: opt.value }))}
-                        className={`py-2 rounded-xl border text-xs font-medium transition-all ${
-                          form.accommodation === opt.value
-                            ? "bg-gold/15 border-gold text-ink"
-                            : "border-ink/12 text-ink/55 hover:border-ink/25"
-                        }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="col-span-2">
-                  <label className="block text-xs font-medium text-ink/60 mb-1.5">Special Requests</label>
-                  <textarea
-                    value={form.notes}
-                    onChange={set("notes")}
-                    rows={3}
-                    placeholder="Honeymoon setup, dietary needs, accessibility, specific hotels…"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-ink/15 bg-white text-sm text-ink placeholder-ink/35 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition resize-none"
-                  />
-                </div>
-              </div>
-
-              {error && <p className="text-xs text-red-500">{error}</p>}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-ink hover:bg-gold text-cream hover:text-ink rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-60"
-              >
-                {loading ? (
-                  <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>
-                ) : (
-                  "Send Customization Request"
-                )}
-              </button>
-            </form>
-          )}
-        </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 py-3 bg-ink hover:bg-gold text-cream hover:text-ink rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-60"
+            >
+              {loading ? (
+                <><Loader2 className="h-4 w-4 animate-spin" /> Sending…</>
+              ) : (
+                "Send Customization Request"
+              )}
+            </button>
+          </form>
+        )}
       </div>
-    </div>
+    </MobileSheet>
   );
 }

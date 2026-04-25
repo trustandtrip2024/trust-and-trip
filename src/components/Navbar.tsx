@@ -169,16 +169,19 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top strip */}
-      <div className="bg-ink text-cream text-xs py-2 md:py-2.5">
-        <div className="container-custom flex items-center justify-between gap-4">
-          <p className="md:hidden text-gold text-center w-full text-[11px] font-medium tracking-wide">
-            🎉 10% Off on bookings 60+ days in advance ·{" "}
+      {/* Top strip — passion gradient sheen */}
+      <div className="relative bg-ink text-cream text-xs py-2 md:py-2.5 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-plum to-ink opacity-95 pointer-events-none" />
+        <div className="absolute inset-y-0 left-1/3 w-1/3 bg-gradient-to-r from-transparent via-ember/15 to-transparent blur-2xl pointer-events-none" />
+        <div className="relative container-custom flex items-center justify-between gap-4">
+          <p className="md:hidden text-center w-full text-[11px] font-semibold tracking-wide">
+            <span className="text-gradient-aurora">10% Off · book 60+ days ahead</span>{" "}
+            ·{" "}
             <a href="tel:+918115999588" onClick={() => captureIntent("call_click", { note: "Navbar top strip (mobile)" })} className="text-cream/80 hover:text-gold">Call +91 8115 999 588</a>
           </p>
-          <div className="hidden md:flex items-center gap-5 opacity-75">
+          <div className="hidden md:flex items-center gap-5 opacity-90">
             <span className="flex items-center gap-1.5">
-              <MapPin className="h-3 w-3 text-gold" />
+              <MapPin className="h-3 w-3 text-ember" />
               Curating journeys across 60+ destinations
             </span>
           </div>
@@ -187,7 +190,7 @@ export default function Navbar() {
               <Phone className="h-3 w-3" />+91 8115 999 588
             </a>
             <span className="opacity-40">|</span>
-            <span className="text-gold">🎉 10% Off · book 60+ days ahead</span>
+            <span className="font-semibold tracking-wide text-gradient-aurora">10% Off · book 60+ days ahead</span>
           </div>
         </div>
       </div>
@@ -198,25 +201,27 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className={clsx(
           "sticky top-0 z-50 w-full transition-all duration-500",
-          scrolled ? "bg-cream/92 backdrop-blur-xl border-b border-ink/10 shadow-soft" : "bg-transparent"
+          scrolled
+            ? "bg-cream/85 backdrop-blur-2xl border-b border-ember/15 shadow-[0_8px_32px_-12px_rgba(45,26,55,0.18)]"
+            : "bg-transparent"
         )}
       >
         <div className="container-custom flex items-center justify-between h-16 md:h-20 gap-4">
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group shrink-0">
+          {/* Logo — premium passion mark */}
+          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
             <div className="relative">
-              <div className="h-9 w-9 rounded-full bg-ink flex items-center justify-center group-hover:bg-gold transition-colors duration-500">
-                <span className="text-gold group-hover:text-ink text-lg font-display font-semibold transition-colors duration-500">T</span>
+              <div className="h-9 w-9 rounded-full bg-ink flex items-center justify-center transition-all duration-500 group-hover:scale-105 group-hover:shadow-glow-ember ring-1 ring-ember/0 group-hover:ring-ember/40">
+                <span className="text-gradient-aurora text-lg font-display font-semibold transition-colors duration-500">T</span>
               </div>
-              <div className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-gold" />
+              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-gradient-passion shadow-[0_0_10px_rgba(242,107,31,0.7)]" />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="font-display text-lg md:text-xl font-medium tracking-tight text-ink">
-                Trust<span className="text-gold">&</span>Trip
+              <span className="font-display text-lg md:text-xl font-semibold tracking-tight text-ink">
+                Trust<span className="text-gradient-passion italic font-bold">&</span>Trip
               </span>
-              <span className="text-[9px] uppercase tracking-[0.22em] text-ink/50 mt-0.5 hidden sm:block">
-                Crafting Reliable Travel
+              <span className="eyebrow-ember text-[8.5px] tracking-[0.28em] mt-1 hidden sm:block">
+                Crafted with passion
               </span>
             </div>
           </Link>
@@ -276,8 +281,9 @@ export default function Navbar() {
 
             {simpleLinks.map((link) => (
               <Link key={link.href} href={link.href}
-                className="relative px-4 py-2 text-sm text-ink/70 hover:text-ink transition-colors duration-200 rounded-lg hover:bg-ink/4 group">
+                className="relative px-4 py-2 text-sm font-medium text-ink/70 hover:text-ink transition-colors duration-200 rounded-lg group">
                 {link.label}
+                <span className="absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left scale-x-0 bg-gradient-passion rounded-full transition-transform duration-300 group-hover:scale-x-100" />
               </Link>
             ))}
           </nav>
@@ -360,7 +366,7 @@ export default function Navbar() {
 
             <button
               onClick={() => openPlanner()}
-              className="hidden md:inline-flex btn-primary !py-2.5 !px-5 !text-xs whitespace-nowrap"
+              className="hidden md:inline-flex btn-passion !py-2.5 !px-5 !text-xs whitespace-nowrap"
             >
               Plan My Trip
             </button>
