@@ -88,7 +88,13 @@ export default function SearchBar() {
   return (
     <div ref={ref} className="relative w-full max-w-2xl mx-auto">
       {/* Flat search bar */}
-      <div className="flex items-center bg-cream/95 backdrop-blur-xl rounded-2xl shadow-soft-lg border border-cream overflow-hidden">
+      <div
+        role="combobox"
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        aria-controls="searchbar-listbox"
+        className="flex items-center bg-cream/95 backdrop-blur-xl rounded-2xl shadow-soft-lg border border-cream overflow-hidden"
+      >
         <MapPin className="h-4 w-4 text-gold shrink-0 ml-5" />
         <input
           type="text"
@@ -99,10 +105,11 @@ export default function SearchBar() {
           placeholder={PLACEHOLDERS[phIdx]}
           className="flex-1 bg-transparent text-ink text-sm font-medium placeholder:text-ink/40 placeholder:font-normal outline-none px-3 py-4"
           aria-label="Search destinations"
-          aria-expanded={open}
+          aria-autocomplete="list"
         />
         <button
           onClick={handleSearch}
+          aria-label="Search"
           className="m-1.5 bg-ink hover:bg-gold text-cream hover:text-ink transition-all duration-200 rounded-xl px-5 py-3 flex items-center gap-2 text-sm font-medium shrink-0"
         >
           <Search className="h-4 w-4" />
@@ -112,7 +119,7 @@ export default function SearchBar() {
 
       {/* Dropdown — opens upward since bar sits at bottom of hero */}
       {open && (
-        <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-soft-lg border border-ink/8 overflow-hidden z-50">
+        <div id="searchbar-listbox" role="listbox" className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-2xl shadow-soft-lg border border-ink/8 overflow-hidden z-50">
           {!query.trim() && (
             <div className="flex border-b border-ink/8">
               <button

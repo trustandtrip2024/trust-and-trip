@@ -165,7 +165,7 @@ export default function PackageCard({
 
       <div className="p-4 md:p-6 flex-1 flex flex-col">
         {destinationName && (
-          <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-[0.2em] text-ink/50">
+          <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-[0.2em] text-ink/70 font-semibold">
             <MapPin className="h-3 w-3" />
             {destinationName}
             {travelType && (

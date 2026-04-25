@@ -11,19 +11,19 @@ import Spotlight from "../ui/Spotlight";
 const CLIPS: { src: string | null; poster: string; label: string; tag: string }[] = [
   {
     src: "/hero/hero-1.mp4",
-    poster: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=2400&q=85&auto=format&fit=crop",
+    poster: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1600&q=75&auto=format&fit=crop",
     label: "Bali, Indonesia",
     tag: "Most Loved",
   },
   {
     src: null,
-    poster: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2400&q=85&auto=format&fit=crop",
+    poster: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=75&auto=format&fit=crop",
     label: "Himalayas, India",
     tag: "Adventure",
   },
   {
     src: null,
-    poster: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=2400&q=85&auto=format&fit=crop",
+    poster: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1600&q=75&auto=format&fit=crop",
     label: "Maldives",
     tag: "Luxury",
   },

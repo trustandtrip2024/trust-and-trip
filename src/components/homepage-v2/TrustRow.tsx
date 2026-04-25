@@ -32,7 +32,7 @@ export default function TrustRow() {
                 <p className="font-display text-sm md:text-base font-medium text-ink leading-tight whitespace-nowrap">
                   {value}
                 </p>
-                <p className="text-[10px] md:text-[11px] text-ink/50 leading-tight whitespace-nowrap">
+                <p className="text-[10px] md:text-[11px] text-ink/70 leading-tight whitespace-nowrap">
                   {label}
                 </p>
               </div>

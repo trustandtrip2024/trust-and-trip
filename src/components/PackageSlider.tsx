@@ -95,7 +95,8 @@ export default function PackageSlider({
           </div>
           <Link
             href={viewAllHref}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-gold transition-colors group"
+            aria-label={viewAllLabel}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:text-ember transition-colors group"
           >
             <span className="hidden sm:inline">{viewAllLabel}</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -140,18 +141,22 @@ export default function PackageSlider({
         </div>
       </div>
 
-      {/* Progress dots */}
+      {/* Progress dots — 44x44 tap target wraps visible pill */}
       {dotCount > 1 && (
-        <div className="mt-4 flex items-center justify-center gap-1.5 lg:hidden">
+        <div className="mt-2 flex items-center justify-center gap-0.5 lg:hidden">
           {Array.from({ length: dotCount }).map((_, i) => (
             <button
               key={i}
               aria-label={`Go to package ${i + 1}`}
               onClick={() => scrollTo(i)}
-              className={`rounded-full transition-all duration-300 ${
-                selectedIndex === i ? "w-5 h-1.5 bg-gold" : "w-1.5 h-1.5 bg-ink/20 hover:bg-ink/40"
-              }`}
-            />
+              className="h-11 w-11 inline-flex items-center justify-center"
+            >
+              <span
+                className={`block rounded-full transition-all duration-300 ${
+                  selectedIndex === i ? "w-5 h-1.5 bg-gold" : "w-1.5 h-1.5 bg-ink/20"
+                }`}
+              />
+            </button>
           ))}
         </div>
       )}

@@ -81,15 +81,15 @@ body {
   }
 
   .eyebrow {
-    @apply text-[11px] uppercase tracking-[0.25em] font-medium text-gold;
+    @apply text-[11px] uppercase tracking-[0.25em] font-semibold text-gold-700;
   }
 
   .eyebrow-ink {
-    @apply text-[11px] uppercase tracking-[0.25em] font-medium text-ink/60;
+    @apply text-[11px] uppercase tracking-[0.25em] font-semibold text-ink/75;
   }
 
   .eyebrow-ember {
-    @apply text-[11px] uppercase tracking-[0.28em] font-semibold text-ember;
+    @apply text-[11px] uppercase tracking-[0.28em] font-bold text-ember-700;
   }
 
   .text-gradient-passion {
