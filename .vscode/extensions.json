@@ -1,0 +1,19 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next",
+    "Anthropic.claude-code",
+    "Vercel.vercel-vscode",
+    "Supabase.vscode-supabase-extension",
+    "Sanity-io.vscode-sanity",
+    "eamodio.gitlens",
+    "ms-azuretools.vscode-docker",
+    "yoavbls.pretty-ts-errors",
+    "usernamehw.errorlens",
+    "PKief.material-icon-theme",
+    "christian-kohler.path-intellisense",
+    "EditorConfig.EditorConfig"
+  ]
+}
