@@ -18,16 +18,14 @@ import ExperienceVectorGrid from "@/components/homepage-v2/ExperienceVectorGrid"
 const FinalCTA = dynamic(() => import("@/components/homepage-v2/FinalCTA"));
 const GoogleReviewsSection = dynamic(() => import("@/components/GoogleReviewsSection"));
 const HomepageOffersSection = dynamic(() => import("@/components/HomepageOffersSection"));
+const SacredJourneys = dynamic(() => import("@/components/homepage-v2/SacredJourneys"));
 
 import {
   getDestinations,
   getTrendingPackages,
   getBudgetPackages,
   getPackagesByType,
-  getPilgrimPackages,
 } from "@/lib/sanity-queries";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
 const DEST_TAGS = [
   { label: "Bali",       href: "/packages?destination=bali",      emoji: "🌺" },
@@ -68,13 +66,11 @@ export default async function HomePage() {
     trendingPackages,
     budgetPackages,
     couplePackages,
-    pilgrimPackages,
   ] = await Promise.all([
     getDestinations(),
     getTrendingPackages(),
     getBudgetPackages(),
     getPackagesByType("Couple"),
-    getPilgrimPackages(),
   ]);
 
   return (
@@ -142,60 +138,8 @@ export default async function HomePage() {
       {/* ── 6. How it works (3 steps) ────────────────────────── */}
       <HowItWorks />
 
-      {/* ── 7. Pilgrim trips ─────────────────────────────────── */}
-      {pilgrimPackages.length > 0 && (
-        <section className="py-20 md:py-28" aria-labelledby="pilgrim-heading">
-          <div className="container-custom">
-            <div className="flex items-end justify-between gap-4 mb-10 md:mb-14">
-              <div>
-                <span className="eyebrow" style={{ color: "#92400e" }}>Sacred Journeys</span>
-                <h2 id="pilgrim-heading" className="heading-section mt-2 max-w-sm text-balance">
-                  Char Dham, Kedarnath &
-                  <span className="italic font-light" style={{ color: "#b45309" }}> Devbhumi yatras.</span>
-                </h2>
-                <p className="mt-3 text-sm text-ink/55 max-w-md leading-relaxed">
-                  Fully arranged pilgrimages by road or helicopter — registration, transfers, and stay included.
-                </p>
-              </div>
-              <Link
-                href="/destinations/uttarakhand"
-                className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-ink/65 hover:text-gold transition-colors group shrink-0"
-              >
-                All yatra packages
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-              {pilgrimPackages.map((pkg) => (
-                <Link
-                  key={pkg.slug}
-                  href={`/packages/${pkg.slug}`}
-                  className="group bg-amber-50/60 border border-amber-100 hover:border-amber-300 hover:bg-white rounded-2xl p-5 transition-all duration-300"
-                >
-                  <div className="flex items-start justify-between gap-3 mb-3">
-                    <h3 className="font-display text-base font-medium leading-snug text-ink group-hover:text-amber-900 transition-colors flex-1">
-                      {pkg.title}
-                    </h3>
-                    <span className="shrink-0 text-[11px] font-semibold text-amber-700 bg-white border border-amber-200 px-2.5 py-1 rounded-full whitespace-nowrap">
-                      {pkg.duration}
-                    </span>
-                  </div>
-                  <p className="text-xs text-ink/50 leading-relaxed line-clamp-2 mb-4">{pkg.description}</p>
-                  <div className="flex items-center justify-between pt-3 border-t border-amber-100">
-                    <p className="text-sm font-semibold text-amber-800">
-                      ₹{pkg.price.toLocaleString("en-IN")}
-                      <span className="text-xs font-normal text-ink/40 ml-1">/ person</span>
-                    </p>
-                    <span className="text-xs text-ink/40 group-hover:text-amber-700 inline-flex items-center gap-1 transition-colors">
-                      View <ArrowRight className="h-3 w-3" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      {/* ── 7. Sacred Journeys (Char Dham + Kedarnath yatras) ── */}
+      <SacredJourneys />
 
       {/* ── 8. Offers ─────────────────────────────────────────── */}
       <HomepageOffersSection />
