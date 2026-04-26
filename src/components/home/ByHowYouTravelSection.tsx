@@ -2,11 +2,14 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Heart, Users, User, Globe2, Mountain, Sunset, Church, Crown } from "lucide-react";
+import { ArrowRight, Heart, Users, User, Globe2, Mountain, Sunset, Church, Crown, Sparkles } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import ChipFilterGroup from "@/components/ui/ChipFilterGroup";
-import PackageCardUI from "@/components/ui/PackageCard";
-import { STYLE_PACKAGES, type StyleId } from "@/data/packagesByStyle";
+import PackageCardUI, { type PackageCardProps } from "@/components/ui/PackageCard";
+
+export type StyleId =
+  | "Honeymoon" | "Family" | "Solo" | "Group"
+  | "Adventure" | "Wellness" | "Pilgrim" | "Luxury";
 
 const CHIPS: { id: StyleId; label: string; icon: typeof Heart; subtitle: string }[] = [
   { id: "Honeymoon", label: "Honeymoon", icon: Heart,    subtitle: "Quiet rooms, late checkouts, dinners that end with stars." },
@@ -24,6 +27,31 @@ interface Props {
   titleStart?: string;
   titleItalic?: string;
   lede?: string;
+  /** Real packages from Sanity, grouped by style. Empty styles show a custom-plan CTA. */
+  packagesByStyle?: Partial<Record<StyleId, PackageCardProps[]>>;
+}
+
+function CustomPlanCard({ style }: { style: StyleId }) {
+  return (
+    <article className="tt-card tt-card-p flex flex-col items-start justify-center gap-4 text-center bg-amber-50/40 border-amber-200/60">
+      <div className="h-12 w-12 rounded-pill bg-amber-100 grid place-items-center text-amber-700 self-center">
+        <Sparkles className="h-5 w-5" />
+      </div>
+      <h3 className="font-serif text-h3 text-stone-900 self-center">
+        {style} trips, made to order.
+      </h3>
+      <p className="text-body text-stone-600 self-center max-w-sm">
+        We craft these on request — tell us your dates, your dream, and we&apos;ll send a custom itinerary in 24 hours.
+      </p>
+      <Link
+        href={`/plan?style=${encodeURIComponent(style)}`}
+        className="tt-cta self-center !w-auto !min-w-[220px]"
+      >
+        Plan my {style.toLowerCase()} trip
+        <ArrowRight className="h-4 w-4" />
+      </Link>
+    </article>
+  );
 }
 
 export default function ByHowYouTravelSection({
@@ -31,14 +59,16 @@ export default function ByHowYouTravelSection({
   titleStart = "Pick a feeling.",
   titleItalic = "We'll do the rest.",
   lede = "The destination matters less than the kind of trip you want it to be. Choose the mood — we'll match the place.",
+  packagesByStyle = {},
 }: Props = {}) {
   const [active, setActive] = useState<StyleId>("Honeymoon");
 
   const items = useMemo(
-    () => STYLE_PACKAGES.filter((p) => p.style === active).slice(0, 6),
-    [active]
+    () => (packagesByStyle[active] ?? []).slice(0, 6),
+    [packagesByStyle, active]
   );
   const subtitle = CHIPS.find((c) => c.id === active)?.subtitle;
+  const empty = items.length === 0;
 
   return (
     <section aria-labelledby="bhyt-title" className="py-18 md:py-22">
@@ -57,13 +87,19 @@ export default function ByHowYouTravelSection({
           )}
         </div>
 
-        <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {items.map((p) => (
-            <li key={p.id}>
-              <PackageCardUI {...p} />
-            </li>
-          ))}
-        </ul>
+        {empty ? (
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+            <CustomPlanCard style={active} />
+          </div>
+        ) : (
+          <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {items.map((p) => (
+              <li key={p.href}>
+                <PackageCardUI {...p} />
+              </li>
+            ))}
+          </ul>
+        )}
 
         <div className="mt-10">
           <Link

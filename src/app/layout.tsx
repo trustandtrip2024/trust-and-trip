@@ -45,6 +45,7 @@ import ConditionalFooter from "@/components/ConditionalFooter";
 import SearchProvider from "@/components/SearchProvider";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import MetaPixel from "@/components/MetaPixel";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Lazy-load below-fold and interaction-triggered components — keeps initial JS lean.
 const TripPlannerModal = dynamic(() => import("@/components/TripPlannerModal"), { ssr: false });
@@ -223,6 +224,7 @@ export default function RootLayout({
         </AuthProvider>
         </CookieConsentProvider>
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

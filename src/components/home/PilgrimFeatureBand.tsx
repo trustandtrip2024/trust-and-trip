@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
-import PackageCardUI from "@/components/ui/PackageCard";
-import { STYLE_PACKAGES } from "@/data/packagesByStyle";
+import PackageCardUI, { type PackageCardProps } from "@/components/ui/PackageCard";
 
 // TODO: replace with real /img/pilgrim-feature.jpg once the asset is in /public.
 const FEATURE_IMAGE =
@@ -14,6 +13,7 @@ interface Props {
   titleStart?: string;
   titleItalic?: string;
   lede?: string;
+  yatras?: PackageCardProps[];
 }
 
 export default function PilgrimFeatureBand({
@@ -21,8 +21,9 @@ export default function PilgrimFeatureBand({
   titleStart = "Yatras, walked with",
   titleItalic = "quiet care.",
   lede = "Helicopter darshans, calm transfers, vegetarian planning, and hotels close to the temples. We've shepherded 600+ yatris this season — and our planners know which queue moves fastest at Kedarnath.",
+  yatras: yatrasProp,
 }: Props = {}) {
-  const yatras = STYLE_PACKAGES.filter((p) => p.style === "Pilgrim").slice(0, 3);
+  const yatras = (yatrasProp ?? []).slice(0, 3);
 
   // TODO: replace with real WhatsApp deeplink env or constant.
   const WHATSAPP_HREF =
@@ -52,7 +53,7 @@ export default function PilgrimFeatureBand({
           {yatras.length > 0 && (
             <ul className="mt-7 grid grid-cols-1 gap-5">
               {yatras.map((p) => (
-                <li key={p.id}>
+                <li key={p.href}>
                   <PackageCardUI {...p} layout="horizontal" density="compact" />
                 </li>
               ))}

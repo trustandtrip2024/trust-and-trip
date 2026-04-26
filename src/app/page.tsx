@@ -11,15 +11,18 @@ import dynamic from "next/dynamic";
 import HeroVideoSearch from "@/components/home/HeroVideoSearch";
 import RecentlyCraftedSection from "@/components/home/RecentlyCraftedSection";
 import ThreeStepsBand from "@/components/home/ThreeStepsBand";
-import ByHowYouTravelSection from "@/components/home/ByHowYouTravelSection";
+import ByHowYouTravelSection, { type StyleId } from "@/components/home/ByHowYouTravelSection";
 import PilgrimFeatureBand from "@/components/home/PilgrimFeatureBand";
 import PackagesByDurationSection from "@/components/home/PackagesByDurationSection";
 import DestinationsGrid from "@/components/home/DestinationsGrid";
+import type { PackageCardProps } from "@/components/ui/PackageCard";
+import type { Package } from "@/lib/data";
 
 import {
   getDestinations,
   getPilgrimPackages,
   getHomepageContent,
+  getPackagesByType,
 } from "@/lib/sanity-queries";
 
 // Below-fold — chunk-split, still SSR'd for SEO; reserve height to avoid CLS.
@@ -32,14 +35,57 @@ const HomeNewsletter         = dynamic(() => import("@/components/home/HomeNewsl
 const SeoFooterIndex         = dynamic(() => import("@/components/home/SeoFooterIndex"),         { loading: () => <div className="h-[640px]" /> });
 const SacredJourneys         = dynamic(() => import("@/components/homepage-v2/SacredJourneys"),  { loading: () => <div className="h-[600px]" /> });
 
+// Sanity Package -> PackageCardProps so card hrefs point at real pages.
+function toCardProps(p: Package): PackageCardProps {
+  return {
+    image: p.image,
+    title: p.title,
+    href: `/packages/${p.slug}`,
+    destination: p.destinationName,
+    travelStyle: p.travelType,
+    duration: p.duration,
+    rating: p.rating,
+    ratingCount: p.reviews,
+    price: p.price,
+    originalPrice: Math.round(p.price * 1.18),
+    saveAmount: Math.round(p.price * 0.18),
+    customizeHref: `/customize-trip?package=${p.slug}`,
+    trending: p.trending,
+    limitedSlots: p.limitedSlots,
+  };
+}
+
 export default async function HomePage() {
-  const [destinations, pilgrimPackages, content] = await Promise.all([
+  const [
+    destinations,
+    pilgrimPackages,
+    content,
+    couple,
+    family,
+    solo,
+    group,
+  ] = await Promise.all([
     getDestinations(),
     getPilgrimPackages(),
     getHomepageContent(),
+    getPackagesByType("Couple"),
+    getPackagesByType("Family"),
+    getPackagesByType("Solo"),
+    getPackagesByType("Group"),
   ]);
 
   const c = content ?? {};
+
+  // Map schema travelTypes onto the brief's 8 mood chips. Styles without a
+  // direct schema flag (Adventure / Wellness / Luxury) render the
+  // "we craft on request" CTA card from inside the section component.
+  const packagesByStyle: Partial<Record<StyleId, PackageCardProps[]>> = {
+    Honeymoon: couple.map(toCardProps),
+    Family:    family.map(toCardProps),
+    Solo:      solo.map(toCardProps),
+    Group:     group.map(toCardProps),
+    Pilgrim:   pilgrimPackages.map(toCardProps),
+  };
 
   return (
     <>
@@ -71,12 +117,14 @@ export default async function HomePage() {
         titleStart={c.byHowYouTravel?.titleStart}
         titleItalic={c.byHowYouTravel?.titleItalic}
         lede={c.byHowYouTravel?.lede}
+        packagesByStyle={packagesByStyle}
       />
       <PilgrimFeatureBand
         eyebrow={c.pilgrimFeature?.eyebrow}
         titleStart={c.pilgrimFeature?.titleStart}
         titleItalic={c.pilgrimFeature?.titleItalic}
         lede={c.pilgrimFeature?.lede}
+        yatras={pilgrimPackages.map(toCardProps)}
       />
       <PackagesByDurationSection
         eyebrow={c.packagesByDuration?.eyebrow}
