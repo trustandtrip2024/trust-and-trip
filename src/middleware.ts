@@ -4,6 +4,23 @@ const REF_COOKIE = "tt_ref";
 const REF_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 const REF_CODE_RE = /^CRTR-[A-Z0-9]{4,10}$/;
 
+// Constant-time string compare — middleware runs in the Edge runtime which
+// doesn't expose `crypto.timingSafeEqual`, so we fold to a length-equal
+// boolean and run the loop in full both ways.
+function safeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    let _bogus = 0;
+    for (let i = 0; i < a.length; i++) _bogus |= a.charCodeAt(i) ^ a.charCodeAt(i);
+    void _bogus;
+    return false;
+  }
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
+}
+
 export function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
 
@@ -18,7 +35,6 @@ export function middleware(req: NextRequest) {
       httpOnly: false,   // need access from client for some flows
       secure: req.nextUrl.protocol === "https:",
     });
-    // continue to admin check below for /admin paths
     if (!pathname.startsWith("/admin") && !pathname.startsWith("/api/admin")) {
       return res;
     }
@@ -29,15 +45,21 @@ export function middleware(req: NextRequest) {
   if (!isAdminPath) return NextResponse.next();
 
   const adminSecret = process.env.ADMIN_SECRET;
-  if (!adminSecret) return NextResponse.next(); // no secret set → open (dev only)
+  // Fail-closed: never let admin pass when ADMIN_SECRET is missing.
+  // Local dev should set ADMIN_SECRET in .env.local.
+  if (!adminSecret) {
+    return new NextResponse("Admin auth not configured", { status: 500 });
+  }
 
   const authHeader = req.headers.get("authorization");
   if (authHeader) {
     const [scheme, encoded] = authHeader.split(" ");
     if (scheme === "Basic" && encoded) {
-      const decoded = atob(encoded);
-      const [, pass] = decoded.split(":");
-      if (pass === adminSecret) return NextResponse.next();
+      try {
+        const decoded = atob(encoded);
+        const [, pass] = decoded.split(":");
+        if (pass && safeEqual(pass, adminSecret)) return NextResponse.next();
+      } catch { /* malformed header → fall through to challenge */ }
     }
   }
 
@@ -47,8 +69,6 @@ export function middleware(req: NextRequest) {
   });
 }
 
-// Match admin routes AND every page (for ref capture). API routes excluded so
-// they don't pay middleware cost on hot paths; ref is read from cookie there.
 export const config = {
   matcher: [
     "/admin/:path*",

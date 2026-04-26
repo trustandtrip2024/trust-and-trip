@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { requireAdmin } from "@/lib/auth-server";
 
 // Admin: bulk-release creator earnings from 'pending' -> 'payable' once the
 // cooling-off window has passed. The cooling-off window protects against
@@ -15,7 +16,9 @@ const admin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function POST(_req: NextRequest) {
+export async function POST(req: NextRequest) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
   const cutoff = new Date(Date.now() - COOL_OFF_DAYS * 24 * 60 * 60 * 1000).toISOString();
 
   // Find pending earnings whose booking is verified and older than cutoff

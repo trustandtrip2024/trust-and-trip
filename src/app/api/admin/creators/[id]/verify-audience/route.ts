@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { requireAdmin } from "@/lib/auth-server";
 
 // Admin: stamp the manually-verified Instagram audience size on a creator.
 // Used today via /admin/creators inline editor (admin opens the IG profile,
@@ -15,6 +16,8 @@ const admin = createClient(
 );
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
   let body: { count?: unknown } = {};
   try { body = await req.json(); } catch { /* empty body OK */ }
 

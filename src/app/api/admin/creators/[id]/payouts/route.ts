@@ -1,19 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { requireAdmin } from "@/lib/auth-server";
 
 // Admin: create a payout that bundles all current 'payable' earnings for one
 // creator into a single payout row. Earnings are linked via payout_id but
 // remain 'payable' until the payout is marked paid — so that we can cancel /
 // retry without losing the bundle.
 //
-// Protected by middleware Basic Auth.
+// Protected by middleware Basic Auth AND inline requireAdmin.
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
   // Confirm creator exists + is active
   const { data: creator, error: cErr } = await admin
     .from("creators")

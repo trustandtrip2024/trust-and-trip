@@ -1,28 +1,14 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
-import { useUserStore } from "@/store/useUserStore";
+import { redirect } from "next/navigation";
 import DashboardNav from "@/components/dashboard/DashboardNav";
+import { getServerUser } from "@/lib/supabase-server";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useUserStore();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !user) router.replace("/login");
-  }, [user, loading, router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-tat-paper flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-tat-charcoal/30" />
-      </div>
-    );
-  }
-
-  if (!user) return null;
+// Server-side auth guard: any unauthed visitor is redirected before any
+// client JS runs. The previous client-side useEffect redirect remains in
+// the navigation component for fast in-app transitions, but the security
+// boundary now sits here.
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const user = await getServerUser();
+  if (!user) redirect("/login");
 
   return (
     <div className="min-h-screen bg-tat-paper/50 flex">

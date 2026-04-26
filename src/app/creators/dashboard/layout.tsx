@@ -1,34 +1,14 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
-import { useUserStore } from "@/store/useUserStore";
+import { redirect } from "next/navigation";
 import CreatorNav from "@/components/creators/CreatorNav";
+import { getServerUser } from "@/lib/supabase-server";
 
-export default function CreatorDashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useUserStore();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (loading) return;
-    if (!user) {
-      router.replace("/login?next=/creators/dashboard");
-      return;
-    }
-    if (user.user_metadata?.role !== "creator") {
-      router.replace("/creators/apply");
-    }
-  }, [user, loading, router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-tat-paper flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-tat-charcoal/30" />
-      </div>
-    );
-  }
-  if (!user || user.user_metadata?.role !== "creator") return null;
+// Server-side auth + role guard. Unauthed users go to /login; authed
+// users without role=creator land on /creators/apply.
+export default async function CreatorDashboardLayout({ children }: { children: React.ReactNode }) {
+  const user = await getServerUser();
+  if (!user) redirect("/login?next=/creators/dashboard");
+  const role = (user.user_metadata as Record<string, unknown> | undefined)?.role;
+  if (role !== "creator") redirect("/creators/apply");
 
   return (
     <div className="min-h-screen bg-tat-paper/50 flex">

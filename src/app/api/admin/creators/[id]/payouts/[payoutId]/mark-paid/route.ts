@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { requireAdmin } from "@/lib/auth-server";
 
 // Admin: mark a payout as paid after the manual UPI / bank / PayPal transfer
 // has settled. Marks the linked earnings as paid, bumps creators.total_paid,
@@ -48,6 +49,8 @@ async function sendPayoutEmail(args: {
 }
 
 export async function POST(req: NextRequest, { params }: { params: { id: string; payoutId: string } }) {
+  const denied = requireAdmin(req);
+  if (denied) return denied;
   let body: { txn_ref?: string; notes?: string } = {};
   try { body = await req.json(); } catch { /* empty body OK */ }
 
