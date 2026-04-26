@@ -2,35 +2,61 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import DestinationCardUI from "@/components/ui/DestinationCard";
+import type { Destination } from "@/lib/data";
 
-const u = (id: string) => `https://images.unsplash.com/${id}?w=1200&q=75&auto=format&fit=crop`;
+interface Props {
+  destinations: Destination[];
+  /** Fallback whispers when a destination doc has no `whisper` field set yet. */
+  whisperFallbacks?: Record<string, string>;
+  eyebrow?: string;
+  titleStart?: string;
+  titleItalic?: string;
+  lede?: string;
+}
 
-const DESTINATIONS = [
-  { name: "Uttarakhand",   country: "India",       region: "Himalayas",        whisper: "Mountains that hold their silence well.", image: u("photo-1561361058-c24cecae35ca"),  href: "/destinations/uttarakhand",      packageCount: 24, priceFrom: 22000 },
-  { name: "Kerala",        country: "India",       region: "South India",      whisper: "Slow water, slower mornings.",            image: u("photo-1602216056096-3b40cc0c9944"), href: "/destinations/kerala",            packageCount: 28, priceFrom: 28000 },
-  { name: "Ladakh",        country: "India",       region: "Himalayas",        whisper: "Where the road is half the holiday.",     image: u("photo-1622308644420-b20142b1e4fc"), href: "/destinations/ladakh",            packageCount: 16, priceFrom: 30000 },
-  { name: "Spiti Valley",  country: "India",       region: "Himachal",         whisper: "Cold deserts and warm tea.",              image: u("photo-1626621341517-bbf3d9990a23"), href: "/destinations/himachal-pradesh",  packageCount: 12, priceFrom: 60000 },
-  { name: "Bali",          country: "Indonesia",   region: "Southeast Asia",   whisper: "Green, gentle, and full of surprises.",   image: u("photo-1537996194471-e657df975ab4"), href: "/destinations/bali",              packageCount: 32, priceFrom: 45000 },
-  { name: "Maldives",      country: "Maldives",    region: "Indian Ocean",     whisper: "Where the floor is the ocean.",           image: u("photo-1514282401047-d79a71a590e8"), href: "/destinations/maldives",          packageCount: 18, priceFrom: 85000 },
-  { name: "Switzerland",   country: "Switzerland", region: "Central Europe",   whisper: "The Alps, on your terms.",                image: u("photo-1527668752968-14dc70a27c95"), href: "/destinations/switzerland",       packageCount: 22, priceFrom: 125000 },
-  { name: "Japan",         country: "Japan",       region: "East Asia",        whisper: "Old country, careful detail.",            image: u("photo-1540959733332-eab4deabeeaf"), href: "/destinations/japan",             packageCount: 16, priceFrom: 90000 },
-];
+const DEFAULT_FALLBACKS: Record<string, string> = {
+  uttarakhand:        "Mountains that hold their silence well.",
+  kerala:             "Slow water, slower mornings.",
+  ladakh:             "Where the road is half the holiday.",
+  "himachal-pradesh": "Cold deserts and warm tea.",
+  bali:               "Green, gentle, and full of surprises.",
+  maldives:           "Where the floor is the ocean.",
+  switzerland:        "The Alps, on your terms.",
+  japan:              "Old country, careful detail.",
+};
 
-export default function DestinationsGrid() {
+export default function DestinationsGrid({
+  destinations,
+  whisperFallbacks = DEFAULT_FALLBACKS,
+  eyebrow = "Destinations",
+  titleStart = "Worth crossing oceans,",
+  titleItalic = "and state lines.",
+  lede = "Sixty places we know well enough to recommend. Eight of our most-loved are below — the rest are a click away.",
+}: Props) {
+  const items = destinations.slice(0, 8);
+  if (items.length === 0) return null;
+
   return (
     <section aria-labelledby="dest-title" className="py-18 md:py-22">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <SectionHeader
-          eyebrow="Destinations"
-          title="Worth crossing oceans,"
-          italicTail="and state lines."
-          lede="Sixty places we know well enough to recommend. Eight of our most-loved are below — the rest are a click away."
+          eyebrow={eyebrow}
+          title={titleStart}
+          italicTail={titleItalic}
+          lede={lede}
         />
 
         <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {DESTINATIONS.map((d) => (
-            <li key={d.name}>
-              <DestinationCardUI {...d} />
+          {items.map((d) => (
+            <li key={d.slug}>
+              <DestinationCardUI
+                image={d.image}
+                name={d.name}
+                region={d.region}
+                country={d.country}
+                whisper={d.whisper ?? whisperFallbacks[d.slug] ?? d.tagline ?? d.region}
+                href={`/destinations/${d.slug}`}
+              />
             </li>
           ))}
         </ul>

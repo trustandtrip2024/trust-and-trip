@@ -49,7 +49,8 @@ const DESTINATIONS_QUERY = `*[_type == "destination"] | order(name asc) {
   "bestTimeToVisit": bestTimeToVisit,
   "idealDuration": idealDuration,
   "thingsToDo": thingsToDo,
-  "highlights": highlights
+  "highlights": highlights,
+  "whisper": whisper
 }`;
 
 const DESTINATION_BY_SLUG_QUERY = `*[_type == "destination" && slug.current == $slug][0] {
@@ -65,7 +66,8 @@ const DESTINATION_BY_SLUG_QUERY = `*[_type == "destination" && slug.current == $
   "bestTimeToVisit": bestTimeToVisit,
   "idealDuration": idealDuration,
   "thingsToDo": thingsToDo,
-  "highlights": highlights
+  "highlights": highlights,
+  "whisper": whisper
 }`;
 
 type SanityDestination = Omit<Destination, "image" | "heroImage"> & {
@@ -301,6 +303,114 @@ export async function getOfferPackages(): Promise<Package[]> {
     `*[_type == "package" && (trending == true || limitedSlots == true || featured == true)] | order(rating desc) [0...8] { ${PACKAGE_FIELDS} }`
   );
   return raw.map(mapPackage);
+}
+
+// ─── Homepage content (singleton) ─────────────────────────────────────────
+
+export type SectionCopy = {
+  eyebrow?: string;
+  titleStart?: string;
+  titleItalic?: string;
+  lede?: string;
+};
+
+export type HomepageContent = {
+  hero?: SectionCopy & { searchPlaceholder?: string; ctaLabel?: string; trustStrip?: string };
+  recentlyCrafted?: SectionCopy;
+  threeSteps?: SectionCopy & {
+    closingLine?: string;
+    steps?: { n: string; title: string; body: string }[];
+  };
+  byHowYouTravel?: SectionCopy;
+  pilgrimFeature?: SectionCopy;
+  packagesByDuration?: SectionCopy;
+  destinations?: SectionCopy;
+  reviews?: SectionCopy;
+  ugc?: SectionCopy;
+  pillars?: SectionCopy & {
+    closingLine?: string;
+    pillars?: { icon: string; title: string; headline: string; body: string }[];
+  };
+  press?: SectionCopy;
+  finalCta?: SectionCopy & { ctaLabel?: string; microcopy?: string };
+  newsletter?: SectionCopy & { placeholder?: string; buttonLabel?: string; footerMicrocopy?: string };
+};
+
+export async function getHomepageContent(): Promise<HomepageContent | null> {
+  return cached("sanity:homepageContent", TTL.medium, async () => {
+    const raw = await sanityClient.fetch<HomepageContent | null>(
+      `*[_id == "homepageContent"][0]`
+    );
+    return raw ?? null;
+  });
+}
+
+// ─── Partner logos / press / UGC ──────────────────────────────────────────
+
+export type PartnerLogo = {
+  name: string;
+  kind: "tourism" | "press" | "accreditation" | "booking";
+  logo: string | null;
+  href?: string;
+  flag?: string;
+  accentColor?: string;
+};
+
+export async function getPartnerLogos(kind?: PartnerLogo["kind"]): Promise<PartnerLogo[]> {
+  return cached(`sanity:partnerLogos:${kind ?? "all"}`, TTL.long, async () => {
+    const filter = kind ? ` && kind == "${kind}"` : "";
+    const raw = await sanityClient.fetch<(Omit<PartnerLogo, "logo"> & { logo: any })[]>(
+      `*[_type == "partnerLogo" && active == true${filter}] | order(order asc, name asc) {
+        name, kind, logo, href, flag, accentColor
+      }`
+    );
+    return raw.map((p) => ({
+      ...p,
+      logo: p.logo ? urlFor(p.logo).width(240).quality(80).url() : null,
+    }));
+  });
+}
+
+export type PressQuote = {
+  quote: string;
+  attribution?: string;
+  sourceUrl?: string;
+};
+
+export async function getFeaturedPressQuote(): Promise<PressQuote | null> {
+  return cached("sanity:pressQuote:featured", TTL.long, async () => {
+    const raw = await sanityClient.fetch<PressQuote | null>(
+      `*[_type == "pressQuote" && featured == true] | order(publishedAt desc) [0] {
+        quote, attribution, sourceUrl
+      }`
+    );
+    return raw ?? null;
+  });
+}
+
+export type UgcPost = {
+  firstName: string;
+  destination: string;
+  caption?: string;
+  image: string;
+  instagramHandle?: string;
+};
+
+export async function getUgcPosts(): Promise<UgcPost[]> {
+  return cached("sanity:ugc", TTL.medium, async () => {
+    const raw = await sanityClient.fetch<(Omit<UgcPost, "image"> & { image: any })[]>(
+      `*[_type == "ugcPost" && active == true && permissionGranted == true]
+        | order(order asc, _createdAt desc) [0...12] {
+        firstName, destination, caption, image, instagramHandle
+      }`
+    );
+    return raw
+      .filter((p) => !!p.image)
+      .map((p) => ({
+        ...p,
+        image: urlFor(p.image).width(600).height(750).quality(75).url(),
+      }));
+  });
 }
 
 // ─── Blog queries ─────────────────────────────────────────────────────────

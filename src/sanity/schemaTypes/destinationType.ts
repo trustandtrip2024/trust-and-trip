@@ -23,6 +23,13 @@ export const destinationType = defineType({
     defineField({ name: 'priceFrom', title: 'Price From (₹)', type: 'number', validation: (R) => R.required().positive() }),
     defineField({ name: 'tagline', title: 'Tagline', type: 'string' }),
     defineField({
+      name: 'whisper',
+      title: 'Whisper (poetic one-liner shown on home destination cards)',
+      type: 'string',
+      description: 'Editorial single line, ~6–10 words. e.g. "Slow water, slower mornings."',
+      validation: (R) => R.max(120),
+    }),
+    defineField({
       name: 'image', title: 'Card Image', type: 'image',
       options: { hotspot: true },
     }),

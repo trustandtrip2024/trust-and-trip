@@ -1,13 +1,27 @@
+import Image from "next/image";
+import Link from "next/link";
 import SectionHeader from "@/components/ui/SectionHeader";
+import type { PartnerLogo, PressQuote } from "@/lib/sanity-queries";
 
-// TODO: Replace with real partner / press logos. Until assets exist, render
-// neutral text-tile placeholders. We never invent press quotes.
-const PLACEHOLDER_LOGOS = [
-  "Press Logo 1", "Press Logo 2", "Press Logo 3", "Press Logo 4",
-  "Tourism Board 1", "Tourism Board 2", "Tourism Board 3", "Tourism Board 4",
-];
+interface Props {
+  eyebrow?: string;
+  titleStart?: string;
+  titleItalic?: string;
+  lede?: string;
+  logos?: PartnerLogo[];
+  quote?: PressQuote | null;
+}
 
-export default function PressPartnersBand() {
+export default function PressPartnersBand({
+  eyebrow = "As featured in",
+  titleStart = "Trusted,",
+  titleItalic = "on record.",
+  lede = "A note from the press, and the tourism boards we work with directly.",
+  logos,
+  quote,
+}: Props = {}) {
+  const items = logos ?? [];
+
   return (
     <section
       aria-labelledby="press-title"
@@ -15,33 +29,77 @@ export default function PressPartnersBand() {
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-6xl">
         <div className="text-center">
-          <SectionHeader
-            eyebrow="As featured in"
-            title="Trusted,"
-            italicTail="on record."
-            lede="A note from the press, and the tourism boards we work with directly."
-            align="center"
-          />
+          <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} align="center" />
         </div>
 
-        <ul
-          aria-label="Featured publications and tourism partners"
-          className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 opacity-70"
-        >
-          {PLACEHOLDER_LOGOS.map((label) => (
-            <li
-              key={label}
-              className="h-8 px-4 inline-flex items-center justify-center rounded-md border border-stone-300 text-tag uppercase text-stone-500 grayscale"
-            >
-              {label}
-            </li>
-          ))}
-        </ul>
+        {items.length > 0 ? (
+          <ul
+            aria-label="Featured publications and partners"
+            className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-6 opacity-80"
+          >
+            {items.map((p) => {
+              const logo = p.logo ? (
+                <Image
+                  src={p.logo}
+                  alt={p.name}
+                  width={120}
+                  height={32}
+                  className="h-7 w-auto grayscale hover:grayscale-0 transition duration-200"
+                />
+              ) : (
+                <span className="h-8 px-4 inline-flex items-center justify-center rounded-md border border-stone-300 text-tag uppercase text-stone-500">
+                  {p.name}
+                </span>
+              );
+              return (
+                <li key={p.name}>
+                  {p.href ? (
+                    <Link
+                      href={p.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={p.name}
+                      className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
+                    >
+                      {logo}
+                    </Link>
+                  ) : (
+                    logo
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="mt-10 text-center text-meta text-stone-400">
+            {/* TODO: add partner / press logos in Sanity (Partner / accreditation logos). */}
+            Partner logos pending — add via Sanity Studio.
+          </p>
+        )}
 
-        <blockquote className="mt-12 max-w-3xl mx-auto text-center font-serif italic text-h3 text-stone-700">
-          {/* TODO: insert real press quote when sourced. Never invent press quotes. */}
-          <span className="text-stone-400">Press quote pending — awaiting publisher sign-off.</span>
-        </blockquote>
+        {quote ? (
+          <figure className="mt-12 max-w-3xl mx-auto text-center">
+            <blockquote className="font-serif italic text-h3 text-stone-700">
+              &ldquo;{quote.quote}&rdquo;
+            </blockquote>
+            {quote.attribution && (
+              <figcaption className="mt-3 text-meta text-stone-500">
+                {quote.sourceUrl ? (
+                  <Link href={quote.sourceUrl} target="_blank" rel="noopener noreferrer" className="hover:text-stone-900 underline-offset-4 hover:underline">
+                    {quote.attribution}
+                  </Link>
+                ) : (
+                  quote.attribution
+                )}
+              </figcaption>
+            )}
+          </figure>
+        ) : (
+          <blockquote className="mt-12 max-w-3xl mx-auto text-center font-serif italic text-h3 text-stone-400">
+            {/* TODO: feature a real press quote in Sanity (Press quotes → featured: true). */}
+            Press quote pending — add via Sanity Studio.
+          </blockquote>
+        )}
       </div>
     </section>
   );

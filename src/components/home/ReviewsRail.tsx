@@ -6,16 +6,23 @@ import { REVIEWS_PLACEHOLDER } from "@/data/reviews.placeholder";
 // TODO: Once CMS is wired, replace REVIEWS_PLACEHOLDER with the production query.
 // We never fabricate reviews — every entry below is marked __placeholder: true.
 
-export default function ReviewsRail() {
+interface Props {
+  eyebrow?: string;
+  titleStart?: string;
+  titleItalic?: string;
+  lede?: string;
+}
+
+export default function ReviewsRail({
+  eyebrow = "Traveler stories",
+  titleStart = "In their words,",
+  titleItalic = "not ours.",
+  lede = "Real reviews from travelers who've actually been there — including the small things that didn't go to plan, and how we fixed them.",
+}: Props = {}) {
   return (
     <section aria-labelledby="reviews-title" className="py-18 md:py-22">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
-        <SectionHeader
-          eyebrow="Traveler stories"
-          title="In their words,"
-          italicTail="not ours."
-          lede="Real reviews from travelers who've actually been there — including the small things that didn't go to plan, and how we fixed them."
-        />
+        <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
         <p className="mt-4 text-meta text-stone-600">
           <span className="font-semibold text-stone-900">4.9</span> on Google

@@ -19,7 +19,19 @@ const CHIPS: { id: StyleId; label: string; icon: typeof Heart; subtitle: string 
   { id: "Luxury",    label: "Luxury",    icon: Crown,    subtitle: "Where the room is half the holiday." },
 ];
 
-export default function ByHowYouTravelSection() {
+interface Props {
+  eyebrow?: string;
+  titleStart?: string;
+  titleItalic?: string;
+  lede?: string;
+}
+
+export default function ByHowYouTravelSection({
+  eyebrow = "By how you travel",
+  titleStart = "Pick a feeling.",
+  titleItalic = "We'll do the rest.",
+  lede = "The destination matters less than the kind of trip you want it to be. Choose the mood — we'll match the place.",
+}: Props = {}) {
   const [active, setActive] = useState<StyleId>("Honeymoon");
 
   const items = useMemo(
@@ -31,12 +43,7 @@ export default function ByHowYouTravelSection() {
   return (
     <section aria-labelledby="bhyt-title" className="py-18 md:py-22">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
-        <SectionHeader
-          eyebrow="By how you travel"
-          title="Pick a feeling."
-          italicTail="We'll do the rest."
-          lede="The destination matters less than the kind of trip you want it to be. Choose the mood — we'll match the place."
-        />
+        <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
         <div className="mt-7">
           <ChipFilterGroup

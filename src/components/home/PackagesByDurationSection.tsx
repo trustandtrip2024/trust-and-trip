@@ -13,7 +13,19 @@ const CHIPS: { id: DurationId; label: string }[] = [
   { id: "long-weekend", label: "Just a long weekend" },
 ];
 
-export default function PackagesByDurationSection() {
+interface Props {
+  eyebrow?: string;
+  titleStart?: string;
+  titleItalic?: string;
+  lede?: string;
+}
+
+export default function PackagesByDurationSection({
+  eyebrow = "Browse by length",
+  titleStart = "How long do you have?",
+  titleItalic = "We'll fit it in.",
+  lede = "Long weekend, full fortnight, or somewhere in between — every itinerary is sized to the days you actually have.",
+}: Props = {}) {
   const [active, setActive] = useState<DurationId>("6-9");
   const items = useMemo(
     () => DESTINATIONS_BY_DURATION.filter((d) => d.durations.includes(active)).slice(0, 4),
@@ -23,12 +35,7 @@ export default function PackagesByDurationSection() {
   return (
     <section aria-labelledby="duration-title" className="py-18 md:py-22 bg-stone-50/60">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
-        <SectionHeader
-          eyebrow="Browse by length"
-          title="How long do you have?"
-          italicTail="We'll fit it in."
-          lede="Long weekend, full fortnight, or somewhere in between — every itinerary is sized to the days you actually have."
-        />
+        <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
         <div className="mt-7">
           <ChipFilterGroup

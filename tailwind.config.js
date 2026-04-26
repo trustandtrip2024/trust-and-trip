@@ -24,11 +24,11 @@ module.exports = {
         },
       },
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
-        serif:   ['"Cormorant Garamond"', 'Fraunces', 'Georgia', 'serif'],
-        body:    ['Manrope', 'Inter', 'system-ui', 'sans-serif'],
-        sans:    ['Manrope', 'Inter', 'system-ui', 'sans-serif'],
-        script:  ['Caveat', 'cursive'],
+        display: ['var(--font-display)', 'Fraunces', 'Georgia', 'serif'],
+        serif:   ['var(--font-serif)', '"Cormorant Garamond"', 'Georgia', 'serif'],
+        body:    ['var(--font-sans)', 'Manrope', 'system-ui', 'sans-serif'],
+        sans:    ['var(--font-sans)', 'Manrope', 'system-ui', 'sans-serif'],
+        script:  ['var(--font-script)', 'Caveat', 'cursive'],
       },
       borderRadius: {
         sm:   "4px",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Search, Calendar, Users, Star, ArrowRight } from "lucide-react";
 
@@ -8,9 +9,30 @@ import { Search, Calendar, Users, Star, ArrowRight } from "lucide-react";
 // Until then, the poster fallback covers; the <video> degrades gracefully on error.
 const VIDEO_MP4   = "/video/hero.mp4";
 const VIDEO_WEBM  = "/video/hero.webm";
-const VIDEO_POSTER = "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1600&q=75&auto=format&fit=crop";
+// Plain Unsplash URL — Next image loader handles per-device sizing via the
+// configured deviceSizes (360 / 640 / 828 / 1200 / 1920) so mobile gets a
+// 360–828w image instead of the 1600w we used to send.
+const VIDEO_POSTER = "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop";
 
-export default function HeroVideoSearch() {
+interface Props {
+  eyebrow?: string;
+  titleStart?: string;
+  titleItalic?: string;
+  lede?: string;
+  searchPlaceholder?: string;
+  ctaLabel?: string;
+  trustStrip?: string;
+}
+
+export default function HeroVideoSearch({
+  eyebrow = "Trust and Trip · Crafting Reliable Travel",
+  titleStart = "Trips that feel",
+  titleItalic = "made just for you.",
+  lede = "Tell us where your heart wants to go and a real planner will build an itinerary worth remembering — usually within 24 hours, always free until you're sure.",
+  searchPlaceholder = 'Where to? Try "Bali", "Char Dham", or "Switzerland"',
+  ctaLabel = "Plan my trip — free",
+  trustStrip = "4.9 on Google · 8,000+ travelers since 2019 · WhatsApp planning, free",
+}: Props) {
   const router = useRouter();
   const [destination, setDestination] = useState("");
   const [days, setDays] = useState("");
@@ -30,23 +52,30 @@ export default function HeroVideoSearch() {
       aria-label="Plan your trip"
       className="relative w-full min-h-[70vh] md:min-h-[88vh] flex items-center overflow-hidden bg-stone-900"
     >
-      {/* Background — video with reduced-motion fallback to poster */}
+      {/* Background — Next-optimised poster image is the LCP element so it
+          gets `priority`. Video plays on top once it loads (motion-reduce
+          hides it). When video fails or no source, poster stays. */}
+      <Image
+        src={VIDEO_POSTER}
+        alt=""
+        aria-hidden="true"
+        fill
+        priority
+        sizes="100vw"
+        quality={70}
+        className="object-cover"
+      />
       <video
         className="absolute inset-0 w-full h-full object-cover motion-reduce:hidden"
         autoPlay
         loop
         muted
         playsInline
-        poster={VIDEO_POSTER}
         aria-hidden="true"
       >
         <source src={VIDEO_WEBM} type="video/webm" />
         <source src={VIDEO_MP4}  type="video/mp4" />
       </video>
-      {/* Reduced-motion: still poster */}
-      <picture className="hidden motion-reduce:block absolute inset-0">
-        <img src={VIDEO_POSTER} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover" />
-      </picture>
 
       {/* Overlay */}
       <div
@@ -56,15 +85,11 @@ export default function HeroVideoSearch() {
 
       {/* Content */}
       <div className="relative w-full mx-auto max-w-3xl px-5 md:px-8 lg:px-12 py-22 text-center text-white">
-        <p className="text-eyebrow uppercase font-medium text-amber-300/90">
-          Trust and Trip · Crafting Reliable Travel
-        </p>
+        <p className="text-eyebrow uppercase font-medium text-amber-300/90">{eyebrow}</p>
         <h1 className="mt-3 font-serif text-display md:text-display text-white text-balance">
-          Trips that feel <em className="not-italic font-serif italic text-amber-300">made just for you.</em>
+          {titleStart} <em className="not-italic font-serif italic text-amber-300">{titleItalic}</em>
         </h1>
-        <p className="mt-4 text-lead text-white/85 max-w-2xl mx-auto text-balance">
-          Tell us where your heart wants to go and a real planner will build an itinerary worth remembering — usually within 24 hours, always free until you&apos;re sure.
-        </p>
+        <p className="mt-4 text-lead text-white/85 max-w-2xl mx-auto text-balance">{lede}</p>
 
         {/* Search */}
         <form
@@ -80,7 +105,7 @@ export default function HeroVideoSearch() {
               type="text"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
-              placeholder='Where to? Try "Bali", "Char Dham", or "Switzerland"'
+              placeholder={searchPlaceholder}
               className="w-full h-12 pl-11 pr-4 bg-transparent text-stone-900 placeholder:text-stone-500 outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-pill"
             />
           </div>
@@ -112,21 +137,20 @@ export default function HeroVideoSearch() {
             type="submit"
             className="tt-cta md:!w-auto md:!min-w-[200px] md:!h-12"
           >
-            Plan my trip — free
+            {ctaLabel}
             <ArrowRight className="h-4 w-4" />
           </button>
         </form>
 
-        {/* Trust strip */}
+        {/* Trust strip — split on ' · ' so the icon prefixes the first item */}
         <p className="mt-6 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-meta text-white/85">
-          <span className="inline-flex items-center gap-1.5">
-            <Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />
-            4.9 on Google
-          </span>
-          <span aria-hidden className="text-white/30">·</span>
-          <span>8,000+ travelers since 2019</span>
-          <span aria-hidden className="text-white/30">·</span>
-          <span>WhatsApp planning, free</span>
+          <Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" aria-hidden />
+          {trustStrip.split(" · ").map((part, i, arr) => (
+            <span key={i} className="inline-flex items-center gap-3">
+              <span>{part}</span>
+              {i < arr.length - 1 && <span aria-hidden className="text-white/30">·</span>}
+            </span>
+          ))}
         </p>
       </div>
     </section>

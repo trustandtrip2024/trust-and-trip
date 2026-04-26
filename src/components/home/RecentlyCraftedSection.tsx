@@ -18,7 +18,19 @@ const CHIPS = [
   { id: "honeymoon",  label: "Honeymoon" },
 ];
 
-export default function RecentlyCraftedSection() {
+interface Props {
+  eyebrow?: string;
+  titleStart?: string;
+  titleItalic?: string;
+  lede?: string;
+}
+
+export default function RecentlyCraftedSection({
+  eyebrow = "Recently crafted",
+  titleStart = "Real itineraries,",
+  titleItalic = "fresh off the road.",
+  lede = "143 trips planned this month. These are the most recent. Tap any one — we'll build you something similar in 24 hours.",
+}: Props = {}) {
   const [active, setActive] = useState("all");
 
   const items = useMemo(() => {
@@ -29,12 +41,7 @@ export default function RecentlyCraftedSection() {
   return (
     <section aria-labelledby="recent-title" className="py-18 md:py-22">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
-        <SectionHeader
-          eyebrow="Recently crafted"
-          title="Real itineraries,"
-          italicTail="fresh off the road."
-          lede="143 trips planned this month. These are the most recent. Tap any one — we'll build you something similar in 24 hours."
-        />
+        <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
         <div className="mt-7">
           <ChipFilterGroup

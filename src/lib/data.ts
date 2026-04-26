@@ -12,6 +12,7 @@ export type Destination = {
   idealDuration: string;
   thingsToDo: string[];
   highlights: string[];
+  whisper?: string;
 };
 
 export type Package = {

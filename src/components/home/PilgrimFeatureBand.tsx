@@ -9,7 +9,19 @@ import { STYLE_PACKAGES } from "@/data/packagesByStyle";
 const FEATURE_IMAGE =
   "https://images.unsplash.com/photo-1561361058-c24cecae35ca?w=1600&q=75&auto=format&fit=crop";
 
-export default function PilgrimFeatureBand() {
+interface Props {
+  eyebrow?: string;
+  titleStart?: string;
+  titleItalic?: string;
+  lede?: string;
+}
+
+export default function PilgrimFeatureBand({
+  eyebrow = "A special kind of journey",
+  titleStart = "Yatras, walked with",
+  titleItalic = "quiet care.",
+  lede = "Helicopter darshans, calm transfers, vegetarian planning, and hotels close to the temples. We've shepherded 600+ yatris this season — and our planners know which queue moves fastest at Kedarnath.",
+}: Props = {}) {
   const yatras = STYLE_PACKAGES.filter((p) => p.style === "Pilgrim").slice(0, 3);
 
   // TODO: replace with real WhatsApp deeplink env or constant.
@@ -35,12 +47,7 @@ export default function PilgrimFeatureBand() {
         </div>
 
         <div className="md:col-span-3">
-          <SectionHeader
-            eyebrow="A special kind of journey"
-            title="Yatras, walked with"
-            italicTail="quiet care."
-            lede="Helicopter darshans, calm transfers, vegetarian planning, and hotels close to the temples. We've shepherded 600+ yatris this season — and our planners know which queue moves fastest at Kedarnath."
-          />
+          <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
           {yatras.length > 0 && (
             <ul className="mt-7 grid grid-cols-1 gap-5">

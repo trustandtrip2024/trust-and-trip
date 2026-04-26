@@ -1,5 +1,38 @@
 import type { Metadata } from "next";
+import { Fraunces, Cormorant_Garamond, Manrope, Caveat } from "next/font/google";
 import dynamic from "next/dynamic";
+
+// Self-hosted fonts via next/font — eliminates the render-blocking
+// Google Fonts <link> and ships only the latin subset we need.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-serif",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
+  weight: ["400", "500", "600"],
+});
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-script",
+  weight: ["500", "700"],
+});
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import MainWrapper from "@/components/MainWrapper";
 import MobileBottomNav from "@/components/MobileBottomNav";
@@ -101,16 +134,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${fraunces.variable} ${cormorant.variable} ${manrope.variable} ${caveat.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-        {/* Google Fonts — Fraunces / Manrope / Caveat */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600&family=Caveat:wght@500;700&display=swap"
-          rel="stylesheet"
-        />
         {/* Preconnect to speed up third-party resources */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
