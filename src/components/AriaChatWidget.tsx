@@ -215,7 +215,7 @@ export default function AriaChatWidget() {
       </AnimatePresence>
 
       {/* FAB */}
-      <div className="fixed bottom-[4.5rem] md:bottom-6 left-4 md:left-6 z-50 flex items-center gap-2">
+      <div data-aria-widget className="fixed bottom-[4.5rem] md:bottom-6 left-4 md:left-6 z-50 flex items-center gap-2">
 
         {/* "Ask Aria" floating label */}
         <AnimatePresence>

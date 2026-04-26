@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Tag, Clock, Users, Star, MapPin, MessageCircle,
-  ShieldCheck, Award, Eye, MessageSquare,
+  ShieldCheck, Eye, ChevronRight, Phone, Sliders,
 } from "lucide-react";
 import { captureIntent } from "@/lib/capture-intent";
 import BookingDeposit from "./BookingDeposit";
@@ -23,7 +23,7 @@ interface Props {
   viewedCount: number;
   enquiredCount: number;
   waNumber: string;
-  saleEndsAt?: string; // ISO date string (optional)
+  saleEndsAt?: string;
 }
 
 function useCountdown(target?: string) {
@@ -33,7 +33,6 @@ function useCountdown(target?: string) {
     const id = setInterval(() => setNow(Date.now()), 60_000);
     return () => clearInterval(id);
   }, [target]);
-
   if (!target) return null;
   const ms = new Date(target).getTime() - now;
   if (ms <= 0) return null;
@@ -51,85 +50,70 @@ export default function BookingAside({
 }: Props) {
   const savings = originalPrice - price;
   const countdown = useCountdown(saleEndsAt);
-  const depositAmount = Math.max(5000, Math.round((price * 0.3) / 1000) * 1000);
 
   const waMessage = encodeURIComponent(
     `Hi! I'm interested in "${title}" (₹${price.toLocaleString("en-IN")}). Could you share more details?`
   );
 
-  const quickQuestions = [
-    { label: "What's included?", q: `What's included in "${title}"?` },
-    { label: "Can I customise?", q: `Can I customise "${title}"?` },
-    { label: "Check availability", q: `Is "${title}" available for my dates?` },
-    { label: "Best price?", q: `Can you offer your best price on "${title}"?` },
+  const meta = [
+    { icon: Clock, label: "Duration", value: duration },
+    { icon: Users, label: "Type",     value: travelType },
+    { icon: Star,  label: "Rating",   value: `${rating} (${reviews})` },
+    { icon: MapPin, label: "Departs", value: departsFrom },
   ];
 
   return (
-    <aside className="tt-card sticky top-24 self-start w-full max-w-[380px] shadow-rail">
+    <aside className="tt-card tt-card-p sticky top-24 self-start w-full max-w-[380px] shadow-rail !p-5">
       {/* Save pill + countdown */}
-      <div className="flex items-center justify-between">
-        {savings > 0 && (
-          <span className="inline-flex items-center gap-1.5 h-7 px-3 rounded-pill bg-amber-100 text-amber-800 text-[12px] font-semibold">
-            <Tag className="w-3.5 h-3.5" /> SAVE ₹{savings.toLocaleString("en-IN")}
-          </span>
-        )}
-        {countdown && (
-          <span className="inline-flex items-center gap-1.5 text-[12px] text-stone-500">
-            <Clock className="w-3.5 h-3.5" /> Sale ends {countdown}
-          </span>
-        )}
-      </div>
+      {(savings > 0 || countdown) && (
+        <div className="flex items-center justify-between gap-2 mb-4">
+          {savings > 0 ? (
+            <span className="inline-flex items-center gap-1.5 h-7 px-3 rounded-pill bg-tat-orange/15 text-tat-orange text-[12px] font-semibold">
+              <Tag className="w-3.5 h-3.5" />
+              SAVE ₹{savings.toLocaleString("en-IN")}
+            </span>
+          ) : <span />}
+          {countdown && (
+            <span className="inline-flex items-center gap-1.5 text-[11px] text-tat-slate">
+              <Clock className="w-3 h-3" /> Ends {countdown}
+            </span>
+          )}
+        </div>
+      )}
 
-      {/* Price block */}
-      <div className="mt-4">
+      {/* Price */}
+      <div>
         {savings > 0 && (
-          <p className="text-[13px] text-stone-400 line-through">
+          <p className="text-[12px] text-tat-slate/80 line-through">
             ₹{originalPrice.toLocaleString("en-IN")}
           </p>
         )}
-        <p className="font-serif text-[34px] leading-none text-stone-900">
+        <p className="font-serif text-[32px] leading-none text-tat-charcoal">
           ₹{price.toLocaleString("en-IN")}
-          <span className="text-[14px] font-sans text-stone-500"> / person</span>
+          <span className="text-[13px] font-sans text-tat-slate font-normal"> / person</span>
         </p>
-        <p className="mt-1 text-[12px] text-stone-500">
-          Excluding flights · Taxes included
+        <p className="mt-1.5 text-[11px] text-tat-slate">
+          Excl. flights · Taxes included
         </p>
       </div>
 
-      {/* 2x2 meta grid */}
-      <dl className="mt-5 grid grid-cols-2 gap-3">
-        <div className="tt-meta">
-          <span className="tt-meta-ico"><Clock /></span>
-          <div>
-            <dt className="tt-meta-lbl">Duration</dt>
-            <dd className="tt-meta-val">{duration}</dd>
+      {/* 2x2 meta — tighter, single-row icons */}
+      <dl className="mt-5 grid grid-cols-2 gap-x-3 gap-y-3">
+        {meta.map(({ icon: Icon, label, value }) => (
+          <div key={label} className="flex items-center gap-2.5 min-w-0">
+            <span className="h-8 w-8 rounded-md bg-tat-cream-warm/40 grid place-items-center shrink-0 text-tat-gold">
+              <Icon className="h-4 w-4" />
+            </span>
+            <div className="min-w-0">
+              <dt className="text-[10px] uppercase tracking-wide font-semibold text-tat-slate">{label}</dt>
+              <dd className="text-[13px] font-medium text-tat-charcoal truncate">{value}</dd>
+            </div>
           </div>
-        </div>
-        <div className="tt-meta">
-          <span className="tt-meta-ico"><Users /></span>
-          <div>
-            <dt className="tt-meta-lbl">Type</dt>
-            <dd className="tt-meta-val">{travelType}</dd>
-          </div>
-        </div>
-        <div className="tt-meta">
-          <span className="tt-meta-ico"><Star /></span>
-          <div>
-            <dt className="tt-meta-lbl">Rating</dt>
-            <dd className="tt-meta-val">{rating} ({reviews})</dd>
-          </div>
-        </div>
-        <div className="tt-meta">
-          <span className="tt-meta-ico"><MapPin /></span>
-          <div>
-            <dt className="tt-meta-lbl">Departs</dt>
-            <dd className="tt-meta-val">{departsFrom}</dd>
-          </div>
-        </div>
+        ))}
       </dl>
 
       {/* CTAs */}
-      <div className="mt-6 space-y-2.5">
+      <div className="mt-5 space-y-2">
         <a
           href={`https://wa.me/${waNumber}?text=${waMessage}`}
           target="_blank"
@@ -137,83 +121,59 @@ export default function BookingAside({
           onClick={() => captureIntent("whatsapp_click", {
             package_slug: slug, package_title: title, destination: destinationName, travel_type: travelType,
           })}
-          className="tt-cta"
+          className="inline-flex items-center justify-center gap-2 h-12 w-full rounded-pill font-semibold text-tat-paper bg-tat-teal hover:bg-tat-teal-deep transition duration-120 text-sm"
         >
           <MessageCircle className="w-4 h-4" /> Book on WhatsApp
         </a>
 
         <BookingDeposit packageSlug={slug} packageTitle={title} packagePrice={price} />
 
-        <div className="flex justify-center gap-4 pt-1 text-[13px] text-stone-600">
+        <div className="grid grid-cols-2 gap-2 pt-1">
           <Link
             href={`/customize-trip?package=${slug}`}
             onClick={() => captureIntent("customize_click", {
               package_slug: slug, package_title: title, destination: destinationName,
             })}
-            className="hover:text-stone-900 underline-offset-4 hover:underline"
+            className="inline-flex items-center justify-center gap-1.5 h-10 px-3 rounded-pill border border-tat-charcoal/15 text-tat-charcoal hover:border-tat-charcoal text-[13px] font-medium transition duration-120"
           >
-            Customise
+            <Sliders className="h-3.5 w-3.5" /> Customise
           </Link>
-          <span className="text-stone-300">·</span>
           <a
             href={`tel:+${waNumber}`}
             onClick={() => captureIntent("call_click", {
               package_slug: slug, package_title: title, note: "BookingAside call link",
             })}
-            className="hover:text-stone-900 underline-offset-4 hover:underline"
+            className="inline-flex items-center justify-center gap-1.5 h-10 px-3 rounded-pill border border-tat-charcoal/15 text-tat-charcoal hover:border-tat-charcoal text-[13px] font-medium transition duration-120"
           >
-            Call a planner
+            <Phone className="h-3.5 w-3.5" /> Call planner
           </a>
         </div>
       </div>
 
-      {/* Trust strip */}
-      <ul className="mt-6 pt-5 border-t border-stone-100 space-y-2.5">
-        <li className="tt-meta">
-          <span className="tt-meta-ico"><ShieldCheck /></span>
-          <p className="tt-meta-val">100% refundable up to 30 days prior</p>
+      {/* Trust strip — single tight row */}
+      <ul className="mt-5 pt-4 border-t border-tat-charcoal/8 space-y-2">
+        <li className="flex items-center gap-2.5 text-[12px] text-tat-charcoal/85">
+          <ShieldCheck className="h-4 w-4 text-tat-teal shrink-0" />
+          100% refundable up to 30 days prior
         </li>
-        <li className="tt-meta">
-          <span className="tt-meta-ico"><Tag /></span>
-          <p className="tt-meta-val">No booking fee — pay on confirmation</p>
+        <li className="flex items-center gap-2.5 text-[12px] text-tat-charcoal/85">
+          <Tag className="h-4 w-4 text-tat-teal shrink-0" />
+          No booking fee — pay only on confirmation
         </li>
-        <li className="tt-meta">
-          <span className="tt-meta-ico"><Award /></span>
-          <p className="tt-meta-val">Best price guarantee</p>
+        <li className="flex items-center gap-2.5 text-[12px] text-tat-charcoal/85">
+          <ChevronRight className="h-4 w-4 text-tat-teal shrink-0" />
+          Best price guarantee
         </li>
       </ul>
 
       {/* Social proof */}
-      <p className="mt-5 text-[12px] text-stone-500 flex items-center gap-3">
-        <span className="inline-flex items-center gap-1">
-          <Eye className="w-3.5 h-3.5" /> {viewedCount} viewed this week
-        </span>
-        <span className="text-stone-300">·</span>
-        <span className="inline-flex items-center gap-1">
-          <MessageSquare className="w-3.5 h-3.5" /> {enquiredCount} enquired recently
-        </span>
+      <p className="mt-4 text-[11px] text-tat-slate flex items-center gap-2 flex-wrap">
+        <Eye className="w-3.5 h-3.5 text-tat-orange" />
+        <span><span className="font-semibold text-tat-charcoal">{viewedCount}</span> viewed</span>
+        <span className="text-tat-charcoal/30" aria-hidden>·</span>
+        <span><span className="font-semibold text-tat-charcoal">{enquiredCount}</span> enquired</span>
+        <span className="text-tat-charcoal/30" aria-hidden>this week</span>
       </p>
-
-      {/* Quick questions */}
-      <div className="mt-6 pt-5 border-t border-stone-100">
-        <p className="tt-meta-lbl mb-3">Quick questions</p>
-        <div className="grid grid-cols-2 gap-2">
-          {quickQuestions.map((q) => (
-            <a
-              key={q.label}
-              href={`https://wa.me/${waNumber}?text=${encodeURIComponent(q.q)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => captureIntent("whatsapp_click", {
-                package_slug: slug, package_title: title, note: `Quick Q — ${q.label}`,
-              })}
-              className="tt-chip justify-center cursor-pointer hover:bg-amber-100 transition"
-            >
-              {q.label}
-            </a>
-          ))}
-        </div>
-      </div>
     </aside>
   );
 }

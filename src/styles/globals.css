@@ -252,6 +252,13 @@ html.dark ::selection { background: #0E7C7B; color: white; }
   scrollbar-width: none;
 }
 
+/* When the package sticky bar is active on mobile, hide floating chat
+   bubbles so the primary CTA isn't covered. */
+html.pkg-sticky-active [data-floating-cta],
+html.pkg-sticky-active [data-aria-widget] {
+  display: none !important;
+}
+
 /* Mobile touch improvements */
 @media (max-width: 768px) {
   /* Larger tap targets for interactive elements */
