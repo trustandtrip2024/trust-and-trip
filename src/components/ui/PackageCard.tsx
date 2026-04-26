@@ -141,7 +141,7 @@ export default function PackageCardUI(p: PackageCardProps) {
           )}
           {typeof p.rating === "number" && (
             <span className="inline-flex items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+              <Star className="h-3.5 w-3.5 fill-tat-gold text-tat-gold" />
               {p.rating}
               {p.ratingCount && <span className="text-tat-slate/80">({p.ratingCount})</span>}
             </span>

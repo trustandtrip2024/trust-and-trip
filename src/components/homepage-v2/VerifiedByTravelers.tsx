@@ -13,7 +13,7 @@ const STATS = [
     label: "Google",
     value: "4.9",
     sub: "200+ reviews",
-    icon: <Star className="h-4 w-4 fill-amber-500 text-amber-500" />,
+    icon: <Star className="h-4 w-4 fill-tat-gold text-tat-gold" />,
   },
   {
     href: "https://www.tripadvisor.in/Search?q=Trust+And+Trip+Experiences",
@@ -173,7 +173,7 @@ export default function VerifiedByTravelers() {
                   {Array.from({ length: 5 }).map((_, k) => (
                     <Star
                       key={k}
-                      className="h-4 w-4 fill-amber-500 text-amber-500"
+                      className="h-4 w-4 fill-tat-gold text-tat-gold"
                     />
                   ))}
                 </div>

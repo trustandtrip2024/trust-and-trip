@@ -44,7 +44,7 @@ export default async function ReferralsPage() {
             { label: "Total Referrers", value: referrals.length, icon: Users, color: "text-blue-500" },
             { label: "Total Clicks", value: totalClicks, icon: TrendingUp, color: "text-purple-500" },
             { label: "Conversions", value: totalConversions, icon: Gift, color: "text-green-500" },
-            { label: "Rewards Paid", value: `₹${totalRewards.toLocaleString("en-IN")}`, icon: IndianRupee, color: "text-amber-500" },
+            { label: "Rewards Paid", value: `₹${totalRewards.toLocaleString("en-IN")}`, icon: IndianRupee, color: "text-tat-gold" },
           ].map(({ label, value, icon: Icon, color }) => (
             <div key={label} className="bg-white rounded-xl border border-gray-200 p-4">
               <div className="flex items-center justify-between mb-2">

@@ -18,7 +18,7 @@ const STEPS = [
     icon: Plane,
     title: "Pack. Go. Relax.",
     body: "Book with 30% deposit. We handle hotels, transfers, guides, permits. On-trip support round the clock — 2am calls included.",
-    color: "from-emerald-500/10 to-emerald-500/5 text-emerald-600",
+    color: "from-emerald-500/10 to-emerald-500/5 text-tat-teal",
   },
 ];
 

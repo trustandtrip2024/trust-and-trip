@@ -119,7 +119,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
             Release pending earnings (cool-off elapsed)
           </button>
           {released !== null && (
-            <span className="text-xs text-emerald-600 font-medium">{released} earning{released === 1 ? "" : "s"} released to payable</span>
+            <span className="text-xs text-tat-teal font-medium">{released} earning{released === 1 ? "" : "s"} released to payable</span>
           )}
         </div>
 

@@ -174,7 +174,7 @@ function Card({ label, value, icon: Icon, accent, good }: {
   return (
     <div className={`rounded-2xl border p-4 ${accent ? "bg-tat-gold/10 border-tat-gold/25" : good ? "bg-emerald-50/60 border-emerald-100" : "bg-white border-tat-charcoal/8"}`}>
       <div className="flex items-center gap-2 mb-2">
-        <Icon className={`h-4 w-4 ${accent ? "text-tat-gold" : good ? "text-emerald-600" : "text-tat-charcoal/45"}`} />
+        <Icon className={`h-4 w-4 ${accent ? "text-tat-gold" : good ? "text-tat-teal" : "text-tat-charcoal/45"}`} />
         <p className="text-[10px] uppercase tracking-widest text-tat-charcoal/55">{label}</p>
       </div>
       <p className="font-display text-xl md:text-2xl font-medium text-tat-charcoal">{value}</p>

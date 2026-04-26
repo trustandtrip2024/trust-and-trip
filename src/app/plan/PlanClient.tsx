@@ -275,7 +275,7 @@ export default function PlanClient() {
                   <div className="p-6 grid md:grid-cols-3 gap-5">
                     <div className="space-y-1.5">
                       <div className="flex items-center gap-1.5 text-xs font-medium text-tat-charcoal/50 uppercase tracking-wider mb-2">
-                        <Coffee className="h-3.5 w-3.5 text-amber-500" /> Morning
+                        <Coffee className="h-3.5 w-3.5 text-tat-gold" /> Morning
                       </div>
                       <p className="text-sm text-tat-charcoal/75 leading-relaxed">{day.morning}</p>
                     </div>

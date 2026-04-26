@@ -190,8 +190,8 @@ h1, h2, h3 {
 
   /* Inclusion / exclusion bullets */
   .tt-inc         { @apply flex items-start gap-3 py-2 text-[14px] text-tat-charcoal; }
-  .tt-inc svg     { @apply w-5 h-5 shrink-0 mt-0.5 text-emerald-600; }
-  .tt-exc svg     { @apply w-5 h-5 shrink-0 mt-0.5 text-rose-500; }
+  .tt-inc svg     { @apply w-5 h-5 shrink-0 mt-0.5 text-tat-teal; }
+  .tt-exc svg     { @apply w-5 h-5 shrink-0 mt-0.5 text-tat-orange; }
 
   /* Buttons */
   .tt-cta         { @apply inline-flex items-center justify-center gap-2 h-12 px-5 w-full rounded-pill font-medium text-tat-paper bg-tat-teal hover:bg-tat-teal-deep transition; }

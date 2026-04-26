@@ -278,7 +278,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                         onClick={() => copyText(c.id, `https://trustandtrip.com/?ref=${c.ref_code}`)}
                         className="inline-flex items-center gap-1.5 bg-white border border-gray-200 text-tat-charcoal hover:border-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold"
                       >
-                        {copied === c.id ? <><Check className="h-3.5 w-3.5 text-emerald-600" />Copied</> : <><Copy className="h-3.5 w-3.5" />Copy link</>}
+                        {copied === c.id ? <><Check className="h-3.5 w-3.5 text-tat-teal" />Copied</> : <><Copy className="h-3.5 w-3.5" />Copy link</>}
                       </button>
                     )}
                   </div>

@@ -134,7 +134,7 @@ export default function CreatorProfilePage() {
               {savingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Save changes
             </button>
-            {profileOk && <span className="flex items-center gap-1.5 text-sm text-emerald-600"><CheckCircle2 className="h-4 w-4" />Saved</span>}
+            {profileOk && <span className="flex items-center gap-1.5 text-sm text-tat-teal"><CheckCircle2 className="h-4 w-4" />Saved</span>}
           </div>
         </form>
 
@@ -142,7 +142,7 @@ export default function CreatorProfilePage() {
         <form onSubmit={saveProfile} className="bg-white rounded-2xl border border-tat-charcoal/8 p-5 md:p-6">
           <div className="flex items-center gap-2 mb-5">
             <div className="h-8 w-8 rounded-xl bg-emerald-50 flex items-center justify-center">
-              <Wallet className="h-4 w-4 text-emerald-600" />
+              <Wallet className="h-4 w-4 text-tat-teal" />
             </div>
             <p className="text-sm font-semibold text-tat-charcoal">Payout details</p>
           </div>
@@ -181,7 +181,7 @@ export default function CreatorProfilePage() {
                 {savingPw ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 Update password
               </button>
-              {pwOk && <span className="flex items-center gap-1.5 text-sm text-emerald-600"><CheckCircle2 className="h-4 w-4" />Updated</span>}
+              {pwOk && <span className="flex items-center gap-1.5 text-sm text-tat-teal"><CheckCircle2 className="h-4 w-4" />Updated</span>}
             </div>
           </div>
         </form>

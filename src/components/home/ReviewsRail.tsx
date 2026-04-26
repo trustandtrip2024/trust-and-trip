@@ -65,7 +65,7 @@ export default function ReviewsRail({
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star
                         key={i}
-                        className={`h-4 w-4 ${i < r.rating ? "fill-amber-500 text-amber-500" : "text-tat-charcoal/20"}`}
+                        className={`h-4 w-4 ${i < r.rating ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/20"}`}
                         aria-hidden
                       />
                     ))}

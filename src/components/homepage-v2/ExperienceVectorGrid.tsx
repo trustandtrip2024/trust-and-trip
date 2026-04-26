@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 
 const ITEMS = [
-  { label: "Honeymoon",  href: "/experiences/honeymoon",  icon: Heart,    accent: "from-rose-500/12 to-rose-500/4   text-rose-500" },
+  { label: "Honeymoon",  href: "/experiences/honeymoon",  icon: Heart,    accent: "from-rose-500/12 to-rose-500/4   text-tat-orange" },
   { label: "Family",     href: "/experiences/family",     icon: Users,    accent: "from-sky-500/12 to-sky-500/4     text-sky-500" },
   { label: "Pilgrim",    href: "/experiences/pilgrim",    icon: Mountain, accent: "from-amber-500/15 to-amber-500/5 text-amber-600" },
   { label: "Adventure",  href: "/experiences/adventure",  icon: Backpack, accent: "from-tat-orange/15 to-tat-orange/5         text-tat-orange" },
@@ -13,7 +13,7 @@ const ITEMS = [
   { label: "Wellness",   href: "/experiences/wellness",   icon: Sunset,   accent: "from-teal-500/12 to-teal-500/4   text-teal-500" },
   { label: "Solo",       href: "/experiences/solo",       icon: Compass,  accent: "from-purple-500/12 to-purple-500/4 text-purple-500" },
   { label: "Group",      href: "/experiences/group",      icon: Star,     accent: "from-tat-orange/15 to-tat-orange/4     text-tat-orange" },
-  { label: "Weekend",    href: "/experiences/weekend",    icon: TreePine, accent: "from-emerald-500/12 to-emerald-500/4 text-emerald-600" },
+  { label: "Weekend",    href: "/experiences/weekend",    icon: TreePine, accent: "from-emerald-500/12 to-emerald-500/4 text-tat-teal" },
 ];
 
 export default function ExperienceVectorGrid() {

@@ -119,7 +119,7 @@ export default function CreatorOverview() {
         <KpiCard icon={MousePointerClick} label="Link clicks" value={stats?.attributions ?? 0} color="bg-blue-50 text-blue-600" />
         <KpiCard icon={Megaphone} label="Leads captured" value={stats?.leads ?? 0} color="bg-rose-50 text-rose-600" sub={stats && stats.leads > 0 ? `${conversionRate}% convert` : undefined} />
         <KpiCard icon={IndianRupee} label="Bookings" value={stats?.bookings ?? 0} color="bg-amber-50 text-amber-600" />
-        <KpiCard icon={Wallet} label="Earned (lifetime)" value={fmtINR(stats?.earned_paise ?? 0)} color="bg-emerald-50 text-emerald-600" />
+        <KpiCard icon={Wallet} label="Earned (lifetime)" value={fmtINR(stats?.earned_paise ?? 0)} color="bg-emerald-50 text-tat-teal" />
       </div>
 
       {/* Pending vs paid */}
@@ -131,7 +131,7 @@ export default function CreatorOverview() {
         </div>
         <div className="bg-white rounded-2xl border border-tat-charcoal/8 p-5">
           <p className="text-xs text-tat-charcoal/55 uppercase tracking-widest mb-2">Paid out</p>
-          <p className="font-display text-3xl font-medium text-emerald-600">{fmtINR(stats?.paid_paise ?? 0)}</p>
+          <p className="font-display text-3xl font-medium text-tat-teal">{fmtINR(stats?.paid_paise ?? 0)}</p>
           <p className="text-[11px] text-tat-charcoal/40 mt-1">Settled to your account.</p>
         </div>
       </div>

@@ -21,7 +21,7 @@ type Booking = {
 };
 
 const STATUS_CONFIG = {
-  created:   { icon: Clock,        color: "text-amber-500",  bg: "bg-amber-50",  border: "border-amber-200", label: "Payment Pending",    desc: "Your booking was created. Complete payment to confirm." },
+  created:   { icon: Clock,        color: "text-tat-gold",  bg: "bg-amber-50",  border: "border-amber-200", label: "Payment Pending",    desc: "Your booking was created. Complete payment to confirm." },
   paid:      { icon: CheckCircle2, color: "text-blue-500",   bg: "bg-blue-50",   border: "border-blue-200",  label: "Payment Received",   desc: "We received your deposit! Our team is reviewing your booking." },
   verified:  { icon: CheckCircle2, color: "text-green-500",  bg: "bg-green-50",  border: "border-green-200", label: "Booking Confirmed",  desc: "Your trip is confirmed! Our planner will reach out within 24 hours." },
   refunded:  { icon: AlertCircle,  color: "text-purple-500", bg: "bg-purple-50", border: "border-purple-200", label: "Refunded",           desc: "Your deposit has been refunded to the original payment method." },

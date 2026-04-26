@@ -20,7 +20,7 @@ export default function AdminHome() {
           </Link>
           <Link href="/admin/referrals"
             className="flex items-center gap-3 bg-white border border-gray-200 text-tat-charcoal px-5 py-3.5 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors">
-            <Gift className="h-4 w-4 text-amber-500" />
+            <Gift className="h-4 w-4 text-tat-gold" />
             Referral Tracking
           </Link>
           <Link href="/admin/creators"
