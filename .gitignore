@@ -40,3 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 lighthouse-report*
+
+gitleaks-report.json
+
+.env
+.env.local
+.env.*.local
