@@ -8,9 +8,8 @@ export const metadata = {
 };
 
 import dynamic from "next/dynamic";
-import HeroVideoSearch from "@/components/home/HeroVideoSearch";
+import HeroSearchWizard, { MobileStickySearch } from "@/components/home/HeroSearchWizard";
 import RecentlyCraftedSection from "@/components/home/RecentlyCraftedSection";
-import ThreeStepsBand from "@/components/home/ThreeStepsBand";
 import ByHowYouTravelSection, { type StyleId } from "@/components/home/ByHowYouTravelSection";
 import PilgrimFeatureBand from "@/components/home/PilgrimFeatureBand";
 import PackagesByDurationSection from "@/components/home/PackagesByDurationSection";
@@ -92,28 +91,19 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroVideoSearch
+      <HeroSearchWizard
         eyebrow={c.hero?.eyebrow}
         titleStart={c.hero?.titleStart}
         titleItalic={c.hero?.titleItalic}
         lede={c.hero?.lede}
-        searchPlaceholder={c.hero?.searchPlaceholder}
-        ctaLabel={c.hero?.ctaLabel}
         trustStrip={c.hero?.trustStrip}
       />
+      <MobileStickySearch />
       <RecentlyCraftedSection
         eyebrow={c.recentlyCrafted?.eyebrow}
         titleStart={c.recentlyCrafted?.titleStart}
         titleItalic={c.recentlyCrafted?.titleItalic}
         lede={c.recentlyCrafted?.lede}
-      />
-      <ThreeStepsBand
-        eyebrow={c.threeSteps?.eyebrow}
-        titleStart={c.threeSteps?.titleStart}
-        titleItalic={c.threeSteps?.titleItalic}
-        lede={c.threeSteps?.lede}
-        closingLine={c.threeSteps?.closingLine}
-        steps={c.threeSteps?.steps}
       />
       <ByHowYouTravelSection
         eyebrow={c.byHowYouTravel?.eyebrow}

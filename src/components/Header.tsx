@@ -247,16 +247,18 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group shrink-0">
             <div className="relative">
-              <div className="h-9 w-9 rounded-full bg-tat-charcoal flex items-center justify-center transition-all duration-500 group-hover:scale-105 group-hover:shadow-glow-ember ring-1 ring-tat-orange/0 group-hover:ring-tat-orange/40">
-                <span className="text-gradient-aurora text-lg font-display font-semibold transition-colors duration-500">T</span>
+              <div className="h-10 w-10 rounded-full bg-gradient-passion flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-crimson">
+                <span className="text-white text-lg font-display font-bold tracking-tight">T</span>
               </div>
-              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-gradient-passion shadow-[0_0_10px_rgba(242,107,31,0.7)]" />
+              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-tat-gold shadow-[0_0_10px_rgba(242,179,64,0.85)] ring-1 ring-white" />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="font-display text-lg md:text-xl font-semibold tracking-tight text-tat-charcoal whitespace-nowrap">
-                Trust<span className="text-gradient-passion italic font-bold">&</span>Trip
+              <span className="font-display text-lg md:text-xl font-bold tracking-tight whitespace-nowrap">
+                <span className="text-tat-charcoal">Trust</span>
+                <span className="text-gradient-passion italic">&amp;</span>
+                <span className="text-gradient-aurora">Trip</span>
               </span>
-              <span className="eyebrow-ember text-[8.5px] tracking-[0.28em] mt-1 hidden sm:block whitespace-nowrap">
+              <span className="eyebrow-ember text-[8.5px] tracking-[0.28em] mt-1 hidden sm:block whitespace-nowrap text-gradient-passion">
                 Crafted with passion
               </span>
             </div>
@@ -404,8 +406,10 @@ export default function Header() {
                   className="fixed right-0 top-0 bottom-0 z-[70] w-[88vw] max-w-sm bg-tat-paper flex flex-col overflow-hidden focus:outline-none data-[state=open]:animate-slide-up"
                 >
                   <div className="flex items-center justify-between px-6 py-5 border-b border-tat-charcoal/8">
-                    <Dialog.Title className="font-display text-xl font-semibold text-tat-charcoal">
-                      Trust<span className="text-gradient-passion italic font-bold">&</span>Trip
+                    <Dialog.Title className="font-display text-xl font-bold tracking-tight">
+                      <span className="text-tat-charcoal">Trust</span>
+                      <span className="text-gradient-passion italic">&amp;</span>
+                      <span className="text-gradient-aurora">Trip</span>
                     </Dialog.Title>
                     <Dialog.Close asChild>
                       <button aria-label="Close menu" className="h-9 w-9 rounded-full bg-tat-charcoal/6 flex items-center justify-center">

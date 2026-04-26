@@ -94,9 +94,14 @@ export default function ByHowYouTravelSection({
             <CustomPlanCard style={active} />
           </div>
         ) : (
-          <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <ul
+            className="mt-8 flex flex-nowrap gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-5 px-5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-5"
+          >
             {items.map((p) => (
-              <li key={p.href}>
+              <li
+                key={p.href}
+                className="shrink-0 snap-start w-[82%] sm:w-auto"
+              >
                 <PackageCardUI {...p} />
               </li>
             ))}

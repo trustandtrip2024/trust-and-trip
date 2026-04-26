@@ -46,9 +46,14 @@ export default function PackagesByDurationSection({
           />
         </div>
 
-        <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <ul
+          className="mt-8 flex flex-nowrap gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-5 px-5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5"
+        >
           {items.map((d) => (
-            <li key={d.id}>
+            <li
+              key={d.id}
+              className="shrink-0 snap-start w-[78%] sm:w-auto"
+            >
               <DestinationCardUI
                 image={d.image}
                 name={d.name}
