@@ -23,12 +23,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Local env files
-.env*.local
+# Local env files — never commit any secret-bearing env file.
+# Patterns intentionally redundant so a future contributor can't easily
+# slip a new variant in without tripping at least one rule.
 .env
+.env.*
+.env.local
+.env*.local
 .env.production
 .env.development
 .env.preview
+.env.test
 
 # Vercel
 .vercel
@@ -39,10 +44,17 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Lighthouse reports — local-only audit artefacts
 lighthouse-report*
+lighthouse-*.report.*
 
-gitleaks-report.json
+# Gitleaks scanner output
+gitleaks-report*
 
-.env
-.env.local
-.env.*.local
+# Local-only Claude / agent artefacts (per-machine)
+.claude/
+
+# Alternative-PM lockfiles (project canonical = npm/package-lock.json)
+pnpm-lock.yaml
+yarn.lock

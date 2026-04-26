@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+export PATH="$PATH:/c/Users/akash/scoop/shims"
+gitleaks protect --staged --redact --verbose
+if [ $? -ne 0 ]; then
+  echo "gitleaks found secrets in your staged changes. Commit blocked."
+  exit 1
+fi
