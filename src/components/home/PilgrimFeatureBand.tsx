@@ -33,10 +33,10 @@ export default function PilgrimFeatureBand({
   return (
     <section
       aria-labelledby="pilgrim-title"
-      className="py-18 md:py-22 bg-amber-50/30 border-y border-amber-200/40"
+      className="py-18 md:py-22 bg-tat-cream-warm/30 border-y border-tat-orange/25"
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-10 items-start">
-        <div className="md:col-span-2 relative rounded-card overflow-hidden aspect-[4/5] md:aspect-[3/4] bg-stone-200">
+        <div className="md:col-span-2 relative rounded-card overflow-hidden aspect-[4/5] md:aspect-[3/4] bg-tat-charcoal/15">
           <Image
             src={FEATURE_IMAGE}
             alt="A temple at dawn, lit by the first light."
@@ -63,17 +63,17 @@ export default function PilgrimFeatureBand({
           <div className="mt-7 flex flex-col sm:flex-row sm:items-center gap-3">
             <Link
               href="/destinations/uttarakhand"
-              className="inline-flex items-center gap-1.5 text-body-sm font-medium text-stone-900 hover:text-amber-700 transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-sm"
+              className="inline-flex items-center gap-1.5 text-body-sm font-medium text-tat-charcoal hover:text-tat-gold transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
             >
               See all yatras
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <span className="hidden sm:inline text-stone-300" aria-hidden>·</span>
+            <span className="hidden sm:inline text-tat-charcoal/20" aria-hidden>·</span>
             <Link
               href={WHATSAPP_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-body-sm font-medium text-stone-700 hover:text-emerald-700 transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-sm"
+              className="inline-flex items-center gap-1.5 text-body-sm font-medium text-tat-charcoal/80 hover:text-emerald-700 transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
             >
               <MessageCircle className="h-4 w-4" />
               Or speak to our yatra desk on WhatsApp

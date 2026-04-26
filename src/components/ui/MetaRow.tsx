@@ -14,7 +14,7 @@ export default function MetaRow({ icon: Icon, label, value, hint }: Props) {
       <div className="min-w-0">
         <p className="tt-meta-lbl">{label}</p>
         <p className="tt-meta-val">{value}</p>
-        {hint && <p className="text-[12px] text-stone-500 mt-0.5">{hint}</p>}
+        {hint && <p className="text-[12px] text-tat-slate/80 mt-0.5">{hint}</p>}
       </div>
     </div>
   );

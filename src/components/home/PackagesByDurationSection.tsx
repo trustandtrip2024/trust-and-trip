@@ -33,7 +33,7 @@ export default function PackagesByDurationSection({
   );
 
   return (
-    <section aria-labelledby="duration-title" className="py-18 md:py-22 bg-stone-50/60">
+    <section aria-labelledby="duration-title" className="py-18 md:py-22 bg-tat-paper">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 

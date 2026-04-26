@@ -33,14 +33,14 @@ interface Props {
 
 function CustomPlanCard({ style }: { style: StyleId }) {
   return (
-    <article className="tt-card tt-card-p flex flex-col items-start justify-center gap-4 text-center bg-amber-50/40 border-amber-200/60">
-      <div className="h-12 w-12 rounded-pill bg-amber-100 grid place-items-center text-amber-700 self-center">
+    <article className="tt-card tt-card-p flex flex-col items-start justify-center gap-4 text-center bg-tat-cream-warm/30 border-tat-orange/30/60">
+      <div className="h-12 w-12 rounded-pill bg-tat-orange/15 grid place-items-center text-tat-gold self-center">
         <Sparkles className="h-5 w-5" />
       </div>
-      <h3 className="font-serif text-h3 text-stone-900 self-center">
+      <h3 className="font-serif text-h3 text-tat-charcoal self-center">
         {style} trips, made to order.
       </h3>
-      <p className="text-body text-stone-600 self-center max-w-sm">
+      <p className="text-body text-tat-slate self-center max-w-sm">
         We craft these on request — tell us your dates, your dream, and we&apos;ll send a custom itinerary in 24 hours.
       </p>
       <Link
@@ -83,7 +83,7 @@ export default function ByHowYouTravelSection({
             ariaLabel="Travel style"
           />
           {subtitle && (
-            <p className="mt-3 text-body text-stone-600 italic font-serif">{subtitle}</p>
+            <p className="mt-3 text-body text-tat-slate italic font-serif">{subtitle}</p>
           )}
         </div>
 
@@ -104,7 +104,7 @@ export default function ByHowYouTravelSection({
         <div className="mt-10">
           <Link
             href="/packages"
-            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-stone-900 hover:text-amber-700 transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-sm"
+            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-tat-charcoal hover:text-tat-gold transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
           >
             Browse all journeys
             <ArrowRight className="h-4 w-4" />

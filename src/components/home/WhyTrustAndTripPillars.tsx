@@ -56,18 +56,18 @@ export default function WhyTrustAndTripPillars({
             const Icon = ICONS[icon] ?? Sparkles;
             return (
               <li key={title} className="tt-card tt-card-p">
-                <div className="h-10 w-10 rounded-md bg-amber-50 grid place-items-center text-amber-700">
+                <div className="h-10 w-10 rounded-md bg-tat-cream-warm/30 grid place-items-center text-tat-gold">
                   <Icon className="h-5 w-5" />
                 </div>
                 <p className="mt-4 tt-eyebrow">{title}</p>
-                <h3 className="mt-2 font-serif text-h3 text-stone-900">{headline}</h3>
-                <p className="mt-3 text-body text-stone-700 leading-relaxed">{body}</p>
+                <h3 className="mt-2 font-serif text-h3 text-tat-charcoal">{headline}</h3>
+                <p className="mt-3 text-body text-tat-charcoal/80 leading-relaxed">{body}</p>
               </li>
             );
           })}
         </ul>
 
-        <p className="mt-10 text-center font-serif italic text-h4 text-stone-700 max-w-3xl mx-auto">
+        <p className="mt-10 text-center font-serif italic text-h4 text-tat-charcoal/80 max-w-3xl mx-auto">
           {closingLine}
         </p>
       </div>

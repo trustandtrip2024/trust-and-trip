@@ -22,7 +22,7 @@ export default function LoveFromTheGramStrip({
   const items = posts ?? [];
 
   return (
-    <section aria-labelledby="ugc-title" className="py-18 md:py-22 bg-stone-50/60">
+    <section aria-labelledby="ugc-title" className="py-18 md:py-22 bg-tat-paper">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
@@ -35,7 +35,7 @@ export default function LoveFromTheGramStrip({
               {items.map((u, i) => (
                 <li
                   key={`${u.firstName}-${i}`}
-                  className="snap-start shrink-0 w-[60%] sm:w-[40%] md:w-[24%] lg:w-[18%] aspect-[4/5] relative rounded-card overflow-hidden bg-stone-200"
+                  className="snap-start shrink-0 w-[60%] sm:w-[40%] md:w-[24%] lg:w-[18%] aspect-[4/5] relative rounded-card overflow-hidden bg-tat-charcoal/15"
                 >
                   <Image
                     src={u.image}
@@ -45,7 +45,7 @@ export default function LoveFromTheGramStrip({
                     quality={70}
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/70 via-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/70 via-transparent" />
                   <p className="absolute inset-x-0 bottom-0 px-3 py-2 text-meta text-white">
                     {u.firstName} <span className="text-white/65">· {u.destination}</span>
                   </p>
@@ -54,7 +54,7 @@ export default function LoveFromTheGramStrip({
             </ul>
           </div>
         ) : (
-          <p className="mt-7 text-meta text-stone-500">
+          <p className="mt-7 text-meta text-tat-slate/80">
             {/* TODO: add UGC photos in Sanity Studio (Traveler photographs).
                 Only entries with permissionGranted = true will appear here. */}
             No traveler photographs yet — add them in Sanity to populate this rail.
@@ -66,7 +66,7 @@ export default function LoveFromTheGramStrip({
             href="https://instagram.com/trust_and_trip"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-body-sm font-medium text-stone-900 hover:text-amber-700 transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-sm"
+            className="inline-flex items-center gap-2 text-body-sm font-medium text-tat-charcoal hover:text-tat-gold transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
           >
             <Instagram className="h-4 w-4" />
             Share yours — tag @trustandtrip on Instagram

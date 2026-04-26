@@ -50,7 +50,7 @@ export default function HeroVideoSearch({
   return (
     <section
       aria-label="Plan your trip"
-      className="relative w-full min-h-[70vh] md:min-h-[88vh] flex items-center overflow-hidden bg-stone-900"
+      className="relative w-full min-h-[70vh] md:min-h-[88vh] flex items-center overflow-hidden bg-tat-charcoal"
     >
       {/* Background — Next-optimised poster image is the LCP element so it
           gets `priority`. Video plays on top once it loads (motion-reduce
@@ -85,9 +85,9 @@ export default function HeroVideoSearch({
 
       {/* Content */}
       <div className="relative w-full mx-auto max-w-3xl px-5 md:px-8 lg:px-12 py-22 text-center text-white">
-        <p className="text-eyebrow uppercase font-medium text-amber-300/90">{eyebrow}</p>
+        <p className="text-eyebrow uppercase font-medium text-tat-orange-soft/90">{eyebrow}</p>
         <h1 className="mt-3 font-serif text-display md:text-display text-white text-balance">
-          {titleStart} <em className="not-italic font-serif italic text-amber-300">{titleItalic}</em>
+          {titleStart} <em className="not-italic font-serif italic text-tat-orange-soft">{titleItalic}</em>
         </h1>
         <p className="mt-4 text-lead text-white/85 max-w-2xl mx-auto text-balance">{lede}</p>
 
@@ -95,42 +95,42 @@ export default function HeroVideoSearch({
         <form
           onSubmit={onSubmit}
           aria-label="Search destinations"
-          className="mt-8 mx-auto bg-white rounded-card md:rounded-pill shadow-rail flex flex-col md:flex-row md:items-stretch p-2 md:p-1.5 gap-2 md:gap-0 md:divide-x md:divide-stone-200"
+          className="mt-8 mx-auto bg-white rounded-card md:rounded-pill shadow-rail flex flex-col md:flex-row md:items-stretch p-2 md:p-1.5 gap-2 md:gap-0 md:divide-x md:divide-tat-charcoal/15"
         >
           <div className="relative flex-1 flex items-center">
             <label htmlFor="hs-dest" className="sr-only">Destination</label>
-            <Search className="absolute left-4 h-4 w-4 text-stone-500" aria-hidden />
+            <Search className="absolute left-4 h-4 w-4 text-tat-slate/80" aria-hidden />
             <input
               id="hs-dest"
               type="text"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full h-12 pl-11 pr-4 bg-transparent text-stone-900 placeholder:text-stone-500 outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-pill"
+              className="w-full h-12 pl-11 pr-4 bg-transparent text-tat-charcoal placeholder:text-tat-slate/80 outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-pill"
             />
           </div>
           <div className="relative md:w-40 flex items-center">
             <label htmlFor="hs-days" className="sr-only">How many days</label>
-            <Calendar className="absolute left-4 h-4 w-4 text-stone-500" aria-hidden />
+            <Calendar className="absolute left-4 h-4 w-4 text-tat-slate/80" aria-hidden />
             <input
               id="hs-days"
               type="text"
               value={days}
               onChange={(e) => setDays(e.target.value)}
               placeholder="How many days?"
-              className="w-full h-12 pl-11 pr-4 bg-transparent text-stone-900 placeholder:text-stone-500 outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-pill"
+              className="w-full h-12 pl-11 pr-4 bg-transparent text-tat-charcoal placeholder:text-tat-slate/80 outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-pill"
             />
           </div>
           <div className="relative md:w-44 flex items-center">
             <label htmlFor="hs-trav" className="sr-only">Who is coming</label>
-            <Users className="absolute left-4 h-4 w-4 text-stone-500" aria-hidden />
+            <Users className="absolute left-4 h-4 w-4 text-tat-slate/80" aria-hidden />
             <input
               id="hs-trav"
               type="text"
               value={travelers}
               onChange={(e) => setTravelers(e.target.value)}
               placeholder="Who's coming?"
-              className="w-full h-12 pl-11 pr-4 bg-transparent text-stone-900 placeholder:text-stone-500 outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-pill"
+              className="w-full h-12 pl-11 pr-4 bg-transparent text-tat-charcoal placeholder:text-tat-slate/80 outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-pill"
             />
           </div>
           <button
@@ -144,7 +144,7 @@ export default function HeroVideoSearch({
 
         {/* Trust strip — split on ' · ' so the icon prefixes the first item */}
         <p className="mt-6 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-meta text-white/85">
-          <Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" aria-hidden />
+          <Star className="h-3.5 w-3.5 fill-tat-orange-soft text-tat-orange-soft" aria-hidden />
           {trustStrip.split(" · ").map((part, i, arr) => (
             <span key={i} className="inline-flex items-center gap-3">
               <span>{part}</span>

@@ -38,15 +38,15 @@ export default function NewsletterBlock({
   };
 
   return (
-    <section className="bg-stone-900 text-white py-18 md:py-22" aria-labelledby="newsletter-title">
+    <section className="bg-tat-charcoal text-white py-18 md:py-22" aria-labelledby="newsletter-title">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-3xl text-center">
-        <p className="text-eyebrow uppercase font-medium text-amber-300/90">{eyebrow}</p>
+        <p className="text-eyebrow uppercase font-medium text-tat-orange-soft/90">{eyebrow}</p>
         <h2 id="newsletter-title" className="mt-2 font-serif text-h1 md:text-display text-white text-balance">
           {title}
           {italicTail && (
             <>
               {" "}
-              <em className="not-italic font-serif italic text-amber-300">{italicTail}</em>
+              <em className="not-italic font-serif italic text-tat-orange-soft">{italicTail}</em>
             </>
           )}
         </h2>
@@ -59,7 +59,7 @@ export default function NewsletterBlock({
         >
           <label htmlFor="nl-email" className="sr-only">Email address</label>
           <div className="relative flex-1">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-500" aria-hidden />
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-tat-slate/80" aria-hidden />
             <input
               id="nl-email"
               type="email"
@@ -68,7 +68,7 @@ export default function NewsletterBlock({
               onChange={(e) => setEmail(e.target.value)}
               placeholder={placeholder}
               aria-describedby={footerMicrocopy ? "nl-help" : undefined}
-              className="w-full h-12 pl-11 pr-4 rounded-pill bg-white text-stone-900 text-body placeholder:text-stone-400 outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900"
+              className="w-full h-12 pl-11 pr-4 rounded-pill bg-white text-tat-charcoal text-body placeholder:text-tat-slate/60 outline-none focus-visible:ring-2 focus-visible:ring-tat-orange-soft focus-visible:ring-offset-2 focus-visible:ring-offset-tat-charcoal"
             />
           </div>
           <button

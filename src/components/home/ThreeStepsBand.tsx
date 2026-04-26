@@ -29,7 +29,7 @@ export default function ThreeStepsBand({
   return (
     <section
       aria-labelledby="steps-title"
-      className="bg-stone-50 py-18 md:py-22 border-y border-stone-200/70"
+      className="bg-tat-paper py-18 md:py-22 border-y border-tat-charcoal/12"
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-6xl">
         <div className="text-center">
@@ -39,14 +39,14 @@ export default function ThreeStepsBand({
         <ol className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
           {items.map((s) => (
             <li key={s.n} className="tt-card tt-card-p">
-              <p className="font-serif text-h2 text-amber-700/80">{s.n}</p>
-              <h3 className="mt-2 font-serif text-h3 text-stone-900">{s.title}</h3>
-              <p className="mt-2 text-body text-stone-700">{s.body}</p>
+              <p className="font-serif text-h2 text-tat-gold/85">{s.n}</p>
+              <h3 className="mt-2 font-serif text-h3 text-tat-charcoal">{s.title}</h3>
+              <p className="mt-2 text-body text-tat-charcoal/80">{s.body}</p>
             </li>
           ))}
         </ol>
 
-        <p className="mt-10 text-center font-serif italic text-h4 text-amber-700/80">
+        <p className="mt-10 text-center font-serif italic text-h4 text-tat-gold/85">
           {closingLine}
         </p>
 

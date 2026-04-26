@@ -33,8 +33,8 @@ export interface PackageCardProps {
 const DEAL_COLOR: Record<NonNullable<PackageCardProps["dealKind"]>, string> = {
   flash:         "bg-rose-600 text-white",
   "early-bird":  "bg-emerald-600 text-white",
-  "last-minute": "bg-amber-600 text-white",
-  standard:      "bg-stone-900 text-white",
+  "last-minute": "bg-tat-orange text-white",
+  standard:      "bg-tat-charcoal text-white",
 };
 
 export default function PackageCardUI(p: PackageCardProps) {
@@ -54,7 +54,7 @@ export default function PackageCardUI(p: PackageCardProps) {
       <Link
         href={p.href}
         className={[
-          "relative block overflow-hidden bg-stone-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2",
+          "relative block overflow-hidden bg-tat-charcoal/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2",
           horizontal ? "md:w-[40%] aspect-[4/3] md:aspect-auto" : "aspect-[4/3]",
         ].join(" ")}
         aria-label={p.title}
@@ -75,20 +75,20 @@ export default function PackageCardUI(p: PackageCardProps) {
             </span>
           )}
           {p.trending && (
-            <span className="inline-flex items-center gap-1 bg-amber-600 text-white text-[10px] uppercase tracking-wider font-medium px-2.5 py-1 rounded-pill">
+            <span className="inline-flex items-center gap-1 bg-tat-orange text-white text-[10px] uppercase tracking-wider font-medium px-2.5 py-1 rounded-pill">
               <Flame className="h-3 w-3" />
               Trending
             </span>
           )}
           {p.limitedSlots && (
-            <span className="inline-flex items-center gap-1 bg-stone-900/90 backdrop-blur-sm text-white text-[10px] uppercase tracking-wider font-medium px-2.5 py-1 rounded-pill">
+            <span className="inline-flex items-center gap-1 bg-tat-charcoal/90 backdrop-blur-sm text-white text-[10px] uppercase tracking-wider font-medium px-2.5 py-1 rounded-pill">
               <Zap className="h-3 w-3" />
               Limited
             </span>
           )}
         </div>
         {p.bookedThisMonth && (
-          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-stone-900/70 backdrop-blur-sm text-white text-[10px] font-medium px-2.5 py-1 rounded-pill">
+          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-tat-charcoal/70 backdrop-blur-sm text-white text-[10px] font-medium px-2.5 py-1 rounded-pill">
             {p.bookedThisMonth} booked this month
           </span>
         )}
@@ -102,8 +102,8 @@ export default function PackageCardUI(p: PackageCardProps) {
         aria-pressed={wished}
         className={[
           "absolute top-3 right-3 h-9 w-9 rounded-full grid place-items-center shadow-card transition duration-120",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2",
-          wished ? "bg-rose-600 text-white" : "bg-white/95 text-stone-700 hover:text-rose-600",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2",
+          wished ? "bg-rose-600 text-white" : "bg-white/95 text-tat-charcoal/80 hover:text-rose-600",
         ].join(" ")}
       >
         <Heart className={`h-4 w-4 ${wished ? "fill-white" : ""}`} />
@@ -112,7 +112,7 @@ export default function PackageCardUI(p: PackageCardProps) {
       {/* BODY */}
       <div className={`flex-1 flex flex-col ${compact ? "p-4" : "p-5 md:p-6"}`}>
         {(p.destination || p.travelStyle) && (
-          <div className="flex items-center gap-2 text-tag uppercase text-stone-500">
+          <div className="flex items-center gap-2 text-tag uppercase text-tat-slate/80">
             {p.destination && (
               <span className="inline-flex items-center gap-1">
                 <MapPin className="h-3 w-3" />
@@ -121,18 +121,18 @@ export default function PackageCardUI(p: PackageCardProps) {
             )}
             {p.destination && p.travelStyle && <span aria-hidden>·</span>}
             {p.travelStyle && (
-              <span className="bg-amber-50 text-amber-800 px-2 py-0.5 rounded-pill normal-case tracking-normal">
+              <span className="bg-tat-cream-warm/30 text-tat-gold px-2 py-0.5 rounded-pill normal-case tracking-normal">
                 {p.travelStyle}
               </span>
             )}
           </div>
         )}
 
-        <h3 className={`mt-2 font-serif ${compact ? "text-h4" : "text-h3"} text-stone-900 leading-snug text-balance`}>
+        <h3 className={`mt-2 font-serif ${compact ? "text-h4" : "text-h3"} text-tat-charcoal leading-snug text-balance`}>
           {p.title}
         </h3>
 
-        <div className="mt-2.5 flex items-center gap-3 text-meta text-stone-600">
+        <div className="mt-2.5 flex items-center gap-3 text-meta text-tat-slate">
           {p.duration && (
             <span className="inline-flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" />
@@ -143,24 +143,24 @@ export default function PackageCardUI(p: PackageCardProps) {
             <span className="inline-flex items-center gap-1">
               <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
               {p.rating}
-              {p.ratingCount && <span className="text-stone-500">({p.ratingCount})</span>}
+              {p.ratingCount && <span className="text-tat-slate/80">({p.ratingCount})</span>}
             </span>
           )}
         </div>
 
-        <div className="mt-auto pt-4 border-t border-stone-200/70 flex items-end justify-between gap-3">
+        <div className="mt-auto pt-4 border-t border-tat-charcoal/12 flex items-end justify-between gap-3">
           <div className="min-w-0">
             {p.saveAmount && p.saveAmount > 0 && (
               <p className="text-[10px] uppercase tracking-wide text-emerald-700 font-semibold">
                 Save ₹{p.saveAmount.toLocaleString("en-IN")}
               </p>
             )}
-            <p className="font-serif text-h3 text-stone-900 leading-none">
+            <p className="font-serif text-h3 text-tat-charcoal leading-none">
               ₹{p.price.toLocaleString("en-IN")}
-              <span className="text-meta font-sans text-stone-500 font-normal ml-1">/ person</span>
+              <span className="text-meta font-sans text-tat-slate/80 font-normal ml-1">/ person</span>
             </p>
             {p.originalPrice && p.originalPrice > p.price && (
-              <p className="text-[11px] text-stone-400 line-through mt-0.5">
+              <p className="text-[11px] text-tat-slate/60 line-through mt-0.5">
                 ₹{p.originalPrice.toLocaleString("en-IN")}
               </p>
             )}

@@ -25,7 +25,7 @@ export default function PressPartnersBand({
   return (
     <section
       aria-labelledby="press-title"
-      className="py-18 md:py-22 bg-stone-50/60 border-y border-stone-200/70"
+      className="py-18 md:py-22 bg-tat-paper border-y border-tat-charcoal/12"
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-6xl">
         <div className="text-center">
@@ -47,7 +47,7 @@ export default function PressPartnersBand({
                   className="h-7 w-auto grayscale hover:grayscale-0 transition duration-200"
                 />
               ) : (
-                <span className="h-8 px-4 inline-flex items-center justify-center rounded-md border border-stone-300 text-tag uppercase text-stone-500">
+                <span className="h-8 px-4 inline-flex items-center justify-center rounded-md border border-tat-charcoal/20 text-tag uppercase text-tat-slate/80">
                   {p.name}
                 </span>
               );
@@ -59,7 +59,7 @@ export default function PressPartnersBand({
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={p.name}
-                      className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
+                      className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2"
                     >
                       {logo}
                     </Link>
@@ -71,7 +71,7 @@ export default function PressPartnersBand({
             })}
           </ul>
         ) : (
-          <p className="mt-10 text-center text-meta text-stone-400">
+          <p className="mt-10 text-center text-meta text-tat-slate/60">
             {/* TODO: add partner / press logos in Sanity (Partner / accreditation logos). */}
             Partner logos pending — add via Sanity Studio.
           </p>
@@ -79,13 +79,13 @@ export default function PressPartnersBand({
 
         {quote ? (
           <figure className="mt-12 max-w-3xl mx-auto text-center">
-            <blockquote className="font-serif italic text-h3 text-stone-700">
+            <blockquote className="font-serif italic text-h3 text-tat-charcoal/80">
               &ldquo;{quote.quote}&rdquo;
             </blockquote>
             {quote.attribution && (
-              <figcaption className="mt-3 text-meta text-stone-500">
+              <figcaption className="mt-3 text-meta text-tat-slate/80">
                 {quote.sourceUrl ? (
-                  <Link href={quote.sourceUrl} target="_blank" rel="noopener noreferrer" className="hover:text-stone-900 underline-offset-4 hover:underline">
+                  <Link href={quote.sourceUrl} target="_blank" rel="noopener noreferrer" className="hover:text-tat-charcoal underline-offset-4 hover:underline">
                     {quote.attribution}
                   </Link>
                 ) : (
@@ -95,7 +95,7 @@ export default function PressPartnersBand({
             )}
           </figure>
         ) : (
-          <blockquote className="mt-12 max-w-3xl mx-auto text-center font-serif italic text-h3 text-stone-400">
+          <blockquote className="mt-12 max-w-3xl mx-auto text-center font-serif italic text-h3 text-tat-slate/60">
             {/* TODO: feature a real press quote in Sanity (Press quotes → featured: true). */}
             Press quote pending — add via Sanity Studio.
           </blockquote>

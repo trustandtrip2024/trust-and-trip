@@ -114,12 +114,12 @@ export default function VerifiedByTravelers() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Heading */}
         <div className="mb-10 max-w-2xl">
-          <p className="mb-3 inline-block bg-amber-300/70 px-2 py-1 text-xs font-semibold uppercase tracking-wider">
+          <p className="mb-3 inline-block bg-tat-orange-soft/70 px-2 py-1 text-xs font-semibold uppercase tracking-wider">
             Verified by Travelers
           </p>
           <h2 className="text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl md:text-5xl">
             Trusted on every{" "}
-            <span className="italic text-amber-700">platform.</span>
+            <span className="italic text-tat-gold">platform.</span>
           </h2>
         </div>
 
@@ -154,7 +154,7 @@ export default function VerifiedByTravelers() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="grid h-10 w-10 place-items-center rounded-full bg-amber-100 font-semibold text-amber-800">
+                    <div className="grid h-10 w-10 place-items-center rounded-full bg-tat-orange/15 font-semibold text-tat-gold">
                       {r.name[0]}
                     </div>
                     <div>
@@ -197,14 +197,14 @@ export default function VerifiedByTravelers() {
               <span
                 key={i}
                 className={`h-1.5 rounded-full transition-all ${
-                  i === selected ? "w-8 bg-amber-600" : "w-3 bg-slate-300"
+                  i === selected ? "w-8 bg-tat-orange" : "w-3 bg-slate-300"
                 }`}
               />
             ))}
           </div>
           <Link
             href="/reviews"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-900 hover:text-amber-700"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-900 hover:text-tat-gold"
           >
             Read all 200+ reviews <ArrowRight className="h-4 w-4" />
           </Link>

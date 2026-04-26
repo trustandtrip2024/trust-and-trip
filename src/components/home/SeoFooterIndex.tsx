@@ -86,20 +86,20 @@ export default function SeoFooterIndex() {
   return (
     <section
       aria-labelledby="seo-footer-title"
-      className="py-18 md:py-22 border-t border-stone-200/70"
+      className="py-18 md:py-22 border-t border-tat-charcoal/12"
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <h2 id="seo-footer-title" className="sr-only">Site index</h2>
         <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-x-6 gap-y-8">
           {COLUMNS.map((col) => (
             <li key={col.title}>
-              <h3 className="text-body-sm font-semibold text-stone-900 font-sans">{col.title}</h3>
+              <h3 className="text-body-sm font-semibold text-tat-charcoal font-sans">{col.title}</h3>
               <ul className="mt-3 space-y-2">
                 {col.links.map((l) => (
                   <li key={l.label}>
                     <Link
                       href={l.href}
-                      className="text-meta text-stone-600 hover:text-stone-900 hover:underline underline-offset-4 transition duration-120"
+                      className="text-meta text-tat-slate hover:text-tat-charcoal hover:underline underline-offset-4 transition duration-120"
                     >
                       {l.label}
                     </Link>

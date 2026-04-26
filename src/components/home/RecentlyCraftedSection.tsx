@@ -53,7 +53,7 @@ export default function RecentlyCraftedSection({
         </div>
 
         {items.length === 0 ? (
-          <p className="mt-10 text-body text-stone-600">
+          <p className="mt-10 text-body text-tat-slate">
             No recent itineraries match this filter yet — try another, or see all recent itineraries below.
           </p>
         ) : (
@@ -80,7 +80,7 @@ export default function RecentlyCraftedSection({
         <div className="mt-10">
           <Link
             href="/packages?sort=recent"
-            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-stone-900 hover:text-amber-700 transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 rounded-sm"
+            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-tat-charcoal hover:text-tat-gold transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
           >
             See all recent itineraries
             <ArrowRight className="h-4 w-4" />
