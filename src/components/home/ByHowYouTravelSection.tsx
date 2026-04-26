@@ -6,6 +6,7 @@ import { ArrowRight, Heart, Users, User, Globe2, Mountain, Sunset, Church, Crown
 import SectionHeader from "@/components/ui/SectionHeader";
 import ChipFilterGroup from "@/components/ui/ChipFilterGroup";
 import PackageCardUI, { type PackageCardProps } from "@/components/ui/PackageCard";
+import { useTripPlanner } from "@/context/TripPlannerContext";
 
 export type StyleId =
   | "Honeymoon" | "Family" | "Solo" | "Group"
@@ -32,8 +33,9 @@ interface Props {
 }
 
 function CustomPlanCard({ style }: { style: StyleId }) {
+  const { open: openPlanner } = useTripPlanner();
   return (
-    <article className="tt-card tt-card-p flex flex-col items-start justify-center gap-4 text-center bg-tat-cream-warm/30 border-tat-orange/30/60">
+    <article className="tt-card tt-card-p flex flex-col items-start justify-center gap-4 text-center bg-tat-cream-warm/30 border-tat-orange/30">
       <div className="h-12 w-12 rounded-pill bg-tat-orange/15 grid place-items-center text-tat-gold self-center">
         <Sparkles className="h-5 w-5" />
       </div>
@@ -43,13 +45,13 @@ function CustomPlanCard({ style }: { style: StyleId }) {
       <p className="text-body text-tat-slate self-center max-w-sm">
         We craft these on request — tell us your dates, your dream, and we&apos;ll send a custom itinerary in 24 hours.
       </p>
-      <Link
-        href={`/plan?style=${encodeURIComponent(style)}`}
+      <button
+        onClick={() => openPlanner()}
         className="tt-cta self-center !w-auto !min-w-[220px]"
       >
         Plan my {style.toLowerCase()} trip
         <ArrowRight className="h-4 w-4" />
-      </Link>
+      </button>
     </article>
   );
 }

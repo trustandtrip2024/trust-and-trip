@@ -20,7 +20,7 @@ export default function ChipFilterGroup({ chips, activeId, onChange, ariaLabel }
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className="flex flex-wrap gap-2"
+      className="flex flex-nowrap gap-2 overflow-x-auto no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 md:flex-wrap snap-x snap-mandatory md:snap-none pb-1"
     >
       {chips.map(({ id, label, icon: Icon }) => {
         const active = activeId === id;
@@ -32,7 +32,7 @@ export default function ChipFilterGroup({ chips, activeId, onChange, ariaLabel }
             aria-selected={active}
             tabIndex={active ? 0 : -1}
             onClick={() => onChange(id)}
-            className={`tt-chip ${active ? "tt-chip--active" : ""}`}
+            className={`tt-chip shrink-0 snap-start ${active ? "tt-chip--active" : ""}`}
           >
             {Icon && <Icon />}
             <span>{label}</span>

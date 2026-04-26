@@ -1,5 +1,9 @@
 import Link from "next/link";
 
+// All links here resolve to a real route. Slugs that don't have a dedicated
+// Sanity destination (e.g. Mauritius, Seychelles, Bhutan) fall through to
+// /packages with a destination query so the listing page renders something
+// useful instead of 404. /reviews resolves via a thin alias page.
 const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Trending Destinations",
@@ -11,7 +15,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
       { label: "Singapore",   href: "/destinations/singapore" },
       { label: "Thailand",    href: "/destinations/thailand" },
       { label: "Sri Lanka",   href: "/destinations/sri-lanka" },
-      { label: "Vietnam",     href: "/destinations/vietnam" },
+      { label: "Vietnam",     href: "/packages?destination=vietnam" },
     ],
   },
   {
@@ -21,22 +25,22 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
       { label: "Thailand",            href: "/destinations/thailand" },
       { label: "Sri Lanka",           href: "/destinations/sri-lanka" },
       { label: "Indonesia (Bali)",    href: "/destinations/bali" },
-      { label: "Mauritius",           href: "/destinations/mauritius" },
-      { label: "Seychelles",          href: "/destinations/seychelles" },
-      { label: "Malaysia",            href: "/destinations/malaysia" },
-      { label: "Bhutan",              href: "/destinations/bhutan" },
+      { label: "Mauritius",           href: "/packages?destination=mauritius" },
+      { label: "Seychelles",          href: "/packages?destination=seychelles" },
+      { label: "Malaysia",            href: "/packages?destination=malaysia" },
+      { label: "Bhutan",              href: "/packages?destination=bhutan" },
     ],
   },
   {
     title: "Yatras & Pilgrim Journeys",
     links: [
-      { label: "Char Dham Helicopter",         href: "/packages/uttarakhand-chardham-helicopter-5n6d" },
-      { label: "Char Dham Road",               href: "/packages/uttarakhand-chardham-road-11n12d" },
-      { label: "Kedarnath",                    href: "/packages/uttarakhand-kedarnath-heli-2n3d" },
-      { label: "Do Dham",                      href: "/packages/uttarakhand-dodham-road-6n7d" },
-      { label: "Badrinath–Kedarnath",          href: "/packages/uttarakhand-dodham-road-6n7d" },
-      { label: "Yamunotri & Gangotri",         href: "/destinations/uttarakhand" },
-      { label: "Devbhumi Uttarakhand",         href: "/destinations/uttarakhand" },
+      { label: "Char Dham Helicopter", href: "/packages?destination=uttarakhand&travelType=Pilgrim&type=helicopter" },
+      { label: "Char Dham Road",       href: "/packages?destination=uttarakhand&travelType=Pilgrim&type=road" },
+      { label: "Kedarnath",            href: "/packages?destination=uttarakhand&q=kedarnath" },
+      { label: "Do Dham",              href: "/packages?destination=uttarakhand&q=dodham" },
+      { label: "Badrinath–Kedarnath",  href: "/packages?destination=uttarakhand&q=badrinath" },
+      { label: "Yamunotri & Gangotri", href: "/destinations/uttarakhand" },
+      { label: "Devbhumi Uttarakhand", href: "/destinations/uttarakhand" },
     ],
   },
   {
@@ -49,7 +53,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
       { label: "Adventure",         href: "/experiences/adventure" },
       { label: "Wellness",          href: "/experiences/wellness" },
       { label: "Luxury",            href: "/experiences/luxury" },
-      { label: "Weekend Getaways",  href: "/experiences/weekend" },
+      { label: "Weekend Getaways",  href: "/packages?duration=3-5" },
     ],
   },
   {
@@ -58,7 +62,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
       { label: "3–5 day",       href: "/packages?duration=3-5" },
       { label: "6–9 day",       href: "/packages?duration=6-9" },
       { label: "10+ day",       href: "/packages?duration=10-plus" },
-      { label: "Long weekend",  href: "/packages?duration=weekend" },
+      { label: "Long weekend",  href: "/packages?duration=3-5" },
     ],
   },
   {
@@ -67,8 +71,8 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
       { label: "About Trust and Trip", href: "/about" },
       { label: "Our story",            href: "/about" },
       { label: "Reviews",              href: "/reviews" },
-      { label: "Press",                href: "/about#press" },
-      { label: "Careers",              href: "/about#careers" },
+      { label: "Press",                href: "/about" },
+      { label: "Careers",              href: "/about" },
       { label: "Contact",              href: "/contact" },
     ],
   },

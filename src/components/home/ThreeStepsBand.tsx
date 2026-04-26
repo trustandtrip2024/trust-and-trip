@@ -1,6 +1,8 @@
-import Link from "next/link";
+"use client";
+
 import { ArrowRight } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { useTripPlanner } from "@/context/TripPlannerContext";
 
 const DEFAULT_STEPS = [
   { n: "01", title: "Tell us your dream",          body: "Where, when, who's coming, and what you can't live without. A 2-minute form is all we need." },
@@ -25,6 +27,7 @@ export default function ThreeStepsBand({
   closingLine = "Free until you're sure. That's the promise.",
   steps,
 }: Props = {}) {
+  const { open: openPlanner } = useTripPlanner();
   const items = steps && steps.length === 3 ? steps : DEFAULT_STEPS;
   return (
     <section
@@ -51,10 +54,10 @@ export default function ThreeStepsBand({
         </p>
 
         <div className="mt-6 flex justify-center">
-          <Link href="/plan" className="tt-cta !w-auto !min-w-[220px]">
+          <button onClick={() => openPlanner()} className="tt-cta !w-auto !min-w-[220px]">
             Plan my trip — free
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </button>
         </div>
       </div>
     </section>

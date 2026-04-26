@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, MessageCircle } from "lucide-react";
+import { useTripPlanner } from "@/context/TripPlannerContext";
 
 const WHATSAPP_HREF =
   "https://wa.me/918115999588?text=" +
@@ -22,6 +25,7 @@ export default function FinalCTABand({
   ctaLabel = "Plan my trip — free",
   microcopy = "Free until you're sure. No card needed to start.",
 }: Props = {}) {
+  const { open: openPlanner } = useTripPlanner();
   return (
     <section
       aria-labelledby="final-cta-title"
@@ -36,10 +40,10 @@ export default function FinalCTABand({
         <p className="mt-3 text-lead text-white/75 max-w-xl mx-auto">{lede}</p>
 
         <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link href="/plan" className="tt-cta !w-auto !min-w-[220px]">
+          <button onClick={() => openPlanner()} className="tt-cta !w-auto !min-w-[220px]">
             {ctaLabel}
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </button>
           <Link
             href={WHATSAPP_HREF}
             target="_blank"

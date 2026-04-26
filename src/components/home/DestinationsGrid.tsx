@@ -46,9 +46,15 @@ export default function DestinationsGrid({
           lede={lede}
         />
 
-        <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* Mobile: snap-scroll rail; desktop: 4-col grid */}
+        <ul
+          className="mt-8 flex flex-nowrap gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-5 px-5 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-5"
+        >
           {items.map((d) => (
-            <li key={d.slug}>
+            <li
+              key={d.slug}
+              className="shrink-0 snap-start w-[78%] sm:w-[58%] md:w-auto"
+            >
               <DestinationCardUI
                 image={d.image}
                 name={d.name}

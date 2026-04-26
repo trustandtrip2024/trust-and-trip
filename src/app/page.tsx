@@ -24,6 +24,7 @@ import {
   getHomepageContent,
   getPackagesByType,
 } from "@/lib/sanity-queries";
+import { fetchGoogleReviews } from "@/lib/google-reviews";
 
 // Below-fold — chunk-split, still SSR'd for SEO; reserve height to avoid CLS.
 const ReviewsRail            = dynamic(() => import("@/components/home/ReviewsRail"),            { loading: () => <div className="h-[560px]" /> });
@@ -64,6 +65,7 @@ export default async function HomePage() {
     family,
     solo,
     group,
+    googleData,
   ] = await Promise.all([
     getDestinations(),
     getPilgrimPackages(),
@@ -72,6 +74,7 @@ export default async function HomePage() {
     getPackagesByType("Family"),
     getPackagesByType("Solo"),
     getPackagesByType("Group"),
+    fetchGoogleReviews(),
   ]);
 
   const c = content ?? {};
@@ -144,6 +147,7 @@ export default async function HomePage() {
         titleStart={c.reviews?.titleStart}
         titleItalic={c.reviews?.titleItalic}
         lede={c.reviews?.lede}
+        googleData={googleData}
       />
       <LoveFromTheGramStrip
         eyebrow={c.ugc?.eyebrow}

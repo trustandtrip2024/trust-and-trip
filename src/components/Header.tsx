@@ -24,12 +24,75 @@ import CurrencySwitcher from "./CurrencySwitcher";
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
 
 // ── Top-bar nav (max 4) ───────────────────────────────────
-const TOP_LINKS = [
-  { href: "/destinations", label: "Destinations" },
-  { href: "/experiences",  label: "Experiences"  },
-  { href: "/offers",       label: "Offers"       },
-  { href: "/plan",         label: "Plan"         },
-] as const;
+type DropdownLink = { label: string; href: string; emoji?: string };
+type TopLink = { href: string; label: string; dropdown?: { groups: { title: string; items: DropdownLink[] }[]; cta?: DropdownLink } };
+
+const DEST_INDIA: DropdownLink[] = [
+  { label: "Bali",        href: "/destinations/bali",        emoji: "🌺" },
+  { label: "Kerala",      href: "/destinations/kerala",      emoji: "🌴" },
+  { label: "Goa",         href: "/destinations/goa",         emoji: "🏖️" },
+  { label: "Rajasthan",   href: "/destinations/rajasthan",   emoji: "🏜️" },
+  { label: "Manali",      href: "/destinations/manali",      emoji: "🏔️" },
+  { label: "Ladakh",      href: "/destinations/ladakh",      emoji: "⛰️" },
+  { label: "Andaman",     href: "/destinations/andaman",     emoji: "🐠" },
+  { label: "Uttarakhand", href: "/destinations/uttarakhand", emoji: "🛕" },
+];
+const DEST_INTL: DropdownLink[] = [
+  { label: "Maldives",    href: "/destinations/maldives",    emoji: "🏝️" },
+  { label: "Switzerland", href: "/destinations/switzerland", emoji: "🏔️" },
+  { label: "Thailand",    href: "/destinations/thailand",    emoji: "🐘" },
+  { label: "Dubai",       href: "/destinations/dubai",       emoji: "🌆" },
+  { label: "Singapore",   href: "/destinations/singapore",   emoji: "🦁" },
+  { label: "Japan",       href: "/destinations/japan",       emoji: "🗾" },
+  { label: "Sri Lanka",   href: "/destinations/sri-lanka",   emoji: "🌿" },
+  { label: "Vietnam",     href: "/destinations/vietnam",     emoji: "🛶" },
+];
+const EXP_LIST: DropdownLink[] = [
+  { label: "Honeymoon",  href: "/experiences/honeymoon",  emoji: "💑" },
+  { label: "Family",     href: "/experiences/family",     emoji: "👨‍👩‍👧‍👦" },
+  { label: "Solo",       href: "/experiences/solo",       emoji: "🧭" },
+  { label: "Group",      href: "/experiences/group",      emoji: "🎉" },
+  { label: "Adventure",  href: "/experiences/adventure",  emoji: "🎒" },
+  { label: "Wellness",   href: "/experiences/wellness",   emoji: "🌿" },
+  { label: "Pilgrim",    href: "/experiences/pilgrim",    emoji: "🛕" },
+  { label: "Luxury",     href: "/experiences/luxury",     emoji: "👑" },
+];
+const OFFER_LIST: DropdownLink[] = [
+  { label: "Flash Deals",         href: "/offers?kind=flash",       emoji: "⚡" },
+  { label: "Early-Bird",          href: "/offers?kind=early-bird",  emoji: "🌅" },
+  { label: "Last-Minute",         href: "/offers?kind=last-minute", emoji: "⏳" },
+  { label: "Honeymoon Specials",  href: "/offers?theme=honeymoon",  emoji: "💑" },
+  { label: "Yatra Specials",      href: "/offers?theme=yatra",      emoji: "🛕" },
+  { label: "Group Bonanza",       href: "/offers?theme=group",      emoji: "🎉" },
+];
+
+const TOP_LINKS: TopLink[] = [
+  {
+    href: "/destinations", label: "Destinations",
+    dropdown: {
+      groups: [
+        { title: "India",         items: DEST_INDIA },
+        { title: "International", items: DEST_INTL  },
+      ],
+      cta: { label: "View all 60+ destinations →", href: "/destinations" },
+    },
+  },
+  {
+    href: "/experiences", label: "Experiences",
+    dropdown: {
+      groups: [{ title: "Browse by mood", items: EXP_LIST }],
+      cta: { label: "All experiences →", href: "/experiences" },
+    },
+  },
+  {
+    href: "/offers", label: "Offers",
+    dropdown: {
+      groups: [{ title: "Live deals", items: OFFER_LIST }],
+      cta: { label: "All offers →", href: "/offers" },
+    },
+  },
+  { href: "/plan", label: "Plan" },
+];
 
 // On tablet (≤1024) collapse all but the first 2
 const TABLET_TOP_LINKS = TOP_LINKS.slice(0, 2);
@@ -65,27 +128,75 @@ export default function Header() {
     { render: "currency", label: "Currency", icon: Sparkles },
   ];
 
-  const renderTopLink = (l: { href: string; label: string }) => (
-    <Link
-      key={l.href}
-      href={l.href}
-      aria-current={isActive(l.href) ? "page" : undefined}
-      className={clsx(
-        "shrink-0 whitespace-nowrap relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 group",
-        isActive(l.href)
-          ? "text-tat-charcoal"
-          : "text-tat-charcoal/70 hover:text-tat-charcoal"
-      )}
-    >
-      {l.label}
-      <span
+  const renderTopLink = (l: TopLink) => {
+    const linkEl = (
+      <Link
+        key={l.href}
+        href={l.href}
+        aria-current={isActive(l.href) ? "page" : undefined}
+        aria-haspopup={l.dropdown ? "menu" : undefined}
         className={clsx(
-          "absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-gradient-passion transition-transform duration-300",
-          isActive(l.href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+          "shrink-0 whitespace-nowrap relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+          isActive(l.href) ? "text-tat-charcoal" : "text-tat-charcoal/70 hover:text-tat-charcoal"
         )}
-      />
-    </Link>
-  );
+      >
+        {l.label}
+        <span
+          className={clsx(
+            "absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-gradient-passion transition-transform duration-300",
+            isActive(l.href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100 group-focus-within:scale-x-100"
+          )}
+        />
+      </Link>
+    );
+
+    if (!l.dropdown) {
+      return <span key={l.href} className="group inline-flex">{linkEl}</span>;
+    }
+
+    return (
+      <div key={l.href} className="group relative inline-flex">
+        {linkEl}
+        <div
+          className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-opacity duration-150"
+          role="menu"
+        >
+          <div className="bg-white rounded-card border border-tat-charcoal/10 shadow-rail p-4 min-w-[280px]">
+            <div className={clsx("grid gap-4", l.dropdown.groups.length > 1 ? "grid-cols-2" : "grid-cols-1")}>
+              {l.dropdown.groups.map((g) => (
+                <div key={g.title}>
+                  <p className="tt-eyebrow !text-[10px] mb-2">{g.title}</p>
+                  <ul className="space-y-0.5">
+                    {g.items.map((it) => (
+                      <li key={it.href}>
+                        <Link
+                          href={it.href}
+                          className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm text-tat-charcoal/80 hover:bg-tat-cream-warm/40 hover:text-tat-charcoal transition-colors duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-teal"
+                          role="menuitem"
+                        >
+                          {it.emoji && <span aria-hidden>{it.emoji}</span>}
+                          <span>{it.label}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            {l.dropdown.cta && (
+              <Link
+                href={l.dropdown.cta.href}
+                className="mt-3 pt-3 border-t border-tat-charcoal/8 inline-flex items-center gap-1 text-xs font-semibold text-tat-teal hover:text-tat-teal-deep"
+                role="menuitem"
+              >
+                {l.dropdown.cta.label}
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
