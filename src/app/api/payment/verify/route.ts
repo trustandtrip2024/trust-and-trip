@@ -52,11 +52,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing payment details." }, { status: 400 });
     }
 
-    // Verify signature
+    // Verify signature — use crypto.timingSafeEqual on equal-length buffers
+    // to avoid leaking the comparison position via timing.
     const secret = process.env.RAZORPAY_KEY_SECRET!;
     const body = `${razorpay_order_id}|${razorpay_payment_id}`;
     const expected = crypto.createHmac("sha256", secret).update(body).digest("hex");
-    if (expected !== razorpay_signature) {
+    const expectedBuf = Buffer.from(expected, "utf8");
+    const givenBuf = Buffer.from(String(razorpay_signature), "utf8");
+    const sigOk =
+      expectedBuf.length === givenBuf.length &&
+      crypto.timingSafeEqual(expectedBuf, givenBuf);
+    if (!sigOk) {
       return NextResponse.json({ error: "Payment verification failed." }, { status: 400 });
     }
 

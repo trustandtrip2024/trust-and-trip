@@ -358,11 +358,18 @@ export type PartnerLogo = {
 
 export async function getPartnerLogos(kind?: PartnerLogo["kind"]): Promise<PartnerLogo[]> {
   return cached(`sanity:partnerLogos:${kind ?? "all"}`, TTL.long, async () => {
-    const filter = kind ? ` && kind == "${kind}"` : "";
+    // Parameterised — never concatenate user-controlled values into a GROQ
+    // filter even when the TS type narrows them.
+    const query = kind
+      ? `*[_type == "partnerLogo" && active == true && kind == $kind] | order(order asc, name asc) {
+          name, kind, logo, href, flag, accentColor
+        }`
+      : `*[_type == "partnerLogo" && active == true] | order(order asc, name asc) {
+          name, kind, logo, href, flag, accentColor
+        }`;
     const raw = await sanityClient.fetch<(Omit<PartnerLogo, "logo"> & { logo: any })[]>(
-      `*[_type == "partnerLogo" && active == true${filter}] | order(order asc, name asc) {
-        name, kind, logo, href, flag, accentColor
-      }`
+      query,
+      kind ? { kind } : {},
     );
     return raw.map((p) => ({
       ...p,
