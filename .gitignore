@@ -46,3 +46,4 @@ gitleaks-report.json
 .env
 .env.local
 .env.*.local
+pnpm-lock.yaml
