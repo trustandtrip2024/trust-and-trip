@@ -42,14 +42,14 @@ export default function ThreeStepsBand({
         <ol className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
           {items.map((s) => (
             <li key={s.n} className="tt-card tt-card-p">
-              <p className="font-serif text-h2 text-tat-gold/85">{s.n}</p>
-              <h3 className="mt-2 font-serif text-h3 text-tat-charcoal">{s.title}</h3>
+              <p className="font-display text-h2 text-tat-burnt">{s.n}</p>
+              <h3 className="mt-2 font-display font-normal text-h3 text-tat-charcoal">{s.title}</h3>
               <p className="mt-2 text-body text-tat-charcoal/80">{s.body}</p>
             </li>
           ))}
         </ol>
 
-        <p className="mt-10 text-center font-serif italic text-h4 text-tat-gold/85">
+        <p className="mt-10 text-center font-display text-h4 text-tat-charcoal/75">
           {closingLine}
         </p>
 

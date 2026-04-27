@@ -79,7 +79,7 @@ export default function PressPartnersBand({
 
         {quote ? (
           <figure className="mt-12 max-w-3xl mx-auto text-center">
-            <blockquote className="font-serif italic text-h3 text-tat-charcoal/80">
+            <blockquote className="font-display text-h3 text-tat-charcoal/80">
               &ldquo;{quote.quote}&rdquo;
             </blockquote>
             {quote.attribution && (
@@ -95,7 +95,7 @@ export default function PressPartnersBand({
             )}
           </figure>
         ) : (
-          <blockquote className="mt-12 max-w-3xl mx-auto text-center font-serif italic text-h3 text-tat-slate/60">
+          <blockquote className="mt-12 max-w-3xl mx-auto text-center font-display text-h3 text-tat-slate/60">
             {/* TODO: feature a real press quote in Sanity (Press quotes → featured: true). */}
             Press quote pending — add via Sanity Studio.
           </blockquote>

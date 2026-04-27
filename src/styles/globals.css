@@ -1,3 +1,5 @@
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -83,7 +85,7 @@ h1, h2, h3 {
   }
 
   .eyebrow-ember {
-    @apply text-[11px] uppercase tracking-[0.28em] font-bold text-tat-orange;
+    @apply text-[11px] uppercase tracking-[0.28em] font-semibold text-tat-orange;
   }
 
   .text-gradient-passion {
@@ -157,45 +159,45 @@ h1, h2, h3 {
      stacks so we can swap palettes later by editing tokens. */
 
   /* Master card (no padding — pair with tt-card-p when needed) */
-  .tt-card        { @apply bg-white rounded-card border border-tat-charcoal/10 shadow-card; }
+  .tt-card        { @apply bg-white dark:bg-white/[0.04] rounded-card border border-tat-charcoal/10 dark:border-white/10 shadow-card; }
   .tt-card-p      { @apply p-5 md:p-8; }
   .tt-card + .tt-card { @apply mt-6; }
 
   /* Eyebrow + title + italic flourish — amber-800 + stone-700 for AA contrast */
   .tt-eyebrow     { @apply text-[12px] tracking-[0.15em] uppercase font-semibold text-tat-gold; }
-  .tt-title       { @apply mt-2 font-serif text-[22px] md:text-[28px] leading-[1.2] text-tat-charcoal; }
-  .tt-title em    { @apply not-italic font-serif italic text-tat-gold; }
-  .tt-lede        { @apply mt-3 text-[15px] md:text-[17px] leading-[1.6] text-tat-charcoal/80 max-w-[68ch]; }
+  .tt-title       { @apply mt-2 font-display text-[22px] md:text-[28px] leading-[1.2] text-tat-charcoal dark:text-tat-paper; }
+  .tt-title em    { @apply not-italic font-display italic text-tat-burnt; }
+  .tt-lede        { @apply mt-3 text-[15px] md:text-[17px] leading-[1.6] text-tat-charcoal/80 dark:text-tat-paper/75 max-w-[68ch]; }
 
   /* Chip row */
   .tt-chip-row    { @apply flex flex-wrap gap-2 mt-4; }
-  .tt-chip        { @apply inline-flex items-center gap-1.5 h-8 px-3 rounded-pill bg-tat-cream-warm/40 text-tat-charcoal text-[13px] font-medium transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-teal focus-visible:ring-offset-2; }
+  .tt-chip        { @apply inline-flex items-center gap-1.5 h-8 px-3 rounded-pill bg-tat-cream-warm/40 dark:bg-white/10 text-tat-charcoal dark:text-tat-paper text-[13px] font-medium transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-teal focus-visible:ring-offset-2; }
   .tt-chip svg    { @apply w-4 h-4 text-tat-gold; }
-  .tt-chip--active{ @apply bg-tat-charcoal text-tat-paper; }
-  .tt-chip--active svg { @apply text-tat-paper; }
-  .tt-link        { @apply text-tat-charcoal/80 hover:text-tat-charcoal underline-offset-4 hover:underline; }
+  .tt-chip--active{ @apply bg-tat-charcoal text-tat-paper dark:bg-tat-paper dark:text-tat-charcoal; }
+  .tt-chip--active svg { @apply text-tat-paper dark:text-tat-charcoal; }
+  .tt-link        { @apply text-tat-charcoal/80 dark:text-tat-paper/80 hover:text-tat-charcoal dark:hover:text-tat-paper underline-offset-4 hover:underline; }
 
   /* Sub-card (used inside itinerary days, stays, reviews) */
-  .tt-subcard     { @apply rounded-sub border border-tat-charcoal/10 bg-white p-4 md:p-5; }
+  .tt-subcard     { @apply rounded-sub border border-tat-charcoal/10 dark:border-white/10 bg-white dark:bg-white/[0.04] p-4 md:p-5; }
 
   /* Mini meta row (icon tile + label/value) */
   .tt-meta        { @apply flex items-start gap-3; }
-  .tt-meta-ico    { @apply w-8 h-8 rounded-lg bg-tat-cream-warm/40 grid place-items-center shrink-0; }
+  .tt-meta-ico    { @apply w-8 h-8 rounded-lg bg-tat-cream-warm/40 dark:bg-white/10 grid place-items-center shrink-0; }
   .tt-meta-ico svg{ @apply w-4 h-4 text-tat-gold; }
-  .tt-meta-lbl    { @apply text-[12px] uppercase tracking-wide font-semibold text-tat-slate; }
-  .tt-meta-val    { @apply text-[14px] font-medium text-tat-charcoal; }
+  .tt-meta-lbl    { @apply text-[12px] uppercase tracking-wide font-semibold text-tat-slate dark:text-tat-paper/65; }
+  .tt-meta-val    { @apply text-[14px] font-medium text-tat-charcoal dark:text-tat-paper; }
 
   /* Day pill */
   .tt-day-pill    { @apply inline-flex items-center justify-center h-7 px-3 rounded-pill bg-tat-charcoal text-tat-paper text-[12px] tracking-wide font-medium; }
 
   /* Inclusion / exclusion bullets */
-  .tt-inc         { @apply flex items-start gap-3 py-2 text-[14px] text-tat-charcoal; }
+  .tt-inc         { @apply flex items-start gap-3 py-2 text-[14px] text-tat-charcoal dark:text-tat-paper; }
   .tt-inc svg     { @apply w-5 h-5 shrink-0 mt-0.5 text-tat-teal; }
   .tt-exc svg     { @apply w-5 h-5 shrink-0 mt-0.5 text-tat-orange; }
 
   /* Buttons */
   .tt-cta         { @apply inline-flex items-center justify-center gap-2 h-12 px-5 w-full rounded-pill font-medium text-tat-paper bg-tat-teal hover:bg-tat-teal-deep transition; }
-  .tt-cta-alt     { @apply inline-flex items-center justify-center gap-2 h-11 px-5 w-full rounded-pill font-medium text-tat-charcoal bg-white border border-tat-charcoal/25 hover:border-tat-charcoal transition; }
+  .tt-cta-alt     { @apply inline-flex items-center justify-center gap-2 h-11 px-5 w-full rounded-pill font-medium text-tat-charcoal dark:text-tat-paper bg-white dark:bg-white/[0.06] border border-tat-charcoal/25 dark:border-white/15 hover:border-tat-charcoal dark:hover:border-white/40 transition; }
 }
 
 @layer utilities {
@@ -209,6 +211,11 @@ h1, h2, h3 {
 
   .mask-fade-r {
     mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  }
+
+  .mask-fade-x {
+    mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
   }
 
   /* Grain overlay */
@@ -294,7 +301,6 @@ html.pkg-sticky-active [data-aria-widget] {
   padding-top: max(1rem, env(safe-area-inset-top));
 }
 
-
 /* ─── Print styles ──────────────────────────────────────
    Used by /dashboard/bookings/[id]/receipt.
    Hide dashboard chrome, full-width receipt. */
@@ -306,4 +312,86 @@ html.pkg-sticky-active [data-aria-widget] {
   main, .min-h-screen { min-height: 0 !important; padding: 0 !important; }
   .shadow-soft, .shadow-soft-lg { box-shadow: none !important; }
   * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+
+@layer base {
+  .theme {
+    --font-heading: var(--font-display);
+    --font-sans: var(--font-sans);
+  }
+  :root {
+    /* Typography system — Fraunces (display) + Inter (body) */
+    --font-display: var(--font-display);
+    --font-body: var(--font-sans);
+    --color-burnt: #C2541C;
+
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: oklch(0.708 0 0);
+  }
+  .dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+  }
+  html {
+    @apply font-sans;
+  }
 }

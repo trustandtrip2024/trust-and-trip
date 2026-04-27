@@ -18,16 +18,16 @@ export default function SectionHeader({
   return (
     <header className={`max-w-2xl ${wrap}`}>
       <p className="tt-eyebrow">{eyebrow}</p>
-      <Heading className={`mt-2 font-serif ${headingSize} text-tat-charcoal text-balance`}>
+      <Heading className={`mt-2 font-display font-normal ${headingSize} text-tat-charcoal dark:text-tat-paper text-balance`}>
         {title}
         {italicTail && (
           <>
             {" "}
-            <em className="not-italic font-serif italic text-tat-gold/85">{italicTail}</em>
+            <em className="not-italic font-display italic text-tat-burnt">{italicTail}</em>
           </>
         )}
       </Heading>
-      {lede && <p className="tt-lede">{lede}</p>}
+      {lede && <p className="tt-lede dark:!text-tat-paper/75">{lede}</p>}
     </header>
   );
 }

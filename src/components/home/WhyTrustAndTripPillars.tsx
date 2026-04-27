@@ -103,8 +103,8 @@ export default function WhyTrustAndTripPillars({
 
         <div className="relative mt-12 max-w-3xl mx-auto text-center">
           <div aria-hidden className="absolute inset-0 rounded-3xl bg-gradient-sunset opacity-50 blur-2xl pointer-events-none" />
-          <p className="relative font-serif italic text-h4 text-tat-charcoal/85 px-6">
-            <span className="text-gradient-aurora font-semibold not-italic">Originality. Trust. Human care. Detail.</span>{" "}
+          <p className="relative font-display text-h4 text-tat-charcoal/85 px-6">
+            <span className="text-gradient-aurora font-semibold">Originality. Trust. Human care. Detail.</span>{" "}
             <span className="block mt-1">{closingLine.replace(/^Originality\. Trust\. Human care\. Detail\.\s*/, "")}</span>
           </p>
         </div>

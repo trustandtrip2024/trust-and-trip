@@ -37,9 +37,9 @@ export default function FinalCTABand({
           <Gift className="h-3 w-3" aria-hidden />
           Plan this week · ₹2,000 off your trip
         </span>
-        <h2 id="final-cta-title" className="mt-2 font-serif text-h1 md:text-display text-white text-balance">
+        <h2 id="final-cta-title" className="mt-2 font-display font-normal text-h1 md:text-display text-white text-balance">
           {titleStart}{" "}
-          <em className="not-italic font-serif italic text-tat-orange-soft">{titleItalic}</em>
+          <em className="not-italic font-display italic text-tat-burnt">{titleItalic}</em>
         </h2>
         <p className="mt-3 text-lead text-white/75 max-w-xl mx-auto">{lede}</p>
 

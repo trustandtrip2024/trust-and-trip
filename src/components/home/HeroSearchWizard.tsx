@@ -400,8 +400,8 @@ export default function HeroSearchWizard({
           <Zap className="h-3 w-3" aria-hidden />
           Free itinerary in 24 h · No card needed
         </span>
-        <h1 className="mt-4 font-serif text-[40px] leading-[1.04] md:text-display text-white text-balance">
-          {titleStart} <em className="not-italic font-serif italic text-tat-orange-soft">{titleItalic}</em>
+        <h1 className="mt-4 font-display font-normal text-[40px] leading-[1.04] md:text-display text-white text-balance">
+          {titleStart} <em className="not-italic font-display italic text-tat-burnt">{titleItalic}</em>
         </h1>
         <p className="mt-4 text-base md:text-lead text-white/85 max-w-2xl mx-auto text-balance">{lede}</p>
 
