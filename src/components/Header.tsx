@@ -8,8 +8,8 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { motion } from "framer-motion";
 import {
   Menu, X, Phone, MapPin, Heart, Search, BookOpen, MoreVertical,
-  Info, User, LogOut, Sparkles, ChevronRight, Mail, Instagram,
-  MessageCircle,
+  Info, User, LogOut, Sparkles, ChevronRight, ChevronDown, Mail, Instagram,
+  MessageCircle, Mic,
 } from "lucide-react";
 import clsx from "clsx";
 import { useTripPlanner } from "@/context/TripPlannerContext";
@@ -236,25 +236,36 @@ export default function Header() {
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className={clsx(
           "sticky top-0 z-50 w-full transition-all duration-500",
-          scrolled
-            ? "bg-tat-paper/85 backdrop-blur-2xl border-b border-tat-orange/15 shadow-[0_8px_32px_-12px_rgba(45,26,55,0.18)]"
-            : "bg-transparent"
+          // Mobile: always dark navbar (matches Yatra-style reference)
+          "bg-tat-charcoal md:bg-transparent",
+          scrolled &&
+            "md:bg-tat-paper/85 md:backdrop-blur-2xl md:border-b md:border-tat-orange/15 md:shadow-[0_8px_32px_-12px_rgba(45,26,55,0.18)]"
         )}
       >
         <div
           className="container-custom flex items-center justify-between h-16 md:h-20 gap-3"
           style={{ flexWrap: "nowrap", whiteSpace: "nowrap" }}
         >
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
+          {/* Mobile hamburger — placed first so it sits at far left */}
+          <button
+            type="button"
+            aria-label="Open menu"
+            onClick={() => setDrawerOpen(true)}
+            className="md:hidden p-2 rounded-md hover:bg-white/10 transition-colors -ml-1"
+          >
+            <Menu className="h-5 w-5 text-tat-paper" />
+          </button>
+
+          {/* Logo — desktop / tablet (≥md) */}
+          <Link href="/" className="hidden md:flex items-center gap-2.5 group shrink-0">
             <div className="relative">
               <div className="h-10 w-10 rounded-full bg-gradient-passion flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-crimson">
-                <span className="text-white text-lg font-display font-bold tracking-tight">T</span>
+                <span className="text-white text-lg font-display font-semibold tracking-tight">T</span>
               </div>
               <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-tat-gold shadow-[0_0_10px_rgba(242,179,64,0.85)] ring-1 ring-white" />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="font-display text-lg md:text-xl font-bold tracking-tight whitespace-nowrap">
+              <span className="font-display text-lg md:text-xl font-semibold tracking-tight whitespace-nowrap">
                 <span className="text-tat-charcoal">Trust</span>
                 <span className="text-gradient-passion italic">&amp;</span>
                 <span className="text-gradient-aurora">Trip</span>
@@ -263,6 +274,17 @@ export default function Header() {
                 Crafted with passion
               </span>
             </div>
+          </Link>
+
+          {/* Logo — mobile (compact, on dark) */}
+          <Link href="/" className="md:hidden flex items-center gap-2 shrink-0">
+            <span className="relative h-8 w-8 rounded-md bg-tat-burnt grid place-items-center font-display font-semibold text-tat-paper text-sm">
+              T
+              <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-tat-gold ring-1 ring-tat-charcoal" />
+            </span>
+            <span className="font-display text-base font-semibold tracking-tight text-tat-paper whitespace-nowrap">
+              Trust<span className="text-tat-burnt italic"> &amp; </span>Trip
+            </span>
           </Link>
 
           {/* Desktop nav: ≥lg = 4 items, md = 2 items + kebab */}
@@ -380,34 +402,39 @@ export default function Header() {
               Plan My Trip
             </button>
 
-            {/* Mobile controls */}
-            <ThemeToggle className="md:hidden !h-9 !w-9" />
+            {/* Mobile cluster — phone pill + profile + hamburger */}
             <a
               href="tel:+918115999588"
-              onClick={() => captureIntent("call_click", { note: "Header mobile call icon" })}
-              className="md:hidden p-2 rounded-full hover:bg-tat-orange/10 transition-colors"
-              aria-label="Call"
+              onClick={() => captureIntent("call_click", { note: "Header mobile call pill" })}
+              className="md:hidden inline-flex items-center gap-1.5 px-3 h-9 rounded-full bg-tat-teal text-white text-[12px] font-semibold whitespace-nowrap shadow-[0_4px_12px_-4px_rgba(14,124,123,0.55)]"
+              aria-label="Call Trust and Trip"
             >
-              <Phone className="h-[18px] w-[18px] text-tat-charcoal" />
+              <span className="grid place-items-center h-5 w-5 rounded-full bg-white/20">
+                <Phone className="h-3 w-3 fill-white text-white" />
+              </span>
+              <span>8115 999 588</span>
+              <ChevronDown className="h-3 w-3 opacity-80" aria-hidden />
             </a>
+            <Link
+              href={user ? "/dashboard" : "/login"}
+              className="md:hidden inline-flex items-center gap-0.5 h-9 px-1.5 rounded-full text-tat-paper hover:bg-white/10 transition-colors"
+              aria-label={user ? "My dashboard" : "Sign in"}
+            >
+              <span className="h-7 w-7 rounded-full border border-white/40 grid place-items-center">
+                <User className="h-3.5 w-3.5" />
+              </span>
+              <ChevronDown className="h-3 w-3 opacity-70" aria-hidden />
+            </Link>
 
-            {/* Mobile hamburger — Radix Dialog */}
+            {/* Mobile drawer — controlled by hamburger button placed earlier */}
             <Dialog.Root open={drawerOpen} onOpenChange={setDrawerOpen}>
-              <Dialog.Trigger asChild>
-                <button
-                  aria-label="Menu"
-                  className="md:hidden p-2 rounded-full hover:bg-tat-charcoal/5 transition-colors"
-                >
-                  <Menu className="h-5 w-5 text-tat-charcoal" />
-                </button>
-              </Dialog.Trigger>
               <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-[60] bg-tat-charcoal/70 backdrop-blur-sm data-[state=open]:animate-fade-in" />
                 <Dialog.Content
                   className="fixed right-0 top-0 bottom-0 z-[70] w-[88vw] max-w-sm bg-tat-paper flex flex-col overflow-hidden focus:outline-none data-[state=open]:animate-slide-up"
                 >
                   <div className="flex items-center justify-between px-6 py-5 border-b border-tat-charcoal/8">
-                    <Dialog.Title className="font-display text-xl font-bold tracking-tight">
+                    <Dialog.Title className="font-display text-xl font-semibold tracking-tight">
                       <span className="text-tat-charcoal">Trust</span>
                       <span className="text-gradient-passion italic">&amp;</span>
                       <span className="text-gradient-aurora">Trip</span>
@@ -527,6 +554,22 @@ export default function Header() {
               </Dialog.Portal>
             </Dialog.Root>
           </div>
+        </div>
+
+        {/* Mobile search row — sits below header row, scrolls with sticky */}
+        <div className="md:hidden bg-tat-charcoal pb-3 px-4">
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
+            className="w-full flex items-center gap-3 h-11 px-4 rounded-full bg-white/10 border border-white/15 text-white/80 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt"
+            aria-label="Open search"
+          >
+            <Search className="h-4 w-4 text-white/70" aria-hidden />
+            <span className="flex-1 text-left">Search &ldquo;Bali&rdquo;</span>
+            <span className="grid place-items-center h-7 w-7 rounded-full bg-white/10">
+              <Mic className="h-3.5 w-3.5 text-white/80" aria-hidden />
+            </span>
+          </button>
         </div>
       </motion.header>
 

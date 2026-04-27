@@ -85,7 +85,7 @@ export default function ByHowYouTravelSection({
             ariaLabel="Travel style"
           />
           {subtitle && (
-            <p className="mt-3 text-body text-tat-slate italic font-serif">{subtitle}</p>
+            <p className="mt-3 text-body text-tat-slate">{subtitle}</p>
           )}
         </div>
 
@@ -94,18 +94,18 @@ export default function ByHowYouTravelSection({
             <CustomPlanCard style={active} />
           </div>
         ) : (
-          <ul
-            className="mt-8 flex flex-nowrap gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-5 px-5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-3 sm:gap-5"
-          >
-            {items.map((p) => (
-              <li
-                key={p.href}
-                className="shrink-0 snap-start w-[82%] sm:w-auto"
-              >
-                <PackageCardUI {...p} />
-              </li>
-            ))}
-          </ul>
+          <div className="mt-8 -mx-5 md:-mx-8 lg:-mx-12 px-5 md:px-8 lg:px-12 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+            <ul className="flex w-max gap-4 md:gap-5 pb-2">
+              {items.map((p) => (
+                <li
+                  key={p.href}
+                  className="shrink-0 snap-start w-[85%] sm:w-[60%] md:w-[44%] lg:w-[32%] xl:w-[30%]"
+                >
+                  <PackageCardUI {...p} />
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <div className="mt-10">

@@ -15,6 +15,7 @@ import RecentlyCraftedSection from "@/components/home/RecentlyCraftedSection";
 import ByHowYouTravelSection, { type StyleId } from "@/components/home/ByHowYouTravelSection";
 import PilgrimFeatureBand from "@/components/home/PilgrimFeatureBand";
 import PackagesByDurationSection from "@/components/home/PackagesByDurationSection";
+import VisaFreeDestinations from "@/components/home/VisaFreeDestinations";
 import DestinationsGrid from "@/components/home/DestinationsGrid";
 import type { PackageCardProps } from "@/components/ui/PackageCard";
 import type { Package } from "@/lib/data";
@@ -129,6 +130,7 @@ export default async function HomePage() {
         titleItalic={c.packagesByDuration?.titleItalic}
         lede={c.packagesByDuration?.lede}
       />
+      <VisaFreeDestinations />
       <DestinationsGrid
         destinations={destinations}
         eyebrow={c.destinations?.eyebrow}

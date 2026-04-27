@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Search, X, MapPin, Package, BookOpen, ArrowRight, Clock, Loader2 } from "lucide-react";
+import { Search, X, MapPin, Package, BookOpen, ArrowRight, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 type Result = {
@@ -21,13 +21,15 @@ const TYPE_META = {
   post:        { label: "Article",     icon: BookOpen,  color: "text-purple-600 bg-purple-50" },
 };
 
-const POPULAR = [
-  { label: "Bali Honeymoon",    href: "/packages?destination=bali" },
-  { label: "Kerala Backwaters", href: "/packages?destination=kerala" },
-  { label: "Maldives Escape",   href: "/packages?destination=maldives" },
-  { label: "Family Packages",   href: "/packages?type=Family" },
-  { label: "Under ₹35K",        href: "/packages?budget=budget" },
-  { label: "Adventure Trips",   href: "/packages?type=Group" },
+const POPULAR_DESTINATIONS: { emoji: string; label: string; href: string }[] = [
+  { emoji: "🌺", label: "Bali",        href: "/destinations/bali" },
+  { emoji: "🌴", label: "Kerala",      href: "/destinations/kerala" },
+  { emoji: "🏜️", label: "Rajasthan",   href: "/destinations/rajasthan" },
+  { emoji: "🏝️", label: "Maldives",    href: "/destinations/maldives" },
+  { emoji: "🛕", label: "Uttarakhand", href: "/destinations/uttarakhand" },
+  { emoji: "🏔️", label: "Switzerland", href: "/destinations/switzerland" },
+  { emoji: "🐘", label: "Thailand",    href: "/destinations/thailand" },
+  { emoji: "⛰️", label: "Ladakh",      href: "/destinations/ladakh" },
 ];
 
 export default function SearchModal({ onClose }: { onClose: () => void }) {
@@ -96,39 +98,59 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
           className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Input */}
-          <div className="flex items-center gap-3 px-5 py-4 border-b border-tat-charcoal/8">
-            {loading ? (
-              <Loader2 className="h-5 w-5 text-tat-charcoal/40 shrink-0 animate-spin" />
-            ) : (
-              <Search className="h-5 w-5 text-tat-charcoal/40 shrink-0" />
-            )}
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search packages, destinations, articles…"
-              className="flex-1 text-base text-tat-charcoal placeholder:text-tat-charcoal/35 outline-none bg-transparent"
-            />
-            {query && (
-              <button onClick={() => setQuery("")} className="text-tat-charcoal/30 hover:text-tat-charcoal transition-colors">
-                <X className="h-4 w-4" />
-              </button>
-            )}
-            <kbd className="hidden sm:block text-[10px] text-tat-charcoal/30 border border-tat-charcoal/15 rounded px-1.5 py-0.5">Esc</kbd>
+          {/* Header — step indicator (visual cue, matches wizard) */}
+          <div className="flex items-center justify-between px-5 pt-4 pb-2">
+            <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-tat-slate">
+              <span className="font-semibold text-tat-burnt">Where to</span>
+              <span aria-hidden className="text-tat-charcoal/30">·</span>
+              <span>Search</span>
+            </div>
+            <button
+              onClick={onClose}
+              aria-label="Close search"
+              className="h-8 w-8 rounded-full grid place-items-center text-tat-charcoal/50 hover:bg-tat-charcoal/5 hover:text-tat-charcoal transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
 
-          {/* Results */}
+          {/* Input — cream pill, matches wizard */}
+          <div className="px-5 pb-4">
+            <div className="flex items-center gap-3 h-12 px-4 rounded-pill bg-tat-cream-warm/40 border border-tat-charcoal/10 focus-within:border-tat-burnt focus-within:bg-white transition">
+              {loading ? (
+                <Loader2 className="h-4 w-4 text-tat-charcoal/40 shrink-0 animate-spin" />
+              ) : (
+                <Search className="h-4 w-4 text-tat-charcoal/45 shrink-0" />
+              )}
+              <input
+                ref={inputRef}
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Type a country, region or city"
+                className="flex-1 text-[15px] text-tat-charcoal placeholder:text-tat-charcoal/45 outline-none bg-transparent"
+              />
+              {query && (
+                <button onClick={() => setQuery("")} className="text-tat-charcoal/35 hover:text-tat-charcoal transition-colors" aria-label="Clear">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Results / Popular */}
           <div className="max-h-[60vh] overflow-y-auto">
             {!query && (
-              <div className="p-5">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-tat-charcoal/40 font-medium mb-3">Popular searches</p>
+              <div className="px-5 pb-5">
+                <p className="text-[13px] text-tat-charcoal/65 mb-3">Or pick a popular one:</p>
                 <div className="flex flex-wrap gap-2">
-                  {POPULAR.map(({ label, href }) => (
-                    <button key={label} onClick={() => navigate(href)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal/5 hover:bg-tat-gold/10 hover:text-tat-charcoal text-sm text-tat-charcoal/70 transition-all border border-tat-charcoal/8 hover:border-tat-gold/30">
-                      <Clock className="h-3 w-3 text-tat-charcoal/30" />
+                  {POPULAR_DESTINATIONS.map(({ emoji, label, href }) => (
+                    <button
+                      key={label}
+                      onClick={() => navigate(href)}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-white border border-tat-charcoal/15 text-tat-charcoal text-[14px] font-medium hover:border-tat-burnt hover:bg-tat-burnt/5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2"
+                    >
+                      <span aria-hidden className="text-base leading-none">{emoji}</span>
                       {label}
                     </button>
                   ))}
