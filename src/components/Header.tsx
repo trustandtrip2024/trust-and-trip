@@ -22,6 +22,7 @@ import ThemeToggle from "./ThemeToggle";
 import CurrencySwitcher from "./CurrencySwitcher";
 
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
+const FlashDealRotator = dynamic(() => import("./FlashDealRotator"), { ssr: false });
 
 // ── Top-bar nav (max 4) ───────────────────────────────────
 type DropdownLink = { label: string; href: string; emoji?: string };
@@ -206,7 +207,7 @@ export default function Header() {
         <div className="absolute inset-y-0 left-1/3 w-1/3 bg-gradient-to-r from-transparent via-tat-orange/15 to-transparent blur-2xl pointer-events-none" />
         <div className="relative container-custom flex items-center justify-between gap-4">
           <p className="md:hidden text-center w-full text-[11px] font-semibold tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">
-            <span className="text-gradient-aurora">10% Off · book 60+ days ahead</span>
+            <span className="text-gradient-aurora"><FlashDealRotator /></span>
           </p>
           <div className="hidden md:flex items-center gap-5 opacity-90">
             <span className="flex items-center gap-1.5 whitespace-nowrap">
@@ -223,7 +224,7 @@ export default function Header() {
               <Phone className="h-3 w-3" />+91 8115 999 588
             </a>
             <span className="opacity-40">|</span>
-            <span className="font-semibold tracking-wide text-gradient-aurora">10% Off · book 60+ days ahead</span>
+            <span className="font-semibold tracking-wide text-gradient-aurora"><FlashDealRotator /></span>
           </div>
         </div>
       </div>

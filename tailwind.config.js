@@ -24,10 +24,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        display: ['var(--font-display)', 'Fraunces', 'Georgia', 'serif'],
-        serif:   ['var(--font-serif)', '"Cormorant Garamond"', 'Georgia', 'serif'],
-        body:    ['var(--font-sans)', 'Manrope', 'system-ui', 'sans-serif'],
-        sans:    ['var(--font-sans)', 'Manrope', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', '"Instrument Serif"', 'Georgia', 'serif'],
+        serif:   ['var(--font-serif)', '"Instrument Serif"', 'Georgia', 'serif'],
+        body:    ['var(--font-sans)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans:    ['var(--font-sans)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         script:  ['var(--font-script)', 'Caveat', 'cursive'],
       },
       borderRadius: {

@@ -18,15 +18,47 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { package_slug, package_title, package_price,
             customer_name, customer_email, customer_phone,
-            travel_date, num_travellers, special_requests } = body;
-
-    // 30% of package price, minimum ₹5,000, rounded to nearest ₹100
-    const depositRupees = Math.max(5000, Math.round((package_price * 0.30) / 100) * 100);
-    const DEPOSIT_AMOUNT = depositRupees * 100; // convert to paise
+            travel_date, num_travellers, special_requests,
+            coupon_code } = body;
 
     if (!customer_name || !customer_email || !customer_phone || !package_slug) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
     }
+
+    // Validate coupon (optional). Reject if expired, redeemed, or under min order.
+    let discountAmount = 0;
+    let validatedCoupon: string | null = null;
+    if (coupon_code) {
+      const code = String(coupon_code).toUpperCase().trim();
+      const { data: coupon } = await supabase
+        .from("coupons")
+        .select("code, amount_off, min_order_value, expires_at, redeemed_at")
+        .eq("code", code)
+        .maybeSingle();
+
+      if (!coupon) {
+        return NextResponse.json({ error: "Invalid coupon code." }, { status: 400 });
+      }
+      if (coupon.redeemed_at) {
+        return NextResponse.json({ error: "This coupon has already been used." }, { status: 400 });
+      }
+      if (new Date(coupon.expires_at).getTime() < Date.now()) {
+        return NextResponse.json({ error: "This coupon has expired." }, { status: 400 });
+      }
+      if (package_price < coupon.min_order_value) {
+        return NextResponse.json({
+          error: `Coupon needs a minimum trip value of ₹${coupon.min_order_value.toLocaleString("en-IN")}.`,
+        }, { status: 400 });
+      }
+      discountAmount = coupon.amount_off;
+      validatedCoupon = coupon.code;
+    }
+
+    const finalPrice = Math.max(0, package_price - discountAmount);
+
+    // 30% of post-discount package price, minimum ₹5,000, rounded to nearest ₹100
+    const depositRupees = Math.max(5000, Math.round((finalPrice * 0.30) / 100) * 100);
+    const DEPOSIT_AMOUNT = depositRupees * 100; // convert to paise
 
     if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
       return NextResponse.json({ error: "Payment not configured." }, { status: 503 });
@@ -58,17 +90,22 @@ export async function POST(req: NextRequest) {
     const refCode = isValidRefCode(cookieRef) ? cookieRef : null;
 
     // Save booking as "created"
-    const { error: dbErr } = await supabase.from("bookings").insert({
+    const { data: bookingRow, error: dbErr } = await supabase.from("bookings").insert({
       razorpay_order_id: order.id,
       package_slug, package_title, package_price,
       deposit_amount: DEPOSIT_AMOUNT / 100,
       customer_name, customer_email, customer_phone,
       travel_date, num_travellers, special_requests,
       ref_code: refCode,
+      coupon_code: validatedCoupon,
+      discount_amount: discountAmount,
       status: "created",
-    });
+    }).select("id").single();
 
     if (dbErr) console.error("Booking insert error:", dbErr);
+    // Coupon is NOT redeemed here — only locked to the booking. The verify
+    // route flips redeemed_at on successful payment so abandoned checkouts
+    // don't burn the user's code.
 
     // Fire-and-forget Bitrix24 sync: opens a Deal in the Sales pipeline
     pushBookingAsDeal({
@@ -91,6 +128,9 @@ export async function POST(req: NextRequest) {
       amount: DEPOSIT_AMOUNT,
       currency: "INR",
       key: process.env.RAZORPAY_KEY_ID,
+      coupon: validatedCoupon ? { code: validatedCoupon, amount_off: discountAmount } : null,
+      final_price: finalPrice,
+      original_price: package_price,
     });
   } catch (err) {
     console.error("Create order error:", err);

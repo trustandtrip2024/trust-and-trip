@@ -133,6 +133,7 @@ export default function PackageSlider({
                 limitedSlots={p.limitedSlots}
                 highlights={p.highlights}
                 inclusions={p.inclusions}
+                categories={p.categories}
                 index={i}
                 inSlider
               />

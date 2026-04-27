@@ -28,6 +28,7 @@ export interface PackageCardProps {
   trending?: boolean;
   highlights?: string[];
   inclusions?: string[];
+  categories?: string[];
   index?: number;
   inSlider?: boolean;
 }
@@ -46,6 +47,7 @@ export default function PackageCard({
   trending,
   highlights,
   inclusions,
+  categories,
   index = 0,
   inSlider = false,
 }: PackageCardProps) {
@@ -174,6 +176,19 @@ export default function PackageCard({
                 <span className="bg-tat-charcoal/5 px-2 py-0.5 rounded-full">{travelType}</span>
               </>
             )}
+          </div>
+        )}
+
+        {categories && categories.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {categories.slice(0, 3).map((c) => (
+              <span
+                key={c}
+                className="inline-flex items-center text-[10px] tracking-wide font-medium px-2 py-0.5 rounded-full bg-tat-gold/10 text-tat-charcoal/75 border border-tat-gold/25"
+              >
+                {c}
+              </span>
+            ))}
           </div>
         )}
 

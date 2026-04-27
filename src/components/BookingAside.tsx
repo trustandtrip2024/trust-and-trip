@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Tag, Clock, Users, Star, MapPin, MessageCircle,
-  ShieldCheck, Eye, ChevronRight, Phone, Sliders,
+  ShieldCheck, ChevronRight, Phone, Sliders, Zap,
 } from "lucide-react";
 import { captureIntent } from "@/lib/capture-intent";
 import BookingDeposit from "./BookingDeposit";
+import LiveViewerCount from "./LiveViewerCount";
 
 interface Props {
   title: string;
@@ -26,21 +27,39 @@ interface Props {
   saleEndsAt?: string;
 }
 
-function useCountdown(target?: string) {
+function hashSlug(slug: string): number {
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+// Deterministic rolling 24-h sale window per package. Each calendar day a
+// fresh window starts at midnight + slug-hash offset, so refreshes don't
+// reset the timer mid-session yet every package has a different ending hour.
+function packageDeadline(slug: string): number {
+  const dayStart = new Date();
+  dayStart.setHours(0, 0, 0, 0);
+  const offsetHours = hashSlug(slug) % 24;
+  return dayStart.getTime() + (24 + offsetHours) * 3_600_000;
+}
+
+function useCountdown(target?: string, slug?: string) {
+  const fallback = slug ? packageDeadline(slug) : 0;
+  const deadline = target ? new Date(target).getTime() : fallback;
   const [now, setNow] = useState<number>(() => Date.now());
   useEffect(() => {
-    if (!target) return;
-    const id = setInterval(() => setNow(Date.now()), 60_000);
+    if (!deadline) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
-  }, [target]);
-  if (!target) return null;
-  const ms = new Date(target).getTime() - now;
+  }, [deadline]);
+  if (!deadline) return null;
+  const ms = deadline - now;
   if (ms <= 0) return null;
-  const d = Math.floor(ms / 86_400_000);
-  const h = Math.floor((ms % 86_400_000) / 3_600_000);
+  const h = Math.floor(ms / 3_600_000);
   const m = Math.floor((ms % 3_600_000) / 60_000);
+  const s = Math.floor((ms % 60_000) / 1000);
   const pad = (n: number) => String(n).padStart(2, "0");
-  return `${pad(d)}d : ${pad(h)}h : ${pad(m)}m`;
+  return { hms: `${pad(h)}:${pad(m)}:${pad(s)}`, urgent: h < 6 };
 }
 
 export default function BookingAside({
@@ -49,7 +68,7 @@ export default function BookingAside({
   waNumber, saleEndsAt,
 }: Props) {
   const savings = originalPrice - price;
-  const countdown = useCountdown(saleEndsAt);
+  const countdown = useCountdown(saleEndsAt, slug);
 
   const waMessage = encodeURIComponent(
     `Hi! I'm interested in "${title}" (₹${price.toLocaleString("en-IN")}). Could you share more details?`
@@ -73,11 +92,33 @@ export default function BookingAside({
               SAVE ₹{savings.toLocaleString("en-IN")}
             </span>
           ) : <span />}
-          {countdown && (
-            <span className="inline-flex items-center gap-1.5 text-[11px] text-tat-slate">
-              <Clock className="w-3 h-3" /> Ends {countdown}
-            </span>
-          )}
+        </div>
+      )}
+
+      {/* Price-lock countdown */}
+      {countdown && (
+        <div
+          className={`mb-4 flex items-center gap-2 rounded-xl px-3 py-2.5 border ${
+            countdown.urgent
+              ? "bg-red-50 border-red-200 text-red-700"
+              : "bg-tat-orange/8 border-tat-orange/25 text-tat-charcoal"
+          }`}
+        >
+          <Zap
+            className={`h-4 w-4 shrink-0 ${countdown.urgent ? "text-red-500" : "text-tat-orange"}`}
+            aria-hidden
+          />
+          <div className="flex-1 min-w-0">
+            <p className="text-[11px] uppercase tracking-wide font-semibold leading-tight">
+              {countdown.urgent ? "Price ends soon" : "Lock today's price"}
+            </p>
+            <p
+              className="font-mono text-[15px] font-semibold leading-tight tabular-nums"
+              aria-live="polite"
+            >
+              {countdown.hms}
+            </p>
+          </div>
         </div>
       )}
 
@@ -166,13 +207,10 @@ export default function BookingAside({
         </li>
       </ul>
 
-      {/* Social proof */}
-      <p className="mt-4 text-[11px] text-tat-slate flex items-center gap-2 flex-wrap">
-        <Eye className="w-3.5 h-3.5 text-tat-orange" />
-        <span><span className="font-semibold text-tat-charcoal">{viewedCount}</span> viewed</span>
-        <span className="text-tat-charcoal/30" aria-hidden>·</span>
-        <span><span className="font-semibold text-tat-charcoal">{enquiredCount}</span> enquired</span>
-        <span className="text-tat-charcoal/30" aria-hidden>this week</span>
+      {/* Live social proof */}
+      <LiveViewerCount slug={slug} fallbackWeek={viewedCount} />
+      <p className="mt-1 text-[11px] text-tat-slate ml-5">
+        <span className="font-semibold text-tat-charcoal">{enquiredCount}</span> enquired this week
       </p>
     </aside>
   );

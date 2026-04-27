@@ -103,11 +103,11 @@ h1, h2, h3 {
   }
 
   .heading-display {
-    @apply font-display text-display-lg font-medium tracking-tight;
+    @apply font-display text-display-lg font-normal tracking-[-0.01em];
   }
 
   .heading-section {
-    @apply font-display text-display-md font-medium tracking-tight;
+    @apply font-display text-display-md font-normal tracking-[-0.01em];
   }
 
   .prose-travel {

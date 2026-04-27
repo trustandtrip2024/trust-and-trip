@@ -9,6 +9,8 @@ export const metadata = {
 
 import dynamic from "next/dynamic";
 import HeroSearchWizard, { MobileStickySearch } from "@/components/home/HeroSearchWizard";
+import TrustBadgeStrip from "@/components/home/TrustBadgeStrip";
+import WhyNotAggregators from "@/components/home/WhyNotAggregators";
 import RecentlyCraftedSection from "@/components/home/RecentlyCraftedSection";
 import ByHowYouTravelSection, { type StyleId } from "@/components/home/ByHowYouTravelSection";
 import PilgrimFeatureBand from "@/components/home/PilgrimFeatureBand";
@@ -34,6 +36,7 @@ const FinalCTABand           = dynamic(() => import("@/components/home/FinalCTAB
 const HomeNewsletter         = dynamic(() => import("@/components/home/HomeNewsletter"),         { loading: () => <div className="h-[360px]" /> });
 const SeoFooterIndex         = dynamic(() => import("@/components/home/SeoFooterIndex"),         { loading: () => <div className="h-[640px]" /> });
 const SacredJourneys         = dynamic(() => import("@/components/homepage-v2/SacredJourneys"),  { loading: () => <div className="h-[600px]" /> });
+const LiveActivityTicker     = dynamic(() => import("@/components/home/LiveActivityTicker"),     { ssr: false });
 
 // Sanity Package -> PackageCardProps so card hrefs point at real pages.
 function toCardProps(p: Package): PackageCardProps {
@@ -99,6 +102,7 @@ export default async function HomePage() {
         trustStrip={c.hero?.trustStrip}
       />
       <MobileStickySearch />
+      <TrustBadgeStrip />
       <RecentlyCraftedSection
         eyebrow={c.recentlyCrafted?.eyebrow}
         titleStart={c.recentlyCrafted?.titleStart}
@@ -145,6 +149,7 @@ export default async function HomePage() {
         titleItalic={c.ugc?.titleItalic}
         lede={c.ugc?.lede}
       />
+      <WhyNotAggregators />
       <WhyTrustAndTripPillars
         eyebrow={c.pillars?.eyebrow}
         titleStart={c.pillars?.titleStart}
@@ -178,6 +183,7 @@ export default async function HomePage() {
         footerMicrocopy={c.newsletter?.footerMicrocopy}
       />
       <SeoFooterIndex />
+      <LiveActivityTicker />
     </>
   );
 }

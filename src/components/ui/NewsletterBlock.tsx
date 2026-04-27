@@ -21,6 +21,7 @@ export default function NewsletterBlock({
 }: Props) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">("idle");
+  const [coupon, setCoupon] = useState<{ code: string; amountOff: number } | null>(null);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -32,8 +33,14 @@ export default function NewsletterBlock({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), source: "homepage_newsletter" }),
       });
-      setStatus(res.ok ? "ok" : "err");
-      if (res.ok) setEmail("");
+      if (res.ok) {
+        const j = await res.json().catch(() => ({}));
+        if (j?.coupon?.code) setCoupon({ code: j.coupon.code, amountOff: j.coupon.amountOff });
+        setStatus("ok");
+        setEmail("");
+      } else {
+        setStatus("err");
+      }
     } catch { setStatus("err"); }
   };
 
@@ -86,6 +93,25 @@ export default function NewsletterBlock({
 
         {status === "err" && (
           <p role="alert" className="mt-3 text-meta text-rose-300">Something went wrong. Try again, or email plan@trustandtrip.com.</p>
+        )}
+        {status === "ok" && coupon && (
+          <div
+            role="status"
+            className="mt-5 mx-auto max-w-md rounded-2xl border-2 border-dashed border-tat-orange-soft/60 bg-white/5 px-5 py-4"
+          >
+            <p className="text-[10px] uppercase tracking-[0.22em] text-tat-orange-soft/90 font-semibold">
+              Your code · ₹{coupon.amountOff.toLocaleString("en-IN")} off
+            </p>
+            <p className="mt-1 font-mono text-2xl font-bold text-white tracking-[0.1em]">
+              {coupon.code}
+            </p>
+            <p className="mt-2 text-meta text-white/65">
+              We've also emailed it to you. Apply at booking, valid 90 days.
+            </p>
+          </div>
+        )}
+        {status === "ok" && !coupon && (
+          <p className="mt-3 text-meta text-tat-orange-soft">Subscribed — check your inbox.</p>
         )}
         {footerMicrocopy && (
           <p id="nl-help" className="mt-4 text-tag uppercase text-white/55">{footerMicrocopy}</p>

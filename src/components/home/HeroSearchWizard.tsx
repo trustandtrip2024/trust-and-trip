@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   Search, Calendar, Users, User, Heart, Star, ArrowRight, ChevronLeft,
-  Mountain, Sparkles, Briefcase, Crown, Sunset, Church, MapPin, X,
+  Mountain, Sparkles, Briefcase, Crown, Sunset, Church, MapPin, X, Zap,
 } from "lucide-react";
 
 const VIDEO_MP4 = "/video/hero.mp4";
@@ -352,7 +352,7 @@ export default function HeroSearchWizard({
   titleStart = "Trips that feel",
   titleItalic = "made just for you.",
   lede = "Tell us where your heart wants to go and a real planner will build an itinerary worth remembering — usually within 24 hours, always free until you're sure.",
-  trustStrip = "4.9 on Google · 8,000+ travelers since 2019 · WhatsApp planning, free",
+  trustStrip = "143+ trips planned this week · 4.9★ from 8,000+ travelers · 60+ destinations",
 }: HeroProps) {
   const router = useRouter();
   const [state, setState] = useState<WizardState>(emptyState);
@@ -366,7 +366,7 @@ export default function HeroSearchWizard({
     <section
       id="hero-search"
       aria-label="Plan your trip"
-      className="relative w-full min-h-[78vh] md:min-h-[88vh] flex items-center overflow-hidden bg-tat-charcoal"
+      className="relative w-full min-h-[88vh] md:min-h-[88vh] flex items-center overflow-hidden bg-tat-charcoal"
     >
       <Image
         src={VIDEO_POSTER}
@@ -394,12 +394,37 @@ export default function HeroSearchWizard({
         style={{ background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.2) 100%)" }}
       />
 
-      <div className="relative w-full mx-auto max-w-3xl px-5 md:px-8 lg:px-12 py-22 text-center text-white">
-        <p className="text-eyebrow uppercase font-medium text-tat-orange-soft/90">{eyebrow}</p>
-        <h1 className="mt-3 font-serif text-display md:text-display text-white text-balance">
+      <div className="relative w-full mx-auto max-w-3xl px-5 md:px-8 lg:px-12 pt-24 pb-14 md:py-22 text-center text-white">
+        <p className="text-[10px] md:text-eyebrow uppercase font-medium tracking-[0.22em] text-tat-orange-soft/90">{eyebrow}</p>
+        <span className="mt-3 inline-flex items-center gap-1.5 rounded-pill bg-tat-orange/15 border border-tat-orange/40 backdrop-blur-sm text-tat-orange-soft text-[11px] md:text-xs font-semibold uppercase tracking-[0.18em] px-3 py-1.5">
+          <Zap className="h-3 w-3" aria-hidden />
+          Free itinerary in 24 h · No card needed
+        </span>
+        <h1 className="mt-4 font-serif text-[40px] leading-[1.04] md:text-display text-white text-balance">
           {titleStart} <em className="not-italic font-serif italic text-tat-orange-soft">{titleItalic}</em>
         </h1>
-        <p className="mt-4 text-lead text-white/85 max-w-2xl mx-auto text-balance">{lede}</p>
+        <p className="mt-4 text-base md:text-lead text-white/85 max-w-2xl mx-auto text-balance">{lede}</p>
+
+        {/* Pre-segmentation tiles — quick start by traveller persona */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+          {TRAVELING_WITH.slice(0, 5).map((t) => {
+            const Icon = t.icon;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => {
+                  setState({ ...emptyState(), with: t.id });
+                  setStep(0);
+                }}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-pill bg-white/10 hover:bg-white/20 border border-white/25 text-white text-[12px] md:text-sm font-medium backdrop-blur-sm transition-all"
+              >
+                <Icon className="h-3.5 w-3.5" aria-hidden />
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
 
         <Wizard
           state={state}

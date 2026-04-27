@@ -11,13 +11,13 @@ interface Props {
 }
 
 export default function HomeNewsletter({
-  eyebrow = "Stay in the know",
-  titleStart = "Travel notes,",
-  titleItalic = "in your inbox.",
-  lede = "One email a month — flash deals, new destinations, and stories from the road. Unsubscribe anytime, no questions asked.",
+  eyebrow = "Join 12,000+ travelers",
+  titleStart = "Get ₹500 off",
+  titleItalic = "your first trip.",
+  lede = "One email a month — flash deals, new destinations, and stories from the road. Subscribe today and we'll email you a ₹500-off code, valid on any package above ₹25,000.",
   placeholder = "you@example.com",
-  buttonLabel = "Subscribe",
-  footerMicrocopy = "Roughly 12 emails a year. Never spam, never sold.",
+  buttonLabel = "Get my ₹500 off",
+  footerMicrocopy = "One-time code, valid 90 days. ~12 emails a year. Never spam, never sold.",
 }: Props = {}) {
   return (
     <NewsletterBlock

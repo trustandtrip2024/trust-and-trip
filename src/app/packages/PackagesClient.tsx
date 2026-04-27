@@ -24,6 +24,12 @@ const priceRanges = [
 
 const travelTypes = ["Couple", "Family", "Group", "Solo"];
 
+const CATEGORY_OPTIONS = [
+  "Honeymoon", "Family", "Adventure", "Wellness", "Cultural",
+  "Spiritual", "Pilgrim", "Luxury", "Budget", "Quick Trips",
+  "Beach", "Mountain", "International", "Groups", "Solo",
+];
+
 const ratingFloors = [
   { label: "4.5+", value: "4.5" },
   { label: "4.0+", value: "4.0" },
@@ -49,6 +55,7 @@ interface Props {
   initialDuration?: string;
   initialBudget?: string;
   initialRegion?: string;
+  initialCategory?: string;
 }
 
 const BUDGET_TO_PRICE: Record<string, string> = {
@@ -66,6 +73,7 @@ export default function PackagesClient({
   initialDuration = "",
   initialBudget = "",
   initialRegion = "",
+  initialCategory = "",
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -80,6 +88,7 @@ export default function PackagesClient({
   const [filterDuration, setFilterDuration] = useState(resolvedDuration);
   const [filterPrice, setFilterPrice] = useState(resolvedPrice);
   const [filterRating, setFilterRating] = useState("");
+  const [filterCategory, setFilterCategory] = useState(initialCategory);
   const [sortBy, setSortBy] = useState<string>("popular");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -94,13 +103,14 @@ export default function PackagesClient({
       if (key) params.set("budget", key);
     }
     if (filterRating) params.set("rating", filterRating);
+    if (filterCategory) params.set("category", filterCategory);
     if (sortBy && sortBy !== "popular") params.set("sort", sortBy);
     if (initialRegion) params.set("region", initialRegion);
 
     const qs = params.toString();
     const url = qs ? `${pathname}?${qs}` : pathname;
     router.replace(url, { scroll: false });
-  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, sortBy, initialRegion, pathname, router]);
+  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, sortBy, initialRegion, pathname, router]);
 
   const filtered = useMemo(() => {
     const list = packages.filter((p) => {
@@ -119,6 +129,9 @@ export default function PackagesClient({
       if (filterRating) {
         const floor = parseFloat(filterRating);
         if (!p.rating || p.rating < floor) return false;
+      }
+      if (filterCategory) {
+        if (!p.categories || !p.categories.includes(filterCategory)) return false;
       }
       return true;
     });
@@ -151,14 +164,15 @@ export default function PackagesClient({
         });
     }
     return sorted;
-  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, sortBy, initialRegion]);
+  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, sortBy, initialRegion]);
 
   const activeFilterCount =
     (filterDestination ? 1 : 0) +
     (filterTravelType ? 1 : 0) +
     (filterDuration ? 1 : 0) +
     (filterPrice ? 1 : 0) +
-    (filterRating ? 1 : 0);
+    (filterRating ? 1 : 0) +
+    (filterCategory ? 1 : 0);
 
   const clearAll = () => {
     setFilterDestination("");
@@ -166,6 +180,7 @@ export default function PackagesClient({
     setFilterDuration("");
     setFilterPrice("");
     setFilterRating("");
+    setFilterCategory("");
     setSortBy("popular");
   };
 
@@ -214,6 +229,8 @@ export default function PackagesClient({
                 setFilterPrice={setFilterPrice}
                 filterRating={filterRating}
                 setFilterRating={setFilterRating}
+                filterCategory={filterCategory}
+                setFilterCategory={setFilterCategory}
                 activeFilterCount={activeFilterCount}
                 clearAll={clearAll}
               />
@@ -250,6 +267,8 @@ export default function PackagesClient({
                     setFilterPrice={setFilterPrice}
                     filterRating={filterRating}
                     setFilterRating={setFilterRating}
+                    filterCategory={filterCategory}
+                    setFilterCategory={setFilterCategory}
                     activeFilterCount={activeFilterCount}
                     clearAll={clearAll}
                     onClose={() => setFiltersOpen(false)}
@@ -323,6 +342,7 @@ export default function PackagesClient({
                     travelType={p.travelType}
                     trending={p.trending}
                     limitedSlots={p.limitedSlots}
+                    categories={p.categories}
                     index={i}
                   />
                 ))}
@@ -347,6 +367,8 @@ interface PanelProps {
   setFilterPrice: (v: string) => void;
   filterRating: string;
   setFilterRating: (v: string) => void;
+  filterCategory: string;
+  setFilterCategory: (v: string) => void;
   activeFilterCount: number;
   clearAll: () => void;
   onClose?: () => void;
@@ -358,6 +380,7 @@ function FilterPanel({
   filterDuration, setFilterDuration,
   filterPrice, setFilterPrice,
   filterRating, setFilterRating,
+  filterCategory, setFilterCategory,
   activeFilterCount, clearAll, onClose,
 }: PanelProps) {
   return (
@@ -402,6 +425,34 @@ function FilterPanel({
           value={filterTravelType}
           onChange={setFilterTravelType}
         />
+      </FilterGroup>
+
+      <FilterGroup label="Category">
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setFilterCategory("")}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+              !filterCategory
+                ? "bg-tat-charcoal text-tat-paper border-tat-charcoal"
+                : "bg-tat-paper text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30"
+            }`}
+          >
+            All
+          </button>
+          {CATEGORY_OPTIONS.map((c) => (
+            <button
+              key={c}
+              onClick={() => setFilterCategory(filterCategory === c ? "" : c)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                filterCategory === c
+                  ? "bg-tat-gold/15 text-tat-charcoal border-tat-gold"
+                  : "bg-tat-paper text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
       </FilterGroup>
 
       <FilterGroup label="Duration">

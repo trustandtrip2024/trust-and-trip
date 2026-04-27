@@ -25,6 +25,7 @@ import {
 import SharePackage from "@/components/SharePackage";
 import PackagePixelEvent from "@/components/PackagePixelEvent";
 import PackageStickyBar from "@/components/PackageStickyBar";
+import PackageViewTracker from "@/components/PackageViewTracker";
 
 interface Props { params: { slug: string } }
 
@@ -67,6 +68,7 @@ export default async function PackageDetail({ params }: Props) {
 
   return (
     <>
+      <PackageViewTracker slug={pkg.slug} />
       <JsonLd data={{
         "@context": "https://schema.org", "@type": "Product",
         name: pkg.title, description: pkg.description, image: pkg.heroImage,
@@ -125,6 +127,15 @@ export default async function PackageDetail({ params }: Props) {
                   <Flame className="h-3 w-3 text-tat-gold" />Trending
                 </span>
               )}
+              {pkg.categories?.map((c) => (
+                <Link
+                  key={c}
+                  href={`/packages?category=${encodeURIComponent(c)}`}
+                  className="inline-flex items-center gap-1.5 bg-tat-paper/10 border border-tat-paper/20 text-tat-paper/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full hover:bg-tat-gold/30 hover:text-tat-paper transition-colors"
+                >
+                  {c}
+                </Link>
+              ))}
             </div>
             <h1 className="font-display text-3xl md:text-5xl font-medium leading-tight text-balance text-tat-paper">
               {pkg.title}

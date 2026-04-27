@@ -49,6 +49,7 @@ export default async function PackagesPage({
         initialDuration={params.duration ?? ""}
         initialBudget={params.budget ?? ""}
         initialRegion={params.region ?? ""}
+        initialCategory={params.category ?? ""}
       />
 
       <CTASection />

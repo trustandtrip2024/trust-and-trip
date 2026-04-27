@@ -129,6 +129,8 @@ const PACKAGE_FIELDS = `
   "hotel": hotel,
   "itinerary": itinerary,
   "activities": activities,
+  "categories": categories,
+  "tags": tags,
   "trending": coalesce(trending, false),
   "featured": coalesce(featured, false),
   "limitedSlots": coalesce(limitedSlots, false)
@@ -191,6 +193,8 @@ function mapPackage(p: SanityPackage): Package {
     inclusions: Array.isArray(p.inclusions) ? p.inclusions : [],
     exclusions: Array.isArray(p.exclusions) ? p.exclusions : [],
     activities: Array.isArray(p.activities) ? p.activities : [],
+    categories: Array.isArray(p.categories) ? p.categories : [],
+    tags: Array.isArray(p.tags) ? p.tags : [],
     itinerary: Array.isArray(p.itinerary)
       ? p.itinerary.map((d) => ({
           title: d?.title ?? "",
@@ -286,6 +290,22 @@ export async function getPackagesByType(travelType: string): Promise<Package[]> 
   const raw = await sanityClient.fetch<SanityPackage[]>(
     `*[_type == "package" && travelType == $type] | order(rating desc, featured desc) { ${PACKAGE_FIELDS} }`,
     { type: travelType }
+  );
+  return raw.map(mapPackage);
+}
+
+export async function getPackagesByCategory(category: string): Promise<Package[]> {
+  const raw = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package" && $category in categories] | order(rating desc, featured desc) { ${PACKAGE_FIELDS} }`,
+    { category }
+  );
+  return raw.map(mapPackage);
+}
+
+export async function getPackagesByTag(tag: string): Promise<Package[]> {
+  const raw = await sanityClient.fetch<SanityPackage[]>(
+    `*[_type == "package" && $tagName in tags] | order(rating desc, featured desc) { ${PACKAGE_FIELDS} }`,
+    { tagName: tag }
   );
   return raw.map(mapPackage);
 }

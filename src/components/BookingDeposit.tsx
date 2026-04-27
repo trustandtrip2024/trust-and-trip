@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, CreditCard, CheckCircle2, Loader2, X, IndianRupee } from "lucide-react";
+import { Shield, CreditCard, CheckCircle2, Loader2, X, IndianRupee, Tag } from "lucide-react";
 import { pixel } from "@/components/MetaPixel";
 
 interface Props {
@@ -28,7 +28,9 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
     travel_date: "",
     num_travellers: "2",
     special_requests: "",
+    coupon_code: "",
   });
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; amount_off: number } | null>(null);
 
   const loadRazorpay = () => new Promise<boolean>((resolve) => {
     if (window.Razorpay) return resolve(true);
@@ -56,6 +58,7 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
       const data = await res.json();
       if (!res.ok) { setError(data.error ?? "Failed to initiate payment."); setLoading(false); return; }
 
+      if (data.coupon) setAppliedCoupon(data.coupon);
       pixel.initiateCheckout(packageTitle, depositAmount);
 
       const rzp = new window.Razorpay({
@@ -176,6 +179,26 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
                   <input type="number" min="1" max="20" value={form.num_travellers}
                     onChange={(e) => setForm({ ...form, num_travellers: e.target.value })} className="input-travel text-sm" />
                 </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1 flex items-center gap-1">
+                  <Tag className="h-3 w-3" /> Coupon code (optional)
+                </label>
+                <input
+                  value={form.coupon_code}
+                  onChange={(e) => {
+                    setForm({ ...form, coupon_code: e.target.value.toUpperCase() });
+                    setAppliedCoupon(null);
+                  }}
+                  placeholder="WELCOME12AB34"
+                  className="input-travel text-sm uppercase tracking-wider"
+                />
+                {appliedCoupon && (
+                  <p className="mt-1 text-[11px] text-green-700 font-medium">
+                    ✓ {appliedCoupon.code} applied — ₹{appliedCoupon.amount_off.toLocaleString("en-IN")} off
+                  </p>
+                )}
               </div>
 
               {error && <p className="text-sm text-red-500 bg-red-50 rounded-xl px-3 py-2">{error}</p>}

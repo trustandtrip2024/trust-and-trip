@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, MessageCircle, Gift } from "lucide-react";
 import { useTripPlanner } from "@/context/TripPlannerContext";
 
 const WHATSAPP_HREF =
@@ -33,6 +33,10 @@ export default function FinalCTABand({
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-3xl text-center">
         <p className="text-eyebrow uppercase font-medium text-tat-orange-soft/90">{eyebrow}</p>
+        <span className="mt-3 inline-flex items-center gap-1.5 rounded-pill bg-tat-orange/15 border border-tat-orange/40 text-tat-orange-soft text-[11px] md:text-xs font-semibold uppercase tracking-[0.18em] px-3 py-1.5">
+          <Gift className="h-3 w-3" aria-hidden />
+          Plan this week · ₹2,000 off your trip
+        </span>
         <h2 id="final-cta-title" className="mt-2 font-serif text-h1 md:text-display text-white text-balance">
           {titleStart}{" "}
           <em className="not-italic font-serif italic text-tat-orange-soft">{titleItalic}</em>
@@ -57,6 +61,10 @@ export default function FinalCTABand({
         </div>
 
         <p className="mt-6 text-tag uppercase text-white/55">{microcopy}</p>
+        <p className="mt-2 inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.22em] text-tat-orange-soft/80">
+          <span className="h-1.5 w-1.5 rounded-full bg-tat-orange-soft animate-pulse" />
+          Only 4 planner slots left this week
+        </p>
       </div>
     </section>
   );

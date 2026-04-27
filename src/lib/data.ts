@@ -45,6 +45,8 @@ export type Package = {
     description: string;
   }[];
   activities: string[];
+  categories?: string[];
+  tags?: string[];
   trending?: boolean;
   featured?: boolean;
   limitedSlots?: boolean;

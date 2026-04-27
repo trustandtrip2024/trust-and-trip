@@ -72,6 +72,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Booking not found." }, { status: 404 });
     }
 
+    // Mark coupon redeemed now that payment is verified. Re-check redeemed_at
+    // is null to guard against double-spend across concurrent payments.
+    for (const b of bookings) {
+      if (!b.coupon_code) continue;
+      await supabase
+        .from("coupons")
+        .update({ redeemed_at: new Date().toISOString(), redeemed_booking_id: b.id })
+        .eq("code", b.coupon_code)
+        .is("redeemed_at", null);
+    }
+
     // Fire leads + clear cart for cart checkout
     const firstBooking = bookings[0];
     const isGroup = bookings.length > 1 || !!firstBooking.order_group_id;

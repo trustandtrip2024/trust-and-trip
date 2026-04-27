@@ -1,30 +1,37 @@
 import type { Metadata } from "next";
-import { Fraunces, Cormorant_Garamond, Manrope, Caveat } from "next/font/google";
+import { Inter, Instrument_Serif, Caveat } from "next/font/google";
 import dynamic from "next/dynamic";
 
 // Self-hosted fonts via next/font — eliminates the render-blocking
 // Google Fonts <link> and ships only the latin subset we need.
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-display",
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-});
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-serif",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-});
-
-const manrope = Manrope({
+//
+// Stack rationale (Apr 2026): switched from Fraunces+Cormorant+Manrope to
+// Inter + Instrument Serif. Inter is the de-facto big-travel-brand sans
+// (Booking.com, Klook, MakeMyTrip-feel) — high legibility at small sizes,
+// crisp on mobile, optimised numerals for prices. Instrument Serif gives
+// the editorial italic accents premium boutique brands use (Black Tomato /
+// Scott Dunn family) without feeling vintage like Cormorant.
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  weight: ["400"],
+  style: ["normal", "italic"],
+});
+
+const instrumentSerifBody = Instrument_Serif({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-serif",
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 const caveat = Caveat({
@@ -135,7 +142,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${cormorant.variable} ${manrope.variable} ${caveat.variable}`}>
+    <html lang="en" className={`${instrumentSerif.variable} ${instrumentSerifBody.variable} ${inter.variable} ${caveat.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         {/* Preconnect to speed up third-party resources */}

@@ -12,14 +12,14 @@ import type { GoogleReview, GooglePlaceData } from "@/lib/google-reviews";
 // is built. Not invented reviews — these are templates approved by the
 // product team.
 const CURATED_FALLBACK = [
-  { id: "g-1", name: "Riya Sharma",   city: "Mumbai",     destination: "Bali honeymoon",        rating: 5, when: "2 weeks ago",  body: "Trust and Trip planned every detail of our Bali honeymoon — private villa with a pool, candle-lit dinners, sunrise on Mount Batur. Our planner was on WhatsApp the whole trip; even helped reschedule a snorkel after rain. Worth every rupee." },
-  { id: "g-2", name: "Akhil Menon",   city: "Bengaluru",  destination: "Char Dham helicopter",  rating: 5, when: "1 month ago", body: "The Char Dham helicopter yatra was flawless. Hotels close to each shrine, vegetarian meals throughout, and VIP darshans arranged for my parents (75 and 72). The team thought of every small thing — my mother had a knee issue and they pre-booked palki transfers without us asking." },
-  { id: "g-3", name: "Megha Pillai",  city: "Chennai",    destination: "Switzerland family",    rating: 5, when: "3 weeks ago", body: "Took our two kids (8 and 11) to Switzerland for nine days. Glacier Express, Jungfrau, Lucerne — every leg was on time and the hotels were genuinely family-friendly (interconnecting rooms, kid menus). The customised itinerary saved us at least two days vs the canned packages we'd seen elsewhere." },
-  { id: "g-4", name: "Yashvi Iyer",   city: "Pune",       destination: "Maldives anniversary",  rating: 5, when: "2 months ago",body: "Booked a 5N Maldives package for our 10th anniversary. The team upgraded our overwater villa as a surprise and arranged a private dolphin-cruise dinner. Transparent pricing — no hidden 'taxes' at checkout, which is rare in this industry." },
-  { id: "g-5", name: "Praveen Kumar", city: "Hyderabad",  destination: "Spiti road trip",       rating: 5, when: "1 month ago", body: "Did a 9N Spiti circuit on bikes — Kaza, Langza, Komic, Chandratal. The route they planned avoided the over-touristed bits and the homestays were exactly what I wanted (basic, warm, real food). They monitored road conditions daily and rerouted us once when there was a landslide near Losar." },
-  { id: "g-6", name: "Nikhil Reddy",  city: "Kolkata",    destination: "Kerala backwaters",     rating: 5, when: "3 weeks ago", body: "Honestly the best backwaters trip I've taken. They put us on a private deluxe houseboat (not the budget shared ones) and the chef cooked Kerala-style fish curry that I still think about. Munnar tea trail was a slow, lovely day. Will book again." },
-  { id: "g-7", name: "Ayush Bansal",  city: "Delhi",      destination: "Thailand group tour",   rating: 5, when: "2 weeks ago", body: "Group of 12, 7 nights in Thailand. Trust and Trip handled the logistics (visas, internal flights, hotel rooming) without making me chase anyone. Bangkok-Krabi-Phuket flowed smoothly. Special thanks to the team for handling a passport-renewal crisis the day before departure." },
-  { id: "g-8", name: "Mehul Patel",   city: "Ahmedabad",  destination: "Dubai luxury",          rating: 5, when: "1 month ago", body: "5N Dubai with the family. Burj Khalifa club access, desert safari with vintage Land Cruisers, and a yacht brunch on the marina. The room at Atlantis was huge and they remembered our anniversary with a cake. This is what 'concierge' is supposed to feel like." },
+  { id: "g-1", name: "Riya Sharma",   city: "Mumbai",     destination: "Bali honeymoon",        href: "/packages?destination=bali&type=Couple",       rating: 5, when: "2 weeks ago",  body: "Trust and Trip planned every detail of our Bali honeymoon — private villa with a pool, candle-lit dinners, sunrise on Mount Batur. Our planner was on WhatsApp the whole trip; even helped reschedule a snorkel after rain. Worth every rupee." },
+  { id: "g-2", name: "Akhil Menon",   city: "Bengaluru",  destination: "Char Dham helicopter",  href: "/packages?destination=uttarakhand&category=Pilgrim", rating: 5, when: "1 month ago", body: "The Char Dham helicopter yatra was flawless. Hotels close to each shrine, vegetarian meals throughout, and VIP darshans arranged for my parents (75 and 72). The team thought of every small thing — my mother had a knee issue and they pre-booked palki transfers without us asking." },
+  { id: "g-3", name: "Megha Pillai",  city: "Chennai",    destination: "Switzerland family",    href: "/packages?destination=switzerland&type=Family", rating: 5, when: "3 weeks ago", body: "Took our two kids (8 and 11) to Switzerland for nine days. Glacier Express, Jungfrau, Lucerne — every leg was on time and the hotels were genuinely family-friendly (interconnecting rooms, kid menus). The customised itinerary saved us at least two days vs the canned packages we'd seen elsewhere." },
+  { id: "g-4", name: "Yashvi Iyer",   city: "Pune",       destination: "Maldives anniversary",  href: "/packages?destination=maldives&type=Couple",   rating: 5, when: "2 months ago",body: "Booked a 5N Maldives package for our 10th anniversary. The team upgraded our overwater villa as a surprise and arranged a private dolphin-cruise dinner. Transparent pricing — no hidden 'taxes' at checkout, which is rare in this industry." },
+  { id: "g-5", name: "Praveen Kumar", city: "Hyderabad",  destination: "Spiti road trip",       href: "/packages?destination=spiti-valley",            rating: 5, when: "1 month ago", body: "Did a 9N Spiti circuit on bikes — Kaza, Langza, Komic, Chandratal. The route they planned avoided the over-touristed bits and the homestays were exactly what I wanted (basic, warm, real food). They monitored road conditions daily and rerouted us once when there was a landslide near Losar." },
+  { id: "g-6", name: "Nikhil Reddy",  city: "Kolkata",    destination: "Kerala backwaters",     href: "/packages?destination=kerala",                  rating: 5, when: "3 weeks ago", body: "Honestly the best backwaters trip I've taken. They put us on a private deluxe houseboat (not the budget shared ones) and the chef cooked Kerala-style fish curry that I still think about. Munnar tea trail was a slow, lovely day. Will book again." },
+  { id: "g-7", name: "Ayush Bansal",  city: "Delhi",      destination: "Thailand group tour",   href: "/packages?destination=thailand&type=Group",     rating: 5, when: "2 weeks ago", body: "Group of 12, 7 nights in Thailand. Trust and Trip handled the logistics (visas, internal flights, hotel rooming) without making me chase anyone. Bangkok-Krabi-Phuket flowed smoothly. Special thanks to the team for handling a passport-renewal crisis the day before departure." },
+  { id: "g-8", name: "Mehul Patel",   city: "Ahmedabad",  destination: "Dubai luxury",          href: "/packages?destination=dubai&category=Luxury",   rating: 5, when: "1 month ago", body: "5N Dubai with the family. Burj Khalifa club access, desert safari with vintage Land Cruisers, and a yacht brunch on the marina. The room at Atlantis was huge and they remembered our anniversary with a cake. This is what 'concierge' is supposed to feel like." },
 ];
 
 interface Props {
@@ -38,6 +38,7 @@ function reviewItems(googleData?: GooglePlaceData | null) {
       name: r.author_name,
       city: "",
       destination: "Google review",
+      href: "" as string,
       rating: r.rating,
       when: r.relative_time_description,
       body: r.text,
@@ -84,7 +85,7 @@ export default function ReviewsRail({
                 key={r.id}
                 className="snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[40%] lg:w-[24%]"
               >
-                <article className="tt-card tt-card-p h-full flex flex-col gap-4">
+                <article className={`tt-card tt-card-p h-full flex flex-col gap-4 ${r.href ? "transition-all hover:shadow-rail hover:-translate-y-0.5" : ""}`}>
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       {r.photoUrl ? (
@@ -107,7 +108,14 @@ export default function ReviewsRail({
                       </div>
                     </div>
                     {r.destination && r.destination !== "Google review" && (
-                      <span className="tt-chip">{r.destination}</span>
+                      r.href ? (
+                        <Link href={r.href} className="tt-chip hover:bg-tat-gold/15 transition-colors">
+                          {r.destination}
+                          <ArrowRight className="h-3 w-3" />
+                        </Link>
+                      ) : (
+                        <span className="tt-chip">{r.destination}</span>
+                      )
                     )}
                   </div>
 
@@ -137,6 +145,15 @@ export default function ReviewsRail({
                     >
                       <ExternalLink className="h-3 w-3" />
                       View on Google
+                    </Link>
+                  )}
+                  {!r.live && r.href && (
+                    <Link
+                      href={r.href}
+                      className="mt-auto inline-flex items-center gap-1 text-tag uppercase text-tat-teal hover:text-tat-teal-deep"
+                    >
+                      Browse {r.destination.split(" ")[0]} trips
+                      <ArrowRight className="h-3 w-3" />
                     </Link>
                   )}
                 </article>
