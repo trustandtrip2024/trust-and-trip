@@ -5,6 +5,9 @@ import { computeTier, pointsForRupees } from "@/lib/points";
 import { markDealPaid } from "@/lib/bitrix24";
 import { findActiveCreator } from "@/lib/creator-attribution";
 import { sendBookingConfirmationEmail } from "@/lib/emails/send-booking-confirmation";
+import { sendCapiEvents, ipFromRequest } from "@/lib/meta-capi";
+import { ga4Purchase, clientIdFromCookie } from "@/lib/ga4-mp";
+import { cookies } from "next/headers";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -153,6 +156,60 @@ export async function POST(req: NextRequest) {
       sendBookingConfirmationEmail(b).catch((e) =>
         console.error("Booking confirmation email error:", e)
       );
+    }
+
+    // Meta CAPI Purchase — highest-value optimizer signal. Use the Razorpay
+    // order_id as event_id so any browser-side Purchase fire on the success
+    // page de-dups naturally. Total = sum of deposits across bookings in this
+    // payment (handles cart-checkout). Fire-and-forget.
+    const totalDepositForCapi = bookings.reduce(
+      (s, b) => s + (b.deposit_amount ?? 0),
+      0
+    );
+    const capiTitles = bookings
+      .map((b) => b.package_title)
+      .filter((t): t is string => Boolean(t));
+    const capiSlugs = bookings
+      .map((b) => b.package_slug)
+      .filter((s): s is string => Boolean(s));
+    sendCapiEvents([
+      {
+        name: "Purchase",
+        eventId: razorpay_order_id,
+        actionSource: "website",
+        user: {
+          email: firstBooking.customer_email ?? undefined,
+          phone: firstBooking.customer_phone ?? undefined,
+          firstName: (firstBooking.customer_name ?? "").split(/\s+/)[0],
+          country: "in",
+          externalId: matchedUserId ?? firstBooking.id,
+          clientIp: ipFromRequest(req),
+          clientUserAgent: req.headers.get("user-agent") ?? undefined,
+        },
+        customData: {
+          currency: "INR",
+          value: totalDepositForCapi,
+          contentName: capiTitles.join(" + ") || undefined,
+          contentIds: capiSlugs.length ? capiSlugs : undefined,
+          contentType: "product",
+          numItems: bookings.length,
+        },
+      },
+    ]).catch((e) => console.error("[capi] Purchase failed", e));
+
+    // GA4 purchase mirror.
+    const gaClientId = clientIdFromCookie(cookies().get("_ga")?.value);
+    if (gaClientId) {
+      void ga4Purchase({
+        clientId: gaClientId,
+        value: totalDepositForCapi,
+        transactionId: razorpay_order_id,
+        packageSlugs: capiSlugs,
+        packageTitle: capiTitles[0],
+        ipOverride: ipFromRequest(req),
+        userAgent: req.headers.get("user-agent") ?? undefined,
+        externalId: matchedUserId ?? firstBooking.id,
+      }).catch((e) => console.error("[ga4-mp] Purchase failed", e));
     }
 
     return NextResponse.json({

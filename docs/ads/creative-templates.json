@@ -1,0 +1,133 @@
+{
+  "$schema": "./creative-templates.schema.json",
+  "_doc": "Pre-built ad creative copy for Meta + Google. One block per LP. Each block: 5 headline variants × 5 primary-text variants × 3 CTA-button labels × WhatsApp prefill messages × URL with full UTM. Use the variants verbatim or as a starting point — don't rewrite from scratch.",
+  "_url_pattern": "https://trustandtrip.com/lp/<lp>?utm_source=<src>&utm_medium=<med>&utm_campaign=<camp>&utm_content=<adID-or-name>&utm_term=<keyword>",
+  "_wa_url_pattern": "https://trustandtrip.com/api/wa/click?src=ad_<lp>_<variant>&dest=<destination>&utm_source=<src>&utm_medium=<med>&utm_campaign=<camp>&utm_content=<adID>",
+  "campaigns": [
+    {
+      "lp": "/lp/maldives-honeymoon",
+      "destination": "Maldives",
+      "audience": "Couples 25-40 · India · interest: honeymoon, luxury travel · LAL of past Maldives bookers",
+      "cta_buttons": ["Get Quote", "Learn More", "Send Message"],
+      "headlines": [
+        "Maldives Honeymoon · Free Draft in 60 Sec",
+        "Overwater Villa Honeymoon · From ₹68,000",
+        "5N Maldives · Real Planner, Not a Brochure",
+        "Maldives Honeymoon · Pay ₹0 to Start",
+        "Hand-Built Maldives Honeymoons · ₹0 Booking"
+      ],
+      "primary_texts": [
+        "A real planner builds your Maldives overwater honeymoon in 60 seconds. Free until you're sure. Indian-vegetarian friendly. Trusted by 200+ Indian couples.",
+        "Skip the brochure trips. Tell us your dates — we send a custom Maldives draft on WhatsApp within minutes. ₹0 to start. Pay only when you're 100% sure.",
+        "Overwater villa, sunset dolphin cruise, candlelit dinner on the sand. Customised for your dates. Quotes in INR — no hidden TCS or GST surprises at checkout.",
+        "8,000+ Indian travellers since 2019. 4.9 ★ on Google. Free draft itinerary in 60 seconds — and you talk to a real human, not a chatbot.",
+        "Your honeymoon, planned by a Trust and Trip planner who's actually been to the resorts. Free first draft. Pay only when sure."
+      ],
+      "wa_messages": [
+        "Hi Trust and Trip — I'd like a free draft itinerary for the Maldives. My dates are flexible.",
+        "Hi! Saw your Maldives honeymoon ad. Can you send a sample 5N overwater itinerary + price?",
+        "Hi Trust and Trip — quick question: which Maldives island is best for an Indian-vegetarian couple?"
+      ]
+    },
+    {
+      "lp": "/lp/bali-honeymoon",
+      "destination": "Bali",
+      "audience": "Couples 25-40 · India · interest: Bali, beach travel · LAL of past Bali bookers",
+      "cta_buttons": ["Get Quote", "Send Message", "Book Now"],
+      "headlines": [
+        "Bali Honeymoon · Free Draft in 60 Sec",
+        "Private-Pool Villa Honeymoon · From ₹55,000",
+        "5N Bali Honeymoon · Real Planner, Not a Brochure",
+        "Bali Honeymoon · ₹0 to Start, Pay Only When Sure",
+        "Bali for Two · Sunrise Mt Batur + Seminyak Sunsets"
+      ],
+      "primary_texts": [
+        "A real planner builds your Bali villa honeymoon in 60 seconds. Free until you're sure. Indian-vegetarian everywhere. Trusted by 200+ Indian couples.",
+        "Skip the cookie-cutter Bali trips. Tell us your dates — we send a custom draft on WhatsApp within minutes. ₹0 to start.",
+        "Private-pool villa in Seminyak, sunrise on Mt Batur, candlelit dinner above the rice paddies. Quoted in INR. No hidden taxes.",
+        "Real Bali honeymoons since 2019. 4.9 ★ on Google. Free first draft. Pay only when sure.",
+        "Your Bali honeymoon, planned by a Trust and Trip planner who's actually been to the villas. Free draft. ₹0 booking."
+      ],
+      "wa_messages": [
+        "Hi Trust and Trip — I'd like a free draft itinerary for Bali. My dates are flexible.",
+        "Hi! Saw your Bali honeymoon ad. Can you send a sample 5N villa itinerary + price?",
+        "Hi Trust and Trip — quick question: best month for a Bali honeymoon for Indians?"
+      ]
+    },
+    {
+      "lp": "/lp/char-dham-yatra",
+      "destination": "Char Dham",
+      "audience": "Adults 40-65 · India · interest: pilgrimage, Char Dham, Hindu travel · LAL of past Char Dham bookers",
+      "cta_buttons": ["Get Quote", "Send Message", "Learn More"],
+      "headlines": [
+        "Char Dham Yatra 2026 · Helicopter or Road",
+        "Char Dham · VIP Darshan, No Long Queues",
+        "Char Dham Yatra · Senior-Safe, Vegetarian, ₹48k",
+        "Helicopter Char Dham · 5 Days · From ₹1.85L",
+        "Char Dham 2026 · 600+ Yatris This Season"
+      ],
+      "primary_texts": [
+        "Char Dham 2026 — by helicopter from Dehradun in 5 days, or by road from Haridwar in 10. VIP darshan arranged. Pure veg meals. Hotels close to every shrine.",
+        "We've shepherded 600+ yatris this season. Helicopter, palki, medical kit — all sequenced. Senior-friendly. WhatsApp support for the entire yatra.",
+        "Skip the long queues at Kedarnath. VIP darshan included. Helicopter shuttle between Dhams. Sattvik vegetarian food. Hotels within walking distance of every temple.",
+        "Char Dham Yatra hand-built for your family. Free draft itinerary in 60 seconds. Pay only when sure. Senior-safe. Indian-vegetarian throughout.",
+        "Trust and Trip · Char Dham 2026. Helicopter from ₹1.85L, road from ₹48k. VIP darshan. Palki transfers. Senior-friendly hotels."
+      ],
+      "wa_messages": [
+        "Hi Trust and Trip — I'd like a Char Dham Yatra plan. Travelling with parents (60+).",
+        "Hi! Saw your Char Dham ad. Helicopter package for 4 people — please share dates and price.",
+        "Hi Trust and Trip — Char Dham by road, 10 days, family of 6. What dates are open in May-June?"
+      ]
+    },
+    {
+      "lp": "/lp/switzerland-honeymoon",
+      "destination": "Switzerland",
+      "audience": "Couples 28-45 · India · interest: Switzerland, alps, luxury honeymoon · HHI ₹15L+",
+      "cta_buttons": ["Get Quote", "Send Message", "Book Now"],
+      "headlines": [
+        "Swiss Honeymoon · Glacier Express + Jungfrau",
+        "Switzerland Honeymoon · From ₹1.45L · INR Quote",
+        "Alps Honeymoon · Free Draft in 60 Sec",
+        "Switzerland 8 Days · Real Planner, No Brochure",
+        "Swiss Travel Pass Included · ₹0 to Start"
+      ],
+      "primary_texts": [
+        "Glacier Express, Jungfrau, Lucerne by lakeside. A real planner builds your Swiss honeymoon in 60 seconds. Free until you're sure. INR quote, no TCS surprises.",
+        "Switzerland 8N hand-built for two. Swiss Travel Pass + Jungfraujoch + Glacier Express included. Indian-vegetarian friendly hotels. Visa assistance.",
+        "Skip the canned Switzerland packages. Tell us your dates — we send a draft on WhatsApp within minutes. ₹0 to start. 4.9 ★ Google.",
+        "Real Swiss honeymoons since 2019. From ₹1.45L per person, all-in. Free first draft. Pay only when sure.",
+        "Your Swiss honeymoon, planned by a Trust and Trip planner. Boutique alpine hotels. Free draft. INR pricing."
+      ],
+      "wa_messages": [
+        "Hi Trust and Trip — I'd like a Swiss honeymoon plan. 8 days, May-June.",
+        "Hi! Saw your Switzerland ad. Can you send a sample 8N itinerary + price for two?",
+        "Hi Trust and Trip — Glacier Express + Jungfrau honeymoon, please share dates and price."
+      ]
+    },
+    {
+      "lp": "/lp/kerala-family",
+      "destination": "Kerala",
+      "audience": "Families 30-55 · India · interest: domestic travel, family vacation, Kerala · HHI ₹8L+",
+      "cta_buttons": ["Get Quote", "Send Message", "Learn More"],
+      "headlines": [
+        "Kerala Family Trip · From ₹28,000",
+        "Backwaters + Munnar · Free Draft in 60 Sec",
+        "Kerala Family · Real Planner, No Brochure",
+        "Kerala for Family · Kid-Friendly Hotels · ₹28k",
+        "Private Houseboat Family Trip · ₹42k onwards"
+      ],
+      "primary_texts": [
+        "Backwaters, tea hills, wildlife — Kerala family trips for every age. Toddler to grandparent. Real planner builds your draft in 60 seconds. From ₹28k/person.",
+        "Skip the canned Kerala packages. Private houseboat (not shared), tea-trail homestay, kid menus on every meal. INR pricing, no hidden taxes.",
+        "Took our parents (70+) and our 6-year-old. Pacing was perfect — never more than 2 hours of driving. Indian-vegetarian everywhere. Real Trust and Trip review.",
+        "Kerala family trips since 2019. From ₹28k/person. Free first draft. Pay only when sure. WhatsApp support throughout the trip.",
+        "Your Kerala family trip, planned by a Trust and Trip planner who's actually stayed at the houseboats. Free draft. INR pricing."
+      ],
+      "wa_messages": [
+        "Hi Trust and Trip — I'd like a Kerala family trip plan. 4 adults + 2 kids.",
+        "Hi! Saw your Kerala ad. Can you send a sample 6N backwaters + Munnar itinerary?",
+        "Hi Trust and Trip — Kerala family trip in October, please share dates and price."
+      ]
+    }
+  ]
+}

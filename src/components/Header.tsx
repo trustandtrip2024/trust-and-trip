@@ -303,6 +303,11 @@ export default function Header() {
 
           {/* Right cluster */}
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* Currency switcher — visible on desktop so non-Indian visitors
+                discover it without opening the More menu. */}
+            <span className="hidden lg:inline-flex">
+              <CurrencySwitcher variant="navbar" />
+            </span>
             <ThemeToggle className="hidden md:inline-flex" />
 
             {/* More kebab — Radix DropdownMenu */}

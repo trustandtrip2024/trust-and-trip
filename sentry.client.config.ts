@@ -9,6 +9,10 @@ if (dsn) {
   Sentry.init({
     dsn,
     environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? process.env.NODE_ENV,
+    release:
+      process.env.NEXT_PUBLIC_SENTRY_RELEASE ??
+      process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ??
+      undefined,
     // Sample 20% of normal sessions and 100% of sessions where an error occurs
     replaysSessionSampleRate: 0.2,
     replaysOnErrorSampleRate: 1.0,

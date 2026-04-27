@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { MessageCircle, ChevronUp, Sliders } from "lucide-react";
 import Link from "next/link";
 import { captureIntent } from "@/lib/capture-intent";
+import Price from "./Price";
 
 interface Props {
   price: number;
@@ -45,7 +46,7 @@ export default function PackageStickyBar({ price, title, slug, duration }: Props
         <div className="flex-1 min-w-0 flex flex-col justify-center">
           <p className="text-[9px] text-tat-slate uppercase tracking-wider">Starting from · {duration}</p>
           <p className="font-serif text-[18px] font-semibold text-tat-charcoal leading-none">
-            ₹{price.toLocaleString("en-IN")}
+            <Price inr={price} />
             <span className="text-[11px] font-sans font-normal text-tat-slate ml-1">/ person</span>
           </p>
         </div>

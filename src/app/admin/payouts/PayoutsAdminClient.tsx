@@ -97,7 +97,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
         </Link>
         <div className="flex items-center gap-2 mb-1">
           <Wallet className="h-5 w-5 text-emerald-500" />
-          <h1 className="text-2xl font-bold text-tat-charcoal">Creator Payouts</h1>
+          <h1 className="text-2xl font-semibold text-tat-charcoal">Creator Payouts</h1>
         </div>
         <p className="text-sm text-tat-slate mb-6">{rows.length} creators · {eligibleCreators} ready to pay</p>
 
@@ -228,7 +228,7 @@ function Card({ label, value, tone }: { label: string; value: string; tone: "eme
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4">
       <p className="text-[10px] uppercase tracking-widest text-tat-slate font-semibold">{label}</p>
-      <p className={`text-xl font-bold mt-1 ${toneCls}`}>{value}</p>
+      <p className={`text-xl font-semibold mt-1 ${toneCls}`}>{value}</p>
     </div>
   );
 }

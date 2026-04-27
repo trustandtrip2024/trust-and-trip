@@ -76,7 +76,7 @@ export default async function DashboardOffersPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/50 via-transparent to-transparent" />
                 <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                  <span className="inline-flex items-center gap-1 bg-tat-gold text-tat-charcoal text-[10px] font-bold uppercase px-2.5 py-1 rounded-full">
+                  <span className="inline-flex items-center gap-1 bg-tat-gold text-tat-charcoal text-[10px] font-semibold uppercase px-2.5 py-1 rounded-full">
                     {offer.discount}% OFF
                   </span>
                   {offer.hot && (

@@ -102,7 +102,7 @@ export default function NewsletterBlock({
             <p className="text-[10px] uppercase tracking-[0.22em] text-tat-orange-soft/90 font-semibold">
               Your code · ₹{coupon.amountOff.toLocaleString("en-IN")} off
             </p>
-            <p className="mt-1 font-mono text-2xl font-bold text-white tracking-[0.1em]">
+            <p className="mt-1 font-mono text-2xl font-semibold text-white tracking-[0.1em]">
               {coupon.code}
             </p>
             <p className="mt-2 text-meta text-white/65">

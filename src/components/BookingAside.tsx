@@ -9,6 +9,7 @@ import {
 import { captureIntent } from "@/lib/capture-intent";
 import BookingDeposit from "./BookingDeposit";
 import LiveViewerCount from "./LiveViewerCount";
+import Price from "./Price";
 
 interface Props {
   title: string;
@@ -89,7 +90,7 @@ export default function BookingAside({
           {savings > 0 ? (
             <span className="inline-flex items-center gap-1.5 h-7 px-3 rounded-pill bg-tat-orange/15 text-tat-orange text-[12px] font-semibold">
               <Tag className="w-3.5 h-3.5" />
-              SAVE ₹{savings.toLocaleString("en-IN")}
+              SAVE <Price inr={savings} />
             </span>
           ) : <span />}
         </div>
@@ -125,12 +126,13 @@ export default function BookingAside({
       {/* Price */}
       <div>
         {savings > 0 && (
-          <p className="text-[12px] text-tat-slate/80 line-through">
-            ₹{originalPrice.toLocaleString("en-IN")}
-          </p>
+          <Price
+            inr={originalPrice}
+            className="text-[12px] text-tat-slate/80 line-through block"
+          />
         )}
         <p className="font-serif text-[32px] leading-none text-tat-charcoal">
-          ₹{price.toLocaleString("en-IN")}
+          <Price inr={price} />
           <span className="text-[13px] font-sans text-tat-slate font-normal"> / person</span>
         </p>
         <p className="mt-1.5 text-[11px] text-tat-slate">

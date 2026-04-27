@@ -1,44 +1,28 @@
 import type { Metadata } from "next";
-import { Inter, Instrument_Serif, Caveat } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import dynamic from "next/dynamic";
 
-// Self-hosted fonts via next/font — eliminates the render-blocking
-// Google Fonts <link> and ships only the latin subset we need.
+// Self-hosted via next/font — eliminates render-blocking Google Fonts
+// <link> and ships only the latin subset.
 //
-// Stack rationale (Apr 2026): switched from Fraunces+Cormorant+Manrope to
-// Inter + Instrument Serif. Inter is the de-facto big-travel-brand sans
-// (Booking.com, Klook, MakeMyTrip-feel) — high legibility at small sizes,
-// crisp on mobile, optimised numerals for prices. Instrument Serif gives
-// the editorial italic accents premium boutique brands use (Black Tomato /
-// Scott Dunn family) without feeling vintage like Cormorant.
+// Typography system (2026-04): Fraunces + Inter. Two families, both
+// variable. Fraunces (display, opsz+wght+SOFT axes) for editorial
+// headlines and italic accents. Inter (body, wght axis) for everything
+// else. No third family. No weight ≥ 700. Italic restricted to
+// Fraunces headline accents in tat-orange.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  style: ["normal", "italic"],
+  axes: ["SOFT", "opsz"],
+});
+
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-display",
-  weight: ["400"],
-  style: ["normal", "italic"],
-});
-
-const instrumentSerifBody = Instrument_Serif({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-serif",
-  weight: ["400"],
-  style: ["normal", "italic"],
-});
-
-const caveat = Caveat({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-script",
-  weight: ["500", "700"],
+  weight: ["400", "500", "600"],
 });
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import MainWrapper from "@/components/MainWrapper";
@@ -61,11 +45,13 @@ const CompareBar = dynamic(() => import("@/components/CompareBar"), { ssr: false
 const AriaChatWidget = dynamic(() => import("@/components/AriaChatWidget"), { ssr: false });
 const CookieBanner = dynamic(() => import("@/components/CookieBanner"), { ssr: false });
 const FloatingWhatsApp = dynamic(() => import("@/components/FloatingWhatsApp"), { ssr: false });
+const PWAInstallPrompt = dynamic(() => import("@/components/PWAInstallPrompt"), { ssr: false });
 import { TripPlannerProvider } from "@/context/TripPlannerContext";
 import { CookieConsentProvider } from "@/context/CookieConsentContext";
 import AuthProvider from "@/components/AuthProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "../styles/globals.css";
+import { cn } from "@/lib/utils";
 
 // Inline, pre-hydration theme setter — prevents light/dark flash.
 const THEME_INIT_SCRIPT = `
@@ -142,7 +128,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${instrumentSerif.variable} ${instrumentSerifBody.variable} ${inter.variable} ${caveat.variable}`}>
+    <html lang="en" className={cn(fraunces.variable, inter.variable, "font-sans")}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         {/* Preconnect to speed up third-party resources */}
@@ -227,6 +213,7 @@ export default function RootLayout({
           <MetaPixel />
           <ServiceWorkerRegister />
           <CookieBanner />
+          <PWAInstallPrompt />
         </TripPlannerProvider>
         </AuthProvider>
         </CookieConsentProvider>

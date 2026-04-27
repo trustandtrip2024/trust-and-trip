@@ -36,6 +36,7 @@ const SOURCE_MAP: Record<LeadSource, string> = {
   exit_intent: "WEB",
   newsletter: "WEB",
   itinerary_generator: "WEB",
+  whatsapp: "WEB",
   // Click intents — map to WEB for now; if you've added "Website" / "WhatsApp" /
   // "Phone (Inbound)" as custom sources in Bitrix24 (see 08-setup-custom-fields.ps1),
   // switch these to the real STATUS_IDs.
@@ -55,6 +56,7 @@ const SOURCE_LABEL: Record<LeadSource, string> = {
   exit_intent: "Exit intent popup",
   newsletter: "Newsletter signup",
   itinerary_generator: "Itinerary generator",
+  whatsapp: "WhatsApp inbound message",
   book_now_click: "Book Now button (click intent)",
   call_click: "Phone button (click intent)",
   whatsapp_click: "WhatsApp button (click intent)",
@@ -113,14 +115,14 @@ export interface Bitrix24DealPayload {
 }
 
 interface BitrixResponse {
-  result?: number | string;
+  result?: number | string | { task?: { id?: number | string } } | Record<string, unknown>;
   error?: string;
   error_description?: string;
 }
 
 // ---- Low-level call -------------------------------------------------------
 
-async function callBitrix(method: string, body: unknown): Promise<BitrixResponse | null> {
+export async function callBitrix(method: string, body: unknown): Promise<BitrixResponse | null> {
   const base = webhookBase();
   if (!base) return null;
 
@@ -282,15 +284,56 @@ async function findOrCreateContact(
 
 /**
  * Push a website lead into Bitrix24 as a Lead record.
+ * Returns the new Bitrix lead ID (number) so callers can attach Tasks etc.
  * Non-blocking — logs errors but never throws.
  */
-export async function pushLead(lead: Bitrix24LeadPayload): Promise<void> {
-  if (!webhookBase()) return;
+export async function pushLead(lead: Bitrix24LeadPayload): Promise<number | null> {
+  if (!webhookBase()) return null;
 
-  await callBitrix("crm.lead.add", {
+  const res = await callBitrix("crm.lead.add", {
     fields: buildLeadFields(lead),
     params: { REGISTER_SONET_EVENT: "Y" },
   });
+  return res?.result ? Number(res.result) : null;
+}
+
+/**
+ * Open a high-priority Task on a Bitrix Lead so the planner sees an SLA
+ * countdown in their dashboard. Use for tier=A leads — they need contact
+ * within minutes or the optimization signal goes stale.
+ *
+ * deadlineMinutes defaults to 5 (the industry-proven sub-5min response window).
+ */
+export async function createLeadTask(opts: {
+  leadId: number;
+  title: string;
+  description?: string;
+  deadlineMinutes?: number;
+  responsibleId?: number; // Bitrix user id; if omitted Bitrix uses the webhook owner
+}): Promise<number | null> {
+  if (!webhookBase()) return null;
+
+  const deadlineMs = Date.now() + (opts.deadlineMinutes ?? 5) * 60_000;
+  const deadlineIso = new Date(deadlineMs).toISOString();
+
+  const res = await callBitrix("tasks.task.add", {
+    fields: {
+      TITLE: opts.title,
+      DESCRIPTION: opts.description ?? "",
+      PRIORITY: "2",                          // 2 = high in Bitrix tasks API
+      RESPONSIBLE_ID: opts.responsibleId ?? 1, // 1 = portal admin fallback
+      UF_CRM_TASK: [`L_${opts.leadId}`],      // bind task to the Lead
+      DEADLINE: deadlineIso,
+      ALLOW_CHANGE_DEADLINE: "Y",
+      MATCH_WORK_TIME: "N",
+    },
+  });
+  const r = res?.result;
+  if (r && typeof r === "object" && "task" in r) {
+    const t = (r as { task?: { id?: number | string } }).task;
+    if (t?.id) return Number(t.id);
+  }
+  return null;
 }
 
 /**

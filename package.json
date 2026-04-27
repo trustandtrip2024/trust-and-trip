@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true next build",
-    "check:lp": "node scripts/check-lp.mjs"
+    "check:lp": "node scripts/check-lp.mjs",
+    "ads:push": "node scripts/push-creatives-to-meta.mjs",
+    "eval:intent": "node scripts/eval-intent.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",

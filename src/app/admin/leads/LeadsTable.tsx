@@ -20,6 +20,9 @@ type Lead = {
   created_at: string;
   utm_source?: string;
   page_url?: string;
+  score?: number | null;
+  tier?: "A" | "B" | "C" | null;
+  assigned_planner?: string | null;
 };
 
 type SortKey = "created_at" | "name" | "status";
@@ -251,7 +254,27 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
         </button>
       </td>
       <td className="px-5 py-4">
-        <p className="font-semibold text-tat-charcoal">{lead.name}</p>
+        <div className="flex items-center gap-2">
+          <p className="font-semibold text-tat-charcoal">{lead.name}</p>
+          {lead.tier && (
+            <span
+              title={`Score ${lead.score ?? 0}/100`}
+              className={
+                "inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-semibold " +
+                (lead.tier === "A"
+                  ? "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-300"
+                  : lead.tier === "B"
+                  ? "bg-amber-100 text-amber-700"
+                  : "bg-gray-100 text-tat-slate")
+              }
+            >
+              {lead.tier}
+            </span>
+          )}
+          {typeof lead.score === "number" && (
+            <span className="text-[10px] text-tat-slate tabular-nums">{lead.score}</span>
+          )}
+        </div>
         <a href={`tel:${lead.phone}`} className="text-xs text-tat-slate hover:text-blue-600 flex items-center gap-1 mt-0.5">
           <Phone className="h-3 w-3" />{lead.phone}
         </a>
@@ -286,6 +309,7 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
           {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
         {updating && <Loader2 className="h-3 w-3 animate-spin inline ml-1 text-gray-400" />}
+        <PlannerCell leadId={lead.id} initial={lead.assigned_planner ?? null} />
       </td>
       <td className="px-5 py-4 text-xs text-tat-slate whitespace-nowrap">
         {new Date(lead.created_at).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"numeric" })}
@@ -311,5 +335,61 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
         </div>
       </td>
     </tr>
+  );
+}
+
+function PlannerCell({
+  leadId,
+  initial,
+}: {
+  leadId: string;
+  initial: string | null;
+}) {
+  const [planner, setPlanner] = useState(initial ?? "");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function save(next: string) {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/leads/assign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: leadId, planner: next || null }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error ?? `HTTP ${res.status}`);
+      }
+      setPlanner(next);
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="mt-1.5 flex items-center gap-1">
+      <input
+        type="text"
+        value={planner}
+        onChange={(e) => setPlanner(e.target.value)}
+        onBlur={(e) => {
+          if (e.target.value !== (initial ?? "")) void save(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            (e.target as HTMLInputElement).blur();
+          }
+        }}
+        placeholder="planner"
+        disabled={busy}
+        className="text-[11px] px-2 py-0.5 rounded border border-gray-200 w-20 outline-none focus:border-tat-orange/40 disabled:opacity-60"
+      />
+      {busy && <Loader2 className="h-3 w-3 animate-spin text-gray-400" />}
+      {error && <span className="text-[10px] text-rose-600" title={error}>!</span>}
+    </div>
   );
 }

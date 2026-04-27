@@ -164,7 +164,7 @@ function OfferCard({ offer, size }: { offer: any; size: "sm" | "lg" }) {
 
         {/* Badges */}
         <div className="absolute top-4 left-4 flex items-center gap-2">
-          <div className="bg-tat-gold text-tat-charcoal px-3 py-1.5 rounded-full text-xs font-display font-bold flex items-center gap-1">
+          <div className="bg-tat-gold text-tat-charcoal px-3 py-1.5 rounded-full text-xs font-display font-semibold flex items-center gap-1">
             <Tag className="h-3 w-3" />{offer.discount}% OFF
           </div>
           {offer.hot && (

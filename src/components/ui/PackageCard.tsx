@@ -7,6 +7,7 @@ import {
   Hotel, Utensils, Bus, Camera,
 } from "lucide-react";
 import { useState } from "react";
+import Price from "@/components/Price";
 
 export interface PackageCardProps {
   image: string;
@@ -191,7 +192,7 @@ export default function PackageCardUI(p: PackageCardProps) {
             <div className="min-w-0">
               {p.originalPrice && p.originalPrice > p.price && (
                 <p className="text-[12px] text-tat-slate/70 leading-none">
-                  <span className="line-through">₹{p.originalPrice.toLocaleString("en-IN")}</span>
+                  <Price inr={p.originalPrice} className="line-through" />
                   {discountPct !== null && (
                     <span className="ml-1.5 text-emerald-700 font-semibold">
                       {discountPct}% off
@@ -200,12 +201,12 @@ export default function PackageCardUI(p: PackageCardProps) {
                 </p>
               )}
               <p className="mt-1 font-display text-h2 text-tat-charcoal leading-none">
-                ₹{p.price.toLocaleString("en-IN")}
+                <Price inr={p.price} />
                 <span className="text-meta font-sans text-tat-slate font-normal ml-1">/ person</span>
               </p>
               {p.saveAmount && p.saveAmount > 0 && (
                 <p className="mt-1 inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-emerald-700 font-semibold">
-                  Save ₹{p.saveAmount.toLocaleString("en-IN")}
+                  Save <Price inr={p.saveAmount} />
                 </p>
               )}
             </div>

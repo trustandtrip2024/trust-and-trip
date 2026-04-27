@@ -146,7 +146,7 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
               </div>
               <div className="flex items-center justify-between mt-1">
                 <span className="text-xs text-tat-gold font-medium">Deposit now</span>
-                <span className="text-sm font-bold text-tat-gold">{depositDisplay}</span>
+                <span className="text-sm font-semibold text-tat-gold">{depositDisplay}</span>
               </div>
             </div>
 

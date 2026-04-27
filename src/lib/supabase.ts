@@ -13,6 +13,7 @@ export type LeadSource =
   | "exit_intent"
   | "newsletter"
   | "itinerary_generator"
+  | "whatsapp"
   // Anonymous click-intent sources (no contact info required — fired on CTA clicks)
   | "book_now_click"
   | "call_click"
@@ -38,6 +39,9 @@ export interface Lead {
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
+  wa_variant?: string;
   page_url?: string;
   ref_code?: string;
   status?: "new" | "contacted" | "qualified" | "booked" | "lost";

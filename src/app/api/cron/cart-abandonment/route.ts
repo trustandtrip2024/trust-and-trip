@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { buildCartResumeUrl } from "@/lib/cart-resume";
 
 // Runs hourly via Vercel Cron (see vercel.json).
 //
@@ -93,12 +94,13 @@ export async function GET(req: NextRequest) {
 
   // Load user profiles
   const { data: { users: allUsers } } = await admin.auth.admin.listUsers();
-  const userMap = new Map<string, { email: string; name: string }>();
+  const userMap = new Map<string, { email: string; name: string; phone?: string }>();
   for (const u of allUsers ?? []) {
     if (userIds.includes(u.id) && u.email) {
       userMap.set(u.id, {
         email: u.email,
         name: (u.user_metadata?.full_name as string) || u.email.split("@")[0],
+        phone: (u.user_metadata?.phone as string) || undefined,
       });
     }
   }
@@ -173,7 +175,7 @@ export async function GET(req: NextRequest) {
                 numTravelers: c.num_travelers ?? undefined,
               })),
               tier,
-              cartUrl: `${SITE_URL}/dashboard/cart`,
+              cartUrl: buildCartResumeUrl(userId),
               whatsappUrl: WHATSAPP_URL,
             }),
           });
@@ -183,6 +185,19 @@ export async function GET(req: NextRequest) {
           console.error(`[cron:cart-abandonment] send ${tier} failed for ${user.email}:`, e);
           continue; // don't stamp on failure; we'll retry next run
         }
+      }
+
+      // Mirror to WhatsApp if we have a phone — open rate ~70% vs email ~20%.
+      if (user.phone) {
+        sendCartAbandonWhatsApp({
+          phone: user.phone,
+          name: user.name,
+          items: unbooked,
+          tier,
+          userId,
+        }).catch((e) =>
+          console.error(`[cron:cart-abandonment] WA ${tier} failed for ${user.phone}:`, e)
+        );
       }
 
       // Stamp all items for this user at this tier (whether email succeeded or we're in no-resend mode)
@@ -206,4 +221,68 @@ export async function GET(req: NextRequest) {
     sent_72h: sent72,
     resend_configured: !!resend,
   });
+}
+
+// ─── WhatsApp mirror ──────────────────────────────────────────────────────
+
+async function sendCartAbandonWhatsApp(opts: {
+  phone: string;
+  name: string;
+  items: CartRow[];
+  tier: "24h" | "72h";
+  userId: string;
+}): Promise<boolean> {
+  const token = process.env.WHATSAPP_ACCESS_TOKEN;
+  const phoneId = process.env.WHATSAPP_PHONE_ID;
+  if (!token || !phoneId) return false;
+
+  const digits = opts.phone.replace(/\D/g, "");
+  if (!digits) return false;
+  const to = digits.length === 10 ? `91${digits}` : digits;
+  const firstName = opts.name.split(/\s+/)[0] || opts.name;
+
+  const top = opts.items.slice(0, 3);
+  const lines: string[] = [];
+  if (opts.tier === "24h") {
+    lines.push(`Hi ${firstName} 🎒 we held your saved trips for you.`);
+  } else {
+    lines.push(`Hi ${firstName} — last nudge before we release your saved trips.`);
+  }
+  lines.push("");
+  for (const c of top) {
+    const title = c.package_title ?? "Your saved package";
+    const price = c.package_price ? `₹${c.package_price.toLocaleString("en-IN")}` : "";
+    lines.push(`• ${title}${price ? ` · ${price}` : ""}`);
+    lines.push(`  ${SITE_URL}/packages/${c.package_slug}`);
+  }
+  if (opts.items.length > top.length) {
+    lines.push(`+ ${opts.items.length - top.length} more in your cart`);
+  }
+  lines.push("");
+  lines.push(`Open your cart: ${buildCartResumeUrl(opts.userId)}`);
+  lines.push("");
+  lines.push("Reply with any change — we'll re-quote in minutes.");
+
+  try {
+    const res = await fetch(
+      `https://graph.facebook.com/v21.0/${phoneId}/messages`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to,
+          type: "text",
+          text: { body: lines.join("\n") },
+        }),
+      }
+    );
+    return res.ok;
+  } catch (e) {
+    console.error("[cart-abandon WA] send failed", e);
+    return false;
+  }
 }

@@ -1,81 +1,108 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
 import { rateLimit } from "@/lib/redis";
+import {
+  generateItinerary,
+  type ItineraryIntent,
+} from "@/lib/itinerary-engine";
+import { deliverItinerary } from "@/lib/itinerary-deliver";
+import { storeItinerary } from "@/lib/itinerary-store";
 
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+export const maxDuration = 60;
+
+const TRAVEL_TYPES = [
+  "Couple",
+  "Family",
+  "Solo",
+  "Group",
+  "Pilgrim",
+  "Luxury",
+  "Adventure",
+  "Wellness",
+] as const;
+
+function coerceIntent(body: Record<string, unknown>): ItineraryIntent | { error: string } {
+  const destination = String(body.destination ?? "").trim();
+  const days = Number(body.days);
+  const travelType = String(body.travelType ?? body.travel_type ?? "").trim();
+
+  if (!destination) return { error: "Missing destination." };
+  if (!Number.isInteger(days) || days < 1 || days > 21)
+    return { error: "Days must be an integer between 1 and 21." };
+  if (!TRAVEL_TYPES.includes(travelType as (typeof TRAVEL_TYPES)[number]))
+    return { error: `travelType must be one of: ${TRAVEL_TYPES.join(", ")}` };
+
+  const intent: ItineraryIntent = {
+    destination,
+    days,
+    travelType: travelType as ItineraryIntent["travelType"],
+    budgetPerPerson: body.budgetPerPerson ? Number(body.budgetPerPerson) : undefined,
+    fromCity: body.fromCity ? String(body.fromCity) : undefined,
+    travelers: body.travelers ? Number(body.travelers) : undefined,
+    interests: body.interests ? String(body.interests) : undefined,
+    travelMonth: body.travelMonth ? String(body.travelMonth) : undefined,
+    flexibility:
+      body.flexibility === "exact" || body.flexibility === "flexible"
+        ? body.flexibility
+        : undefined,
+  };
+  return intent;
+}
 
 export async function POST(req: NextRequest) {
   try {
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
     const { allowed } = await rateLimit(`itinerary:${ip}`, { limit: 5, windowSeconds: 3600 });
     if (!allowed) {
-      return NextResponse.json({ error: "Too many requests. Please try again in an hour." }, { status: 429 });
+      return NextResponse.json(
+        { error: "Too many requests. Please try again in an hour." },
+        { status: 429 }
+      );
     }
 
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json({ error: "AI not configured." }, { status: 503 });
     }
 
-    const { destination, days, travelType, budget, fromCity, interests } = await req.json();
-
-    if (!destination || !days || !travelType) {
-      return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
+    const body = await req.json();
+    const parsed = coerceIntent(body);
+    if ("error" in parsed) {
+      return NextResponse.json({ error: parsed.error }, { status: 400 });
     }
 
-    const prompt = `Generate a detailed ${days}-day travel itinerary for ${destination}, India/abroad.
+    const result = await generateItinerary(parsed);
 
-Trip details:
-- Destination: ${destination}
-- Duration: ${days} days
-- Travel type: ${travelType}
-- Budget: ${budget || "moderate"} (Indian rupees)
-- Departing from: ${fromCity || "Delhi"}
-- Special interests: ${interests || "general sightseeing and local experiences"}
-
-Return ONLY valid JSON in this exact structure (no markdown, no explanation):
-{
-  "title": "Trip title (evocative, 6-8 words)",
-  "tagline": "One compelling sentence about this journey",
-  "highlights": ["highlight 1", "highlight 2", "highlight 3", "highlight 4"],
-  "bestTimeToVisit": "e.g. October to March",
-  "estimatedCost": "e.g. ₹45,000 – ₹65,000 per person",
-  "days": [
-    {
-      "day": 1,
-      "title": "Arrival & First Impressions",
-      "morning": "Detailed morning activity with specific places and tips",
-      "afternoon": "Detailed afternoon activity",
-      "evening": "Detailed evening activity with restaurant/experience suggestion",
-      "stay": "Hotel/accommodation type recommendation",
-      "tip": "One practical local tip for this day"
+    // Optional delivery — fire-and-forget, never blocks response.
+    const contactEmail = body.email ? String(body.email).trim() : undefined;
+    const contactPhone = body.phone ? String(body.phone).trim() : undefined;
+    const contactName = body.name ? String(body.name).trim() : undefined;
+    if (contactEmail || contactPhone) {
+      deliverItinerary({
+        itinerary: result.itinerary,
+        matchedPackages: result.matchedPackages,
+        contact: { name: contactName, email: contactEmail, phone: contactPhone },
+      }).catch((e) => console.error("[itinerary] delivery failed", e));
     }
-  ],
-  "packingTips": ["tip 1", "tip 2", "tip 3"],
-  "visaInfo": "Brief visa/travel document info for Indians"
-}
 
-Rules:
-- Be specific: use real place names, actual restaurants, actual attractions
-- Indian context: mention distances from Indian metros, Indian vegetarian food options
-- Each day's morning/afternoon/evening should be 2-3 sentences
-- Generate exactly ${days} day objects
-- Keep estimatedCost realistic for Indian travellers`;
-
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 4000,
-      messages: [{ role: "user", content: prompt }],
+    // Persist for history / cost tracking — fire-and-forget.
+    void storeItinerary({
+      intent: parsed,
+      itinerary: result.itinerary,
+      matchedPackages: result.matchedPackages,
+      usage: result.usage,
+      source: "api",
+      contactPhone,
+      contactEmail,
     });
 
-    const text = response.content[0].type === "text" ? response.content[0].text : "";
-
-    // Parse JSON — strip any accidental markdown fences
-    const cleaned = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-    const itinerary = JSON.parse(cleaned);
-
-    return NextResponse.json({ itinerary });
+    return NextResponse.json({
+      itinerary: result.itinerary,
+      matchedPackages: result.matchedPackages,
+      usage: result.usage,
+      delivered: Boolean(contactEmail || contactPhone),
+    });
   } catch (err) {
     console.error("Itinerary generation error:", err);
-    return NextResponse.json({ error: "Failed to generate itinerary. Please try again." }, { status: 500 });
+    const message = err instanceof Error ? err.message : "Failed to generate itinerary.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

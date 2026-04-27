@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-// All links here resolve to a real route. Slugs that don't have a dedicated
-// Sanity destination (e.g. Mauritius, Seychelles, Bhutan) fall through to
-// /packages with a destination query so the listing page renders something
-// useful instead of 404. /reviews resolves via a thin alias page.
+// All links here resolve to a real SEO landing route — either a long-tail
+// page from src/app/[...seo]/page.tsx, a /destinations/<slug>(/<travelType>)
+// alias, or an /experiences/<slug> page. Don't add new entries without
+// confirming the underlying route exists.
 const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
     title: "Trending Destinations",
@@ -11,77 +11,85 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
       { label: "Bali",        href: "/destinations/bali" },
       { label: "Maldives",    href: "/destinations/maldives" },
       { label: "Switzerland", href: "/destinations/switzerland" },
-      { label: "Japan",       href: "/destinations/japan" },
-      { label: "Singapore",   href: "/destinations/singapore" },
       { label: "Thailand",    href: "/destinations/thailand" },
+      { label: "Singapore",   href: "/destinations/singapore" },
+      { label: "Dubai",       href: "/destinations/dubai" },
+      { label: "Vietnam",     href: "/vietnam-tour-packages-from-india" },
       { label: "Sri Lanka",   href: "/destinations/sri-lanka" },
-      { label: "Vietnam",     href: "/packages?destination=vietnam" },
     ],
   },
   {
-    title: "Visa-Free for Indians",
+    title: "Honeymoon Specials",
     links: [
-      { label: "Maldives",            href: "/destinations/maldives" },
-      { label: "Thailand",            href: "/destinations/thailand" },
-      { label: "Sri Lanka",           href: "/destinations/sri-lanka" },
-      { label: "Indonesia (Bali)",    href: "/destinations/bali" },
-      { label: "Mauritius",           href: "/packages?destination=mauritius" },
-      { label: "Seychelles",          href: "/packages?destination=seychelles" },
-      { label: "Malaysia",            href: "/packages?destination=malaysia" },
-      { label: "Bhutan",              href: "/packages?destination=bhutan" },
+      { label: "Bali Honeymoon",         href: "/honeymoon-packages-bali" },
+      { label: "Maldives Honeymoon",     href: "/honeymoon-packages-maldives" },
+      { label: "Thailand Honeymoon",     href: "/honeymoon-packages-thailand" },
+      { label: "Switzerland Honeymoon",  href: "/destinations/switzerland/honeymoon" },
+      { label: "Santorini Honeymoon",    href: "/destinations/santorini/honeymoon" },
+      { label: "Ha Long Bay Cruise",     href: "/ha-long-bay-tour-package" },
+      { label: "All Honeymoon trips",    href: "/experiences/honeymoon" },
     ],
   },
   {
-    title: "Yatras & Pilgrim Journeys",
+    title: "Family & Group",
     links: [
-      { label: "Char Dham Helicopter", href: "/packages?destination=uttarakhand&travelType=Pilgrim&type=helicopter" },
-      { label: "Char Dham Road",       href: "/packages?destination=uttarakhand&travelType=Pilgrim&type=road" },
-      { label: "Kedarnath",            href: "/packages?destination=uttarakhand&q=kedarnath" },
-      { label: "Do Dham",              href: "/packages?destination=uttarakhand&q=dodham" },
-      { label: "Badrinath–Kedarnath",  href: "/packages?destination=uttarakhand&q=badrinath" },
-      { label: "Yamunotri & Gangotri", href: "/destinations/uttarakhand" },
-      { label: "Devbhumi Uttarakhand", href: "/destinations/uttarakhand" },
+      { label: "Kerala Family",      href: "/family-tour-packages-kerala" },
+      { label: "Dubai Family",       href: "/family-tour-packages-dubai" },
+      { label: "Bali Family",        href: "/destinations/bali/family" },
+      { label: "Singapore Family",   href: "/destinations/singapore/family" },
+      { label: "Goa Group Trip",     href: "/group-tour-packages-goa" },
+      { label: "Thailand Group",     href: "/destinations/thailand/group" },
+      { label: "All Family trips",   href: "/experiences/family" },
+      { label: "All Group trips",    href: "/experiences/group" },
     ],
   },
   {
-    title: "Themed Journeys",
+    title: "Yatras & Pilgrim",
     links: [
-      { label: "Honeymoon",         href: "/experiences/honeymoon" },
-      { label: "Family",            href: "/experiences/family" },
-      { label: "Solo",              href: "/experiences/solo" },
-      { label: "Group",             href: "/experiences/group" },
-      { label: "Adventure",         href: "/experiences/adventure" },
-      { label: "Wellness",          href: "/experiences/wellness" },
-      { label: "Luxury",            href: "/experiences/luxury" },
-      { label: "Weekend Getaways",  href: "/packages?duration=3-5" },
+      { label: "Char Dham Yatra",        href: "/char-dham-yatra-package" },
+      { label: "Kedarnath Yatra",        href: "/kedarnath-yatra-package" },
+      { label: "Kedarnath Helicopter",   href: "/kedarnath-helicopter-package" },
+      { label: "Devbhumi Uttarakhand",   href: "/destinations/uttarakhand" },
+      { label: "All Pilgrim journeys",   href: "/experiences/pilgrim" },
     ],
   },
   {
-    title: "Packages by Duration",
+    title: "Adventure & Solo",
     links: [
-      { label: "3–5 day",       href: "/packages?duration=3-5" },
-      { label: "6–9 day",       href: "/packages?duration=6-9" },
-      { label: "10+ day",       href: "/packages?duration=10-plus" },
-      { label: "Long weekend",  href: "/packages?duration=3-5" },
+      { label: "Spiti Valley Tour",     href: "/spiti-valley-tour-packages" },
+      { label: "Spiti Bike Trip",       href: "/spiti-valley-bike-trip" },
+      { label: "Zanskar Valley",        href: "/zanskar-valley-tour-packages" },
+      { label: "Chadar Trek",           href: "/chadar-trek-package" },
+      { label: "Manali Solo",           href: "/solo-trip-packages-manali" },
+      { label: "Bali Solo",             href: "/destinations/bali/solo" },
+      { label: "All Adventure trips",   href: "/experiences/adventure" },
+      { label: "All Solo trips",        href: "/experiences/solo" },
     ],
   },
   {
-    title: "About",
+    title: "By Style & Budget",
     links: [
-      { label: "About Trust and Trip", href: "/about" },
-      { label: "Our story",            href: "/about" },
-      { label: "Reviews",              href: "/reviews" },
-      { label: "Press",                href: "/about" },
-      { label: "Careers",              href: "/about" },
-      { label: "Contact",              href: "/contact" },
+      { label: "Luxury",                  href: "/experiences/luxury" },
+      { label: "Wellness",                href: "/experiences/wellness" },
+      { label: "Cultural",                href: "/experiences/cultural" },
+      { label: "Weekend Getaways",       href: "/experiences/weekend" },
+      { label: "Budget International",   href: "/budget-international-packages" },
+      { label: "3–5 day trips",          href: "/packages?duration=3-5" },
+      { label: "6–9 day trips",          href: "/packages?duration=6-9" },
+      { label: "10+ day trips",          href: "/packages?duration=10-plus" },
     ],
   },
   {
-    title: "Talk to us",
+    title: "About · Talk to us",
     links: [
+      { label: "About Trust and Trip",     href: "/about" },
+      { label: "Reviews",                  href: "/reviews" },
+      { label: "Blog & Journal",           href: "/blog" },
+      { label: "Customize a trip",         href: "/customize-trip" },
+      { label: "Offers & deals",           href: "/offers" },
+      { label: "Contact",                  href: "/contact" },
       { label: "WhatsApp +91 8115 999 588", href: "https://wa.me/918115999588" },
-      { label: "Mon–Sun 9am–10pm IST",      href: "/contact" },
-      { label: "plan@trustandtrip.com",     href: "mailto:plan@trustandtrip.com" },
+      { label: "plan@trustandtrip.com",    href: "mailto:plan@trustandtrip.com" },
     ],
   },
 ];
@@ -90,20 +98,22 @@ export default function SeoFooterIndex() {
   return (
     <section
       aria-labelledby="seo-footer-title"
-      className="py-18 md:py-22 border-t border-tat-charcoal/12"
+      className="py-18 md:py-22 border-t border-tat-charcoal/12 dark:border-white/10"
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <h2 id="seo-footer-title" className="sr-only">Site index</h2>
         <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-x-6 gap-y-8">
           {COLUMNS.map((col) => (
             <li key={col.title}>
-              <h3 className="text-body-sm font-semibold text-tat-charcoal font-sans">{col.title}</h3>
+              <h3 className="text-body-sm font-semibold text-tat-charcoal dark:text-white font-sans">
+                {col.title}
+              </h3>
               <ul className="mt-3 space-y-2">
                 {col.links.map((l) => (
                   <li key={l.label}>
                     <Link
                       href={l.href}
-                      className="text-meta text-tat-slate hover:text-tat-charcoal hover:underline underline-offset-4 transition duration-120"
+                      className="text-meta text-tat-slate dark:text-white/65 hover:text-tat-charcoal dark:hover:text-white hover:underline underline-offset-4 transition duration-120"
                     >
                       {l.label}
                     </Link>

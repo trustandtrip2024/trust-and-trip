@@ -71,28 +71,41 @@ export default function MetaPixel() {
 
 // ─── Event helpers — call these anywhere in the app ───────────────────────
 
-export function pixelTrack(event: string, params?: Record<string, unknown>) {
+/**
+ * Fire a Pixel event. Pass `eventId` to de-dup against a server-side CAPI
+ * call that uses the same id. Without dedup the same conversion is counted
+ * twice and Meta's optimizer trains on inflated numbers.
+ */
+export function pixelTrack(
+  event: string,
+  params?: Record<string, unknown>,
+  eventId?: string,
+) {
   if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", event, params);
+    if (eventId) {
+      window.fbq("track", event, params, { eventID: eventId });
+    } else {
+      window.fbq("track", event, params);
+    }
   }
 }
 
 export const pixel = {
-  lead: (value?: number) =>
-    pixelTrack("Lead", value ? { value, currency: "INR" } : undefined),
+  lead: (value?: number, eventId?: string) =>
+    pixelTrack("Lead", value ? { value, currency: "INR" } : undefined, eventId),
 
-  initiateCheckout: (packageTitle: string, value: number) =>
-    pixelTrack("InitiateCheckout", { content_name: packageTitle, value, currency: "INR" }),
+  initiateCheckout: (packageTitle: string, value: number, eventId?: string) =>
+    pixelTrack("InitiateCheckout", { content_name: packageTitle, value, currency: "INR" }, eventId),
 
-  purchase: (packageTitle: string, value: number) =>
-    pixelTrack("Purchase", { content_name: packageTitle, value, currency: "INR" }),
+  purchase: (packageTitle: string, value: number, eventId?: string) =>
+    pixelTrack("Purchase", { content_name: packageTitle, value, currency: "INR" }, eventId),
 
-  viewContent: (packageTitle: string, value: number) =>
-    pixelTrack("ViewContent", { content_name: packageTitle, value, currency: "INR", content_type: "product" }),
+  viewContent: (packageTitle: string, value: number, eventId?: string) =>
+    pixelTrack("ViewContent", { content_name: packageTitle, value, currency: "INR", content_type: "product" }, eventId),
 
-  search: (query: string) =>
-    pixelTrack("Search", { search_string: query }),
+  search: (query: string, eventId?: string) =>
+    pixelTrack("Search", { search_string: query }, eventId),
 
-  contact: () =>
-    pixelTrack("Contact"),
+  contact: (eventId?: string) =>
+    pixelTrack("Contact", undefined, eventId),
 };

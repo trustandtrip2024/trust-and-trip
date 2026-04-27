@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Star, Calendar, ExternalLink } from "lucide-react";
+import { ArrowRight, Star, ExternalLink } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import type { GoogleReview, GooglePlaceData } from "@/lib/google-reviews";
 
@@ -79,69 +79,88 @@ export default function ReviewsRail({
           className="mt-7 -mx-5 px-5 md:-mx-8 md:px-8 lg:-mx-12 lg:px-12 overflow-x-auto snap-x snap-mandatory no-scrollbar"
           aria-label="Traveler reviews scroller"
         >
-          <ul className="flex gap-5 pb-2">
+          <ul className="flex gap-4 pb-2">
             {items.map((r) => (
               <li
                 key={r.id}
-                className="snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[40%] lg:w-[24%]"
+                className="snap-start shrink-0 w-[78%] sm:w-[50%] md:w-[32%] lg:w-[22%] xl:w-[19%]"
               >
-                <article className={`tt-card tt-card-p h-full flex flex-col gap-4 ${r.href ? "transition-all hover:shadow-rail hover:-translate-y-0.5" : ""}`}>
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
+                <article
+                  className={`bg-white dark:bg-white/[0.04] rounded-card border border-tat-charcoal/10 dark:border-white/10 shadow-card h-full flex flex-col gap-2.5 p-4 md:p-5 ${
+                    r.href ? "transition-all hover:shadow-rail hover:-translate-y-0.5" : ""
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
                       {r.photoUrl ? (
                         <Image
                           src={r.photoUrl}
                           alt=""
-                          width={40}
-                          height={40}
-                          className="h-10 w-10 rounded-pill shrink-0"
+                          width={32}
+                          height={32}
+                          className="h-8 w-8 rounded-pill shrink-0"
                           unoptimized
                         />
                       ) : (
-                        <div className="h-10 w-10 rounded-pill bg-tat-cream-warm/40 grid place-items-center font-semibold text-tat-gold shrink-0" aria-hidden>
+                        <div
+                          className="h-8 w-8 rounded-pill bg-tat-cream-warm/60 grid place-items-center text-[12px] font-semibold text-tat-gold shrink-0"
+                          aria-hidden
+                        >
                           {r.name.slice(0, 1).toUpperCase()}
                         </div>
                       )}
                       <div className="min-w-0">
-                        <p className="text-body-sm font-medium text-tat-charcoal truncate">{r.name}</p>
-                        {r.city && <p className="text-tag uppercase text-tat-slate truncate">{r.city}</p>}
+                        <p className="text-[13px] font-medium text-tat-charcoal dark:text-white truncate leading-tight">
+                          {r.name}
+                        </p>
+                        <p className="text-[10px] uppercase tracking-[0.08em] text-tat-slate dark:text-white/55 truncate mt-0.5">
+                          {r.city ? `${r.city} · ${r.when}` : r.when}
+                        </p>
                       </div>
                     </div>
-                    {r.destination && r.destination !== "Google review" && (
-                      r.href ? (
-                        <Link href={r.href} className="tt-chip hover:bg-tat-gold/15 transition-colors">
-                          {r.destination}
-                          <ArrowRight className="h-3 w-3" />
-                        </Link>
-                      ) : (
-                        <span className="tt-chip">{r.destination}</span>
-                      )
-                    )}
+                    <div
+                      className="flex gap-0.5 shrink-0"
+                      aria-label={`${r.rating} out of 5 stars`}
+                    >
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-3 w-3 ${
+                            i < r.rating
+                              ? "fill-tat-gold text-tat-gold"
+                              : "text-tat-charcoal/20 dark:text-white/20"
+                          }`}
+                          aria-hidden
+                        />
+                      ))}
+                    </div>
                   </div>
 
-                  <p className="inline-flex items-center gap-1.5 text-meta text-tat-slate">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {r.when}
+                  {r.destination && r.destination !== "Google review" && (
+                    r.href ? (
+                      <Link
+                        href={r.href}
+                        className="inline-flex self-start items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-pill bg-tat-cream-warm/50 text-tat-charcoal/80 hover:bg-tat-gold/15 transition-colors dark:bg-white/10 dark:text-white/85"
+                      >
+                        {r.destination}
+                      </Link>
+                    ) : (
+                      <span className="inline-flex self-start items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-pill bg-tat-cream-warm/50 text-tat-charcoal/80 dark:bg-white/10 dark:text-white/85">
+                        {r.destination}
+                      </span>
+                    )
+                  )}
+
+                  <p className="text-[13px] text-tat-charcoal/85 dark:text-white/80 leading-relaxed line-clamp-6">
+                    {r.body}
                   </p>
-
-                  <div className="flex gap-0.5" aria-label={`${r.rating} out of 5 stars`}>
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-4 w-4 ${i < r.rating ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/20"}`}
-                        aria-hidden
-                      />
-                    ))}
-                  </div>
-
-                  <p className="text-body text-tat-charcoal/85 leading-relaxed">{r.body}</p>
 
                   {r.live && r.authorUrl && (
                     <Link
                       href={r.authorUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-auto inline-flex items-center gap-1 text-tag uppercase text-tat-teal hover:text-tat-teal-deep"
+                      className="mt-auto inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.08em] font-semibold text-tat-teal hover:text-tat-teal-deep"
                     >
                       <ExternalLink className="h-3 w-3" />
                       View on Google
@@ -150,7 +169,7 @@ export default function ReviewsRail({
                   {!r.live && r.href && (
                     <Link
                       href={r.href}
-                      className="mt-auto inline-flex items-center gap-1 text-tag uppercase text-tat-teal hover:text-tat-teal-deep"
+                      className="mt-auto inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.08em] font-semibold text-tat-teal hover:text-tat-teal-deep"
                     >
                       Browse {r.destination.split(" ")[0]} trips
                       <ArrowRight className="h-3 w-3" />

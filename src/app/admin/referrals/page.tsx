@@ -33,7 +33,7 @@ export default async function ReferralsPage() {
             <ArrowLeft className="h-4 w-4" /> Admin
           </Link>
           <span className="text-gray-300">/</span>
-          <h1 className="text-xl font-bold text-tat-charcoal flex items-center gap-2">
+          <h1 className="text-xl font-semibold text-tat-charcoal flex items-center gap-2">
             <Gift className="h-5 w-5 text-tat-gold" /> Referrals
           </h1>
         </div>
@@ -51,7 +51,7 @@ export default async function ReferralsPage() {
                 <p className="text-xs text-tat-slate">{label}</p>
                 <Icon className={`h-4 w-4 ${color}`} />
               </div>
-              <p className="text-2xl font-bold text-tat-charcoal">{value}</p>
+              <p className="text-2xl font-semibold text-tat-charcoal">{value}</p>
             </div>
           ))}
         </div>

@@ -125,7 +125,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
         </Link>
         <div className="flex items-center gap-2 mb-1">
           <Sparkles className="h-5 w-5 text-purple-500" />
-          <h1 className="text-2xl font-bold text-tat-charcoal">Creator Program</h1>
+          <h1 className="text-2xl font-semibold text-tat-charcoal">Creator Program</h1>
         </div>
         <p className="text-sm text-tat-slate mb-6">{counts.all} total · {counts.pending} pending · {counts.active} active</p>
 

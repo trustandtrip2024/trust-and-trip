@@ -67,7 +67,7 @@ export function BookingConfirmationEmail({
                 View booking
               </a>
               <a href={receiptUrl} style={{ display: "inline-block", background: "#0B1C2C", color: "#FAF7F2", padding: "12px 24px", borderRadius: 999, textDecoration: "none", fontWeight: 600, fontSize: 14, marginBottom: 8 }}>
-                Download receipt
+                Download GST invoice
               </a>
             </div>
 

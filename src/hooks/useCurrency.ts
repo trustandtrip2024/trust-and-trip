@@ -60,6 +60,10 @@ export function useCurrency() {
   const setCurrency = (code: CurrencyCode) => {
     setState((s) => ({ ...s, currency: code }));
     try { localStorage.setItem(STORAGE_KEY, code); } catch { /* private mode */ }
+    // Broadcast so any <Price> on the page re-renders immediately.
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent<CurrencyCode>("tt:currency", { detail: code }));
+    }
   };
 
   return { ...state, setCurrency };

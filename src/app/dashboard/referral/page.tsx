@@ -148,7 +148,7 @@ export default function ReferralDashboardPage() {
                 "You both get ₹500 off — automatically applied",
               ].map((step, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <span className="h-5 w-5 rounded-full bg-tat-gold/20 text-tat-charcoal text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                  <span className="h-5 w-5 rounded-full bg-tat-gold/20 text-tat-charcoal text-[10px] font-semibold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
                   <p className="text-sm text-tat-charcoal/65">{step}</p>
                 </div>
               ))}

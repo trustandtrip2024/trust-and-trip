@@ -10,7 +10,7 @@ async function getLeads() {
   );
   const { data, error } = await supabase
     .from("leads")
-    .select("*")
+    .select("*, assigned_planner")
     .order("created_at", { ascending: false })
     .limit(200);
 
@@ -31,6 +31,7 @@ export default async function LeadsPage() {
       const today = new Date();
       return d.toDateString() === today.toDateString();
     }).length,
+    tierA: leads.filter((l) => l.tier === "A").length,
   };
 
   return (
@@ -38,13 +39,14 @@ export default async function LeadsPage() {
       <div className="max-w-7xl mx-auto px-4 py-10">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-tat-charcoal">Leads Dashboard</h1>
+          <h1 className="text-2xl font-semibold text-tat-charcoal">Leads Dashboard</h1>
           <p className="text-tat-slate text-sm mt-1">Trust and Trip — Enquiries CRM</p>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
           <StatCard label="Total Leads" value={stats.total} color="blue" />
+          <StatCard label="🔥 Tier A" value={stats.tierA} color="emerald" />
           <StatCard label="New" value={stats.new} color="yellow" />
           <StatCard label="Contacted" value={stats.contacted} color="purple" />
           <StatCard label="Booked" value={stats.booked} color="green" />
@@ -67,11 +69,12 @@ function StatCard({ label, value, color }: { label: string; value: number; color
     purple: "bg-purple-50 text-purple-700 border-purple-100",
     green: "bg-green-50 text-green-700 border-green-100",
     indigo: "bg-indigo-50 text-indigo-700 border-indigo-100",
+    emerald: "bg-emerald-50 text-emerald-700 border-emerald-200",
   };
   return (
     <div className={`rounded-xl border p-4 ${colors[color]}`}>
       <p className="text-xs font-medium opacity-70">{label}</p>
-      <p className="text-3xl font-bold mt-1">{value}</p>
+      <p className="text-3xl font-semibold mt-1">{value}</p>
     </div>
   );
 }

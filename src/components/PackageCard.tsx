@@ -9,6 +9,7 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import { useUserStore } from "@/store/useUserStore";
 import { supabase } from "@/lib/supabase";
 import { getDynamicPrice } from "@/lib/dynamic-pricing";
+import Price from "./Price";
 import CustomizeModal from "./CustomizeModal";
 import ScheduleCallModal from "./ScheduleCallModal";
 
@@ -214,14 +215,21 @@ export default function PackageCard({
             <div>
               <div className="flex items-center gap-1.5 mb-0.5">
                 <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${tier.color}`}>{tier.badge}</span>
-                {savings > 0 && <span className="text-[9px] text-green-600 font-medium">Save ₹{savings.toLocaleString("en-IN")}</span>}
+                {savings > 0 && (
+                  <span className="text-[9px] text-green-600 font-medium">
+                    Save <Price inr={savings} />
+                  </span>
+                )}
               </div>
               <p className="font-display text-xl md:text-2xl text-tat-charcoal">
-                ₹{dynPrice.toLocaleString("en-IN")}
+                <Price inr={dynPrice} />
                 <span className="text-xs text-tat-charcoal/50 font-sans font-normal ml-1">/ person</span>
               </p>
               {savings > 0 && (
-                <p className="text-[10px] text-tat-charcoal/35 line-through">₹{originalPrice.toLocaleString("en-IN")}</p>
+                <Price
+                  inr={originalPrice}
+                  className="text-[10px] text-tat-charcoal/35 line-through"
+                />
               )}
             </div>
             <Link

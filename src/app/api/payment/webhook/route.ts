@@ -29,6 +29,18 @@ interface RazorpayEvent {
     payment?: { entity: RazorpayPayment };
     order?: { entity: { id: string; amount: number; status: string } };
     refund?: { entity: { payment_id: string; amount: number; id: string } };
+    dispute?: {
+      entity: {
+        id: string;
+        payment_id: string;
+        amount: number;
+        currency: string;
+        reason_code?: string;
+        phase?: string;            // "chargeback" | "fraud" | "retrieval"
+        status?: string;           // "open" | "won" | "lost" | "closed"
+        respond_by?: number;       // unix seconds — DO NOT MISS
+      };
+    };
   };
 }
 
@@ -201,13 +213,67 @@ export async function POST(req: NextRequest) {
         break;
       }
 
+      case "payment.dispute.created":
+      case "payment.dispute.under_review":
+      case "payment.dispute.lost":
+      case "payment.dispute.won":
+      case "payment.dispute.closed": {
+        const dispute = evt.payload.dispute?.entity;
+        if (dispute?.payment_id) {
+          // Stamp the booking with dispute metadata so ops can find it.
+          const { data: booking } = await supabase
+            .from("bookings")
+            .select("id, customer_name, customer_email, customer_phone, package_title, deposit_amount")
+            .eq("razorpay_payment_id", dispute.payment_id)
+            .single();
+
+          if (booking) {
+            // Lost or fraud dispute → bookings.status = refunded so it lands
+            // in /admin/bookings cancelled/refunded and net-bookings drops.
+            const isLost = evt.event === "payment.dispute.lost";
+            const update: Record<string, unknown> = {
+              cancel_reason: `Razorpay dispute (${dispute.phase ?? "?"}) — ${dispute.reason_code ?? "no code"}`,
+            };
+            if (isLost) {
+              update.status = "refunded";
+              update.cancelled_at = new Date().toISOString();
+              update.refunded_at = new Date().toISOString();
+              update.refund_amount = Math.round((dispute.amount ?? 0) / 100);
+              update.refund_ref = dispute.id;
+            }
+            await supabase.from("bookings").update(update).eq("id", booking.id);
+
+            // Loud alert — disputes have a hard respond-by deadline.
+            await alertDispute({
+              event: evt.event,
+              dispute,
+              bookingId: booking.id,
+              customerName: booking.customer_name,
+              customerPhone: booking.customer_phone,
+              customerEmail: booking.customer_email,
+              packageTitle: booking.package_title,
+            }).catch((e) => console.error("[webhook] dispute alert failed", e));
+          }
+        }
+        break;
+      }
+
       case "refund.processed":
       case "refund.created": {
         const refund = evt.payload.refund?.entity;
         if (refund?.payment_id) {
+          // Razorpay refund.amount is in paise — convert to rupees for our column.
+          const refundRupees = Math.round(refund.amount / 100);
           await supabase
             .from("bookings")
-            .update({ status: "refunded" })
+            .update({
+              status: "refunded",
+              refunded_at: new Date().toISOString(),
+              refund_amount: refundRupees,
+              refund_ref: refund.id,
+              cancelled_at: new Date().toISOString(),
+              cancel_reason: cancel_reasonFromEvent(evt),
+            })
             .eq("razorpay_payment_id", refund.payment_id);
         }
         break;
@@ -223,5 +289,77 @@ export async function POST(req: NextRequest) {
     console.error("[webhook] error:", err);
     // Return 500 so Razorpay retries.
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  }
+}
+
+function cancel_reasonFromEvent(evt: RazorpayEvent): string {
+  return evt.event === "refund.processed"
+    ? "Razorpay refund processed"
+    : "Razorpay refund created";
+}
+
+interface DisputeAlertInput {
+  event: string;
+  dispute: {
+    id: string;
+    payment_id: string;
+    amount: number;
+    currency: string;
+    reason_code?: string;
+    phase?: string;
+    status?: string;
+    respond_by?: number;
+  };
+  bookingId: string;
+  customerName: string | null;
+  customerPhone: string | null;
+  customerEmail: string | null;
+  packageTitle: string | null;
+}
+
+async function alertDispute(input: DisputeAlertInput) {
+  const slack = process.env.LEAD_ALERT_SLACK_WEBHOOK;
+  const tgToken = process.env.LEAD_ALERT_TELEGRAM_TOKEN;
+  const tgChat = process.env.LEAD_ALERT_TELEGRAM_CHAT_ID;
+  if (!slack && !tgToken) return;
+
+  const respondByISO = input.dispute.respond_by
+    ? new Date(input.dispute.respond_by * 1000).toISOString()
+    : "—";
+  const amountInr = Math.round((input.dispute.amount ?? 0) / 100);
+  const heading = input.event === "payment.dispute.created"
+    ? "🚨 Razorpay DISPUTE OPENED"
+    : `Razorpay dispute · ${input.event}`;
+
+  const lines = [
+    heading,
+    "",
+    `Customer: ${input.customerName ?? "—"} · ${input.customerPhone ?? "—"} · ${input.customerEmail ?? "—"}`,
+    `Package: ${input.packageTitle ?? "—"}`,
+    `Amount: ₹${amountInr.toLocaleString("en-IN")}`,
+    `Phase: ${input.dispute.phase ?? "?"} · Status: ${input.dispute.status ?? "?"}`,
+    `Reason: ${input.dispute.reason_code ?? "no code"}`,
+    `Respond by: ${respondByISO}`,
+    `Razorpay payment_id: ${input.dispute.payment_id}`,
+    `Razorpay dispute_id: ${input.dispute.id}`,
+  ];
+
+  if (slack) {
+    fetch(slack, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: lines.join("\n") }),
+    }).catch(() => undefined);
+  }
+  if (tgToken && tgChat) {
+    fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: tgChat,
+        text: lines.join("\n"),
+        disable_web_page_preview: true,
+      }),
+    }).catch(() => undefined);
   }
 }

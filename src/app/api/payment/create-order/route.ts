@@ -4,6 +4,8 @@ import { createClient } from "@supabase/supabase-js";
 import { pushBookingAsDeal } from "@/lib/bitrix24";
 import { REF_COOKIE, isValidRefCode } from "@/lib/creator-attribution";
 import { rateLimit, clientIp } from "@/lib/redis";
+import { sendCapiEvents, ipFromRequest } from "@/lib/meta-capi";
+import { ga4InitiateCheckout, clientIdFromCookie } from "@/lib/ga4-mp";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -89,6 +91,47 @@ export async function POST(req: NextRequest) {
     const cookieRef = cookies().get(REF_COOKIE)?.value;
     const refCode = isValidRefCode(cookieRef) ? cookieRef : null;
 
+    // Attribute booking to the most recent matching Lead so funnel reporting
+    // is exact (not best-effort email/phone match at query time).
+    const phoneDigits = String(customer_phone ?? "").replace(/\D/g, "");
+    const phoneTail = phoneDigits.length >= 10 ? phoneDigits.slice(-10) : null;
+    let attributedLead: {
+      id: string;
+      score: number | null;
+      tier: string | null;
+      utm_source: string | null;
+      utm_medium: string | null;
+      utm_campaign: string | null;
+      utm_content: string | null;
+      utm_term: string | null;
+    } | null = null;
+    {
+      const { data: matches } = await supabase
+        .from("leads")
+        .select("id, score, tier, utm_source, utm_medium, utm_campaign, utm_content, utm_term, email, phone, created_at")
+        .or(
+          [
+            customer_email ? `email.eq.${customer_email}` : "",
+            phoneTail ? `phone.ilike.%${phoneTail}` : "",
+          ].filter(Boolean).join(",")
+        )
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (matches && matches.length > 0) {
+        const m = matches[0];
+        attributedLead = {
+          id: m.id,
+          score: (m.score as number | null) ?? null,
+          tier: (m.tier as string | null) ?? null,
+          utm_source: m.utm_source as string | null,
+          utm_medium: m.utm_medium as string | null,
+          utm_campaign: m.utm_campaign as string | null,
+          utm_content: m.utm_content as string | null,
+          utm_term: m.utm_term as string | null,
+        };
+      }
+    }
+
     // Save booking as "created"
     const { data: bookingRow, error: dbErr } = await supabase.from("bookings").insert({
       razorpay_order_id: order.id,
@@ -99,6 +142,14 @@ export async function POST(req: NextRequest) {
       ref_code: refCode,
       coupon_code: validatedCoupon,
       discount_amount: discountAmount,
+      lead_id:      attributedLead?.id ?? null,
+      lead_score:   attributedLead?.score ?? null,
+      lead_tier:    attributedLead?.tier ?? null,
+      utm_source:   attributedLead?.utm_source ?? null,
+      utm_medium:   attributedLead?.utm_medium ?? null,
+      utm_campaign: attributedLead?.utm_campaign ?? null,
+      utm_content:  attributedLead?.utm_content ?? null,
+      utm_term:     attributedLead?.utm_term ?? null,
       status: "created",
     }).select("id").single();
 
@@ -106,6 +157,51 @@ export async function POST(req: NextRequest) {
     // Coupon is NOT redeemed here — only locked to the booking. The verify
     // route flips redeemed_at on successful payment so abandoned checkouts
     // don't burn the user's code.
+
+    // CAPI InitiateCheckout — paired with browser-side fbq fire on Razorpay open.
+    // event_id = razorpay order_id so any browser-side IC dedupes naturally.
+    const fbp = cookies().get("_fbp")?.value;
+    const fbc = cookies().get("_fbc")?.value;
+    sendCapiEvents([
+      {
+        name: "InitiateCheckout",
+        eventId: order.id,
+        actionSource: "website",
+        user: {
+          email: customer_email,
+          phone: customer_phone,
+          firstName: String(customer_name).split(/\s+/)[0],
+          country: "in",
+          externalId: bookingRow?.id ? String(bookingRow.id) : undefined,
+          fbp,
+          fbc,
+          clientIp: ipFromRequest(req),
+          clientUserAgent: req.headers.get("user-agent") ?? undefined,
+        },
+        customData: {
+          currency: "INR",
+          value: DEPOSIT_AMOUNT / 100,
+          contentName: package_title,
+          contentIds: package_slug ? [package_slug] : undefined,
+          contentType: "product",
+          numItems: 1,
+        },
+      },
+    ]).catch((e) => console.error("[capi] InitiateCheckout failed", e));
+
+    // GA4 begin_checkout mirror.
+    const gaClientId = clientIdFromCookie(cookies().get("_ga")?.value);
+    if (gaClientId) {
+      void ga4InitiateCheckout({
+        clientId: gaClientId,
+        value: DEPOSIT_AMOUNT / 100,
+        packageSlug: package_slug,
+        packageTitle: package_title,
+        ipOverride: ipFromRequest(req),
+        userAgent: req.headers.get("user-agent") ?? undefined,
+        externalId: bookingRow?.id ? String(bookingRow.id) : undefined,
+      }).catch((e) => console.error("[ga4-mp] IC failed", e));
+    }
 
     // Fire-and-forget Bitrix24 sync: opens a Deal in the Sales pipeline
     pushBookingAsDeal({

@@ -5,7 +5,7 @@ export default function AdminHome() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center max-w-sm w-full px-4">
-        <h1 className="text-2xl font-bold text-tat-charcoal mb-1">Trust and Trip</h1>
+        <h1 className="text-2xl font-semibold text-tat-charcoal mb-1">Trust and Trip</h1>
         <p className="text-tat-slate mb-8 text-sm">Admin Dashboard</p>
         <div className="grid gap-3">
           <Link href="/admin/leads"

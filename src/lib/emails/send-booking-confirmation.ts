@@ -2,6 +2,8 @@
 // Fire-and-forget — never blocks the primary flow. Skips silently if Resend
 // is not configured.
 
+import { buildInvoiceUrl } from "@/lib/invoice";
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://trustandtrip.com";
 const WHATSAPP_URL = "https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I%20have%20a%20question%20about%20my%20booking.";
 
@@ -40,7 +42,8 @@ export async function sendBookingConfirmationEmail(b: BookingShape) {
         travelDate: b.travel_date ?? null,
         paymentId: b.razorpay_payment_id ?? null,
         bookingUrl: `${SITE_URL}/dashboard/bookings/${b.id}`,
-        receiptUrl: `${SITE_URL}/dashboard/bookings/${b.id}/receipt`,
+        // GST tax invoice — token-signed, customer can re-download forever.
+        receiptUrl: buildInvoiceUrl(b.id),
         whatsappUrl: WHATSAPP_URL,
       }),
     });

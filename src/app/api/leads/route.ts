@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import type { Lead } from "@/lib/supabase";
-import { pushLead } from "@/lib/bitrix24";
+import { pushLead, createLeadTask } from "@/lib/bitrix24";
 import { REF_COOKIE, isValidRefCode, findActiveCreator } from "@/lib/creator-attribution";
 import { rateLimit, clientIp } from "@/lib/redis";
+import { capiLead, ipFromRequest } from "@/lib/meta-capi";
+import { alertLead, isHotLead } from "@/lib/lead-alerts";
+import { scoreLead } from "@/lib/lead-scoring";
+import { ga4Lead, clientIdFromCookie } from "@/lib/ga4-mp";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -122,27 +126,107 @@ export async function POST(req: NextRequest) {
 
     mark(`3b. ref_code=${refCode ?? "(none)"}`);
 
-    mark("4. calling supabase.from(leads).insert(...)");
-    const { data: leadRow, error } = await supabase.from("leads").insert({
+    // Score before insert so the row carries score + tier from day one.
+    const { score, tier, reasons } = scoreLead({
       name: safeName,
       email: safeEmail,
       phone: safePhone,
-      message: body.message?.trim(),
-      package_title: body.package_title,
-      package_slug: body.package_slug,
       destination: body.destination,
       travel_type: body.travel_type,
       travel_date: body.travel_date,
       num_travellers: body.num_travellers,
       budget: body.budget,
+      package_title: body.package_title,
+      package_slug: body.package_slug,
       source: body.source ?? "contact_form",
       utm_source: body.utm_source,
       utm_medium: body.utm_medium,
-      utm_campaign: body.utm_campaign,
-      page_url: body.page_url,
-      ref_code: refCode,
-      status: "new",
-    }).select("id").single();
+      message: body.message,
+    });
+    mark(`3c. score=${score} tier=${tier}`);
+
+    // Lead dedup: same phone (or email) + destination within the last 1h →
+    // update the existing row in place instead of inserting a fresh one.
+    // Stops accidental double-submits + form spammers from inflating the
+    // Pixel Lead optimizer signal. Only applies to non-intent submissions
+    // — click-intents already have a separate dedup story (1 row per click
+    // is fine, they're attribution markers).
+    let dedupedLeadId: string | null = null;
+    if (!isIntent && (safePhone || safeEmail) && body.destination) {
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+      const filters: string[] = [];
+      if (safePhone) filters.push(`phone.eq.${safePhone}`);
+      if (safeEmail) filters.push(`email.eq.${safeEmail}`);
+      const { data: prior } = await supabase
+        .from("leads")
+        .select("id")
+        .eq("destination", body.destination)
+        .gte("created_at", oneHourAgo)
+        .or(filters.join(","))
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (prior && prior.length > 0) {
+        dedupedLeadId = prior[0].id as string;
+        mark(`3d. dedup hit — reusing lead ${dedupedLeadId}`);
+      }
+    }
+
+    mark("4. supabase write (insert or dedup-update)");
+
+    let leadRow: { id: string } | null = null;
+    let error: { message?: string; code?: string; details?: string; hint?: string } | null = null;
+
+    if (dedupedLeadId) {
+      // Update in place — refresh score/tier and any newer fields.
+      const { error: upErr } = await supabase
+        .from("leads")
+        .update({
+          name: safeName,
+          email: safeEmail || undefined,
+          phone: safePhone || undefined,
+          message: body.message?.trim() || undefined,
+          travel_date: body.travel_date,
+          num_travellers: body.num_travellers,
+          budget: body.budget,
+          score,
+          tier,
+        })
+        .eq("id", dedupedLeadId);
+      error = upErr;
+      leadRow = upErr ? null : { id: dedupedLeadId };
+    } else {
+      const ins = await supabase
+        .from("leads")
+        .insert({
+          name: safeName,
+          email: safeEmail,
+          phone: safePhone,
+          message: body.message?.trim(),
+          package_title: body.package_title,
+          package_slug: body.package_slug,
+          destination: body.destination,
+          travel_type: body.travel_type,
+          travel_date: body.travel_date,
+          num_travellers: body.num_travellers,
+          budget: body.budget,
+          source: body.source ?? "contact_form",
+          utm_source: body.utm_source,
+          utm_medium: body.utm_medium,
+          utm_campaign: body.utm_campaign,
+          utm_content: body.utm_content,
+          utm_term: body.utm_term,
+          wa_variant: body.wa_variant,
+          page_url: body.page_url,
+          ref_code: refCode,
+          score,
+          tier,
+          status: "new",
+        })
+        .select("id")
+        .single();
+      leadRow = (ins.data as { id: string } | null) ?? null;
+      error = ins.error;
+    }
 
     if (error) {
       console.error("Supabase insert error:", error);
@@ -190,12 +274,95 @@ export async function POST(req: NextRequest) {
 
     // Fire-and-forget Bitrix24 sync — errors logged but never block response.
     // Always push, even intents, so sales sees every click in the CRM.
-    pushLead({ ...body, name: safeName, email: safeEmail, phone: safePhone, ref_code: refCode ?? undefined }).catch((e) =>
-      console.error("Bitrix24 pushLead error:", e)
-    );
+    // For tier=A leads, follow the Bitrix push with a 5-minute SLA Task so
+    // a planner sees a hard deadline ticking in their dashboard.
+    void (async () => {
+      try {
+        const bitrixLeadId = await pushLead({
+          ...body,
+          name: safeName,
+          email: safeEmail,
+          phone: safePhone,
+          ref_code: refCode ?? undefined,
+        });
+        if (bitrixLeadId && tier === "A" && !isIntent) {
+          await createLeadTask({
+            leadId: bitrixLeadId,
+            title: `🔥 HOT LEAD — call ${safeName} within 5 min (${body.destination ?? "no destination"})`,
+            description: [
+              `Phone: ${safePhone || "—"}`,
+              `Email: ${safeEmail || "—"}`,
+              `Destination: ${body.destination ?? "—"}`,
+              `Travel type: ${body.travel_type ?? "—"}`,
+              `Travel date: ${body.travel_date ?? "—"}`,
+              `Budget: ${body.budget ?? "—"}`,
+              `Score: ${score}/100`,
+              `Source: ${body.source ?? "—"} · UTM: ${body.utm_source ?? "-"}/${body.utm_campaign ?? "-"}`,
+              "",
+              `Reasons: ${reasons.join(", ")}`,
+            ].join("\n"),
+            deadlineMinutes: 5,
+          }).catch((e) => console.error("Bitrix24 createLeadTask error:", e));
+        }
+      } catch (e) {
+        console.error("Bitrix24 pushLead error:", e);
+      }
+    })();
     mark("7. bitrix24 pushLead queued");
 
-    return NextResponse.json({ success: true, debug });
+    // Meta CAPI — server-side Lead event with event_id for de-dup against browser Pixel.
+    // Skip click intents (low signal, would inflate Lead count and confuse the optimizer).
+    let eventId: string | undefined;
+    if (!isIntent && body.source !== "newsletter") {
+      const fbp = cookies().get("_fbp")?.value;
+      const fbc = cookies().get("_fbc")?.value;
+      const { eventId: id } = await capiLead({
+        email: safeEmail || undefined,
+        phone: safePhone || undefined,
+        firstName: safeName?.split(/\s+/)[0],
+        externalId: leadRow?.id ? String(leadRow.id) : undefined,
+        contentName: body.package_title || body.destination,
+        value: body.budget ? Number(body.budget) || 0 : 0,
+        fbp,
+        fbc,
+        clientIp: ipFromRequest(req),
+        clientUserAgent: req.headers.get("user-agent") ?? undefined,
+        pageUrl: body.page_url,
+      });
+      eventId = id;
+    }
+    mark("8. meta capi fired");
+
+    // GA4 Measurement Protocol — server-side mirror of the same Lead event
+    // so GA4 sees the conversion even when the browser-side gtag fire is
+    // blocked by tracking-prevention. Fire-and-forget.
+    if (!isIntent && body.source !== "newsletter") {
+      const gaClientId = clientIdFromCookie(cookies().get("_ga")?.value);
+      if (gaClientId) {
+        void ga4Lead({
+          clientId: gaClientId,
+          value: body.budget ? Number(body.budget) || 0 : 0,
+          contentName: body.package_title || body.destination,
+          ipOverride: ipFromRequest(req),
+          userAgent: req.headers.get("user-agent") ?? undefined,
+          externalId: leadRow?.id ? String(leadRow.id) : undefined,
+        }).catch((e) => console.error("[ga4-mp] Lead failed", e));
+      }
+    }
+    mark("8b. ga4 mp fired");
+
+    // Real-time alert to planner. Fire-and-forget. Skip click intents.
+    if (!isIntent) {
+      const hydrated = { ...body, name: safeName, email: safeEmail, phone: safePhone, id: leadRow?.id };
+      // Hot if scored tier A OR the structural heuristic says so — belt + braces.
+      const hot = tier === "A" || isHotLead(hydrated);
+      alertLead({ lead: hydrated, hot }).catch((e) =>
+        console.error("Lead alert error:", e)
+      );
+    }
+    mark(`9. lead alert fired (tier=${tier} reasons=${reasons.length})`);
+
+    return NextResponse.json({ success: true, eventId, score, tier, debug });
   } catch (err) {
     const e = err as Error & { code?: string; digest?: string };
     console.error("Lead API error:", e);

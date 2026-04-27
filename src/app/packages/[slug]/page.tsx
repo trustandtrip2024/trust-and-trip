@@ -69,6 +69,12 @@ export default async function PackageDetail({ params }: Props) {
   return (
     <>
       <PackageViewTracker slug={pkg.slug} />
+      <PackagePixelEvent
+        title={pkg.title}
+        price={pkg.price}
+        slug={pkg.slug}
+        category={pkg.travelType}
+      />
       <JsonLd data={{
         "@context": "https://schema.org", "@type": "Product",
         name: pkg.title, description: pkg.description, image: pkg.heroImage,

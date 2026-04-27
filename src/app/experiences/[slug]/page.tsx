@@ -73,7 +73,7 @@ export default async function ExperienceDetailPage({ params }: Props) {
               {exp.title}
             </h1>
             {exp.tagline && (
-              <p className="mt-5 text-tat-paper/70 text-xl font-display font-light italic">
+              <p className="mt-5 text-tat-paper/70 text-xl font-display font-light">
                 {exp.tagline}
               </p>
             )}
