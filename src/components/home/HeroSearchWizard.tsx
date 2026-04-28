@@ -144,7 +144,7 @@ function Wizard({ state, setState, step, setStep, onSubmit, variant = "hero" }: 
     <div
       className={
         variant === "hero"
-          ? "mt-7 mx-auto max-w-2xl bg-white rounded-card shadow-rail p-5 md:p-6 text-tat-charcoal text-left"
+          ? "relative z-20 mt-7 mx-auto max-w-2xl bg-white rounded-card shadow-rail p-5 md:p-6 text-tat-charcoal text-left"
           : "p-5 text-tat-charcoal"
       }
     >
@@ -422,7 +422,7 @@ export default function HeroSearchWizard({
         <p className="mt-4 text-base md:text-lead text-white/85 max-w-2xl mx-auto text-balance [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">{lede}</p>
 
         {/* Pre-segmentation tiles — quick start by traveller persona */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+        <div className="relative z-10 mt-6 flex flex-wrap items-center justify-center gap-2">
           {TRAVELING_WITH.slice(0, 5).map((t) => {
             const Icon = t.icon;
             return (
