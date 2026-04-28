@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 const HERO_IMG =
-  "https://images.unsplash.com/photo-1530841344095-502e9bb29024?w=1600&q=68&auto=format&fit=crop";
+  "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=1600&q=68&auto=format&fit=crop";
 
 const PROOF = [
   { icon: Clock, label: "Draft in 60 sec", sub: "Real planner reviews" },

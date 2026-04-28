@@ -51,12 +51,12 @@ const CORPORATE_CLIENTS: CorporateClient[] = [
   { name: "HCL Technologies",  domain: "hcltech.com",         trip: "Manager offsite", icon: Building2 },
 ];
 
-function clearbitUrl(domain: string): string {
-  return `https://logo.clearbit.com/${domain}?size=128`;
-}
-
 function CorporateLogo({ client }: { client: CorporateClient }) {
-  const src = client.logo ?? (client.domain ? clearbitUrl(client.domain) : null);
+  // Clearbit's public logo API has been retired / flaky for several
+  // domains (e.g. panasonic.com, sbi.co.in returned ERR_NAME_NOT_RESOLVED
+  // in production). Render an icon + brand name instead — when the user
+  // uploads real partner SVGs into Sanity, swap to client.logo.
+  const src = client.logo ?? null;
   const Icon = client.icon ?? Building2;
 
   return (
