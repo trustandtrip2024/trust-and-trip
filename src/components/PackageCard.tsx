@@ -193,7 +193,10 @@ export default function PackageCard({
           </div>
         )}
 
-        <h3 className="font-display text-lg md:text-xl font-medium leading-tight text-balance group-hover:text-tat-gold transition-colors duration-300">
+        <h3
+          title={title}
+          className="font-display text-lg md:text-xl font-medium leading-tight text-balance group-hover:text-tat-gold transition-colors duration-300 line-clamp-2"
+        >
           {title}
         </h3>
 

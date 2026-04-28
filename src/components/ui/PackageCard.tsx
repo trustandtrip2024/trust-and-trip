@@ -155,7 +155,10 @@ export default function PackageCardUI(p: PackageCardProps) {
         )}
 
         {/* Title */}
-        <h3 className={`mt-2 font-display font-normal ${compact ? "text-h4" : "text-h3"} text-tat-charcoal leading-snug text-balance line-clamp-2`}>
+        <h3
+          title={p.title}
+          className={`mt-2 font-display font-normal ${compact ? "text-h4" : "text-h3"} text-tat-charcoal leading-snug text-balance line-clamp-2`}
+        >
           {p.title}
         </h3>
 
