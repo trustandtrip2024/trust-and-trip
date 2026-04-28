@@ -8,6 +8,12 @@
 // emails go to logged-out users, we surface a "send me a sign-in link" CTA.
 
 import { createClient } from "@supabase/supabase-js";
+
+export const metadata = {
+  title: "Resume your booking",
+  description: "Pick up your trip planning right where you left off.",
+  robots: { index: false, follow: false },
+};
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
