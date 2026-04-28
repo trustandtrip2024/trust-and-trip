@@ -334,7 +334,10 @@ export default function Header() {
             <span className="hidden lg:inline-flex">
               <CurrencySwitcher variant="navbar" />
             </span>
-            <ThemeToggle className="hidden lg:inline-flex text-tat-charcoal/60" />
+            {/* Single theme toggle; responsive Tailwind classes split the
+                paint between the dark mobile header and the light desktop
+                header without rendering the component twice in DOM. */}
+            <ThemeToggle className="text-tat-paper hover:bg-white/10 lg:text-tat-charcoal/60 lg:hover:bg-tat-charcoal/5" />
 
             {/* More kebab — Radix DropdownMenu */}
             <DropdownMenu.Root>
@@ -456,11 +459,6 @@ export default function Header() {
               </span>
               <ChevronDown className="h-3 w-3 opacity-70" aria-hidden />
             </Link>
-            {/* Mobile theme toggle — sits in the dark mobile header. Use
-                paper-coloured icon so it remains visible against the dark
-                background. */}
-            <ThemeToggle className="lg:hidden text-tat-paper hover:bg-white/10" />
-
             {/* Mobile drawer — controlled by hamburger button placed earlier */}
             <Dialog.Root open={drawerOpen} onOpenChange={setDrawerOpen}>
               <Dialog.Portal>
