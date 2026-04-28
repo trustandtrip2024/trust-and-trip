@@ -216,7 +216,7 @@ export default function PackagesClient({
         <div className="grid md:grid-cols-[260px_1fr] gap-8 lg:gap-12">
           {/* Desktop sidebar */}
           <aside className="hidden md:block">
-            <div className="md:sticky md:top-28">
+            <div className="md:sticky md:top-28 md:max-h-[calc(100vh-7rem)] md:overflow-y-auto md:pb-24 no-scrollbar">
               <FilterPanel
                 destinations={destinations}
                 filterDestination={filterDestination}
