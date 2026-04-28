@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { motion } from "framer-motion";
 import {
   Menu, X, Phone, MapPin, Heart, Search, BookOpen, MoreVertical,
   Info, User, LogOut, Sparkles, ChevronRight, ChevronDown, Mail, Instagram,
@@ -22,7 +21,10 @@ import ThemeToggle from "./ThemeToggle";
 import CurrencySwitcher from "./CurrencySwitcher";
 
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
-const FlashDealRotator = dynamic(() => import("./FlashDealRotator"), { ssr: false });
+// FlashDealRotator is SSR-safe (renders DEALS[0] server-side; setInterval
+// only spins up in useEffect on client), so we render it normally to avoid
+// a blank-text gap on every reload.
+import FlashDealRotator from "./FlashDealRotator";
 
 // ── Top-bar nav (max 4) ───────────────────────────────────
 type DropdownLink = { label: string; href: string; emoji?: string };
@@ -255,13 +257,11 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Sticky header */}
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      {/* Sticky header — no entrance animation; persistent chrome should not
+          fade in on every reload (caused a visible flicker before paint). */}
+      <header
         className={clsx(
-          "sticky top-0 z-50 w-full transition-all duration-500",
+          "sticky top-0 z-50 w-full transition-colors duration-300",
           // Mobile: always dark navbar (matches Yatra-style reference)
           "bg-tat-charcoal md:bg-transparent",
           scrolled &&
@@ -615,7 +615,7 @@ export default function Header() {
             </span>
           </button>
         </div>
-      </motion.header>
+      </header>
 
       {searchOpen && <SearchModal onClose={() => setSearchOpen(false)} />}
     </>
