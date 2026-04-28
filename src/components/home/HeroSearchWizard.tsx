@@ -414,10 +414,12 @@ export default function HeroSearchWizard({
           <Zap className="h-3 w-3" aria-hidden />
           Free itinerary in 24 h · No card needed
         </span>
-        <h1 className="mt-4 font-display font-normal text-[40px] leading-[1.04] md:text-display text-white text-balance">
+        <h1
+          className="mt-4 font-display font-normal text-[40px] leading-[1.04] md:text-display text-white text-balance [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]"
+        >
           {titleStart} <em className="not-italic font-display italic text-tat-burnt">{titleItalic}</em>
         </h1>
-        <p className="mt-4 text-base md:text-lead text-white/85 max-w-2xl mx-auto text-balance">{lede}</p>
+        <p className="mt-4 text-base md:text-lead text-white/85 max-w-2xl mx-auto text-balance [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">{lede}</p>
 
         {/* Pre-segmentation tiles — quick start by traveller persona */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
