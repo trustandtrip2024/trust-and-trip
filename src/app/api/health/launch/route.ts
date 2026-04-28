@@ -71,12 +71,30 @@ async function pingMetaCapi(): Promise<Check> {
   const pixel = process.env.META_PIXEL_ID ?? "1712300429671832";
   const token = process.env.META_CAPI_ACCESS_TOKEN;
   if (!token) return { status: "missing" };
-  // Pixel reachability check — we don't actually post events; we just hit the
-  // metadata endpoint to confirm token validity.
+  // Validate by POSTing a benign test event — Meta's metadata-read endpoint
+  // requires extra permissions that CAPI tokens don't always carry, but the
+  // /events endpoint only needs the CAPI scope itself. test_event_code keeps
+  // the event out of production stats.
   try {
     const res = await fetch(
-      `https://graph.facebook.com/v21.0/${pixel}?fields=name&access_token=${encodeURIComponent(token)}`,
-      { signal: AbortSignal.timeout(5000) }
+      `https://graph.facebook.com/v21.0/${pixel}/events`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: [
+            {
+              event_name: "PageView",
+              event_time: Math.floor(Date.now() / 1000),
+              action_source: "website",
+              user_data: { client_ip_address: "1.2.3.4", client_user_agent: "healthcheck" },
+            },
+          ],
+          test_event_code: process.env.META_TEST_EVENT_CODE ?? "TEST_HEALTH",
+          access_token: token,
+        }),
+        signal: AbortSignal.timeout(5000),
+      }
     );
     if (!res.ok) {
       const body = await res.text().catch(() => "");
