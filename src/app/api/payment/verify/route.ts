@@ -63,6 +63,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Payment verification failed." }, { status: 400 });
     }
 
+    // Idempotency: if every booking on this order is already 'verified', skip
+    // all side effects (points, leads.insert, CAPI, GA4, emails, deal advance)
+    // and return the same shape so the client treats the second call as a
+    // no-op rather than an error or a duplicate-write success.
+    const { data: existing } = await supabase
+      .from("bookings")
+      .select("id, status")
+      .eq("razorpay_order_id", razorpay_order_id);
+    if (existing && existing.length > 0 && existing.every((b) => b.status === "verified")) {
+      return NextResponse.json({
+        success: true,
+        already_verified: true,
+        booking_id: existing[0].id,
+        booking_ids: existing.map((b) => b.id),
+        is_group: existing.length > 1,
+      });
+    }
+
     // Update all bookings tied to this order (supports cart checkout → 1 order, N bookings)
     const { data: bookings, error } = await supabase
       .from("bookings")
@@ -129,20 +147,38 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Save leads CRM entries (one per booking)
+    // Save leads CRM entries (one per booking). If a lead already exists for
+    // this booking (e.g. payment retry after a network blip), update it
+    // instead of inserting a duplicate row.
     for (const b of bookings) {
-      await supabase.from("leads").insert({
-        name: b.customer_name,
-        email: b.customer_email,
-        phone: b.customer_phone,
-        package_title: b.package_title,
-        package_slug: b.package_slug,
-        travel_date: b.travel_date,
-        num_travellers: String(b.num_travellers),
-        message: `DEPOSIT PAID ₹${b.deposit_amount.toLocaleString("en-IN")}${isGroup ? " [cart]" : ""} | ${b.special_requests ?? ""}`,
-        source: "package_enquiry",
-        status: "booked",
-      });
+      const message = `DEPOSIT PAID ₹${b.deposit_amount.toLocaleString("en-IN")}${isGroup ? " [cart]" : ""} | ${b.special_requests ?? ""}`;
+      const { data: prior } = await supabase
+        .from("leads")
+        .select("id")
+        .eq("phone", b.customer_phone)
+        .eq("package_slug", b.package_slug)
+        .eq("status", "booked")
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (prior && prior.length > 0) {
+        await supabase
+          .from("leads")
+          .update({ message, status: "booked" })
+          .eq("id", prior[0].id);
+      } else {
+        await supabase.from("leads").insert({
+          name: b.customer_name,
+          email: b.customer_email,
+          phone: b.customer_phone,
+          package_title: b.package_title,
+          package_slug: b.package_slug,
+          travel_date: b.travel_date,
+          num_travellers: b.num_travellers,
+          message,
+          source: "package_enquiry",
+          status: "booked",
+        });
+      }
     }
 
     // Fire-and-forget Bitrix24 sync: advance the Deal(s) created at order time to Won.

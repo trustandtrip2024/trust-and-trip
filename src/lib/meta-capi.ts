@@ -209,6 +209,50 @@ export async function sendCapiEvents(events: CapiEvent[]): Promise<CapiResponse>
 }
 
 /**
+ * Server-side ViewContent. Pair with the client-side `pixel.viewContent()`
+ * call by passing the same eventId so Meta de-duplicates the two events.
+ */
+export async function capiViewContent(opts: {
+  eventId: string;
+  packageTitle?: string;
+  packageSlug?: string;
+  value?: number;
+  email?: string;
+  phone?: string;
+  externalId?: string;
+  fbp?: string;
+  fbc?: string;
+  clientIp?: string;
+  clientUserAgent?: string;
+  pageUrl?: string;
+}): Promise<void> {
+  await sendCapiEvents([
+    {
+      name: "ViewContent",
+      eventId: opts.eventId,
+      eventSourceUrl: opts.pageUrl,
+      user: {
+        email: opts.email,
+        phone: opts.phone,
+        country: "in",
+        externalId: opts.externalId,
+        fbp: opts.fbp,
+        fbc: opts.fbc,
+        clientIp: opts.clientIp,
+        clientUserAgent: opts.clientUserAgent,
+      },
+      customData: {
+        currency: "INR",
+        value: opts.value ?? 0,
+        contentName: opts.packageTitle,
+        contentIds: opts.packageSlug ? [opts.packageSlug] : undefined,
+        contentType: "product",
+      },
+    },
+  ]).catch((e) => console.error("[meta-capi] capiViewContent failed", e));
+}
+
+/**
  * Convenience: capture a Lead event from a server route.
  * Returns the event_id so the browser-side Pixel can fire with the same id.
  */

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 import { pushLead } from "@/lib/bitrix24";
 import { generateItinerary } from "@/lib/itinerary-engine";
 import { deliverItinerary } from "@/lib/itinerary-deliver";
@@ -18,6 +19,27 @@ export const maxDuration = 60;
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN ?? "";
 const WA_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN ?? "";
 const PHONE_ID = process.env.WHATSAPP_PHONE_ID ?? "";
+// App secret used to sign the X-Hub-Signature-256 header. Get this from the
+// Meta app dashboard → App Settings → Basic → App Secret. Required for
+// webhook signature verification.
+const APP_SECRET = process.env.WHATSAPP_APP_SECRET ?? "";
+
+/**
+ * Verify the X-Hub-Signature-256 header against the raw request body using
+ * the Meta app secret. Returns true when the request is authentic, false
+ * otherwise. If APP_SECRET is unset we refuse all POSTs — fail closed.
+ */
+function verifySignature(rawBody: string, signatureHeader: string | null): boolean {
+  if (!APP_SECRET) return false;
+  if (!signatureHeader || !signatureHeader.startsWith("sha256=")) return false;
+  const expected = crypto
+    .createHmac("sha256", APP_SECRET)
+    .update(rawBody)
+    .digest("hex");
+  const provided = signatureHeader.slice("sha256=".length);
+  if (expected.length !== provided.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(expected, "hex"), Buffer.from(provided, "hex"));
+}
 
 const supabase =
   process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -40,9 +62,20 @@ export async function GET(req: NextRequest) {
 
 // Receive incoming WhatsApp messages (POST)
 export async function POST(req: NextRequest) {
+  // Read the raw body once — we need the exact bytes for HMAC verification,
+  // and Next.js doesn't let us call req.text() AND req.json() on the same
+  // request.
+  const rawBody = await req.text();
+
+  // Reject anything that fails the X-Hub-Signature-256 check. Stops attackers
+  // from POSTing fake WhatsApp payloads to spam the leads pipeline.
+  if (!verifySignature(rawBody, req.headers.get("x-hub-signature-256"))) {
+    return new Response("invalid signature", { status: 401 });
+  }
+
   let body: Record<string, unknown>;
   try {
-    body = await req.json();
+    body = JSON.parse(rawBody) as Record<string, unknown>;
   } catch {
     return NextResponse.json({ ok: true });
   }

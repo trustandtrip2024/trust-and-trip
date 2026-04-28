@@ -56,11 +56,15 @@ export default function LeadForm({
   const [success, setSuccess] = useState(false);
 
   const onSubmit = async (data: FormValues) => {
+    let eventId: string | undefined;
+    let score: number | undefined;
+
     if (submitHandler) {
       await submitHandler(data);
     } else {
-      // Save lead to Supabase (fire-and-forget — don't block WhatsApp)
-      submitLead({
+      // Submit lead first; we await so the server-issued eventId can be used
+      // to deduplicate the Pixel Lead event against the CAPI Lead.
+      const result = await submitLead({
         name: data.name,
         email: data.email,
         phone: data.phone,
@@ -73,7 +77,12 @@ export default function LeadForm({
         num_travellers: data.travelers,
         budget: data.budget,
         source,
-      }).catch(() => {}); // silently continue on error
+      }).catch(() => ({ ok: false } as const));
+
+      if (result.ok) {
+        eventId = result.eventId;
+        score = result.score;
+      }
 
       // Build WhatsApp message from form data
       const lines = [
@@ -101,7 +110,10 @@ export default function LeadForm({
       window.open(waUrl, "_blank", "noopener,noreferrer");
     }
     analytics.formSubmit(data.destination || destinationContext);
-    pixel.lead();
+    analytics.lead(score, data.destination || destinationContext);
+    // Score becomes the Pixel `value` so Meta's optimizer weights tier-A
+    // leads higher; eventId pairs with the CAPI Lead for dedup.
+    pixel.lead(score, eventId);
     setSuccess(true);
     reset();
     setTimeout(() => setSuccess(false), 5000);

@@ -217,6 +217,8 @@ export async function POST(req: NextRequest) {
       specialRequests: special_requests,
       razorpayOrderId: order.id,
       refCode: refCode ?? undefined,
+      leadScore: attributedLead?.score ?? undefined,
+      leadTier: attributedLead?.tier ?? undefined,
     }).catch((e) => console.error("Bitrix24 pushBookingAsDeal error:", e));
 
     return NextResponse.json({

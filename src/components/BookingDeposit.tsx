@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Shield, CreditCard, CheckCircle2, Loader2, X, IndianRupee, Tag } from "lucide-react";
 import { pixel } from "@/components/MetaPixel";
+import { analytics } from "@/lib/analytics";
 
 interface Props {
   packageSlug: string;
@@ -59,7 +60,10 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
       if (!res.ok) { setError(data.error ?? "Failed to initiate payment."); setLoading(false); return; }
 
       if (data.coupon) setAppliedCoupon(data.coupon);
-      pixel.initiateCheckout(packageTitle, depositAmount);
+      // Pass Razorpay order_id as eventId so the server-side CAPI
+      // InitiateCheckout (which uses the same order_id) deduplicates.
+      pixel.initiateCheckout(packageTitle, depositAmount, data.order_id);
+      analytics.beginCheckout(packageTitle, packageSlug, depositAmount);
 
       const rzp = new window.Razorpay({
         key: data.key,
@@ -82,7 +86,10 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
             body: JSON.stringify(response),
           });
           if (verify.ok) {
-            pixel.purchase(packageTitle, depositAmount);
+            // Pass Razorpay order_id as eventId — matches the CAPI Purchase
+            // event in /api/payment/verify so Meta deduplicates the two.
+            pixel.purchase(packageTitle, depositAmount, data.order_id);
+            analytics.purchase(packageTitle, packageSlug, depositAmount, data.order_id);
             setSuccess(true); setOpen(false);
           }
           else setError("Payment received but verification failed. Please contact us.");

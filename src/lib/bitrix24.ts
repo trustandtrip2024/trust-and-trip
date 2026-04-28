@@ -87,9 +87,14 @@ const UF = {
   utmSource: "UF_CRM_UTM_SOURCE",
   utmMedium: "UF_CRM_UTM_MEDIUM",
   utmCampaign: "UF_CRM_UTM_CAMPAIGN",
+  utmContent: "UF_CRM_UTM_CONTENT",
+  utmTerm: "UF_CRM_UTM_TERM",
   refCode: "UF_CRM_REF_CODE",
+  razorpayOrder: "UF_CRM_RAZORPAY_ORDER",
   commissionAmount: "UF_CRM_COMMISSION_AMOUNT",
   commissionPaid: "UF_CRM_COMMISSION_PAID",
+  leadScore: "UF_CRM_LEAD_SCORE",
+  leadTier: "UF_CRM_LEAD_TIER",
 } as const;
 
 // ---- Types ----------------------------------------------------------------
@@ -112,6 +117,8 @@ export interface Bitrix24DealPayload {
   isGroup?: boolean;
   refCode?: string;
   commissionAmount?: number;
+  leadScore?: number;
+  leadTier?: string;
 }
 
 interface BitrixResponse {
@@ -196,9 +203,9 @@ function buildLeadFields(lead: Bitrix24LeadPayload): Record<string, unknown> {
   if (lead.utm_source)      fields[UF.utmSource]     = lead.utm_source;
   if (lead.utm_medium)      fields[UF.utmMedium]     = lead.utm_medium;
   if (lead.utm_campaign)    fields[UF.utmCampaign]   = lead.utm_campaign;
-  if ((lead as Bitrix24LeadPayload & { ref_code?: string }).ref_code) {
-    fields[UF.refCode] = (lead as Bitrix24LeadPayload & { ref_code?: string }).ref_code;
-  }
+  if (lead.utm_content)     fields[UF.utmContent]    = lead.utm_content;
+  if (lead.utm_term)        fields[UF.utmTerm]       = lead.utm_term;
+  if (lead.ref_code)        fields[UF.refCode]       = lead.ref_code;
 
   return fields;
 }
@@ -220,7 +227,6 @@ function buildDealFields(deal: Bitrix24DealPayload): Record<string, unknown> {
     COMMENTS: [
       deal.specialRequests ? `Special requests: ${deal.specialRequests}` : null,
       `Deposit paid: ₹${deal.depositAmount.toLocaleString("en-IN")}`,
-      `Razorpay order: ${deal.razorpayOrderId}`,
       deal.razorpayPaymentId ? `Razorpay payment: ${deal.razorpayPaymentId}` : null,
       deal.isGroup ? "(Part of a cart checkout — multiple bookings)" : null,
     ].filter(Boolean).join("\n"),
@@ -231,6 +237,11 @@ function buildDealFields(deal: Bitrix24DealPayload): Record<string, unknown> {
   if (deal.numTravellers) fields[UF.numTravellers] = String(deal.numTravellers);
   if (deal.refCode)       fields[UF.refCode] = deal.refCode;
   if (deal.commissionAmount !== undefined) fields[UF.commissionAmount] = deal.commissionAmount;
+  if (deal.leadScore !== undefined)        fields[UF.leadScore] = deal.leadScore;
+  if (deal.leadTier)                        fields[UF.leadTier]  = deal.leadTier;
+  // Razorpay order ID stored in dedicated UF so markDealPaid() can look it up
+  // by exact match instead of substring-searching COMMENTS.
+  fields[UF.razorpayOrder] = deal.razorpayOrderId;
 
   return fields;
 }
@@ -388,23 +399,32 @@ export async function pushNewsletterSubscriber(email: string): Promise<void> {
 export async function markDealPaid(razorpayOrderId: string, razorpayPaymentId: string): Promise<void> {
   if (!webhookBase()) return;
 
-  // Bitrix24 doesn't let us filter on COMMENTS directly in crm.deal.list without
-  // full-text search, so we rely on the razorpay_order_id being unique and searchable
-  // via a custom field instead. For simplicity we add a comment + update STAGE.
-  // The recommended long-term fix is to add a UF_CRM_RAZORPAY_ORDER custom field.
-
-  // Fire-and-forget: update last matching open deal's stage via a search by comment substring
-  const found = await callBitrix("crm.deal.list", {
-    filter: { "%COMMENTS": razorpayOrderId, "CLOSED": "N" },
+  // Look the deal up by the dedicated UF_CRM_RAZORPAY_ORDER custom field.
+  // Falls back to a COMMENTS substring scan if the UF doesn't exist in the
+  // portal yet — keeps markDealPaid working during gradual UF rollout.
+  let dealId: number | null = null;
+  const byUf = await callBitrix("crm.deal.list", {
+    filter: { [`=${UF.razorpayOrder}`]: razorpayOrderId, "CLOSED": "N" },
     select: ["ID"],
     order: { ID: "DESC" },
   });
+  const ufHit = (byUf as { result?: Array<{ ID?: string | number }> } | null)?.result?.[0]?.ID;
+  if (ufHit) dealId = Number(ufHit);
 
-  const dealId = (found as any)?.result?.[0]?.ID;
+  if (!dealId) {
+    const fallback = await callBitrix("crm.deal.list", {
+      filter: { "%COMMENTS": razorpayOrderId, "CLOSED": "N" },
+      select: ["ID"],
+      order: { ID: "DESC" },
+    });
+    const fbHit = (fallback as { result?: Array<{ ID?: string | number }> } | null)?.result?.[0]?.ID;
+    if (fbHit) dealId = Number(fbHit);
+  }
+
   if (!dealId) return;
 
   await callBitrix("crm.deal.update", {
-    id: Number(dealId),
+    id: dealId,
     fields: {
       STAGE_ID: "WON",
       CLOSEDATE: new Date().toISOString().slice(0, 10),
