@@ -23,7 +23,8 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
-  weight: ["400", "500", "600"],
+  // 700 added for hero stat numerals and big-impact pricing.
+  weight: ["400", "500", "600", "700"],
 });
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import MainWrapper from "@/components/MainWrapper";

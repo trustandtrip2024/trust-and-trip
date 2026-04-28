@@ -47,20 +47,26 @@ module.exports = {
         "300": "300ms",
       },
       fontSize: {
-        "display":     ["56px", { lineHeight: "1.1",  letterSpacing: "-0.01em" }],
-        "h1":          ["40px", { lineHeight: "1.15" }],
-        "h2":          ["28px", { lineHeight: "1.2"  }],
-        "h3":          ["22px", { lineHeight: "1.25" }],
-        "h4":          ["18px", { lineHeight: "1.3"  }],
-        "lead":        ["17px", { lineHeight: "1.6"  }],
-        "body":        ["15px", { lineHeight: "1.6"  }],
-        "body-sm":     ["14px", { lineHeight: "1.55" }],
-        "meta":        ["13px", { lineHeight: "1.5"  }],
-        "eyebrow":     ["12px", { lineHeight: "1.5",  letterSpacing: "0.15em" }],
-        "tag":         ["11px", { lineHeight: "1.4",  letterSpacing: "0.10em" }],
-        "display-xl":  ["clamp(3rem, 8vw, 6.5rem)", { lineHeight: "0.95", letterSpacing: "-0.02em" }],
-        "display-lg":  ["clamp(2.25rem, 5vw, 4.5rem)", { lineHeight: "1", letterSpacing: "-0.02em" }],
-        "display-md":  ["clamp(1.875rem, 4vw, 3rem)", { lineHeight: "1.05", letterSpacing: "-0.015em" }],
+        // Typography pass 1 (2026-04-29): fluid clamps for h1-h3, body
+        // bump 15→16, lead bump 17→clamp(17,20), new prose token for
+        // long-form. Tracking ladder codified across the heading scale.
+        // Existing display-xl/lg/md preserved for back-compat with hero
+        // components that already reference them.
+        "display":     ["clamp(2rem, 4.2vw, 3.5rem)",       { lineHeight: "1.08", letterSpacing: "-0.02em"  }],
+        "h1":          ["clamp(1.875rem, 3.2vw, 2.75rem)",  { lineHeight: "1.12", letterSpacing: "-0.018em" }],
+        "h2":          ["clamp(1.5rem, 2.4vw, 2rem)",       { lineHeight: "1.18", letterSpacing: "-0.014em" }],
+        "h3":          ["clamp(1.25rem, 1.8vw, 1.5rem)",    { lineHeight: "1.25", letterSpacing: "-0.01em"  }],
+        "h4":          ["1.125rem",                         { lineHeight: "1.32", letterSpacing: "-0.005em" }],
+        "lead":        ["clamp(1.0625rem, 1.2vw, 1.25rem)", { lineHeight: "1.55" }],
+        "prose":       ["1.0625rem",                        { lineHeight: "1.7"  }],
+        "body":        ["1rem",                             { lineHeight: "1.6"  }],
+        "body-sm":     ["0.875rem",                         { lineHeight: "1.55" }],
+        "meta":        ["0.8125rem",                        { lineHeight: "1.45" }],
+        "eyebrow":     ["0.75rem",                          { lineHeight: "1.4", letterSpacing: "0.16em" }],
+        "tag":         ["0.6875rem",                        { lineHeight: "1.4", letterSpacing: "0.12em" }],
+        "display-xl":  ["clamp(3rem, 8vw, 6.5rem)",         { lineHeight: "0.95", letterSpacing: "-0.025em" }],
+        "display-lg":  ["clamp(2.25rem, 5vw, 4.5rem)",      { lineHeight: "1",    letterSpacing: "-0.022em" }],
+        "display-md":  ["clamp(1.875rem, 4vw, 3rem)",       { lineHeight: "1.05", letterSpacing: "-0.018em" }],
       },
       animation: {
         "fade-in": "fadeIn 0.8s ease-out forwards",

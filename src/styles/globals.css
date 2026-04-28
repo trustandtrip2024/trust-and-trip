@@ -161,11 +161,13 @@ h1, h2, h3 {
   .tt-card-p      { @apply p-5 md:p-8; }
   .tt-card + .tt-card { @apply mt-6; }
 
-  /* Eyebrow + title + italic flourish — amber-800 + stone-700 for AA contrast */
-  .tt-eyebrow     { @apply text-[12px] tracking-[0.15em] uppercase font-semibold text-tat-gold; }
-  .tt-title       { @apply mt-2 font-display text-[22px] md:text-[28px] leading-[1.2] text-tat-charcoal dark:text-tat-paper; }
+  /* Eyebrow + title + italic flourish — amber-800 + stone-700 for AA contrast.
+     Pulled to tokens (text-eyebrow / text-h2 / text-lead) so the fluid
+     clamps from tailwind.config.js drive every section header on the site. */
+  .tt-eyebrow     { @apply text-eyebrow uppercase font-semibold text-tat-gold; }
+  .tt-title       { @apply mt-2 font-display text-h2 text-tat-charcoal dark:text-tat-paper; }
   .tt-title em    { @apply not-italic font-display italic text-tat-burnt; }
-  .tt-lede        { @apply mt-3 text-[15px] md:text-[17px] leading-[1.6] text-tat-charcoal/80 dark:text-tat-paper/75 max-w-[68ch]; }
+  .tt-lede        { @apply mt-3 text-lead text-tat-charcoal/80 dark:text-tat-paper/75 max-w-[68ch]; }
 
   /* Chip row */
   .tt-chip-row    { @apply flex flex-wrap gap-2 mt-4; }
@@ -202,6 +204,13 @@ h1, h2, h3 {
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Tabular numerals — for prices, counts, ratings, timers. Stops digits
+     from shifting width on hover or count animations. */
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  /* Long-form prose measure — pair with text-prose for blog/itinerary body. */
+  .text-prose-mx { max-width: 65ch; }
 
   .mask-fade-b {
     mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
@@ -499,5 +508,13 @@ html.pkg-detail-nav-active header.sticky {
   }
   html {
     @apply font-sans;
+    /* Inter character variants: cv11 single-storey 'a', ss03 modern 'g',
+       ss01 sharper digits. Improves legibility at small body sizes and
+       gives prices/counts a less-mechanical feel. */
+    font-feature-settings: "cv11", "ss03", "ss01";
+  }
+
+  body {
+    @apply text-body;
   }
 }
