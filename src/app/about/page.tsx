@@ -77,6 +77,15 @@ export default function AboutPage() {
               <span className="italic text-tat-gold font-light"> Not issues.</span>
             </h1>
             <p className="mt-6 text-tat-charcoal/70 text-lg leading-relaxed">
+              Trust and Trip is a custom travel-planning service that designs personalised
+              holiday itineraries with a real human planner. We help travellers plan and book
+              honeymoons, family vacations, group tours, solo trips and pilgrim journeys across
+              60+ destinations in India and abroad — including Bali, the Maldives, Switzerland,
+              Thailand, Kerala, Rajasthan, Ladakh, Uttarakhand and Char Dham. Tell us what you
+              want, a planner builds your itinerary within 24 hours, and you only pay once
+              you&apos;re sure.
+            </p>
+            <p className="mt-4 text-tat-charcoal/60 leading-relaxed">
               Trust and Trip Experiences Pvt. Ltd. was founded in Noida with one mission: make
               travel genuinely worry-free for every kind of traveller — couples on their first
               honeymoon, families on a once-in-a-decade holiday, groups of friends chasing an
