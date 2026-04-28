@@ -122,14 +122,14 @@ export default function ByHowYouTravelSection({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.25 }}
-              className="flex w-max gap-4 lg:gap-6 pb-2 pr-5 lg:pr-0"
+              className="flex w-max gap-3 md:gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0"
             >
               {items.map((p) => (
                 <li
                   key={p.href}
-                  className="shrink-0 snap-start w-[72%] sm:w-[48%] md:w-[40%] lg:w-[31%] xl:w-[28%]"
+                  className="shrink-0 snap-start w-[68%] sm:w-[44%] md:w-[32%] lg:w-[24%] xl:w-[20%]"
                 >
-                  <PackageCardUI {...p} />
+                  <PackageCardUI {...p} density="compact" />
                 </li>
               ))}
             </motion.ul>

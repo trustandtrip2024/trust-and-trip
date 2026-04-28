@@ -176,7 +176,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         )}
 
         {/* Inclusions strip */}
-        <ul className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-meta text-tat-charcoal/75">
+        <ul className={`${compact ? "mt-2.5" : "mt-3"} flex flex-wrap items-center gap-x-3 gap-y-1.5 text-meta text-tat-charcoal/75`}>
           {inclusions.map((id) => {
             const meta = INCLUSION_META[id];
             const Icon = meta.icon;
@@ -190,7 +190,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         </ul>
 
         {/* Price block */}
-        <div className="mt-4 pt-3 border-t border-tat-charcoal/10">
+        <div className={`${compact ? "mt-3 pt-2.5" : "mt-4 pt-3"} border-t border-tat-charcoal/10`}>
           <div className="flex items-end justify-between gap-3">
             <div className="min-w-0">
               {p.originalPrice && p.originalPrice > p.price && (
@@ -203,7 +203,7 @@ export default function PackageCardUI(p: PackageCardProps) {
                   )}
                 </p>
               )}
-              <p className="mt-1 font-display text-h2 text-tat-charcoal leading-none">
+              <p className={`mt-1 font-display ${compact ? "text-h3" : "text-h2"} text-tat-charcoal leading-none`}>
                 <Price inr={p.price} />
                 <span className="text-meta font-sans text-tat-slate font-normal ml-1">/ person</span>
               </p>
@@ -218,17 +218,17 @@ export default function PackageCardUI(p: PackageCardProps) {
         </div>
 
         {/* CTAs */}
-        <div className="mt-4 flex flex-col gap-2">
+        <div className={`${compact ? "mt-3 gap-1.5" : "mt-4 gap-2"} flex flex-col`}>
           <Link
             href={p.href}
-            className="inline-flex items-center justify-center gap-1.5 h-11 px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2"
+            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-10" : "h-11"} px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2`}
           >
             View details
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
           <Link
             href={p.customizeHref ?? `${p.href}?customize=1`}
-            className="inline-flex items-center justify-center gap-1.5 h-9 text-meta font-medium text-tat-charcoal/80 hover:text-tat-burnt transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2 rounded-md"
+            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-8" : "h-9"} text-meta font-medium text-tat-charcoal/80 hover:text-tat-burnt transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2 rounded-md`}
           >
             Customise this trip
             <ArrowRight className="h-3 w-3" />
