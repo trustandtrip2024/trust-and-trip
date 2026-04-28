@@ -26,6 +26,9 @@ import {
   getPilgrimPackages,
   getHomepageContent,
   getPackagesByType,
+  getPartnerLogos,
+  getFeaturedPressQuote,
+  getUgcPosts,
 } from "@/lib/sanity-queries";
 import { fetchGoogleReviews } from "@/lib/google-reviews";
 
@@ -71,6 +74,9 @@ export default async function HomePage() {
     solo,
     group,
     googleData,
+    partnerLogos,
+    pressQuote,
+    ugcPosts,
   ] = await Promise.all([
     getDestinations(),
     getPilgrimPackages(),
@@ -80,6 +86,9 @@ export default async function HomePage() {
     getPackagesByType("Solo"),
     getPackagesByType("Group"),
     fetchGoogleReviews(),
+    getPartnerLogos(),
+    getFeaturedPressQuote(),
+    getUgcPosts(),
   ]);
 
   const c = content ?? {};
@@ -153,6 +162,7 @@ export default async function HomePage() {
         titleStart={c.ugc?.titleStart}
         titleItalic={c.ugc?.titleItalic}
         lede={c.ugc?.lede}
+        posts={ugcPosts}
       />
       <HomeOfferDealsRail />
       <WhyNotAggregators />
@@ -169,6 +179,8 @@ export default async function HomePage() {
         titleStart={c.press?.titleStart}
         titleItalic={c.press?.titleItalic}
         lede={c.press?.lede}
+        logos={partnerLogos}
+        quote={pressQuote}
       />
       <SacredJourneys packages={pilgrimPackages} />
       <FinalCTABand
