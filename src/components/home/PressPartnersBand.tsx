@@ -147,12 +147,7 @@ export default function PressPartnersBand({
               );
             })}
           </ul>
-        ) : (
-          <p className="mt-10 text-center text-meta text-tat-slate/60">
-            {/* TODO: add partner / press logos in Sanity (Partner / accreditation logos). */}
-            Partner logos pending — add via Sanity Studio.
-          </p>
-        )}
+        ) : null}
 
         {quote ? (
           <figure className="mt-12 max-w-3xl mx-auto text-center">
