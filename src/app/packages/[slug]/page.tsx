@@ -9,7 +9,6 @@ import { getGalleryImages } from "@/lib/gallery-images";
 import PackageItinerary from "@/components/PackageItinerary";
 import PackageGallery from "@/components/PackageGallery";
 import PackageSlider from "@/components/PackageSlider";
-import PackageEnquiryCTA from "@/components/PackageEnquiryCTA";
 import PackageSectionNav from "@/components/PackageSectionNav";
 import ReviewsList from "@/components/ReviewsList";
 import ReviewForm from "@/components/ReviewForm";
@@ -387,8 +386,6 @@ export default async function PackageDetail({ params }: Props) {
         duration={pkg.duration}
         originalPrice={originalPrice}
       />
-
-      <PackageEnquiryCTA packageTitle={pkg.title} price={pkg.price} duration={pkg.duration} />
     </>
   );
 }
