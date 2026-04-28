@@ -53,7 +53,25 @@ function AuthCallbackInner() {
 
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        const role = data.session.user.user_metadata?.role;
+        // OAuth signup flows stash metadata (e.g. role=creator) in
+        // sessionStorage because Supabase OAuth has no `data` field at
+        // start. Apply it now if present, then route by final role.
+        let role = data.session.user.user_metadata?.role as string | undefined;
+        try {
+          const raw = window.sessionStorage.getItem("tt_oauth_pending_metadata");
+          if (raw) {
+            const meta = JSON.parse(raw) as Record<string, string>;
+            window.sessionStorage.removeItem("tt_oauth_pending_metadata");
+            if (Object.keys(meta).length) {
+              await supabase.auth.updateUser({
+                data: { ...data.session.user.user_metadata, ...meta },
+              });
+              if (meta.role) role = meta.role;
+            }
+          }
+        } catch {
+          // bad json or storage disabled — ignore
+        }
         const dest = role === "creator" ? "/creators/dashboard" : next;
         router.replace(dest);
       } else {

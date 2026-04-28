@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Loader2, CheckCircle2, Sparkles } from "lucide-react";
+import OAuthButtons from "@/components/OAuthButtons";
 
 const AUDIENCE_BUCKETS = [
   "< 1k",
@@ -99,6 +100,29 @@ export default function CreatorApplyPage() {
         <p className="text-sm text-tat-charcoal/60 mb-8">
           Takes 2 minutes. Approval in 48 hours. We don&apos;t share your details with third parties.
         </p>
+
+        {/* OAuth fast-path — pre-fills name/email from provider, marks the
+            user role=creator so post-signup they land in /creators/dashboard. */}
+        <div className="bg-white rounded-3xl border border-tat-charcoal/8 p-6 md:p-7 shadow-soft mb-5">
+          <p className="text-[12px] uppercase tracking-[0.12em] text-tat-charcoal/55 mb-3">
+            Skip the form — sign up in one click
+          </p>
+          <OAuthButtons
+            next="/creators/dashboard"
+            signUpMetadata={{ role: "creator" }}
+          />
+          <p className="mt-3 text-[11px] text-tat-charcoal/45 text-center">
+            We&apos;ll still ask for your audience details once inside.
+          </p>
+        </div>
+
+        <div className="my-4 flex items-center gap-3">
+          <span className="h-px flex-1 bg-tat-charcoal/10" />
+          <span className="text-[11px] uppercase tracking-[0.12em] text-tat-charcoal/40">
+            or apply with full form
+          </span>
+          <span className="h-px flex-1 bg-tat-charcoal/10" />
+        </div>
 
         <form onSubmit={submit} className="space-y-5 bg-white rounded-3xl border border-tat-charcoal/8 p-6 md:p-8 shadow-soft">
           {/* Personal */}

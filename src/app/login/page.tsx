@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Eye, EyeOff, Loader2, CheckCircle2, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useUserStore } from "@/store/useUserStore";
+import OAuthButtons from "@/components/OAuthButtons";
 
 type Mode = "signin" | "signup" | "reset";
 
@@ -113,6 +114,21 @@ function LoginPageInner() {
             </button>
           </div>
         ) : (
+          <>
+            {/* OAuth buttons — sit above the email/password form for
+                fastest sign-in. Same component on creator pages. */}
+            {mode !== "reset" && (
+              <>
+                <OAuthButtons next="/dashboard" />
+                <div className="my-5 flex items-center gap-3">
+                  <span className="h-px flex-1 bg-tat-charcoal/10" />
+                  <span className="text-[11px] uppercase tracking-[0.12em] text-tat-charcoal/40">
+                    or with email
+                  </span>
+                  <span className="h-px flex-1 bg-tat-charcoal/10" />
+                </div>
+              </>
+            )}
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "signup" && (
               <div>
@@ -187,6 +203,7 @@ function LoginPageInner() {
               ) : mode === "signin" ? "Sign In" : mode === "signup" ? "Create Account" : "Send Reset Email"}
             </button>
           </form>
+          </>
         )}
 
         {/* Toggle */}
