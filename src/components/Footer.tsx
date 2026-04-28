@@ -114,13 +114,15 @@ export default function Footer() {
               </div>
             ) : (
               <form onSubmit={subscribe} className="flex gap-2 w-full md:w-auto md:min-w-[340px] shrink-0">
+                <label htmlFor="footer-newsletter-email" className="sr-only">Email</label>
                 <input
+                  id="footer-newsletter-email"
                   type="email"
                   required
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 bg-tat-paper/8 border border-tat-paper/15 text-tat-paper placeholder:text-tat-paper/30 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-tat-gold"
+                  className="flex-1 bg-white/10 border border-white/30 text-white placeholder:text-white/70 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-tat-gold focus:ring-2 focus:ring-tat-gold/40"
                 />
                 <button
                   type="submit"

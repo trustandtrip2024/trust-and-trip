@@ -45,15 +45,17 @@ export default function NewsletterInline() {
           <p className="text-tat-paper/90 text-sm">You're subscribed! First story coming soon.</p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="mt-6 flex items-center gap-2 bg-tat-paper/8 border border-tat-paper/15 rounded-full p-1.5 pl-5 focus-within:border-tat-gold transition-colors">
+        <form onSubmit={handleSubmit} className="mt-6 flex items-center gap-2 bg-white/10 border border-white/30 rounded-full p-1.5 pl-5 focus-within:border-tat-gold transition-colors">
+          <label htmlFor="newsletter-inline-email" className="sr-only">Email</label>
           <input
+            id="newsletter-inline-email"
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             disabled={state === "loading"}
-            className="flex-1 bg-transparent text-tat-paper placeholder:text-tat-paper/40 text-sm outline-none py-2 disabled:opacity-50"
+            className="flex-1 bg-transparent text-white placeholder:text-white/70 text-sm outline-none py-2 disabled:opacity-50"
           />
           <button
             type="submit"
