@@ -72,20 +72,9 @@ function CorporateLogo({ client }: { client: CorporateClient }) {
             alt={`${client.name} logo`}
             loading="lazy"
             className="max-h-12 md:max-h-14 max-w-[120px] md:max-w-[140px] object-contain grayscale opacity-70 group-hover/logo:grayscale-0 group-hover/logo:opacity-100 transition duration-300"
-            onError={(e) => {
-              // Hide the broken Clearbit logo and let the icon-fallback take
-              // over by toggling a sibling class via parent.
-              const parent = (e.currentTarget as HTMLElement).parentElement;
-              if (parent) parent.dataset.fallback = "true";
-              (e.currentTarget as HTMLElement).style.display = "none";
-            }}
           />
         ) : (
           <Icon className="h-7 w-7 text-tat-charcoal/40 dark:text-tat-paper/50" />
-        )}
-        {/* Fallback icon if Clearbit 404s (toggled by data-fallback above). */}
-        {src && (
-          <Icon className="hidden data-[fallback=true]:block h-7 w-7 text-tat-charcoal/40 dark:text-tat-paper/50" />
         )}
       </div>
       <p className="text-[12px] md:text-[13px] font-medium text-tat-charcoal/70 dark:text-tat-paper/75 whitespace-nowrap">
