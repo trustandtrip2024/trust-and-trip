@@ -120,10 +120,17 @@ function redisKeysFor(type: string): string[] {
 }
 
 export async function POST(req: NextRequest) {
-  // Auth — Sanity sends Authorization: Bearer <secret>.
+  // Auth — accept the secret via either Authorization: Bearer (preferred)
+  // or ?token=<secret> query string. Apex → www redirects strip headers,
+  // so the query param keeps Sanity webhooks working without forcing the
+  // user to use the canonical host.
   if (SECRET) {
     const auth = req.headers.get("authorization");
-    if (auth !== `Bearer ${SECRET}`) {
+    const queryToken = req.nextUrl.searchParams.get("token");
+    const ok =
+      auth === `Bearer ${SECRET}` ||
+      queryToken === SECRET;
+    if (!ok) {
       return NextResponse.json({ error: "unauthorized" }, { status: 401 });
     }
   }
