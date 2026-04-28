@@ -42,7 +42,7 @@ const ITEMS: VisaFreeItem[] = [
     country: "South Asia",
     rule: "Free e-visa · 30 days",
     whisper: "Hill country tea, southern coast surf.",
-    image: "https://images.unsplash.com/photo-1546708973-b9c4ed11577d?auto=format&fit=crop&w=900&q=70",
+    image: "https://images.unsplash.com/photo-1597211684565-dca64d72bdfe?auto=format&fit=crop&w=900&q=70",
     href: "/packages?destination=sri-lanka",
   },
   {

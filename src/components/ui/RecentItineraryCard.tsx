@@ -19,7 +19,7 @@ interface Props {
 // Destination -> small Unsplash thumbnail. Keep keys lowercase + space-collapsed.
 const DEST_THUMBS: Record<string, string> = {
   "bali":         "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=400&q=70&auto=format&fit=crop",
-  "switzerland":  "https://images.unsplash.com/photo-1530841344095-502e9bb29024?w=400&q=70&auto=format&fit=crop",
+  "switzerland":  "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=400&q=70&auto=format&fit=crop",
   "kedarnath":    "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&q=70&auto=format&fit=crop",
   "spiti valley": "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=400&q=70&auto=format&fit=crop",
   "maldives":     "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400&q=70&auto=format&fit=crop",
