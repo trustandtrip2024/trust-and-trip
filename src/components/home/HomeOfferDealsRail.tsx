@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Flame, Clock, ArrowRight, Sparkles, Sun, Hourglass } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
+import LiveStatLine from "@/components/home/LiveStatLine";
 
 /**
  * Home-page rail of live, time-bound offers. Each card shows a ticking
@@ -261,11 +262,14 @@ export default function HomeOfferDealsRail() {
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <div className="flex items-end justify-between gap-4 flex-wrap">
-          <SectionHeader
-            eyebrow="Live deals"
-            title="Hand-picked offers,"
-            italicTail="ticking down."
-          />
+          <div>
+            <SectionHeader
+              eyebrow="Live deals"
+              title="Hand-picked offers,"
+              italicTail="ticking down."
+            />
+            <LiveStatLine />
+          </div>
           <Link
             href="/offers"
             className="hidden md:inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-charcoal dark:text-tat-paper hover:text-tat-gold transition-colors"
