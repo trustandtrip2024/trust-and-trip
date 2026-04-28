@@ -74,8 +74,11 @@ export default function ByHowYouTravelSection({
   const empty = items.length === 0;
 
   return (
-    <section aria-labelledby="bhyt-title" className="py-16 md:py-22">
-      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
+    <section
+      aria-labelledby="bhyt-title"
+      className="py-14 md:py-20 lg:py-24 bg-tat-paper dark:bg-tat-charcoal"
+    >
+      <div className="container-custom">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
         <div className="mt-7">
@@ -105,7 +108,7 @@ export default function ByHowYouTravelSection({
         </div>
 
         {empty ? (
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-5">
             <CustomPlanCard style={active} />
           </div>
         ) : (
@@ -113,7 +116,7 @@ export default function ByHowYouTravelSection({
             {/* Mobile (<md): horizontal snap-carousel with edge bleed so the
                 next card peeks. Tablet+: real grid — no overflow, every card
                 visible, fewer "is this cut off?" interpretations. */}
-            <div className="mt-8 md:hidden -mx-5 px-5 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+            <div className="mt-8 lg:hidden -mx-5 px-5 overflow-x-auto no-scrollbar snap-x snap-mandatory">
               <motion.ul
                 key={`m-${active}`}
                 initial={{ opacity: 0 }}
@@ -124,7 +127,7 @@ export default function ByHowYouTravelSection({
                 {items.map((p) => (
                   <li
                     key={p.href}
-                    className="shrink-0 snap-start w-[82%] sm:w-[60%]"
+                    className="shrink-0 snap-start w-[82%] sm:w-[55%] md:w-[42%]"
                   >
                     <PackageCardUI {...p} />
                   </li>
@@ -136,7 +139,7 @@ export default function ByHowYouTravelSection({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.25 }}
-              className="hidden md:grid mt-8 grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6"
+              className="hidden lg:grid mt-8 grid-cols-3 gap-5 lg:gap-6"
             >
               {items.slice(0, 6).map((p) => (
                 <li key={p.href}>
