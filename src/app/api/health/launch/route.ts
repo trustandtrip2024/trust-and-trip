@@ -36,8 +36,8 @@ async function checkEnv(): Promise<Record<string, Check>> {
     // AI / messaging
     anthropic: must("ANTHROPIC_API_KEY") ? { status: "ok" } : { status: "missing", detail: "itinerary engine off" },
     resend: must("RESEND_API_KEY") ? { status: "ok" } : { status: "missing", detail: "email delivery off" },
-    whatsapp: must("WHATSAPP_ACCESS_TOKEN") && must("WHATSAPP_PHONE_ID") && must("WHATSAPP_VERIFY_TOKEN")
-      ? { status: "ok" } : { status: "missing", detail: "WA send + webhook off" },
+    whatsapp: must("WHATSAPP_ACCESS_TOKEN") && must("WHATSAPP_PHONE_ID") && must("WHATSAPP_VERIFY_TOKEN") && must("WHATSAPP_APP_SECRET")
+      ? { status: "ok" } : { status: "missing", detail: "WA send + webhook off (need PHONE_ID + ACCESS_TOKEN + VERIFY_TOKEN + APP_SECRET)" },
 
     // Ad attribution
     meta_capi: must("META_CAPI_ACCESS_TOKEN")
