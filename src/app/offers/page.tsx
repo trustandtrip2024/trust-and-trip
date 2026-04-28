@@ -87,7 +87,18 @@ export default async function OffersPage() {
               <Flame className="h-5 w-5 text-tat-gold" />
               <h2 className="font-display text-xl font-medium">Flash Deals — Ending Soon</h2>
             </div>
-            <div className="grid md:grid-cols-3 gap-4 md:gap-5">
+            {/* Mobile: horizontal snap-rail so users can swipe through deals
+                without an endless single-column stack. */}
+            <div className="md:hidden -mx-5 px-5 overflow-x-auto snap-x snap-mandatory no-scrollbar">
+              <ul className="flex gap-4 pb-2 pr-5">
+                {hotOffers.map((offer) => (
+                  <li key={offer.slug} className="shrink-0 snap-start w-[82%] sm:w-[60%]">
+                    <OfferCard offer={offer} size="sm" />
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="hidden md:grid md:grid-cols-3 gap-4 md:gap-5">
               {hotOffers.map((offer) => (
                 <OfferCard key={offer.slug} offer={offer} size="sm" />
               ))}
@@ -109,11 +120,23 @@ export default async function OffersPage() {
               <Link href="/contact" className="btn-primary">Talk to a planner</Link>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-              {regularOffers.map((offer) => (
-                <OfferCard key={offer.slug} offer={offer} size="lg" />
-              ))}
-            </div>
+            <>
+              {/* Mobile: horizontal snap-rail */}
+              <div className="md:hidden -mx-5 px-5 overflow-x-auto snap-x snap-mandatory no-scrollbar">
+                <ul className="flex gap-5 pb-2 pr-5">
+                  {regularOffers.map((offer) => (
+                    <li key={offer.slug} className="shrink-0 snap-start w-[82%] sm:w-[58%]">
+                      <OfferCard offer={offer} size="lg" />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="hidden md:grid md:grid-cols-2 gap-6 md:gap-8">
+                {regularOffers.map((offer) => (
+                  <OfferCard key={offer.slug} offer={offer} size="lg" />
+                ))}
+              </div>
+            </>
           )}
         </div>
       </section>

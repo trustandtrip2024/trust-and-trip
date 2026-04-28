@@ -268,10 +268,7 @@ export default function Header() {
             "md:bg-tat-paper/85 md:backdrop-blur-2xl md:border-b md:border-tat-orange/15 md:shadow-[0_8px_32px_-12px_rgba(45,26,55,0.18)]"
         )}
       >
-        <div
-          className="container-custom flex items-center justify-between h-16 md:h-20 gap-3"
-          style={{ flexWrap: "nowrap", whiteSpace: "nowrap" }}
-        >
+        <div className="container-custom flex flex-nowrap items-center justify-between h-16 md:h-20 gap-3 overflow-hidden">
           {/* Mobile hamburger — placed first so it sits at far left */}
           <button
             type="button"
@@ -446,8 +443,10 @@ export default function Header() {
               <span className="grid place-items-center h-5 w-5 rounded-full bg-white/20">
                 <Phone className="h-3 w-3 fill-white text-white" />
               </span>
-              <span>8115 999 588</span>
-              <ChevronDown className="h-3 w-3 opacity-80" aria-hidden />
+              {/* Hide digits on the very narrowest phones to keep the
+                  header row from overflowing 375px viewports. */}
+              <span className="hidden xs:inline sm:inline">8115 999 588</span>
+              <span className="sm:hidden">Call</span>
             </a>
             <Link
               href={user ? "/dashboard" : "/login"}
