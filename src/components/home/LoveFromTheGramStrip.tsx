@@ -141,7 +141,10 @@ function Polaroid({ post, size }: { post: UgcPost; size: "sm" | "md" }) {
       </div>
       <figcaption className={`pt-3 ${padBottom} px-1`}>
         <div className="flex items-center justify-between gap-2">
-          <p className="font-display text-[14px] md:text-[15px] text-tat-charcoal dark:text-tat-paper leading-tight truncate">
+          <p
+            title={`${post.firstName} · ${post.destination}`}
+            className="font-display text-[14px] md:text-[15px] text-tat-charcoal dark:text-tat-paper leading-tight whitespace-normal line-clamp-2"
+          >
             {post.firstName}
             <span className="text-tat-charcoal/55 dark:text-tat-paper/55 font-sans"> · {post.destination}</span>
           </p>

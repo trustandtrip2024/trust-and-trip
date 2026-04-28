@@ -110,10 +110,16 @@ export default function ReviewsRail({
                         </div>
                       )}
                       <div className="min-w-0">
-                        <p className="text-[13px] font-medium text-tat-charcoal dark:text-white truncate leading-tight">
+                        <p
+                          title={r.name}
+                          className="text-[13px] font-medium text-tat-charcoal dark:text-white leading-tight whitespace-normal line-clamp-2"
+                        >
                           {r.name}
                         </p>
-                        <p className="text-[10px] uppercase tracking-[0.08em] text-tat-slate dark:text-white/55 truncate mt-0.5">
+                        <p
+                          title={r.city ? `${r.city} · ${r.when}` : r.when}
+                          className="text-[10px] uppercase tracking-[0.08em] text-tat-slate dark:text-white/55 mt-0.5 whitespace-normal line-clamp-2"
+                        >
                           {r.city ? `${r.city} · ${r.when}` : r.when}
                         </p>
                       </div>
