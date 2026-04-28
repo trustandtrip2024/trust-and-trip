@@ -135,7 +135,7 @@ export default function PackageCardUI(p: PackageCardProps) {
       </button>
 
       {/* BODY */}
-      <div className={`flex-1 flex flex-col ${compact ? "p-4" : "p-4 md:p-5"}`}>
+      <div className={`flex-1 flex flex-col ${compact ? "p-4" : "p-3 md:p-5"}`}>
         {/* Destination + travel style */}
         {(p.destination || p.travelStyle) && (
           <div className="flex items-center gap-2 text-tag uppercase text-tat-slate/80">
