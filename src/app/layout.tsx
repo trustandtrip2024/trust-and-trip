@@ -30,6 +30,7 @@ import MobileBottomNav from "@/components/MobileBottomNav";
 import JsonLd from "@/components/JsonLd";
 import ScrollToTop from "@/components/ScrollToTop";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import GoogleTagManager from "@/components/GoogleTagManager";
 import VercelAnalytics from "@/components/VercelAnalytics";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
 import ConditionalFooter from "@/components/ConditionalFooter";
@@ -208,6 +209,7 @@ export default function RootLayout({
           <AriaChatWidget />
           <ScrollToTop />
           <GoogleAnalytics />
+          <GoogleTagManager />
           <VercelAnalytics />
           <WebVitalsReporter />
           <MetaPixel />
