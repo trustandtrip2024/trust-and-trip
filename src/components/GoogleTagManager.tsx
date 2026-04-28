@@ -16,22 +16,35 @@ import { useCookieConsent } from "@/context/CookieConsentContext";
 
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "";
 
-export default function GoogleTagManager() {
+interface Props {
+  /** Per-request CSP nonce. Threaded down from layout.tsx → middleware. */
+  nonce?: string;
+}
+
+export default function GoogleTagManager({ nonce }: Props) {
   const { consent } = useCookieConsent();
 
   if (!GTM_ID || !consent?.analytics) return null;
 
+  // The GTM loader uses the official nonce-aware variant: it copies the
+  // nonce from any element with a `nonce` attribute onto the dynamically
+  // created gtm.js <script>. Combined with our strict-dynamic CSP, this
+  // lets GTM-loaded tags inherit trust without us listing them all.
   return (
     <>
       <Script
         id="gtm-init"
         strategy="afterInteractive"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: `
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            var n=d.querySelector('[nonce]');
+            n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));
+            f.parentNode.insertBefore(j,f);
             })(window,document,'script','dataLayer','${GTM_ID}');
           `,
         }}

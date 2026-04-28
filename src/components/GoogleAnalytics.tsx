@@ -6,7 +6,12 @@ import { useEffect } from "react";
 import { GA_ID } from "@/lib/analytics";
 import { useCookieConsent } from "@/context/CookieConsentContext";
 
-export default function GoogleAnalytics() {
+interface Props {
+  /** Per-request CSP nonce. Threaded down from layout.tsx → middleware. */
+  nonce?: string;
+}
+
+export default function GoogleAnalytics({ nonce }: Props) {
   const pathname = usePathname();
   const { consent } = useCookieConsent();
 
@@ -21,11 +26,13 @@ export default function GoogleAnalytics() {
     <>
       <Script
         strategy="lazyOnload"
+        nonce={nonce}
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
       />
       <Script
         id="ga4-init"
         strategy="lazyOnload"
+        nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];

@@ -37,6 +37,11 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
     if (window.Razorpay) return resolve(true);
     const s = document.createElement("script");
     s.src = "https://checkout.razorpay.com/v1/checkout.js";
+    // Stamp the per-request CSP nonce from <meta property="csp-nonce">
+    // (set in app/layout.tsx). Required when the CSP uses 'strict-dynamic'
+    // — without it the Razorpay script is blocked.
+    const nonceMeta = document.querySelector<HTMLMetaElement>('meta[property="csp-nonce"]');
+    if (nonceMeta?.content) s.setAttribute("nonce", nonceMeta.content);
     s.onload = () => resolve(true);
     s.onerror = () => resolve(false);
     document.body.appendChild(s);

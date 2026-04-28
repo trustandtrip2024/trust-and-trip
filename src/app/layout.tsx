@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
+import { headers } from "next/headers";
 import dynamic from "next/dynamic";
 
 // Self-hosted via next/font — eliminates render-blocking Google Fonts
@@ -128,10 +129,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Per-request nonce comes from middleware.ts → CSP header. Stamp it on
+  // every <script> tag we emit so the strict-dynamic policy accepts them.
+  const nonce = headers().get("x-nonce") ?? undefined;
+
   return (
     <html lang="en" className={cn(fraunces.variable, inter.variable, "font-sans")}>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        {/* Expose nonce to client-side dynamic-script loaders (e.g. Razorpay
+            in BookingDeposit). Reading from a <meta> is the standard pattern
+            so we don't need to thread the nonce through every client tree. */}
+        {nonce && <meta property="csp-nonce" content={nonce} />}
         {/* Preconnect to speed up third-party resources */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
@@ -146,7 +155,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Trust and Trip" />
       </head>
       <body className="min-h-screen flex flex-col">
-        <JsonLd data={[
+        <JsonLd nonce={nonce} data={[
           {
             "@context": "https://schema.org",
             "@type": "TravelAgency",
@@ -208,11 +217,11 @@ export default function RootLayout({
           <SearchProvider />
           <AriaChatWidget />
           <ScrollToTop />
-          <GoogleAnalytics />
-          <GoogleTagManager />
+          <GoogleAnalytics nonce={nonce} />
+          <GoogleTagManager nonce={nonce} />
           <VercelAnalytics />
           <WebVitalsReporter />
-          <MetaPixel />
+          <MetaPixel nonce={nonce} />
           <ServiceWorkerRegister />
           <CookieBanner />
           <PWAInstallPrompt />
