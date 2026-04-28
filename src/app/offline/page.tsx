@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { WifiOff, ArrowLeft } from "lucide-react";
 
+export const metadata = {
+  title: "You're offline",
+  description: "It looks like your internet is offline. Reconnect to continue planning with Trust and Trip.",
+  robots: { index: false, follow: false },
+};
+
 export default function OfflinePage() {
   return (
     <div className="min-h-screen bg-tat-paper flex items-center justify-center px-4">

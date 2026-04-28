@@ -10,6 +10,12 @@
 import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import { invoiceToken } from "@/lib/invoice";
+
+export const metadata = {
+  title: "Tax invoice",
+  description: "GST-compliant tax invoice for your Trust and Trip booking.",
+  robots: { index: false, follow: false },
+};
 import PrintButton from "./PrintButton";
 
 export const dynamic = "force-dynamic";
