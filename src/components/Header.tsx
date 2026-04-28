@@ -232,16 +232,16 @@ export default function Header() {
         <div className="absolute inset-0 bg-gradient-to-r from-tat-charcoal via-tat-charcoal to-tat-charcoal opacity-95 pointer-events-none" />
         <div className="absolute inset-y-0 left-1/3 w-1/3 bg-gradient-to-r from-transparent via-tat-orange/15 to-transparent blur-2xl pointer-events-none" />
         <div className="relative container-custom flex items-center justify-between gap-4">
-          <p className="md:hidden text-center w-full text-[11px] font-semibold tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">
+          <p className="lg:hidden text-center w-full text-[11px] font-semibold tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">
             <span className="text-gradient-aurora"><FlashDealRotator /></span>
           </p>
-          <div className="hidden md:flex items-center gap-5 opacity-90">
+          <div className="hidden lg:flex items-center gap-5 opacity-90">
             <span className="flex items-center gap-1.5 whitespace-nowrap">
               <MapPin className="h-3 w-3 text-tat-orange" />
               Curating journeys across 60+ destinations
             </span>
           </div>
-          <div className="hidden md:flex items-center gap-5 whitespace-nowrap">
+          <div className="hidden lg:flex items-center gap-5 whitespace-nowrap">
             <a
               href="tel:+918115999588"
               onClick={() => captureIntent("call_click", { note: "Header top strip" })}
@@ -277,13 +277,13 @@ export default function Header() {
             type="button"
             aria-label="Open menu"
             onClick={() => setDrawerOpen(true)}
-            className="md:hidden p-2 rounded-md hover:bg-white/10 transition-colors -ml-1"
+            className="lg:hidden p-2 rounded-md hover:bg-white/10 transition-colors -ml-1"
           >
             <Menu className="h-5 w-5 text-tat-paper" />
           </button>
 
           {/* Logo — desktop / tablet (≥md) */}
-          <Link href="/" className="hidden md:flex items-center gap-2.5 group shrink-0">
+          <Link href="/" className="hidden lg:flex items-center gap-2.5 group shrink-0">
             <div className="relative">
               <div className="h-10 w-10 rounded-full bg-gradient-passion flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-crimson">
                 <span className="text-white text-lg font-display font-semibold tracking-tight">T</span>
@@ -303,7 +303,7 @@ export default function Header() {
           </Link>
 
           {/* Logo — mobile (compact, on dark) */}
-          <Link href="/" className="md:hidden flex items-center gap-2 shrink-0">
+          <Link href="/" className="lg:hidden flex items-center gap-2 shrink-0">
             <span className="relative h-8 w-8 rounded-md bg-tat-burnt grid place-items-center font-display font-semibold text-tat-paper text-sm">
               T
               <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-tat-gold ring-1 ring-tat-charcoal" />
@@ -316,7 +316,7 @@ export default function Header() {
           {/* Desktop nav: ≥lg = 4 items, md = 2 items + kebab */}
           <nav
             aria-label="Primary"
-            className="hidden md:flex items-center gap-1 flex-1 justify-center min-w-0"
+            className="hidden lg:flex items-center gap-1 flex-1 justify-center min-w-0"
             style={{ flexWrap: "nowrap" }}
           >
             <span className="hidden lg:inline-flex items-center gap-1">
@@ -334,14 +334,14 @@ export default function Header() {
             <span className="hidden lg:inline-flex">
               <CurrencySwitcher variant="navbar" />
             </span>
-            <ThemeToggle className="hidden md:inline-flex text-tat-charcoal/60" />
+            <ThemeToggle className="hidden lg:inline-flex text-tat-charcoal/60" />
 
             {/* More kebab — Radix DropdownMenu */}
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <button
                   aria-label="More options"
-                  className="hidden md:inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-tat-charcoal/8 transition-colors"
+                  className="hidden lg:inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-tat-charcoal/8 transition-colors"
                 >
                   <MoreVertical className="h-4 w-4 text-tat-charcoal/75" />
                 </button>
@@ -428,7 +428,7 @@ export default function Header() {
             {/* Plan My Trip CTA — desktop */}
             <button
               onClick={() => openPlanner()}
-              className="hidden md:inline-flex btn-passion !py-2.5 !px-5 !text-xs whitespace-nowrap"
+              className="hidden lg:inline-flex btn-passion !py-2.5 !px-5 !text-xs whitespace-nowrap"
             >
               Plan My Trip
             </button>
@@ -437,7 +437,7 @@ export default function Header() {
             <a
               href="tel:+918115999588"
               onClick={() => captureIntent("call_click", { note: "Header mobile call pill" })}
-              className="md:hidden inline-flex items-center gap-1.5 px-3 h-9 rounded-full bg-tat-teal text-white text-[12px] font-semibold whitespace-nowrap shadow-[0_4px_12px_-4px_rgba(14,124,123,0.55)]"
+              className="lg:hidden inline-flex items-center gap-1.5 px-3 h-9 rounded-full bg-tat-teal text-white text-[12px] font-semibold whitespace-nowrap shadow-[0_4px_12px_-4px_rgba(14,124,123,0.55)]"
               aria-label="Call Trust and Trip"
             >
               <span className="grid place-items-center h-5 w-5 rounded-full bg-white/20">
@@ -448,7 +448,7 @@ export default function Header() {
             </a>
             <Link
               href={user ? "/dashboard" : "/login"}
-              className="md:hidden inline-flex items-center gap-0.5 h-9 px-1.5 rounded-full text-tat-paper hover:bg-white/10 transition-colors"
+              className="lg:hidden inline-flex items-center gap-0.5 h-9 px-1.5 rounded-full text-tat-paper hover:bg-white/10 transition-colors"
               aria-label={user ? "My dashboard" : "Sign in"}
             >
               <span className="h-7 w-7 rounded-full border border-white/40 grid place-items-center">
@@ -459,7 +459,7 @@ export default function Header() {
             {/* Mobile theme toggle — sits in the dark mobile header. Use
                 paper-coloured icon so it remains visible against the dark
                 background. */}
-            <ThemeToggle className="md:hidden text-tat-paper hover:bg-white/10" />
+            <ThemeToggle className="lg:hidden text-tat-paper hover:bg-white/10" />
 
             {/* Mobile drawer — controlled by hamburger button placed earlier */}
             <Dialog.Root open={drawerOpen} onOpenChange={setDrawerOpen}>
@@ -604,7 +604,7 @@ export default function Header() {
         </div>
 
         {/* Mobile search row — sits below header row, scrolls with sticky */}
-        <div className="md:hidden bg-tat-charcoal pb-3 px-4">
+        <div className="lg:hidden bg-tat-charcoal pb-3 px-4">
           <button
             type="button"
             onClick={() => setSearchOpen(true)}

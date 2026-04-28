@@ -189,7 +189,7 @@ export default function PackagesClient({
     <section className="py-12 md:py-16">
       <div className="container-custom">
         {/* Mobile bar */}
-        <div className="flex items-center justify-between gap-3 mb-6 md:hidden">
+        <div className="flex items-center justify-between gap-3 mb-6 lg:hidden">
           <button
             onClick={() => setFiltersOpen(!filtersOpen)}
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-tat-charcoal text-tat-paper text-sm"
@@ -214,10 +214,10 @@ export default function PackagesClient({
           </div>
         </div>
 
-        <div className="grid md:grid-cols-[260px_1fr] gap-8 lg:gap-12">
+        <div className="grid lg:grid-cols-[260px_1fr] gap-8 lg:gap-12">
           {/* Desktop sidebar */}
-          <aside className="hidden md:block">
-            <div className="md:sticky md:top-28 md:max-h-[calc(100vh-7rem)] md:overflow-y-auto md:pb-24 no-scrollbar">
+          <aside className="hidden lg:block">
+            <div className="lg:sticky lg:top-28 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pb-24 no-scrollbar">
               <FilterPanel
                 destinations={destinations}
                 filterDestination={filterDestination}
@@ -247,14 +247,14 @@ export default function PackagesClient({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setFiltersOpen(false)}
-                  className="fixed inset-0 bg-tat-charcoal/60 backdrop-blur-sm z-[60] md:hidden"
+                  className="fixed inset-0 bg-tat-charcoal/60 backdrop-blur-sm z-[60] lg:hidden"
                 />
                 <motion.aside
                   initial={{ x: "-100%" }}
                   animate={{ x: 0 }}
                   exit={{ x: "-100%" }}
                   transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                  className="fixed left-0 top-0 bottom-0 w-full max-w-sm bg-tat-paper z-[70] overflow-y-auto p-6 md:hidden"
+                  className="fixed left-0 top-0 bottom-0 w-full max-w-sm bg-tat-paper z-[70] overflow-y-auto p-6 lg:hidden"
                 >
                   <FilterPanel
                     destinations={destinations}
@@ -281,7 +281,7 @@ export default function PackagesClient({
 
           <div>
             {/* Desktop results header */}
-            <div className="hidden md:flex items-center justify-between mb-6 gap-4 flex-wrap">
+            <div className="hidden lg:flex items-center justify-between mb-6 gap-4 flex-wrap">
               <p className="text-sm text-tat-charcoal/60">
                 <span className="font-medium text-tat-charcoal">{filtered.length}</span> packages
                 {activeFilterCount > 0 && (
@@ -400,7 +400,7 @@ function FilterPanel({
             </button>
           )}
           {onClose && (
-            <button onClick={onClose} className="md:hidden p-2 rounded-full hover:bg-tat-charcoal/5">
+            <button onClick={onClose} className="lg:hidden p-2 rounded-full hover:bg-tat-charcoal/5">
               <X className="h-5 w-5" />
             </button>
           )}
