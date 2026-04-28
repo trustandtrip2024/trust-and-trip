@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Download, X } from "lucide-react";
 
 // PWA install prompt — fires only:
@@ -24,12 +25,17 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
 }
 
+// Don't pop up on conversion-critical surfaces.
+const HIDDEN_ON = ["/lp/", "/invoice/", "/cart/resume", "/login", "/register"];
+
 export default function PWAInstallPrompt() {
+  const pathname = usePathname();
   const [event, setEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (pathname && HIDDEN_ON.some((p) => pathname.startsWith(p))) return;
 
     // Bump visit counter once per page load.
     const visits = Number(window.localStorage.getItem(VISIT_KEY) ?? "0") + 1;
@@ -56,7 +62,7 @@ export default function PWAInstallPrompt() {
     }
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
     return () => window.removeEventListener("beforeinstallprompt", onBeforeInstall);
-  }, []);
+  }, [pathname]);
 
   async function install() {
     if (!event) return;

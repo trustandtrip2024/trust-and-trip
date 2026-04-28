@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Loader2, Sparkles } from "lucide-react";
 import { submitLead } from "@/lib/submit-lead";
@@ -60,7 +61,14 @@ function AriaFace({ size = 40, className = "" }: { size?: number; className?: st
   );
 }
 
+// Don't show Aria on conversion-critical surfaces — LPs already have a
+// stream-AI widget + WA pill, dashboard has its own chat path.
+const HIDDEN_ON = ["/lp/", "/invoice/", "/cart/resume", "/login", "/register", "/admin"];
+
 export default function AriaChatWidget() {
+  const pathname = usePathname();
+  const onHidden = !!pathname && HIDDEN_ON.some((p) => pathname.startsWith(p));
+
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: WELCOME },
@@ -111,6 +119,8 @@ export default function AriaChatWidget() {
       setLoading(false);
     }
   };
+
+  if (onHidden) return null;
 
   return (
     <>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Sparkles, X } from "lucide-react";
 
 type Activity = { name: string; city: string; action: string; mins: number };
@@ -18,7 +19,11 @@ const ACTIVITIES: Activity[] = [
   { name: "Diya & Arjun",   city: "Lucknow",    action: "got Rajasthan honeymoon plan",        mins: 110 },
 ];
 
+const HIDDEN_ON = ["/lp/", "/invoice/", "/cart/resume", "/login", "/register"];
+
 export default function LiveActivityTicker() {
+  const pathname = usePathname();
+  const onHidden = !!pathname && HIDDEN_ON.some((p) => pathname.startsWith(p));
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -36,7 +41,7 @@ export default function LiveActivityTicker() {
     return () => clearInterval(t);
   }, [visible, dismissed]);
 
-  if (!visible || dismissed) return null;
+  if (onHidden || !visible || dismissed) return null;
 
   const a = ACTIVITIES[idx];
 

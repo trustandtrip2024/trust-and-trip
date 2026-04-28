@@ -45,7 +45,9 @@ function Tab({ href, icon: Icon, label, active, badge }: {
   );
 }
 
-const HIDDEN_ON = ["/dashboard", "/login", "/creators/dashboard", "/admin"];
+// Hide on dashboard/admin/auth views AND on paid-traffic landing pages
+// where every UI inch matters and ONE CTA (form / WhatsApp) is the goal.
+const HIDDEN_ON = ["/dashboard", "/login", "/creators/dashboard", "/admin", "/lp/", "/invoice/", "/cart/resume"];
 
 export default function MobileBottomNav() {
   const path = usePathname();

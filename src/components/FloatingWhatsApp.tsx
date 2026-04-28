@@ -19,7 +19,14 @@ export default function FloatingWhatsApp() {
     return () => clearTimeout(t);
   }, []);
 
-  if (path.startsWith("/dashboard") || path.startsWith("/login")) return null;
+  // LPs have their own sticky WA pill — don't double up.
+  if (
+    path.startsWith("/dashboard") ||
+    path.startsWith("/login") ||
+    path.startsWith("/lp/") ||
+    path.startsWith("/invoice/") ||
+    path.startsWith("/cart/resume")
+  ) return null;
   if (!show) return null;
 
   const waMessage = encodeURIComponent(
