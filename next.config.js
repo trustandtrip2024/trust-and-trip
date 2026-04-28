@@ -303,10 +303,39 @@ const nextConfig = {
   },
 
   async headers() {
+    // Content-Security-Policy.
+    //
+    // Allowlist of every external origin the site loads scripts/data/images
+    // from. Built in single-line form (no newlines) because some CDNs split a
+    // multi-line value at the first \n.
+    //
+    // We use 'unsafe-inline' + 'unsafe-eval' on script-src — Next.js App
+    // Router emits inline bootstrap scripts and Sanity Studio (embedded at
+    // /studio) eval()s GROQ. Tightening this needs a per-request nonce and
+    // touches every <Script> tag, deferred for now. Trade-off documented.
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://checkout.razorpay.com https://*.razorpay.com https://va.vercel-scripts.com https://*.vercel-scripts.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: blob: https://www.googletagmanager.com https://*.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.google.com https://www.google.co.in https://*.google.com https://*.gstatic.com https://www.facebook.com https://*.facebook.com https://lh3.googleusercontent.com https://cdn.sanity.io https://images.unsplash.com https://plus.unsplash.com https://cdn.pixabay.com https://videos.pexels.com https://*.supabase.co",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.google.com https://*.google.com https://connect.facebook.net https://*.facebook.com https://graph.facebook.com https://lekxoexyebfvngllpeqx.supabase.co https://*.supabase.co https://api.sanity.io https://*.api.sanity.io https://*.apicdn.sanity.io https://api.razorpay.com https://lumberjack.razorpay.com https://*.razorpay.com https://api.anthropic.com https://*.upstash.io https://*.vercel-insights.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://wa.me https://api.whatsapp.com",
+      "media-src 'self' https: blob:",
+      "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com https://www.google.com https://*.google.com https://www.googletagmanager.com",
+      "worker-src 'self' blob:",
+      "manifest-src 'self'",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self' https://checkout.razorpay.com",
+      "frame-ancestors 'self'",
+      "upgrade-insecure-requests",
+    ].join("; ");
+
     return [
       {
         source: "/(.*)",
         headers: [
+          { key: "Content-Security-Policy", value: csp },
           { key: "X-DNS-Prefetch-Control", value: "on" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
