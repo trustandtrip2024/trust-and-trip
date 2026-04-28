@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Heart, Users, User, Globe2, Mountain, Sunset, Church, Crown, Sparkles, MapPin, Clock } from "lucide-react";
+import { ArrowRight, Heart, Users, User, Globe2, Mountain, Sunset, Church, Crown, Sparkles, MapPin } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import ChipFilterGroup from "@/components/ui/ChipFilterGroup";
 import type { PackageCardProps } from "@/components/ui/PackageCard";
@@ -33,48 +33,43 @@ interface Props {
   packagesByStyle?: Partial<Record<StyleId, PackageCardProps[]>>;
 }
 
-function MiniCard({ p }: { p: PackageCardProps }) {
+function MiniCard({ p, styleLabel }: { p: PackageCardProps; styleLabel: string }) {
   return (
     <Link
       href={p.href}
-      className="group block h-full rounded-2xl bg-white dark:bg-white/5 ring-1 ring-tat-charcoal/8 dark:ring-white/10 overflow-hidden transition duration-200 hover:ring-tat-burnt/30 hover:shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2"
+      className="group relative block h-full aspect-[3/4] rounded-card overflow-hidden bg-tat-charcoal shadow-card transition duration-200 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2"
       aria-label={p.title}
     >
-      <div className="relative aspect-[4/3] bg-tat-charcoal/15 overflow-hidden">
-        <Image
-          src={p.image}
-          alt=""
-          fill
-          sizes="(max-width: 640px) 70vw, (max-width: 1024px) 33vw, 22vw"
-          quality={65}
-          className="object-cover transition-transform duration-300 group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
-        />
-        {p.duration && (
-          <span className="absolute bottom-2.5 left-2.5 inline-flex items-center gap-1 bg-white/95 text-tat-charcoal text-[11px] font-semibold px-2 py-0.5 rounded-pill shadow-card">
-            <Clock className="h-3 w-3 text-tat-burnt" />
-            {p.duration}
-          </span>
-        )}
-      </div>
-      <div className="p-3.5 md:p-4">
+      <Image
+        src={p.image}
+        alt=""
+        fill
+        sizes="(max-width: 640px) 78vw, (max-width: 1024px) 30vw, 22vw"
+        quality={70}
+        className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:group-hover:scale-100"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/85 via-tat-charcoal/30 to-transparent" />
+
+      <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 text-white">
         {p.destination && (
-          <p className="inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.14em] text-tat-slate/80">
-            <MapPin className="h-3 w-3 text-tat-burnt" />
-            {p.destination}
-          </p>
+          <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.14em] text-white/70">
+            <MapPin className="h-3 w-3 text-tat-orange-soft" />
+            <span>{p.destination}</span>
+          </div>
         )}
-        <h3 className="mt-1.5 font-display font-normal text-[15px] md:text-[17px] leading-snug text-tat-charcoal dark:text-tat-paper text-balance line-clamp-2 min-h-[2.5em]">
+        <h3 className="mt-1 font-serif text-[19px] md:text-[20px] text-white leading-tight line-clamp-2">
           {p.title}
         </h3>
-        <div className="mt-3 pt-2.5 border-t border-tat-charcoal/8 dark:border-white/10 flex items-end justify-between gap-2">
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-tat-slate/70">From</p>
-            <p className="font-display text-[18px] md:text-[20px] text-tat-charcoal dark:text-tat-paper leading-none">
-              <Price inr={p.price} />
-            </p>
-          </div>
-          <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-tat-burnt dark:text-tat-gold">
-            View
+        <p className="mt-1.5 font-serif italic text-[13px] text-white/80 line-clamp-1">
+          {styleLabel}
+          {p.duration ? ` · ${p.duration}` : ""}
+        </p>
+        <div className="mt-3 flex items-center justify-between gap-2 text-[12.5px]">
+          <span className="text-white/75">
+            from <Price inr={p.price} className="font-semibold text-white" />
+          </span>
+          <span className="inline-flex items-center gap-1 text-white/85 group-hover:text-tat-orange-soft transition duration-120">
+            Explore
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </span>
         </div>
@@ -151,13 +146,13 @@ export default function ByHowYouTravelSection({
           </div>
         ) : (
           <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-proximity scroll-smooth">
-            <ul className="flex w-max gap-3 md:gap-4 lg:gap-5 pb-1.5 pr-5 lg:pr-0">
+            <ul className="flex w-max gap-4 md:gap-4 lg:gap-5 pb-1.5 pr-5 lg:pr-0">
               {items.map((p) => (
                 <li
                   key={p.href}
-                  className="shrink-0 snap-start w-[64%] sm:w-[42%] md:w-[30%] lg:w-[23%] xl:w-[19%]"
+                  className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[34%] lg:w-[24%] xl:w-[24%]"
                 >
-                  <MiniCard p={p} />
+                  <MiniCard p={p} styleLabel={active} />
                 </li>
               ))}
             </ul>
