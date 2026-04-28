@@ -7,4 +7,10 @@ import { defineCliConfig } from 'sanity/cli'
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET
 
-export default defineCliConfig({ api: { projectId, dataset } })
+export default defineCliConfig({
+  api: { projectId, dataset },
+  // Hostname for `npx sanity deploy`. Skips the "Select existing studio
+  // hostname" prompt on future deploys; rebuilds the same hosted Studio
+  // at https://trust-and-trip.sanity.studio.
+  studioHost: 'trust-and-trip',
+})

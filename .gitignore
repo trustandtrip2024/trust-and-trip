@@ -47,3 +47,6 @@ gitleaks-report.json
 .env.local
 .env.*.local
 pnpm-lock.yaml
+
+# Sanity Studio deploy build (npx sanity deploy output)
+/trust-and-trip/
