@@ -22,7 +22,7 @@ export const DESTINATIONS_BY_DURATION: DestinationDurationItem[] = [
   // Long weekend
   { id: "goa",       name: "Goa",       region: "West India",  country: "India",       whisper: "Coast and chai, in equal measure.", image: u("photo-1512343879784-a960bf40e7f2"), packageCount: 24, priceFrom: 18000, href: "/destinations/goa",       durations: ["long-weekend", "3-5"] },
   { id: "rishikesh", name: "Rishikesh", region: "Uttarakhand", country: "India",       whisper: "Mountains and the river that runs through.", image: u("photo-1561361058-c24cecae35ca"), packageCount: 18, priceFrom: 14000, href: "/destinations/rishikesh", durations: ["long-weekend", "3-5"] },
-  { id: "udaipur",   name: "Udaipur",   region: "Rajasthan",   country: "India",       whisper: "Lakes, palaces, evenings that stretch.",     image: u("photo-1590082773386-d19499f8c28e"), packageCount: 16, priceFrom: 22000, href: "/destinations/rajasthan", durations: ["long-weekend", "3-5"] },
+  { id: "udaipur",   name: "Udaipur",   region: "Rajasthan",   country: "India",       whisper: "Lakes, palaces, evenings that stretch.",     image: u("photo-1599661046289-e31897846e41"), packageCount: 16, priceFrom: 22000, href: "/destinations/rajasthan", durations: ["long-weekend", "3-5"] },
   { id: "shimla",    name: "Shimla",    region: "Himachal",    country: "India",       whisper: "Pine, snow, slow trains.",                    image: u("photo-1626015365107-3a71e18c5268"), packageCount: 14, priceFrom: 16000, href: "/destinations/himachal-pradesh", durations: ["long-weekend", "3-5"] },
 
   // 3-5 day
@@ -35,7 +35,7 @@ export const DESTINATIONS_BY_DURATION: DestinationDurationItem[] = [
   { id: "bali",      name: "Bali",      region: "Indonesia",   country: "Indonesia",   whisper: "Green, gentle, and full of surprises.",   image: u("photo-1537996194471-e657df975ab4"), packageCount: 32, priceFrom: 45000, href: "/destinations/bali",      durations: ["6-9"] },
   { id: "vietnam",   name: "Vietnam",   region: "Southeast Asia", country: "Vietnam",  whisper: "North to south, by night train.",         image: u("photo-1525625293386-3f8f99389edd"), packageCount: 18, priceFrom: 55000, href: "/destinations/vietnam",   durations: ["6-9", "10+"] },
   { id: "spiti",     name: "Spiti Valley", region: "Himachal", country: "India",      whisper: "Cold deserts and warm tea.",              image: u("photo-1626621341517-bbf3d9990a23"), packageCount: 12, priceFrom: 60000, href: "/destinations/himachal-pradesh", durations: ["6-9", "10+"] },
-  { id: "ladakh",    name: "Ladakh",    region: "Himalayas",   country: "India",      whisper: "Where the road is half the holiday.",     image: u("photo-1622308644420-b20142b1e4fc"), packageCount: 16, priceFrom: 30000, href: "/destinations/ladakh",    durations: ["6-9", "10+"] },
+  { id: "ladakh",    name: "Ladakh",    region: "Himalayas",   country: "India",      whisper: "Where the road is half the holiday.",     image: u("photo-1589553416260-f586c8f1514f"), packageCount: 16, priceFrom: 30000, href: "/destinations/ladakh",    durations: ["6-9", "10+"] },
 
   // 10+ day
   { id: "switzerland", name: "Switzerland", region: "Central Europe", country: "Switzerland", whisper: "The Alps, on your terms.",        image: u("photo-1527668752968-14dc70a27c95"), packageCount: 22, priceFrom: 125000, href: "/destinations/switzerland", durations: ["10+"] },
