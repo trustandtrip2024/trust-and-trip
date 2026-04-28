@@ -4,7 +4,8 @@ import { useState, useMemo, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import PackageCard from "@/components/PackageCard";
 import type { Package, Destination } from "@/lib/data";
-import { SlidersHorizontal, X, ArrowUpDown, Star } from "lucide-react";
+import { SlidersHorizontal, X, ArrowUpDown, Star, Sparkles, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { captureIntent } from "@/lib/capture-intent";
 
@@ -327,7 +328,7 @@ export default function PackagesClient({
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-8">
                 {filtered.map((p, i) => (
                   <PackageCard
                     key={p.slug}
@@ -346,6 +347,7 @@ export default function PackagesClient({
                     index={i}
                   />
                 ))}
+                <CustomTripCTACard />
               </div>
             )}
           </div>
@@ -547,5 +549,36 @@ function RadioRow({
         </label>
       ))}
     </>
+  );
+}
+
+// Filler card that always sits at the end of the package grid so the last
+// row never reads as orphaned. Doubles as a soft conversion path for users
+// who don't see a perfect match in the listed packages.
+function CustomTripCTACard() {
+  return (
+    <Link
+      href="/customize-trip"
+      onClick={() => captureIntent("customize_click", { note: "Packages grid · Custom-trip CTA card" })}
+      className="group flex flex-col justify-between rounded-3xl border-2 border-dashed border-tat-burnt/30 bg-gradient-to-br from-tat-burnt/5 via-transparent to-tat-gold/10 hover:border-tat-burnt hover:from-tat-burnt/10 transition-colors p-6 md:p-7 min-h-[420px]"
+    >
+      <div>
+        <span className="inline-flex items-center justify-center h-10 w-10 rounded-2xl bg-tat-burnt/15 text-tat-burnt mb-4">
+          <Sparkles className="h-5 w-5" />
+        </span>
+        <p className="text-[10px] uppercase tracking-[0.22em] text-tat-burnt font-semibold">Don&apos;t see what you want?</p>
+        <h3 className="mt-2 font-display text-xl md:text-2xl font-medium text-tat-charcoal text-balance">
+          We craft custom itineraries in <em className="not-italic italic font-display text-tat-burnt">24 hours</em>.
+        </h3>
+        <p className="mt-3 text-sm text-tat-charcoal/65 leading-relaxed">
+          Tell us where, when, and the kind of trip you want. A real planner
+          builds your itinerary, free until you&apos;re sure.
+        </p>
+      </div>
+      <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-tat-burnt group-hover:gap-2 transition-all">
+        Plan my custom trip
+        <ArrowRight className="h-4 w-4" />
+      </span>
+    </Link>
   );
 }
