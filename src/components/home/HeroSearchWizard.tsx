@@ -340,7 +340,7 @@ function Wizard({ state, setState, step, setStep, onSubmit, variant = "hero" }: 
           type="button"
           onClick={handleNext}
           disabled={!canNext}
-          className="tt-cta !w-auto !min-w-[160px] disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center justify-center gap-2 h-12 px-5 min-w-[160px] rounded-pill font-semibold text-white bg-tat-burnt hover:bg-tat-burnt/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLast ? "Show trips" : "Next"}
           <ArrowRight className="h-4 w-4" />
