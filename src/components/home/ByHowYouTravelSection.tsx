@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Heart, Users, User, Globe2, Mountain, Sunset, Church, Crown, Sparkles } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import ChipFilterGroup from "@/components/ui/ChipFilterGroup";
@@ -73,7 +74,7 @@ export default function ByHowYouTravelSection({
   const empty = items.length === 0;
 
   return (
-    <section aria-labelledby="bhyt-title" className="py-18 md:py-22">
+    <section aria-labelledby="bhyt-title" className="py-16 md:py-22">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
@@ -84,9 +85,23 @@ export default function ByHowYouTravelSection({
             onChange={(id) => setActive(id as StyleId)}
             ariaLabel="Travel style"
           />
-          {subtitle && (
-            <p className="mt-3 text-body text-tat-slate">{subtitle}</p>
-          )}
+          {/* Mood subtitle — editorial italic so it reads as the active
+              chip's tagline rather than auxiliary copy. Animated swap when
+              the active chip changes. */}
+          <AnimatePresence mode="wait">
+            {subtitle && (
+              <motion.p
+                key={active}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="mt-4 font-display italic text-[17px] md:text-[20px] leading-snug text-tat-burnt dark:text-tat-gold max-w-2xl"
+              >
+                &ldquo;{subtitle}&rdquo;
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
 
         {empty ? (
@@ -94,28 +109,57 @@ export default function ByHowYouTravelSection({
             <CustomPlanCard style={active} />
           </div>
         ) : (
-          <div className="mt-8 -mx-5 md:-mx-8 lg:-mx-12 px-5 md:px-8 lg:px-12 overflow-x-auto no-scrollbar snap-x snap-mandatory">
-            <ul className="flex w-max gap-4 md:gap-5 pb-2">
-              {items.map((p) => (
-                <li
-                  key={p.href}
-                  className="shrink-0 snap-start w-[85%] sm:w-[60%] md:w-[44%] lg:w-[32%] xl:w-[30%]"
-                >
+          <>
+            {/* Mobile (<md): horizontal snap-carousel with edge bleed so the
+                next card peeks. Tablet+: real grid — no overflow, every card
+                visible, fewer "is this cut off?" interpretations. */}
+            <div className="mt-8 md:hidden -mx-5 px-5 overflow-x-auto no-scrollbar snap-x snap-mandatory">
+              <motion.ul
+                key={`m-${active}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.25 }}
+                className="flex w-max gap-4 pb-2 pr-5"
+              >
+                {items.map((p) => (
+                  <li
+                    key={p.href}
+                    className="shrink-0 snap-start w-[82%] sm:w-[60%]"
+                  >
+                    <PackageCardUI {...p} />
+                  </li>
+                ))}
+              </motion.ul>
+            </div>
+            <motion.ul
+              key={`d-${active}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.25 }}
+              className="hidden md:grid mt-8 grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6"
+            >
+              {items.slice(0, 6).map((p) => (
+                <li key={p.href}>
                   <PackageCardUI {...p} />
                 </li>
               ))}
-            </ul>
-          </div>
+            </motion.ul>
+          </>
         )}
 
-        <div className="mt-10">
+        <div className="mt-10 flex items-center justify-between gap-4">
           <Link
             href="/packages"
-            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-tat-charcoal hover:text-tat-gold transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
+            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-tat-charcoal dark:text-tat-paper hover:text-tat-gold transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
           >
             Browse all journeys
             <ArrowRight className="h-4 w-4" />
           </Link>
+          {!empty && (
+            <p className="text-[12px] text-tat-charcoal/55 dark:text-tat-paper/60">
+              Showing {Math.min(items.length, 6)} {active.toLowerCase()} trips
+            </p>
+          )}
         </div>
       </div>
     </section>

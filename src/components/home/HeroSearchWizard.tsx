@@ -8,9 +8,20 @@ import {
   Mountain, Sparkles, Briefcase, Crown, Sunset, Church, MapPin, X, Zap,
 } from "lucide-react";
 
+// Hero photo. Light, vibrant — a family enjoying a beachside luxury moment.
+// Swap this URL to update the hero. The image is lazy-loaded by the
+// browser image cache after the first paint; we use Next/Image with
+// `priority` so it lands in the LCP.
+const HERO_IMAGE_URL =
+  "https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?auto=format&fit=crop&w=2400&q=80";
+
+// Optional looping background video — kept as enhancement only. If
+// present the file is served from /public/video; otherwise the image
+// stays as the hero. Disabled for now per the brand brief: the family
+// photo is the hero, no motion required.
+const ENABLE_HERO_VIDEO = false;
 const VIDEO_MP4 = "/video/hero.mp4";
 const VIDEO_WEBM = "/video/hero.webm";
-const VIDEO_POSTER = "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop";
 
 type StepId = "destination" | "with" | "interest" | "duration" | "place";
 
@@ -351,7 +362,7 @@ export default function HeroSearchWizard({
   eyebrow = "Trust and Trip · Crafting Reliable Travel",
   titleStart = "Trips that feel",
   titleItalic = "made just for you.",
-  lede = "Tell us where your heart wants to go and a real planner will build an itinerary worth remembering — usually within 24 hours, always free until you're sure.",
+  lede = "A real planner. An itinerary in 24 hours. Free until you're sure.",
   trustStrip = "143+ trips planned this week · 4.9★ from 8,000+ travelers · 60+ destinations",
 }: HeroProps) {
   const router = useRouter();
@@ -369,29 +380,32 @@ export default function HeroSearchWizard({
       className="relative w-full min-h-[88vh] md:min-h-[88vh] flex items-center overflow-hidden bg-tat-charcoal"
     >
       <Image
-        src={VIDEO_POSTER}
-        alt=""
-        aria-hidden="true"
+        src={HERO_IMAGE_URL}
+        alt="A family enjoying a sunny beachside luxury holiday — Trust and Trip hero"
         fill
         priority
         sizes="100vw"
-        quality={70}
+        quality={80}
         className="object-cover"
       />
-      <video
-        className="absolute inset-0 w-full h-full object-cover motion-reduce:hidden"
-        autoPlay
-        loop
-        muted
-        playsInline
-        aria-hidden="true"
-      >
-        <source src={VIDEO_WEBM} type="video/webm" />
-        <source src={VIDEO_MP4}  type="video/mp4" />
-      </video>
+      {ENABLE_HERO_VIDEO && (
+        <video
+          className="absolute inset-0 w-full h-full object-cover motion-reduce:hidden"
+          autoPlay
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+        >
+          <source src={VIDEO_WEBM} type="video/webm" />
+          <source src={VIDEO_MP4}  type="video/mp4" />
+        </video>
+      )}
+      {/* Light, warm overlay — keeps the photo vibrant while ensuring text
+          contrast. Top-half stays bright; only the headline area darkens. */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.2) 100%)" }}
+        style={{ background: "linear-gradient(to top, rgba(20, 12, 30, 0.55) 0%, rgba(20, 12, 30, 0.25) 45%, rgba(255, 255, 255, 0.05) 100%)" }}
       />
 
       <div className="relative w-full mx-auto max-w-3xl px-5 md:px-8 lg:px-12 pt-24 pb-14 md:py-22 text-center text-white">

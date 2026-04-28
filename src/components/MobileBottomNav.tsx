@@ -45,9 +45,20 @@ function Tab({ href, icon: Icon, label, active, badge }: {
   );
 }
 
-// Hide on dashboard/admin/auth views AND on paid-traffic landing pages
-// where every UI inch matters and ONE CTA (form / WhatsApp) is the goal.
-const HIDDEN_ON = ["/dashboard", "/login", "/creators/dashboard", "/admin", "/lp/", "/invoice/", "/cart/resume"];
+// Hide on dashboard/admin/auth views, paid-traffic landing pages, and any
+// route where a single high-conversion CTA already owns the bottom of the
+// screen. Package detail pages have their own pricing+book sticky bar so
+// the generic nav must stand down to avoid stacking two bars.
+const HIDDEN_ON = [
+  "/dashboard",
+  "/login",
+  "/creators/dashboard",
+  "/admin",
+  "/lp/",
+  "/invoice/",
+  "/cart/resume",
+  "/packages/", // detail pages only — bare /packages stays
+];
 
 export default function MobileBottomNav() {
   const path = usePathname();

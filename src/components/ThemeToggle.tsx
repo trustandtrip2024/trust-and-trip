@@ -16,12 +16,15 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
       onClick={toggle}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       title={isDark ? "Light mode" : "Dark mode"}
-      className={`h-9 w-9 inline-flex items-center justify-center rounded-full hover:bg-tat-charcoal/5 transition-colors ${className}`}
+      className={`h-9 w-9 inline-flex items-center justify-center rounded-full hover:bg-tat-charcoal/5 dark:hover:bg-white/10 transition-colors ${className}`}
     >
       {isDark ? (
         <Sun className="h-4 w-4 text-tat-gold" />
       ) : (
-        <Moon className="h-4 w-4 text-tat-charcoal/60" />
+        // Inherit currentColor so the icon stays visible whether the toggle
+        // sits on a light header (charcoal text) or the dark mobile header
+        // (paper text passed in via className).
+        <Moon className="h-4 w-4" />
       )}
     </button>
   );

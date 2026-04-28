@@ -16,24 +16,17 @@ export default function HomeAboutBlurb() {
       aria-labelledby="about-trust-and-trip"
       className="bg-tat-paper border-y border-tat-charcoal/8"
     >
-      <div className="container-custom py-10 md:py-14">
+      <div className="container-custom py-8 md:py-10">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="eyebrow mb-3">About Trust and Trip</p>
+          <p className="eyebrow mb-2">About Trust and Trip</p>
           <h2
             id="about-trust-and-trip"
-            className="font-display text-2xl md:text-3xl font-medium text-tat-charcoal text-balance"
+            className="font-display text-xl md:text-2xl font-medium text-tat-charcoal text-balance"
           >
-            Trust and Trip is a custom travel-planning service that designs
-            personalised holiday itineraries with a real human planner.
+            A custom travel-planning service that designs personalised
+            itineraries with a real human planner — across 60+ destinations
+            in India and abroad.
           </h2>
-          <p className="mt-4 text-tat-charcoal/70 leading-relaxed text-base md:text-lg">
-            We help travellers plan and book honeymoons, family vacations,
-            group tours, solo trips and pilgrim journeys across 60+
-            destinations in India and abroad — including Bali, the Maldives,
-            Switzerland, Thailand, Kerala, Rajasthan, Ladakh, Uttarakhand and
-            Char Dham. Tell us what you want, a planner builds your itinerary
-            within 24 hours, and you only pay once you&apos;re sure.
-          </p>
         </div>
       </div>
     </section>

@@ -250,6 +250,106 @@ html.dark ::-webkit-scrollbar-thumb { background: #F2EAD9; }
 html.dark ::-webkit-scrollbar-thumb:hover { background: #0E7C7B; }
 html.dark ::selection { background: #0E7C7B; color: white; }
 
+/* ─── Dark mode legibility pass ──────────────────────────────────
+   The TAT palette is light-mode tuned. Many sections lock text to
+   `text-tat-charcoal` / `text-tat-charcoal/XX` which becomes near
+   invisible on the dark canvas. The rules below remap those tokens
+   onto cream-tinted equivalents so existing copy stays readable
+   without rewriting every component.
+
+   We only touch *foreground* colors and section *backgrounds* —
+   buttons, gradients, and brand accents (gold/orange/burnt) remain
+   untouched on purpose so brand identity survives the mode flip. */
+
+html.dark {
+  /* Default text colour on every element using the brand ink token. */
+  --tw-prose-body: #F2EAD9;
+}
+
+/* Sections that paint themselves with the cream / paper canvas in
+   light mode flip to a softer charcoal in dark mode. */
+html.dark .bg-tat-paper,
+html.dark .bg-tat-cream,
+html.dark .bg-tat-cream-warm,
+html.dark .bg-cream,
+html.dark .bg-sand,
+html.dark .bg-white {
+  background-color: #1B1B1B !important;
+  color: #F2EAD9;
+}
+
+/* Cards / panels rendered on raw white get a slightly raised charcoal
+   so they still pop off the page. */
+html.dark .bg-white\/5,
+html.dark .bg-white\/10,
+html.dark .bg-white\/40,
+html.dark .bg-white\/60,
+html.dark .bg-white\/70,
+html.dark .bg-white\/80 {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Lock low-opacity charcoal text variants to a cream tone so body
+   copy, eyebrow microcopy, and form labels stay readable. */
+html.dark .text-tat-charcoal,
+html.dark .text-tat-charcoal\/95,
+html.dark .text-tat-charcoal\/90,
+html.dark .text-tat-charcoal\/85,
+html.dark .text-tat-charcoal\/80,
+html.dark .text-tat-charcoal\/75,
+html.dark .text-tat-charcoal\/70,
+html.dark .text-tat-charcoal\/65,
+html.dark .text-tat-charcoal\/60 { color: #F2EAD9 !important; }
+
+html.dark .text-tat-charcoal\/55,
+html.dark .text-tat-charcoal\/50,
+html.dark .text-tat-charcoal\/45,
+html.dark .text-tat-charcoal\/40 { color: rgba(242, 234, 217, 0.78) !important; }
+
+html.dark .text-tat-charcoal\/35,
+html.dark .text-tat-charcoal\/30,
+html.dark .text-tat-charcoal\/25,
+html.dark .text-tat-charcoal\/20 { color: rgba(242, 234, 217, 0.55) !important; }
+
+html.dark .text-tat-charcoal\/15,
+html.dark .text-tat-charcoal\/10,
+html.dark .text-tat-charcoal\/8,
+html.dark .text-tat-charcoal\/5 { color: rgba(242, 234, 217, 0.32) !important; }
+
+/* Same treatment for the legacy "ink" alias used by the older home
+   sections still on the cream/ink token pair. */
+html.dark .text-ink,
+html.dark .text-ink\/80,
+html.dark .text-ink\/70,
+html.dark .text-ink\/60 { color: #F2EAD9 !important; }
+html.dark .text-ink\/50,
+html.dark .text-ink\/40 { color: rgba(242, 234, 217, 0.7) !important; }
+
+/* Borders that use charcoal-with-opacity become invisible on the dark
+   canvas — switch them to a paper-tinted line instead. */
+html.dark .border-tat-charcoal,
+html.dark .border-tat-charcoal\/15,
+html.dark .border-tat-charcoal\/12,
+html.dark .border-tat-charcoal\/10,
+html.dark .border-tat-charcoal\/8,
+html.dark .border-tat-charcoal\/5 { border-color: rgba(242, 234, 217, 0.15) !important; }
+
+/* Form inputs: add a visible surface so users can see the field. */
+html.dark .input-travel,
+html.dark input[type="text"],
+html.dark input[type="email"],
+html.dark input[type="tel"],
+html.dark input[type="number"],
+html.dark input[type="search"],
+html.dark textarea,
+html.dark select {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(242, 234, 217, 0.18);
+  color: #F2EAD9;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder { color: rgba(242, 234, 217, 0.45); }
+
 /* Hide scrollbar utility for carousels */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -272,6 +372,14 @@ html.pkg-sticky-active [data-aria-widget] {
   html.mobile-search-active header.sticky {
     display: none !important;
   }
+}
+
+/* Trip detail page: once the user scrolls past the in-page section nav,
+   the nav promotes itself to fixed top:0 (`pkg-detail-nav-active` class
+   on <html>). Hide the global brand header during that takeover so the
+   trip detail menu owns the top of the screen. */
+html.pkg-detail-nav-active header.sticky {
+  display: none !important;
 }
 
 /* Mobile touch improvements */

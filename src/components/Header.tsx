@@ -130,39 +130,63 @@ export default function Header() {
   ];
 
   const renderTopLink = (l: TopLink) => {
-    const linkEl = (
-      <Link
-        key={l.href}
-        href={l.href}
-        aria-current={isActive(l.href) ? "page" : undefined}
-        aria-haspopup={l.dropdown ? "menu" : undefined}
-        className={clsx(
-          "shrink-0 whitespace-nowrap relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
-          isActive(l.href) ? "text-tat-charcoal" : "text-tat-charcoal/70 hover:text-tat-charcoal"
-        )}
-      >
-        {l.label}
-        <span
-          className={clsx(
-            "absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-gradient-passion transition-transform duration-300",
-            isActive(l.href) ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100 group-focus-within:scale-x-100"
-          )}
-        />
-      </Link>
-    );
-
+    // Plain link — no dropdown, no chevron, no menu trigger.
     if (!l.dropdown) {
-      return <span key={l.href} className="group inline-flex">{linkEl}</span>;
+      return (
+        <Link
+          key={l.href}
+          href={l.href}
+          aria-current={isActive(l.href) ? "page" : undefined}
+          className={clsx(
+            "shrink-0 whitespace-nowrap relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+            isActive(l.href) ? "text-tat-charcoal" : "text-tat-charcoal/70 hover:text-tat-charcoal"
+          )}
+        >
+          {l.label}
+          <span
+            className={clsx(
+              "absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-gradient-passion transition-transform duration-300",
+              isActive(l.href) ? "scale-x-100" : "scale-x-0"
+            )}
+          />
+        </Link>
+      );
     }
 
+    // Dropdown link — Radix DropdownMenu so it opens on tap/click on every
+    // device (including touch screens that have no hover state). Chevron
+    // marker rotates 180° while the menu is open as a visual affordance.
     return (
-      <div key={l.href} className="group relative inline-flex">
-        {linkEl}
-        <div
-          className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-opacity duration-150"
-          role="menu"
-        >
-          <div className="bg-white rounded-card border border-tat-charcoal/10 shadow-rail p-4 min-w-[280px]">
+      <DropdownMenu.Root key={l.href} modal={false}>
+        <DropdownMenu.Trigger asChild>
+          <button
+            type="button"
+            aria-haspopup="menu"
+            aria-current={isActive(l.href) ? "page" : undefined}
+            className={clsx(
+              "group/topnav shrink-0 inline-flex items-center gap-1 whitespace-nowrap relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+              isActive(l.href) ? "text-tat-charcoal" : "text-tat-charcoal/70 hover:text-tat-charcoal"
+            )}
+          >
+            {l.label}
+            <ChevronDown
+              className="h-3.5 w-3.5 transition-transform duration-200 group-data-[state=open]/topnav:rotate-180 data-[state=open]:rotate-180"
+              aria-hidden
+            />
+            <span
+              className={clsx(
+                "absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-gradient-passion transition-transform duration-300",
+                isActive(l.href) ? "scale-x-100" : "scale-x-0"
+              )}
+            />
+          </button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content
+            align="center"
+            sideOffset={10}
+            className="z-[60] bg-white rounded-card border border-tat-charcoal/10 shadow-rail p-4 min-w-[300px] data-[state=open]:animate-fade-in"
+          >
             <div className={clsx("grid gap-4", l.dropdown.groups.length > 1 ? "grid-cols-2" : "grid-cols-1")}>
               {l.dropdown.groups.map((g) => (
                 <div key={g.title}>
@@ -170,14 +194,15 @@ export default function Header() {
                   <ul className="space-y-0.5">
                     {g.items.map((it) => (
                       <li key={it.href}>
-                        <Link
-                          href={it.href}
-                          className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm text-tat-charcoal/80 hover:bg-tat-cream-warm/40 hover:text-tat-charcoal transition-colors duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-teal"
-                          role="menuitem"
-                        >
-                          {it.emoji && <span aria-hidden>{it.emoji}</span>}
-                          <span>{it.label}</span>
-                        </Link>
+                        <DropdownMenu.Item asChild>
+                          <Link
+                            href={it.href}
+                            className="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm text-tat-charcoal/80 hover:bg-tat-cream-warm/40 hover:text-tat-charcoal outline-none data-[highlighted]:bg-tat-cream-warm/40 data-[highlighted]:text-tat-charcoal transition-colors duration-120"
+                          >
+                            {it.emoji && <span aria-hidden>{it.emoji}</span>}
+                            <span>{it.label}</span>
+                          </Link>
+                        </DropdownMenu.Item>
                       </li>
                     ))}
                   </ul>
@@ -185,17 +210,18 @@ export default function Header() {
               ))}
             </div>
             {l.dropdown.cta && (
-              <Link
-                href={l.dropdown.cta.href}
-                className="mt-3 pt-3 border-t border-tat-charcoal/8 inline-flex items-center gap-1 text-xs font-semibold text-tat-teal hover:text-tat-teal-deep"
-                role="menuitem"
-              >
-                {l.dropdown.cta.label}
-              </Link>
+              <DropdownMenu.Item asChild>
+                <Link
+                  href={l.dropdown.cta.href}
+                  className="mt-3 pt-3 border-t border-tat-charcoal/8 inline-flex items-center gap-1 text-xs font-semibold text-tat-teal hover:text-tat-teal-deep outline-none"
+                >
+                  {l.dropdown.cta.label}
+                </Link>
+              </DropdownMenu.Item>
             )}
-          </div>
-        </div>
-      </div>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
     );
   };
 
@@ -308,7 +334,7 @@ export default function Header() {
             <span className="hidden lg:inline-flex">
               <CurrencySwitcher variant="navbar" />
             </span>
-            <ThemeToggle className="hidden md:inline-flex" />
+            <ThemeToggle className="hidden md:inline-flex text-tat-charcoal/60" />
 
             {/* More kebab — Radix DropdownMenu */}
             <DropdownMenu.Root>
@@ -430,6 +456,10 @@ export default function Header() {
               </span>
               <ChevronDown className="h-3 w-3 opacity-70" aria-hidden />
             </Link>
+            {/* Mobile theme toggle — sits in the dark mobile header. Use
+                paper-coloured icon so it remains visible against the dark
+                background. */}
+            <ThemeToggle className="md:hidden text-tat-paper hover:bg-white/10" />
 
             {/* Mobile drawer — controlled by hamburger button placed earlier */}
             <Dialog.Root open={drawerOpen} onOpenChange={setDrawerOpen}>
@@ -453,23 +483,35 @@ export default function Header() {
 
                   <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-4 py-4">
                     <div className="space-y-0.5">
-                      {[...TOP_LINKS, ...moreItems
+                      {/* Top-level nav: dropdown groups become tap-to-expand
+                          accordions; flat links open directly. */}
+                      {TOP_LINKS.map((l) => (
+                        <MobileDrawerLink
+                          key={l.href}
+                          link={l}
+                          isActive={isActive}
+                          onNavigate={() => setDrawerOpen(false)}
+                        />
+                      ))}
+
+                      {/* Secondary "more" links flat under the groups. */}
+                      {moreItems
                         .filter((m) => m.href)
                         .map((m) => ({ href: m.href!, label: m.label.replace(/\s\(\d+\)$/, "") }))
-                      ].map((l) => (
-                        <Link
-                          key={l.href}
-                          href={l.href}
-                          aria-current={isActive(l.href) ? "page" : undefined}
-                          onClick={() => setDrawerOpen(false)}
-                          className={clsx(
-                            "flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium transition-colors",
-                            isActive(l.href) ? "bg-tat-orange/10 text-tat-orange" : "text-tat-charcoal/80 hover:bg-tat-charcoal/5 hover:text-tat-charcoal"
-                          )}
-                        >
-                          {l.label}
-                          <ChevronRight className="h-4 w-4 opacity-40" />
-                        </Link>
+                        .map((l) => (
+                          <Link
+                            key={l.href}
+                            href={l.href}
+                            aria-current={isActive(l.href) ? "page" : undefined}
+                            onClick={() => setDrawerOpen(false)}
+                            className={clsx(
+                              "flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium transition-colors",
+                              isActive(l.href) ? "bg-tat-orange/10 text-tat-orange" : "text-tat-charcoal/80 hover:bg-tat-charcoal/5 hover:text-tat-charcoal"
+                            )}
+                          >
+                            {l.label}
+                            <ChevronRight className="h-4 w-4 opacity-40" />
+                          </Link>
                       ))}
 
                       <button
@@ -580,5 +622,105 @@ export default function Header() {
 
       {searchOpen && <SearchModal onClose={() => setSearchOpen(false)} />}
     </>
+  );
+}
+
+// ─── Mobile drawer accordion item ────────────────────────────────────────
+//
+// Renders a single TOP_LINKS entry inside the mobile drawer. If the link
+// has a nested dropdown (Destinations, Experiences, Offers) the row is a
+// tap-to-expand accordion with a rotating chevron marker. If the link has
+// no dropdown (Plan) it's a plain Link that closes the drawer on click.
+
+function MobileDrawerLink({
+  link, isActive, onNavigate,
+}: {
+  link: TopLink;
+  isActive: (href: string) => boolean;
+  onNavigate: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  if (!link.dropdown) {
+    return (
+      <Link
+        href={link.href}
+        aria-current={isActive(link.href) ? "page" : undefined}
+        onClick={onNavigate}
+        className={clsx(
+          "flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium transition-colors",
+          isActive(link.href)
+            ? "bg-tat-orange/10 text-tat-orange"
+            : "text-tat-charcoal/80 hover:bg-tat-charcoal/5 hover:text-tat-charcoal"
+        )}
+      >
+        {link.label}
+        <ChevronRight className="h-4 w-4 opacity-40" />
+      </Link>
+    );
+  }
+
+  return (
+    <div>
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className={clsx(
+          "w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium transition-colors",
+          isActive(link.href)
+            ? "bg-tat-orange/10 text-tat-orange"
+            : "text-tat-charcoal/80 hover:bg-tat-charcoal/5 hover:text-tat-charcoal"
+        )}
+      >
+        <span className="inline-flex items-center gap-2">
+          {link.label}
+          <span className="text-[10px] uppercase tracking-wider text-tat-charcoal/40">
+            {link.dropdown.groups.reduce((n, g) => n + g.items.length, 0)}
+          </span>
+        </span>
+        <ChevronDown
+          className={clsx(
+            "h-4 w-4 opacity-60 transition-transform duration-200",
+            open && "rotate-180"
+          )}
+        />
+      </button>
+
+      {open && (
+        <div className="mt-1 pl-4 pr-2 pb-2 space-y-3">
+          {link.dropdown.groups.map((g) => (
+            <div key={g.title}>
+              <p className="px-2 mb-1 text-[10px] uppercase tracking-[0.2em] text-tat-charcoal/45 font-semibold">
+                {g.title}
+              </p>
+              <ul className="space-y-0.5">
+                {g.items.map((it) => (
+                  <li key={it.href}>
+                    <Link
+                      href={it.href}
+                      onClick={onNavigate}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-tat-charcoal/75 hover:bg-tat-cream-warm/50 hover:text-tat-charcoal transition-colors"
+                    >
+                      {it.emoji && <span aria-hidden>{it.emoji}</span>}
+                      <span>{it.label}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          {link.dropdown.cta && (
+            <Link
+              href={link.dropdown.cta.href}
+              onClick={onNavigate}
+              className="block px-3 pt-2 mt-1 border-t border-tat-charcoal/8 text-xs font-semibold text-tat-teal hover:text-tat-teal-deep"
+            >
+              {link.dropdown.cta.label}
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

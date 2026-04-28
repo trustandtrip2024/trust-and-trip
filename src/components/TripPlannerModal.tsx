@@ -126,6 +126,30 @@ export default function TripPlannerModal() {
   const [step, setStep] = useState<Step>("destination");
   const [dir, setDir] = useState(1);
   const [tab, setTab] = useState<"india" | "international">("india");
+  // Track viewport so the modal can be suppressed on mobile — the home
+  // page already exposes a 5-step wizard inline (MobileStickySearch in the
+  // header after scroll, and the hero wizard above the fold). Showing this
+  // full-screen modal on top of those was redundant. On mobile we close
+  // the request and scroll the hero into view so the user lands on the
+  // inline experience instead.
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.matchMedia("(max-width: 767px)").matches);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen && isMobile) {
+      // Scroll to the hero search wizard so the user lands on the inline
+      // 5-step flow, then close the would-be modal.
+      const hero = document.getElementById("hero-search");
+      if (hero) hero.scrollIntoView({ behavior: "smooth", block: "start" });
+      else window.scrollTo({ top: 0, behavior: "smooth" });
+      close();
+    }
+  }, [isOpen, isMobile, close]);
 
   // Reset to step 1 every time modal opens
   useEffect(() => {
@@ -259,7 +283,7 @@ export default function TripPlannerModal() {
 
   const stepIndex = STEPS.indexOf(step);
 
-  if (!isOpen) return null;
+  if (!isOpen || isMobile) return null;
 
   return (
     <AnimatePresence>

@@ -34,6 +34,7 @@ const ReviewsRail            = dynamic(() => import("@/components/home/ReviewsRa
 const LoveFromTheGramStrip   = dynamic(() => import("@/components/home/LoveFromTheGramStrip"),   { loading: () => <div className="h-[480px]" /> });
 const WhyTrustAndTripPillars = dynamic(() => import("@/components/home/WhyTrustAndTripPillars"), { loading: () => <div className="h-[520px]" /> });
 const PressPartnersBand      = dynamic(() => import("@/components/home/PressPartnersBand"),      { loading: () => <div className="h-[420px]" /> });
+const HomeOfferDealsRail     = dynamic(() => import("@/components/home/HomeOfferDealsRail"),     { loading: () => <div className="h-[640px]" /> });
 const FinalCTABand           = dynamic(() => import("@/components/home/FinalCTABand"),           { loading: () => <div className="h-[420px]" /> });
 const HomeNewsletter         = dynamic(() => import("@/components/home/HomeNewsletter"),         { loading: () => <div className="h-[360px]" /> });
 const SeoFooterIndex         = dynamic(() => import("@/components/home/SeoFooterIndex"),         { loading: () => <div className="h-[640px]" /> });
@@ -153,6 +154,7 @@ export default async function HomePage() {
         titleItalic={c.ugc?.titleItalic}
         lede={c.ugc?.lede}
       />
+      <HomeOfferDealsRail />
       <WhyNotAggregators />
       <WhyTrustAndTripPillars
         eyebrow={c.pillars?.eyebrow}

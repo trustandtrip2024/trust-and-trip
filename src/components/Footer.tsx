@@ -135,9 +135,13 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ── Main link grid ─────────────────────────────────────── */}
+      {/* ── Main link grid ─────────────────────────────────────────────
+          Mobile uses a 2-col grid where the four content columns balance
+          one-to-one (Explore | Pilgrim, International | Support). The brand
+          column spans full width on mobile and one column on desktop.
+          ─────────────────────────────────────────────────────────────── */}
       <div className="container-custom pt-14 pb-10 border-b border-tat-paper/8">
-        <div className="grid grid-cols-2 md:grid-cols-[1.6fr_1fr_1fr_1fr] gap-10 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-[1.6fr_1fr_1fr_1fr_1fr] gap-x-6 gap-y-10 md:gap-8">
 
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
@@ -207,8 +211,13 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
+          </div>
 
-            <h4 className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium mt-8 mb-5">International</h4>
+          {/* International / Honeymoon — split out of Explore so the
+              mobile two-column grid doesn't end up with one giant column
+              twice the height of its neighbour. */}
+          <div>
+            <h4 className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium mb-5">International</h4>
             <ul className="space-y-3">
               {HONEYMOON.map((l) => (
                 <li key={l.label}>
@@ -223,7 +232,7 @@ export default function Footer() {
 
           {/* Pilgrim & Adventure */}
           <div>
-            <h4 className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium mb-5">Pilgrim & Adventure</h4>
+            <h4 className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium mb-5">Pilgrim &amp; Adventure</h4>
             <ul className="space-y-3">
               {PILGRIM.map((l) => (
                 <li key={l.label}>
@@ -249,14 +258,16 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-
-            {/* Hours */}
-            <div className="mt-8 p-4 rounded-xl bg-tat-paper/5 border border-tat-paper/8">
-              <p className="text-[10px] uppercase tracking-wider text-tat-gold font-medium mb-2">We're available</p>
-              <p className="text-sm text-tat-paper/60 font-medium">Mon – Sun: 8 AM – 10 PM</p>
-              <p className="text-xs text-tat-paper/35 mt-1">Call, WhatsApp, or email anytime.</p>
-            </div>
           </div>
+        </div>
+
+        {/* Hours block — moved out of the Support column so the four
+            link columns stay equal-height on mobile. Sits full-width
+            below the link grid. */}
+        <div className="mt-10 max-w-md p-4 rounded-xl bg-tat-paper/5 border border-tat-paper/8">
+          <p className="text-[10px] uppercase tracking-wider text-tat-gold font-medium mb-2">We&apos;re available</p>
+          <p className="text-sm text-tat-paper/60 font-medium">Mon – Sun: 8 AM – 10 PM</p>
+          <p className="text-xs text-tat-paper/35 mt-1">Call, WhatsApp, or email anytime.</p>
         </div>
       </div>
 

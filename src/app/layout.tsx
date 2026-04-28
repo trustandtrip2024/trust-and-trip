@@ -56,11 +56,16 @@ import "../styles/globals.css";
 import { cn } from "@/lib/utils";
 
 // Inline, pre-hydration theme setter — prevents light/dark flash.
+//
+// Default theme is always LIGHT. Dark mode activates only when the user has
+// explicitly chosen it via the ThemeToggle (stored in localStorage). We
+// deliberately ignore prefers-color-scheme so first-time visitors land on
+// the brand light palette.
 const THEME_INIT_SCRIPT = `
 try {
-  var t = localStorage.getItem('tt_theme');
-  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (t === 'dark' || (!t && prefersDark)) document.documentElement.classList.add('dark');
+  if (localStorage.getItem('tt_theme') === 'dark') {
+    document.documentElement.classList.add('dark');
+  }
 } catch (e) {}
 `;
 

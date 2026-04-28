@@ -15,17 +15,20 @@ import ReviewsList from "@/components/ReviewsList";
 import ReviewForm from "@/components/ReviewForm";
 import BookingAside from "@/components/BookingAside";
 import JsonLd from "@/components/JsonLd";
-import Image2 from "next/image";
 import {
   Clock, Star, MapPin, Check, X as XIcon, ChevronRight,
-  Hotel, Sparkles, ShieldCheck, Zap, Users, ArrowRight,
-  MessageCircle, Flame, IndianRupee, Info, Phone,
-  Plane, Utensils, Car, Camera,
+  Hotel, Sparkles, Zap, Users, Flame,
 } from "lucide-react";
 import SharePackage from "@/components/SharePackage";
 import PackagePixelEvent from "@/components/PackagePixelEvent";
 import PackageStickyBar from "@/components/PackageStickyBar";
 import PackageViewTracker from "@/components/PackageViewTracker";
+import TourIncludesRibbon from "@/components/package-detail/TourIncludesRibbon";
+import QuickActionRow from "@/components/package-detail/QuickActionRow";
+import CallbackForm from "@/components/package-detail/CallbackForm";
+import CancellationLadder from "@/components/package-detail/CancellationLadder";
+import UpgradesTabs from "@/components/package-detail/UpgradesTabs";
+import NeedToKnowGrid from "@/components/package-detail/NeedToKnowGrid";
 
 interface Props { params: { slug: string } }
 
@@ -162,7 +165,7 @@ export default async function PackageDetail({ params }: Props) {
       </section>
 
       {/* ── Section Nav ────────────────────────────────────────── */}
-      <PackageSectionNav />
+      <PackageSectionNav packageTitle={pkg.title} />
 
       {/* ── Main Content ───────────────────────────────────────── */}
       <div className="container-custom py-8 md:py-12 pb-24 lg:pb-12">
@@ -176,20 +179,20 @@ export default async function PackageDetail({ params }: Props) {
               <PackageGallery images={galleryImages} title={pkg.title} />
             </div>
 
-            {/* What's included badges */}
-            <div className="flex flex-wrap gap-2 mb-10 pb-10 border-b border-tat-charcoal/8">
-              {[
-                { icon: Car, label: "Transfers" },
-                { icon: Hotel, label: "Stay" },
-                { icon: Utensils, label: "Breakfast" },
-                { icon: Camera, label: "Sightseeing" },
-                { icon: Plane, label: "No Flights" },
-              ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-2 bg-tat-gold/8 border border-tat-gold/20 text-tat-charcoal text-xs font-medium px-3 py-2 rounded-xl">
-                  <Icon className="h-3.5 w-3.5 text-tat-gold" />
-                  {label} {label === "No Flights" ? "" : "Included"}
-                </div>
-              ))}
+            {/* Tour includes ribbon + tour highlights — replaces the legacy
+                inline badge row. */}
+            <div className="mb-8">
+              <TourIncludesRibbon highlights={pkg.highlights} />
+            </div>
+
+            {/* Quick actions — Send Itinerary / Download Brochure / Email Itinerary */}
+            <div className="mb-10">
+              <QuickActionRow
+                packageTitle={pkg.title}
+                packageSlug={pkg.slug}
+                packagePrice={pkg.price}
+                duration={pkg.duration}
+              />
             </div>
 
             {/* OVERVIEW */}
@@ -321,32 +324,24 @@ export default async function PackageDetail({ params }: Props) {
               </div>
             </section>
 
-            {/* KNOW BEFORE YOU GO */}
+            {/* CALLBACK FORM */}
+            <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+              <CallbackForm packageTitle={pkg.title} packageSlug={pkg.slug} />
+            </section>
+
+            {/* UPGRADES AVAILABLE */}
+            <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+              <UpgradesTabs />
+            </section>
+
+            {/* CANCELLATION POLICY & PAYMENT TERMS */}
+            <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+              <CancellationLadder price={pkg.price} />
+            </section>
+
+            {/* NEED TO KNOW */}
             <section className="mb-4 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
-              <div className="flex items-center gap-2 mb-5">
-                <div className="h-8 w-8 rounded-full bg-tat-gold/15 flex items-center justify-center shrink-0">
-                  <Info className="h-4 w-4 text-tat-gold" />
-                </div>
-                <div>
-                  <span className="eyebrow">Know before you go</span>
-                </div>
-              </div>
-              <div className="bg-tat-cream/50 rounded-2xl p-5 space-y-3 border border-tat-charcoal/5">
-                {[
-                  "Valid government-issued ID required for check-in at all hotels.",
-                  "Package price is per person based on double/twin sharing occupancy.",
-                  "International airfare is not included unless explicitly stated.",
-                  "Room upgrades, mini-bar, and personal expenses are not covered.",
-                  "Travel insurance is strongly recommended for all international packages.",
-                  "Itinerary is subject to change due to weather or local conditions.",
-                  "Visa assistance is available — contact your planner for guidance.",
-                ].map((note, i) => (
-                  <div key={i} className="flex items-start gap-3 text-sm text-tat-charcoal/70">
-                    <span className="h-1.5 w-1.5 rounded-full bg-tat-gold mt-2 shrink-0" />
-                    {note}
-                  </div>
-                ))}
-              </div>
+              <NeedToKnowGrid destinationName={pkg.destinationName} />
             </section>
           </div>
 
@@ -385,7 +380,13 @@ export default async function PackageDetail({ params }: Props) {
       )}
 
       {/* Sticky mobile bottom bar */}
-      <PackageStickyBar price={pkg.price} title={pkg.title} slug={pkg.slug} duration={pkg.duration} />
+      <PackageStickyBar
+        price={pkg.price}
+        title={pkg.title}
+        slug={pkg.slug}
+        duration={pkg.duration}
+        originalPrice={originalPrice}
+      />
 
       <PackageEnquiryCTA packageTitle={pkg.title} price={pkg.price} duration={pkg.duration} />
     </>
