@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useDeferredValue } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import PackageCard from "@/components/PackageCard";
 import type { Package, Destination } from "@/lib/data";
@@ -408,11 +408,8 @@ function FilterPanel({
       </div>
 
       <FilterGroup label="Destination">
-        <RadioRow
-          name="destination"
-          options={[{ label: "All", value: "" }].concat(
-            destinations.map((d) => ({ label: d.name, value: d.slug }))
-          )}
+        <DestinationFilter
+          destinations={destinations}
           value={filterDestination}
           onChange={setFilterDestination}
         />
@@ -549,6 +546,100 @@ function RadioRow({
         </label>
       ))}
     </>
+  );
+}
+
+// Search-able, grouped destination filter — replaces the flat radio list
+// in the FilterPanel sidebar so users can find destinations like "Spiti"
+// or "Bali" without scanning a 25-row column. Uses useDeferredValue so the
+// keystroke handler stays snappy even with longer destination lists.
+function DestinationFilter({
+  destinations, value, onChange,
+}: {
+  destinations: Destination[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+
+  const { domestic, international } = useMemo(() => {
+    const q = deferredQuery.trim().toLowerCase();
+    const match = (d: Destination) =>
+      !q || d.name.toLowerCase().includes(q) || d.country.toLowerCase().includes(q);
+    return {
+      domestic: destinations.filter((d) => d.country === "India" && match(d)),
+      international: destinations.filter((d) => d.country !== "India" && match(d)),
+    };
+  }, [destinations, deferredQuery]);
+
+  const totalMatches = domestic.length + international.length;
+
+  return (
+    <div className="space-y-3">
+      {/* Search input */}
+      <label htmlFor="dest-filter-search" className="sr-only">Search destinations</label>
+      <input
+        id="dest-filter-search"
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search destinations…"
+        className="w-full px-3 py-2 rounded-lg border border-tat-charcoal/15 bg-white text-sm text-tat-charcoal placeholder:text-tat-charcoal/40 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-charcoal/30"
+      />
+
+      {/* "All" reset row */}
+      <label className="flex items-center gap-2.5 cursor-pointer group text-sm">
+        <input
+          type="radio"
+          name="destination"
+          value=""
+          checked={value === ""}
+          onChange={() => onChange("")}
+          className="peer sr-only"
+        />
+        <span className="h-4 w-4 rounded-full border-2 border-tat-charcoal/25 peer-checked:border-tat-charcoal flex items-center justify-center transition-colors">
+          <span className={`h-1.5 w-1.5 rounded-full ${value === "" ? "bg-tat-charcoal" : ""}`} />
+        </span>
+        <span className="text-tat-charcoal/80 group-hover:text-tat-charcoal peer-checked:text-tat-charcoal peer-checked:font-medium">
+          All destinations
+        </span>
+      </label>
+
+      {totalMatches === 0 && (
+        <p className="text-xs text-tat-charcoal/45 italic px-1">
+          No destinations match &ldquo;{deferredQuery}&rdquo;.
+        </p>
+      )}
+
+      {domestic.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-tat-charcoal/45">
+            Domestic
+          </p>
+          <RadioRow
+            name="destination"
+            options={domestic.map((d) => ({ label: d.name, value: d.slug }))}
+            value={value}
+            onChange={onChange}
+          />
+        </div>
+      )}
+
+      {international.length > 0 && (
+        <div className="space-y-1">
+          <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-tat-charcoal/45">
+            International
+          </p>
+          <RadioRow
+            name="destination"
+            options={international.map((d) => ({ label: d.name, value: d.slug }))}
+            value={value}
+            onChange={onChange}
+          />
+        </div>
+      )}
+    </div>
   );
 }
 
