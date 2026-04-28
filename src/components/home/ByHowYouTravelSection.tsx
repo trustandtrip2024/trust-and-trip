@@ -76,7 +76,7 @@ export default function ByHowYouTravelSection({
   return (
     <section
       aria-labelledby="bhyt-title"
-      className="py-14 md:py-20 lg:py-24 bg-tat-paper dark:bg-tat-charcoal"
+      className="py-10 md:py-16 lg:py-24 bg-tat-paper dark:bg-tat-charcoal"
     >
       <div className="container-custom">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
@@ -112,42 +112,28 @@ export default function ByHowYouTravelSection({
             <CustomPlanCard style={active} />
           </div>
         ) : (
-          <>
-            {/* Mobile (<md): horizontal snap-carousel with edge bleed so the
-                next card peeks. Tablet+: real grid — no overflow, every card
-                visible, fewer "is this cut off?" interpretations. */}
-            <div className="mt-8 lg:hidden -mx-5 px-5 overflow-x-auto no-scrollbar snap-x snap-mandatory">
-              <motion.ul
-                key={`m-${active}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.25 }}
-                className="flex w-max gap-4 pb-2 pr-5"
-              >
-                {items.map((p) => (
-                  <li
-                    key={p.href}
-                    className="shrink-0 snap-start w-[82%] sm:w-[55%] md:w-[42%]"
-                  >
-                    <PackageCardUI {...p} />
-                  </li>
-                ))}
-              </motion.ul>
-            </div>
+          /* Single unified snap-slider that scales across every breakpoint.
+             Mobile: ~72% peek. Tablet/desktop: progressively more cards
+             visible, with snap-proximity (not mandatory) so users near an
+             edge can free-scroll without the snap fighting them. */
+          <div className="mt-8 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-proximity scroll-smooth">
             <motion.ul
-              key={`d-${active}`}
+              key={`u-${active}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.25 }}
-              className="hidden lg:grid mt-8 grid-cols-3 gap-5 lg:gap-6"
+              className="flex w-max gap-4 lg:gap-6 pb-2 pr-5 lg:pr-0"
             >
-              {items.slice(0, 6).map((p) => (
-                <li key={p.href}>
+              {items.map((p) => (
+                <li
+                  key={p.href}
+                  className="shrink-0 snap-start w-[72%] sm:w-[48%] md:w-[40%] lg:w-[31%] xl:w-[28%]"
+                >
                   <PackageCardUI {...p} />
                 </li>
               ))}
             </motion.ul>
-          </>
+          </div>
         )}
 
         <div className="mt-10 flex items-center justify-between gap-4">
