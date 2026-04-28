@@ -9,6 +9,7 @@ export const metadata = {
 
 import dynamic from "next/dynamic";
 import HeroSearchWizard, { MobileStickySearch } from "@/components/home/HeroSearchWizard";
+import HomeAboutBlurb from "@/components/home/HomeAboutBlurb";
 import TrustBadgeStrip from "@/components/home/TrustBadgeStrip";
 import WhyNotAggregators from "@/components/home/WhyNotAggregators";
 import RecentlyCraftedSection from "@/components/home/RecentlyCraftedSection";
@@ -103,6 +104,7 @@ export default async function HomePage() {
         trustStrip={c.hero?.trustStrip}
       />
       <MobileStickySearch />
+      <HomeAboutBlurb />
       <TrustBadgeStrip />
       <RecentlyCraftedSection
         eyebrow={c.recentlyCrafted?.eyebrow}
