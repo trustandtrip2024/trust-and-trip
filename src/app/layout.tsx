@@ -165,13 +165,17 @@ export default function RootLayout({
           {
             "@context": "https://schema.org",
             "@type": "TravelAgency",
+            "@id": `${BASE_URL}/#organization`,
             name: "Trust and Trip",
             url: BASE_URL,
+            logo: `${BASE_URL}/icon.svg`,
+            image: `${BASE_URL}/icon.svg`,
             telephone: "+918115999588",
             email: "hello@trustandtrip.com",
             priceRange: "₹₹–₹₹₹₹",
             description: "Trust and Trip crafts reliable travel experiences across 60+ destinations for couples, families, groups and solo travelers.",
             slogan: "Crafting Reliable Travel",
+            foundingDate: "2019",
             address: {
               "@type": "PostalAddress",
               streetAddress: "R-607, Amrapali Princely, Noida Sector 71",
@@ -180,11 +184,27 @@ export default function RootLayout({
               postalCode: "201301",
               addressCountry: "IN",
             },
+            contactPoint: [
+              {
+                "@type": "ContactPoint",
+                telephone: "+918115999588",
+                contactType: "customer support",
+                areaServed: ["IN", "US", "AE", "GB", "AU", "SG"],
+                availableLanguage: ["en", "hi"],
+              },
+            ],
             openingHoursSpecification: {
               "@type": "OpeningHoursSpecification",
               dayOfWeek: ["Monday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
               opens: "08:00",
               closes: "22:00",
+            },
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: "4.9",
+              reviewCount: "8000",
+              bestRating: "5",
+              worstRating: "1",
             },
             sameAs: [
               "https://www.instagram.com/trust_and_trip",

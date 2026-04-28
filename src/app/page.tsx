@@ -22,6 +22,9 @@ import VisaFreeDestinations from "@/components/home/VisaFreeDestinations";
 import DestinationsGrid from "@/components/home/DestinationsGrid";
 import HomeFAQ from "@/components/home/HomeFAQ";
 import HomeBlogTeaser from "@/components/home/HomeBlogTeaser";
+import HomePlannerCard from "@/components/home/HomePlannerCard";
+import HomeBrandReel from "@/components/home/HomeBrandReel";
+import HowItWorks from "@/components/homepage-v2/HowItWorks";
 import type { PackageCardProps } from "@/components/ui/PackageCard";
 import type { Package } from "@/lib/data";
 
@@ -183,6 +186,12 @@ export default async function HomePage() {
       />
 
       <WhyNotAggregators />
+
+      <HowItWorks />
+
+      <HomePlannerCard />
+
+      <HomeBrandReel />
 
       <WhyTrustAndTripPillars
         eyebrow={c.pillars?.eyebrow}
