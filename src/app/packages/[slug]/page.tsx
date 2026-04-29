@@ -34,6 +34,11 @@ import PackageVsAggregator from "@/components/package-detail/PackageVsAggregator
 import PackageHotels from "@/components/package-detail/PackageHotels";
 import PackageFaqs from "@/components/package-detail/PackageFaqs";
 import PackageVideo from "@/components/package-detail/PackageVideo";
+import DeparturesGrid from "@/components/package-detail/DeparturesGrid";
+import PriceBreakdown from "@/components/package-detail/PriceBreakdown";
+import BestMonthsStrip from "@/components/package-detail/BestMonthsStrip";
+import PackageQuickFacts from "@/components/package-detail/PackageQuickFacts";
+import PackingList from "@/components/package-detail/PackingList";
 
 interface Props { params: { slug: string } }
 
@@ -201,6 +206,18 @@ export default async function PackageDetail({ params }: Props) {
               <TourIncludesRibbon highlights={pkg.highlights} inclusions={pkg.inclusions} />
             </div>
 
+            {/* Quick facts — group size, difficulty, visa. Returns null
+                when none of the Sanity fields are populated. */}
+            <div className="mb-8">
+              <PackageQuickFacts
+                groupSize={pkg.groupSize}
+                difficulty={pkg.difficulty}
+                visaInfo={pkg.visaInfo}
+                destinationName={pkg.destinationName}
+                isInternational={pkg.categories?.includes("International")}
+              />
+            </div>
+
             {/* vs Aggregator — only renders when comparePrice is set in Sanity. */}
             {pkg.comparePrice && pkg.comparePrice > pkg.price && (
               <div className="mb-8">
@@ -251,6 +268,7 @@ export default async function PackageDetail({ params }: Props) {
                   day: day.day ?? idx + 1,
                   title: day.title,
                   description: day.description,
+                  meals: day.meals,
                 }))}
               />
             </section>
@@ -297,6 +315,24 @@ export default async function PackageDetail({ params }: Props) {
                 </div>
               </div>
             </section>
+
+            {/* DEPARTURES — fixed batches with slot urgency. Renders only
+                when Sanity has upcoming dates set. */}
+            {pkg.departures && pkg.departures.length > 0 && (
+              <DeparturesGrid
+                departures={pkg.departures}
+                packageTitle={pkg.title}
+                packageSlug={pkg.slug}
+                basePrice={pkg.price}
+                waNumber={WA}
+              />
+            )}
+
+            {/* PRICE BREAKDOWN — per-occupancy rates. Returns null when
+                fewer than 2 fields populated. */}
+            {pkg.priceBreakdown && (
+              <PriceBreakdown breakdown={pkg.priceBreakdown} basePrice={pkg.price} />
+            )}
 
             {/* HOTEL — multi-city array when set, single-hotel fallback. */}
             {pkg.hotels && pkg.hotels.length > 0 ? (
@@ -386,6 +422,16 @@ export default async function PackageDetail({ params }: Props) {
               faqs={pkg.faqs ?? []}
               pageUrl={`https://trustandtrip.com/packages/${pkg.slug}`}
             />
+
+            {/* BEST MONTHS — 12-tile climate strip. Null when not set. */}
+            {pkg.bestMonths && pkg.bestMonths.length > 0 && (
+              <BestMonthsStrip months={pkg.bestMonths} destinationName={pkg.destinationName} />
+            )}
+
+            {/* PACKING LIST — collapsible categories. Null when not set. */}
+            {pkg.packingList && pkg.packingList.length > 0 && (
+              <PackingList list={pkg.packingList} />
+            )}
 
             {/* NEED TO KNOW */}
             <section className="mb-4 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">

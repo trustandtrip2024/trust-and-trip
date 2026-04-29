@@ -43,6 +43,7 @@ export type Package = {
     day?: number;
     title: string;
     description: string;
+    meals?: { breakfast?: boolean; lunch?: boolean; dinner?: boolean };
   }[];
   activities: string[];
   categories?: string[];
@@ -68,6 +69,35 @@ export type Package = {
   }[];
   faqs?: { q: string; a: string }[];
   youtubeUrl?: string;
+
+  // ─── Package detail page · phase-3 fields ──────────────────────────────
+  departures?: {
+    date: string;
+    batchLabel?: string;
+    slotsLeft?: number;
+    priceOverride?: number;
+  }[];
+  priceBreakdown?: {
+    doubleSharing?: number;
+    tripleSharing?: number;
+    childUnder5?: number;
+    childUnder12?: number;
+    singleSupplement?: number;
+  };
+  bestMonths?: {
+    month: number;
+    tag?: "peak" | "shoulder" | "off" | "avoid";
+    note?: string;
+  }[];
+  groupSize?: { min?: number; max?: number; idealFor?: string };
+  difficulty?: "easy" | "moderate" | "challenging" | "extreme";
+  visaInfo?: {
+    required?: boolean;
+    visaType?: string;
+    processingDays?: number;
+    notes?: string;
+  };
+  packingList?: { category?: string; items: string[] }[];
 };
 
 export type Experience = {

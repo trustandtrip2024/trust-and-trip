@@ -8,9 +8,12 @@ const SECTIONS = [
   { id: "overview",   label: "Overview" },
   { id: "itinerary",  label: "Itinerary" },
   { id: "inclusions", label: "Inclusions" },
+  { id: "departures", label: "Departures" },
+  { id: "pricing",    label: "Pricing" },
   { id: "hotel",      label: "Hotel" },
   { id: "reviews",    label: "Reviews" },
   { id: "faqs",       label: "FAQs" },
+  { id: "best-time",  label: "Best time" },
 ];
 
 interface Props {

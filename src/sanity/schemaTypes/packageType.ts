@@ -48,6 +48,17 @@ export const packageType = defineType({
           fields: [
             defineField({ name: 'title', type: 'string' }),
             defineField({ name: 'description', type: 'text', rows: 2 }),
+            defineField({
+              name: 'meals',
+              title: 'Meals included this day',
+              type: 'object',
+              description: 'Drives the B/L/D pills on each itinerary day.',
+              fields: [
+                defineField({ name: 'breakfast', type: 'boolean', initialValue: false }),
+                defineField({ name: 'lunch', type: 'boolean', initialValue: false }),
+                defineField({ name: 'dinner', type: 'boolean', initialValue: false }),
+              ],
+            }),
           ],
           preview: { select: { title: 'title' } },
         }),
@@ -162,6 +173,134 @@ export const packageType = defineType({
       title: 'Hero video (YouTube/Vimeo)',
       type: 'url',
       description: 'Optional. Plays in the hero on premium packages instead of the still hero image.',
+    }),
+
+    // ─── Package detail page · phase-3 fields ──────────────────────────────
+    defineField({
+      name: 'departures',
+      title: 'Departure dates',
+      type: 'array',
+      description: 'Fixed-departure batches. When set, drives the Departures grid + slots-left urgency on the booking aside.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({ name: 'date', type: 'date', validation: (R) => R.required() }),
+            defineField({ name: 'batchLabel', type: 'string', description: 'e.g. "Diwali batch", "Summer special".' }),
+            defineField({ name: 'slotsLeft', type: 'number', description: 'Updated by ops. Drives "X slots left" urgency.' }),
+            defineField({ name: 'priceOverride', title: 'Price (₹) for this batch', type: 'number', description: 'Optional per-batch price override.' }),
+          ],
+          preview: {
+            select: { date: 'date', label: 'batchLabel', slots: 'slotsLeft' },
+            prepare: ({ date, label, slots }) => ({
+              title: date ?? 'No date',
+              subtitle: [label, typeof slots === 'number' ? `${slots} slots` : null].filter(Boolean).join(' · '),
+            }),
+          },
+        }),
+      ],
+    }),
+
+    defineField({
+      name: 'priceBreakdown',
+      title: 'Price breakdown (per person, ₹)',
+      type: 'object',
+      description: 'Optional. Shown below the booking aside as "Per person · Double · Triple · Child · Single supplement".',
+      fields: [
+        defineField({ name: 'doubleSharing', title: 'Double sharing', type: 'number' }),
+        defineField({ name: 'tripleSharing', title: 'Triple sharing', type: 'number' }),
+        defineField({ name: 'childUnder5', title: 'Child (under 5, no bed)', type: 'number' }),
+        defineField({ name: 'childUnder12', title: 'Child (5–12, with bed)', type: 'number' }),
+        defineField({ name: 'singleSupplement', title: 'Single supplement', type: 'number' }),
+      ],
+    }),
+
+    defineField({
+      name: 'bestMonths',
+      title: 'Best months to travel',
+      type: 'array',
+      description: 'Optional. Drives the 12-month strip below FAQs.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({ name: 'month', type: 'number', validation: (R) => R.required().min(1).max(12), description: '1=Jan … 12=Dec.' }),
+            defineField({
+              name: 'tag',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Peak season', value: 'peak' },
+                  { title: 'Shoulder', value: 'shoulder' },
+                  { title: 'Off season', value: 'off' },
+                  { title: 'Avoid', value: 'avoid' },
+                ],
+              },
+            }),
+            defineField({ name: 'note', type: 'string', description: 'Short caption — e.g. "Whale-watching window".' }),
+          ],
+        }),
+      ],
+    }),
+
+    defineField({
+      name: 'groupSize',
+      title: 'Group size',
+      type: 'object',
+      fields: [
+        defineField({ name: 'min', type: 'number', validation: (R) => R.min(1) }),
+        defineField({ name: 'max', type: 'number' }),
+        defineField({ name: 'idealFor', type: 'string', description: 'e.g. "Couples + small families" — shown below the min/max range.' }),
+      ],
+    }),
+
+    defineField({
+      name: 'difficulty',
+      type: 'string',
+      description: 'Pilgrim/adventure packages. Renders a difficulty pill in the quick-facts strip.',
+      options: {
+        list: [
+          { title: 'Easy', value: 'easy' },
+          { title: 'Moderate', value: 'moderate' },
+          { title: 'Challenging', value: 'challenging' },
+          { title: 'Extreme', value: 'extreme' },
+        ],
+      },
+    }),
+
+    defineField({
+      name: 'visaInfo',
+      title: 'Visa info (Indian passport)',
+      type: 'object',
+      fields: [
+        defineField({ name: 'required', title: 'Visa required?', type: 'boolean', initialValue: false }),
+        defineField({ name: 'visaType', type: 'string', description: 'e.g. "Visa on arrival", "e-Visa", "Schengen", "Visa-free".' }),
+        defineField({ name: 'processingDays', type: 'number', description: 'Typical turnaround in days.' }),
+        defineField({ name: 'notes', type: 'text', rows: 2 }),
+      ],
+    }),
+
+    defineField({
+      name: 'packingList',
+      title: 'What to pack',
+      type: 'array',
+      description: 'Categorised packing list. Renders as a collapsible block.',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          fields: [
+            defineField({ name: 'category', type: 'string', description: 'e.g. "Clothing", "Documents", "Electronics".' }),
+            defineField({ name: 'items', type: 'array', of: [{ type: 'string' }] }),
+          ],
+          preview: {
+            select: { category: 'category', items: 'items' },
+            prepare: ({ category, items }) => ({
+              title: category ?? 'Category',
+              subtitle: Array.isArray(items) ? `${items.length} item${items.length === 1 ? '' : 's'}` : '',
+            }),
+          },
+        }),
+      ],
     }),
   ],
   preview: {

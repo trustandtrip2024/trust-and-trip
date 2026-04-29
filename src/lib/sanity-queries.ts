@@ -127,7 +127,10 @@ const PACKAGE_FIELDS = `
   "inclusions": inclusions,
   "exclusions": exclusions,
   "hotel": hotel,
-  "itinerary": itinerary,
+  "itinerary": itinerary[]{
+    day, title, description,
+    "meals": meals
+  },
   "activities": activities,
   "categories": categories,
   "tags": tags,
@@ -143,7 +146,14 @@ const PACKAGE_FIELDS = `
     "image": image.asset->url
   },
   "faqs": faqs[]{ q, a },
-  "youtubeUrl": youtubeUrl
+  "youtubeUrl": youtubeUrl,
+  "departures": departures[]{ date, batchLabel, slotsLeft, priceOverride },
+  "priceBreakdown": priceBreakdown,
+  "bestMonths": bestMonths[]{ month, tag, note },
+  "groupSize": groupSize,
+  "difficulty": difficulty,
+  "visaInfo": visaInfo,
+  "packingList": packingList[]{ category, items }
 `;
 
 const PACKAGES_QUERY = `*[_type == "package"] | order(featured desc, rating desc) { ${PACKAGE_FIELDS} }`;
@@ -207,8 +217,10 @@ function mapPackage(p: SanityPackage): Package {
     tags: Array.isArray(p.tags) ? p.tags : [],
     itinerary: Array.isArray(p.itinerary)
       ? p.itinerary.map((d) => ({
+          day: d?.day,
           title: d?.title ?? "",
           description: d?.description ?? "",
+          meals: d?.meals,
         }))
       : [],
     hotel: p.hotel
