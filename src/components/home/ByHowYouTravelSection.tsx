@@ -106,7 +106,9 @@ export default function ByHowYouTravelSection({
   eyebrow = "By how you travel",
   titleStart = "Pick a feeling.",
   titleItalic = "We'll do the rest.",
-  lede = "The destination matters less than the kind of trip. Choose the mood — we'll match the place.",
+  // Lede intentionally undefined — the chip group below is its own affordance,
+  // a paragraph between the title and the chips just dilutes the eyeline.
+  lede,
   packagesByStyle = {},
 }: Props = {}) {
   const [active, setActive] = useState<StyleId>("Honeymoon");
@@ -150,7 +152,7 @@ export default function ByHowYouTravelSection({
               {items.map((p) => (
                 <li
                   key={p.href}
-                  className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[34%] lg:w-[24%] xl:w-[24%]"
+                  className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]"
                 >
                   <MiniCard p={p} styleLabel={active} />
                 </li>

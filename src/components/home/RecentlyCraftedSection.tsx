@@ -57,29 +57,32 @@ export default function RecentlyCraftedSection({
             No recent itineraries match this filter yet — try another, or see all recent itineraries below.
           </p>
         ) : (
-          <ul
-            className="mt-8 flex flex-nowrap gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-5 px-5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5"
-          >
-            {items.map((it) => (
-              <li
-                key={it.id}
-                className="shrink-0 snap-start w-[80%] sm:w-auto"
-              >
-                <RecentItineraryCard
-                  firstName={it.firstName}
-                  city={it.city}
-                  timeAgo={it.timeAgo}
-                  tripStyle={it.tripStyle}
-                  nights={it.nights}
-                  primaryDestination={it.primaryDestination}
-                  otherDestinationsCount={it.otherDestinationsCount}
-                  price={it.price}
-                  plannerName={it.plannerName}
-                  href={it.href}
-                />
-              </li>
-            ))}
-          </ul>
+          // Single horizontal rail at every breakpoint — shipping the same
+          // snap-scroll story on web + mobile reads as a curated reel rather
+          // than a static grid that suddenly compresses on phone.
+          <div className="mt-8 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
+            <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
+              {items.map((it) => (
+                <li
+                  key={it.id}
+                  className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]"
+                >
+                  <RecentItineraryCard
+                    firstName={it.firstName}
+                    city={it.city}
+                    timeAgo={it.timeAgo}
+                    tripStyle={it.tripStyle}
+                    nights={it.nights}
+                    primaryDestination={it.primaryDestination}
+                    otherDestinationsCount={it.otherDestinationsCount}
+                    price={it.price}
+                    plannerName={it.plannerName}
+                    href={it.href}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <div className="mt-10">

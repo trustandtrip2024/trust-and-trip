@@ -49,23 +49,27 @@ export default function RecentItineraryCard({
   const thumb = thumbFor(primaryDestination);
   return (
     <article className="tt-card group h-full flex flex-col overflow-hidden transition duration-200 hover:shadow-hover focus-within:shadow-hover">
-      {/* Destination banner */}
-      <div className="relative aspect-[16/8] bg-tat-charcoal/10 overflow-hidden">
+      {/* Destination banner — taller aspect (4:3) so the photo carries the
+          card; the editorial body sits underneath rather than competing. */}
+      <div className="relative aspect-[4/3] bg-tat-charcoal/10 overflow-hidden">
         <Image
           src={thumb}
           alt={`${primaryDestination} preview`}
           fill
-          sizes="(max-width: 640px) 80vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="(max-width: 640px) 78vw, (max-width: 1024px) 48vw, 24vw"
           quality={70}
           className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/55 via-transparent to-transparent" />
-        <span className="absolute top-3 right-3 tt-chip bg-white/95 dark:bg-white/85 dark:text-tat-charcoal">
+        <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/70 via-tat-charcoal/15 to-transparent" />
+        <span className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-pill bg-tat-gold/95 text-tat-charcoal text-[10px] font-bold uppercase tracking-wider shadow-soft">
           {tripStyle}
         </span>
-        <p className="absolute bottom-2.5 left-3 inline-flex items-center gap-1 text-meta text-white drop-shadow-sm">
-          <MapPin className="h-3.5 w-3.5 text-tat-gold" />
-          <span className="font-medium">{destinationsLine}</span>
+        <span className="absolute top-3 right-3 inline-flex items-center px-2 py-1 rounded-pill bg-white/95 text-tat-charcoal text-[10px] font-semibold uppercase tracking-wider">
+          {nights}N
+        </span>
+        <p className="absolute bottom-3 left-3 right-3 inline-flex items-center gap-1 text-[13px] font-semibold text-white drop-shadow-sm">
+          <MapPin className="h-3.5 w-3.5 text-tat-gold shrink-0" />
+          <span className="truncate">{destinationsLine}</span>
         </p>
       </div>
 

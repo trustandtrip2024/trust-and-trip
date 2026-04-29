@@ -27,7 +27,8 @@ export default function PackagesByDurationSection({
   eyebrow = "Browse by length",
   titleStart = "How long do you have?",
   titleItalic = "We'll fit it in.",
-  lede = "Long weekend, full fortnight, or somewhere in between — every itinerary is sized to the days you actually have.",
+  // Lede intentionally undefined — the duration chips below speak for themselves.
+  lede,
   tightTop = false,
 }: Props = {}) {
   const [active, setActive] = useState<DurationId>("6-9");
@@ -50,27 +51,29 @@ export default function PackagesByDurationSection({
           />
         </div>
 
-        <ul
-          className="mt-8 flex flex-nowrap gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-5 px-5 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-5"
-        >
-          {items.map((d) => (
-            <li
-              key={d.id}
-              className="shrink-0 snap-start w-[78%] sm:w-auto"
-            >
-              <DestinationCardUI
-                image={d.image}
-                name={d.name}
-                region={d.region}
-                country={d.country}
-                whisper={d.whisper}
-                packageCount={d.packageCount}
-                priceFrom={d.priceFrom}
-                href={d.href}
-              />
-            </li>
-          ))}
-        </ul>
+        {/* Single horizontal rail at every breakpoint to match the other
+            home rails (RecentlyCrafted, ByHowYouTravel, OfferDeals). */}
+        <div className="mt-8 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
+          <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
+            {items.map((d) => (
+              <li
+                key={d.id}
+                className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]"
+              >
+                <DestinationCardUI
+                  image={d.image}
+                  name={d.name}
+                  region={d.region}
+                  country={d.country}
+                  whisper={d.whisper}
+                  packageCount={d.packageCount}
+                  priceFrom={d.priceFrom}
+                  href={d.href}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

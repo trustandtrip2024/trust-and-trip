@@ -44,7 +44,9 @@ export default function PilgrimFeatureBand({
   eyebrow = "A special kind of journey",
   titleStart = "Yatras, walked with",
   titleItalic = "quiet care.",
-  lede = "Helicopter darshans, calm transfers, vegetarian planning, and hotels close to the temples. We've shepherded 600+ yatris this season — and our planners know which queue moves fastest at Kedarnath.",
+  // Subtitle is the four Char Dham shrine names — concrete, scannable,
+  // lets the chip strip + proof tiles do the storytelling underneath.
+  lede = "Kedarnath · Badrinath · Gangotri · Yamunotri",
   yatras: yatrasProp,
   tightTop = false,
 }: Props = {}) {

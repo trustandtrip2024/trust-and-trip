@@ -178,29 +178,32 @@ export default async function HomePage() {
           a tight inter-section gap so they read as one editorial beat. */}
       <div id="browse" className={ANCHOR_OFFSET}>
         <div id="by-style">
+          {/* Lede intentionally not forwarded — the chip group is its own
+              affordance and a paragraph between title and chips dilutes
+              the eyeline. Component default also leaves lede unset. */}
           <ByHowYouTravelSection
             eyebrow={c.byHowYouTravel?.eyebrow}
             titleStart={c.byHowYouTravel?.titleStart}
             titleItalic={c.byHowYouTravel?.titleItalic}
-            lede={c.byHowYouTravel?.lede}
             packagesByStyle={packagesByStyle}
           />
         </div>
         <div id="by-duration">
+          {/* Lede dropped — duration chips speak for themselves. */}
           <PackagesByDurationSection
             eyebrow={c.packagesByDuration?.eyebrow}
             titleStart={c.packagesByDuration?.titleStart}
             titleItalic={c.packagesByDuration?.titleItalic}
-            lede={c.packagesByDuration?.lede}
             tightTop
           />
         </div>
         <div id="pilgrim">
+          {/* Lede dropped — component default uses the four Char Dham
+              shrine names as a scannable subtitle. */}
           <PilgrimFeatureBand
             eyebrow={c.pilgrimFeature?.eyebrow}
             titleStart={c.pilgrimFeature?.titleStart}
             titleItalic={c.pilgrimFeature?.titleItalic}
-            lede={c.pilgrimFeature?.lede}
             yatras={pilgrimPackages.map(toCardProps)}
             tightTop
           />

@@ -279,25 +279,22 @@ export default function HomeOfferDealsRail() {
           </Link>
         </div>
 
-        {/* Mobile: snap carousel with peek */}
-        <div className="md:hidden mt-7 -mx-5 px-5 overflow-x-auto snap-x snap-mandatory no-scrollbar">
-          <ul className="flex gap-4 pb-2 pr-5">
+        {/* Single horizontal rail at every breakpoint — countdown story
+            reads better as a swipeable reel than a tiled grid. Card widths
+            match the other home rails (78/48/32/24) so the visual rhythm
+            stays consistent down the page. */}
+        <div className="mt-7 md:mt-9 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
+          <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
             {DEALS.map((d) => (
-              <li key={d.slug} className="shrink-0 snap-start w-[78%] sm:w-[58%]">
+              <li
+                key={d.slug}
+                className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]"
+              >
                 <DealCard deal={d} />
               </li>
             ))}
           </ul>
         </div>
-
-        {/* Tablet+: grid */}
-        <ul className="hidden md:grid mt-9 grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
-          {DEALS.map((d) => (
-            <li key={d.slug}>
-              <DealCard deal={d} />
-            </li>
-          ))}
-        </ul>
 
         {/* Mobile-only "see all" link */}
         <div className="md:hidden mt-6">
