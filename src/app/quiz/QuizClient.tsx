@@ -333,6 +333,33 @@ function Results({
     answers.budget === "lt50k" ? "under ₹50k" : answers.budget === "50-100k" ? "₹50k–₹1L" : "₹1L+",
   ];
 
+  // Persist quiz handoff so Aria can greet the user with a quiz-aware
+  // welcome + quick prompts. AriaChatWidget reads sessionStorage on every
+  // mount and on `tt:aria-open`. Survives back-nav within the same tab.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.sessionStorage.setItem(
+        "tt_aria_quiz_preload",
+        JSON.stringify({
+          travelType: answers.travelType,
+          vibe: answers.vibe,
+          duration: answers.duration,
+          budget: answers.budget,
+          topMatchTitle: top3[0]?.pkg.title,
+          topMatchSlug: top3[0]?.pkg.slug,
+        }),
+      );
+    } catch {
+      // sessionStorage may be blocked in private mode — silent fallback.
+    }
+  }, [answers, top3]);
+
+  function openAria() {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new CustomEvent("tt:aria-open"));
+  }
+
   return (
     <div>
       <p className="tt-eyebrow text-tat-gold">Your top 3 matches</p>
@@ -424,6 +451,14 @@ function Results({
             <MessageCircle className="h-4 w-4" />
             Chat on WhatsApp
           </a>
+          <button
+            type="button"
+            onClick={openAria}
+            className="inline-flex items-center gap-2 h-12 px-6 rounded-pill border border-tat-paper/30 text-tat-paper hover:bg-tat-paper/10 font-semibold transition"
+          >
+            <Sparkles className="h-4 w-4 text-tat-gold" />
+            Ask Aria about this match
+          </button>
         </div>
       </div>
 

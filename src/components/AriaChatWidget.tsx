@@ -17,6 +17,55 @@ const QUICK_PROMPTS = [
 
 const WELCOME = "Hi! I'm Aria, your personal travel assistant 👋\n\nTell me where you'd love to go, your budget, and who you're traveling with — I'll find the perfect trip for you!";
 
+// Quiz handoff: /quiz writes a summary to sessionStorage and dispatches
+// `tt:aria-open` with the same payload. Aria opens, replaces the welcome
+// with a quiz-aware greeting, and swaps the quick prompts for ones tuned
+// to the user's answers.
+const QUIZ_PRELOAD_KEY = "tt_aria_quiz_preload";
+
+interface QuizPreload {
+  travelType: string;
+  vibe: string;
+  duration: string;
+  budget: string;
+  topMatchTitle?: string;
+  topMatchSlug?: string;
+}
+
+function isQuizPreload(x: unknown): x is QuizPreload {
+  if (!x || typeof x !== "object") return false;
+  const o = x as Record<string, unknown>;
+  return typeof o.travelType === "string" && typeof o.vibe === "string" && typeof o.duration === "string" && typeof o.budget === "string";
+}
+
+function readQuizPreload(): QuizPreload | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(QUIZ_PRELOAD_KEY);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    return isQuizPreload(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function quizGreeting(p: QuizPreload): string {
+  const dur = p.duration === "10+" ? "10+ days" : `${p.duration} days`;
+  const bud = p.budget === "lt50k" ? "under ₹50k" : p.budget === "50-100k" ? "₹50k–₹1L" : "₹1L+";
+  const match = p.topMatchTitle ? `\n\nYour top match was **${p.topMatchTitle}** — want me to customise it, compare it to the others, or suggest a sharper alternative?` : "";
+  return `Welcome back from the quiz 👋\n\nI've got your shortlist — ${p.travelType.toLowerCase()} · ${p.vibe.toLowerCase()} · ${dur} · ${bud} per person.${match}`;
+}
+
+function quizPrompts(p: QuizPreload): string[] {
+  const prompts = [];
+  if (p.topMatchTitle) prompts.push(`Customise the ${p.topMatchTitle} itinerary`);
+  prompts.push(`Compare my top 3 ${p.vibe.toLowerCase()} matches`);
+  prompts.push(`Cheaper alternatives under my budget`);
+  prompts.push(`Best months to travel ${p.vibe === "Beach" ? "to a beach" : p.vibe === "Mountain" ? "to mountains" : "for this trip"}`);
+  return prompts;
+}
+
 // Illustrated female face SVG avatar
 function AriaFace({ size = 40, className = "" }: { size?: number; className?: string }) {
   return (
@@ -77,12 +126,40 @@ export default function AriaChatWidget() {
   const [loading, setLoading] = useState(false);
   const [unread, setUnread] = useState(0);
   const [showLabel, setShowLabel] = useState(false);
+  const [quizPreload, setQuizPreload] = useState<QuizPreload | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (open) { setUnread(0); setTimeout(() => inputRef.current?.focus(), 100); }
   }, [open]);
+
+  // Quiz handoff. Listen for `tt:aria-open` and rebuild the welcome message
+  // off the saved quiz answers. Only swap if the user hasn't already chatted
+  // (messages.length === 1 means we're still on the WELCOME stub).
+  useEffect(() => {
+    function applyPreload() {
+      const p = readQuizPreload();
+      if (!p) return;
+      setQuizPreload(p);
+      setMessages((prev) => {
+        if (prev.length !== 1) return prev;
+        return [{ role: "assistant", content: quizGreeting(p) }];
+      });
+    }
+
+    function onAriaOpen() {
+      applyPreload();
+      setOpen(true);
+    }
+
+    // Pick up preload silently on mount in case the user navigates back to
+    // a non-quiz page after completing the quiz — Aria should still be
+    // primed when they finally tap the FAB.
+    applyPreload();
+    window.addEventListener("tt:aria-open", onAriaOpen);
+    return () => window.removeEventListener("tt:aria-open", onAriaOpen);
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -190,10 +267,10 @@ export default function AriaChatWidget() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Quick prompts */}
+            {/* Quick prompts — quiz-aware when handoff payload exists. */}
             {messages.length === 1 && (
               <div className="px-3 pb-2 flex gap-1.5 flex-wrap bg-gray-50">
-                {QUICK_PROMPTS.map((q) => (
+                {(quizPreload ? quizPrompts(quizPreload) : QUICK_PROMPTS).map((q) => (
                   <button key={q} onClick={() => send(q)}
                     className="text-[11px] px-2.5 py-1 rounded-full bg-white border border-tat-charcoal/10 text-tat-charcoal/60 hover:border-tat-gold hover:text-tat-charcoal transition-all whitespace-nowrap">
                     {q}
