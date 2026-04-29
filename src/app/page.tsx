@@ -8,18 +8,16 @@ export const metadata = {
 };
 
 import dynamic from "next/dynamic";
-import HeroSearchWizard, { MobileStickySearch } from "@/components/home/HeroSearchWizard";
+import HeroSearchWizard from "@/components/home/HeroSearchWizard";
 import HomeDealRibbon from "@/components/home/HomeDealRibbon";
 import HomeStickySubnav from "@/components/home/HomeStickySubnav";
 import HomeTopDestChips from "@/components/home/HomeTopDestChips";
 import TrustBadgeStrip from "@/components/home/TrustBadgeStrip";
-import WhyNotAggregators from "@/components/home/WhyNotAggregators";
 import RecentlyCraftedSection from "@/components/home/RecentlyCraftedSection";
 import ByHowYouTravelSection, { type StyleId } from "@/components/home/ByHowYouTravelSection";
 import PilgrimFeatureBand from "@/components/home/PilgrimFeatureBand";
 import PackagesByDurationSection from "@/components/home/PackagesByDurationSection";
 import VisaFreeDestinations from "@/components/home/VisaFreeDestinations";
-import DestinationsGrid from "@/components/home/DestinationsGrid";
 import HomeFAQ from "@/components/home/HomeFAQ";
 import HomeBlogTeaser from "@/components/home/HomeBlogTeaser";
 import HomePlannerCard from "@/components/home/HomePlannerCard";
@@ -128,7 +126,8 @@ export default async function HomePage() {
         lede={c.hero?.lede}
         trustStrip={c.hero?.trustStrip}
       />
-      <MobileStickySearch />
+      {/* MobileStickySearch removed — Header search modal already covers
+          mobile re-engagement and the in-page subnav anchors are enough. */}
       <HomeStickySubnav />
 
       <TrustBadgeStrip />
@@ -179,15 +178,13 @@ export default async function HomePage() {
 
       <VisaFreeDestinations />
 
-      <DestinationsGrid
-        destinations={destinations}
-        eyebrow={c.destinations?.eyebrow}
-        titleStart={c.destinations?.titleStart}
-        titleItalic={c.destinations?.titleItalic}
-        lede={c.destinations?.lede}
-      />
+      {/* DestinationsGrid removed — HomeTopDestChips above already covers
+          discovery; the full grid lives on /destinations and was duplicating
+          a long photo grid mid-scroll. */}
 
-      <WhyNotAggregators />
+      {/* WhyNotAggregators removed — WhyTrustAndTripPillars below covers the
+          same trust pitch with better visual treatment, and HowItWorks fills
+          the "why us" beat directly after. */}
 
       <HowItWorks />
 
