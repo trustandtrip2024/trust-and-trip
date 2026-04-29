@@ -238,7 +238,7 @@ export default function HomeOfferDealsRail() {
       aria-labelledby="home-deals-title"
       className="py-16 md:py-24 bg-tat-paper dark:bg-tat-charcoal"
     >
-      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-[1480px]">
         <div className="flex items-end justify-between gap-4 flex-wrap">
           <div>
             <SectionHeader
@@ -263,7 +263,7 @@ export default function HomeOfferDealsRail() {
             {DEALS.map((d) => (
               <li
                 key={d.slug}
-                className="shrink-0 snap-start flex w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]"
+                className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[30%]"
               >
                 <DealCard deal={d} />
               </li>

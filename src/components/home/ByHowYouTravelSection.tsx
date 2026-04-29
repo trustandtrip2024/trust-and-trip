@@ -173,12 +173,12 @@ export default function ByHowYouTravelSection({
       aria-labelledby="bhyt-title"
       className="py-16 md:py-24 bg-tat-paper dark:bg-tat-charcoal"
     >
-      <div className="container-custom">
+      <div className="mx-auto w-full max-w-[1480px] px-5 md:px-8 lg:px-12">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
         {/* 8-tile grid — 1 col mobile, 2 col sm, 4 col lg. Replaces chip+rail
             with direct visual browse: every style is its own portal. */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
           {STYLES.map((meta) => {
             const trips = packagesByStyle[meta.id] ?? [];
             const heroImage = trips[0]?.image || meta.fallbackImage;

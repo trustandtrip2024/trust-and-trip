@@ -42,7 +42,7 @@ function DurationTile({ meta }: { meta: DurationTileMeta }) {
       aria-label={`Trips that fit a ${meta.label.toLowerCase()}`}
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-tat-charcoal ring-1 ring-tat-charcoal/10 shadow-soft hover:shadow-soft-lg transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2"
     >
-      <div className="relative aspect-[5/6] sm:aspect-[4/5]">
+      <div className="relative aspect-[5/6] md:aspect-[16/9] lg:aspect-[4/3] xl:aspect-[3/2]">
         <Image
           src={heroImage}
           alt=""
@@ -127,13 +127,13 @@ export default function PackagesByDurationSection({
       aria-labelledby="duration-title"
       className={`${tightTop ? "pt-4 md:pt-6 pb-16 md:pb-24" : "py-16 md:py-24"} bg-tat-paper`}
     >
-      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-[1480px]">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
         {/* 4 large duration tiles. 1-col mobile, 2-col sm/md, 4-col lg.
             Replaces chip+rail with photo-led portals — same browse intent,
             shown not chosen. */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
           {DURATIONS.map((meta) => (
             <DurationTile key={meta.id} meta={meta} />
           ))}
