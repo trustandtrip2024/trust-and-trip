@@ -65,6 +65,51 @@ export default function AboutPage() {
         name: "About Trust and Trip",
         description: "Trust and Trip Experiences Pvt. Ltd. — transparent, reliable and trustworthy travel.",
         url: "https://trustandtrip.com/about",
+        mainEntity: {
+          "@type": "TravelAgency",
+          name: "Trust and Trip Experiences Pvt. Ltd.",
+          alternateName: "Trust and Trip",
+          url: "https://trustandtrip.com",
+          logo: "https://trustandtrip.com/icon.svg",
+          email: "hello@trustandtrip.com",
+          telephone: "+91 8115 999 588",
+          slogan: "Crafting Reliable Travel",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "R-607, Amrapali Princely, Sector 71",
+            addressLocality: "Noida",
+            addressRegion: "Uttar Pradesh",
+            postalCode: "201301",
+            addressCountry: "IN",
+          },
+          founder: {
+            "@type": "Person",
+            name: "Akash Mishra",
+            jobTitle: "Founder",
+            worksFor: {
+              "@type": "Organization",
+              name: "Trust and Trip Experiences Pvt. Ltd.",
+            },
+          },
+          sameAs: [
+            "https://instagram.com/trust_and_trip",
+            "https://facebook.com/trustandtrip/",
+            "https://x.com/trust_and_trip",
+            "https://youtube.com/@trustandtrip",
+            "https://linkedin.com/company/trust-and-trip/",
+          ],
+          areaServed: ["India", "Asia", "Europe", "Worldwide"],
+          knowsAbout: [
+            "Honeymoon Packages",
+            "Family Tours",
+            "Group Tours",
+            "Solo Travel",
+            "Pilgrim Yatra",
+            "Adventure Travel",
+            "Custom Itinerary Design",
+          ],
+          paymentAccepted: ["Visa", "Mastercard", "UPI", "Google Pay", "PhonePe"],
+        },
       }} />
 
       {/* Hero */}
