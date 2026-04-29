@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Tag, Clock, Users, Star, MapPin, MessageCircle,
-  ShieldCheck, ChevronRight, Phone, Sliders, Zap,
+  Phone, Sliders, Zap,
 } from "lucide-react";
 import { captureIntent } from "@/lib/capture-intent";
 import BookingDeposit from "./BookingDeposit";
 import LiveViewerCount from "./LiveViewerCount";
+import PackageTrustStrip from "./package-detail/PackageTrustStrip";
 import Price from "./Price";
 
 interface Props {
@@ -193,21 +194,10 @@ export default function BookingAside({
         </div>
       </div>
 
-      {/* Trust strip — single tight row */}
-      <ul className="mt-5 pt-4 border-t border-tat-charcoal/8 space-y-2">
-        <li className="flex items-center gap-2.5 text-[12px] text-tat-charcoal/85">
-          <ShieldCheck className="h-4 w-4 text-tat-teal shrink-0" />
-          100% refundable up to 30 days prior
-        </li>
-        <li className="flex items-center gap-2.5 text-[12px] text-tat-charcoal/85">
-          <Tag className="h-4 w-4 text-tat-teal shrink-0" />
-          No booking fee — pay only on confirmation
-        </li>
-        <li className="flex items-center gap-2.5 text-[12px] text-tat-charcoal/85">
-          <ChevronRight className="h-4 w-4 text-tat-teal shrink-0" />
-          Best price guarantee
-        </li>
-      </ul>
+      {/* Trust strip — 4-cell grid via shared PackageTrustStrip */}
+      <div className="mt-5 pt-4 border-t border-tat-charcoal/8">
+        <PackageTrustStrip />
+      </div>
 
       {/* Live social proof */}
       <LiveViewerCount slug={slug} fallbackWeek={viewedCount} />

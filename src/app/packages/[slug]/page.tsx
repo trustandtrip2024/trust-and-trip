@@ -28,6 +28,8 @@ import CallbackForm from "@/components/package-detail/CallbackForm";
 import CancellationLadder from "@/components/package-detail/CancellationLadder";
 import UpgradesTabs from "@/components/package-detail/UpgradesTabs";
 import NeedToKnowGrid from "@/components/package-detail/NeedToKnowGrid";
+import PackageWhyThis from "@/components/package-detail/PackageWhyThis";
+import PackageVsAggregator from "@/components/package-detail/PackageVsAggregator";
 
 interface Props { params: { slug: string } }
 
@@ -63,7 +65,9 @@ export default async function PackageDetail({ params }: Props) {
   const originalPrice = Math.round(pkg.price * 1.22);
   const discount = Math.round(((originalPrice - pkg.price) / originalPrice) * 100);
   const viewedCount = Math.max(20, (pkg.reviews * 3 + pkg.slug.length * 7) % 120 + 15);
-  const enquiredCount = Math.max(8, (pkg.reviews * 2 + pkg.slug.length * 3) % 60 + 8);
+  // Prefer the editor-supplied count when set; otherwise fall back to a
+  // deterministic synthetic figure derived from review count + slug length.
+  const enquiredCount = pkg.bookedThisMonth ?? Math.max(8, (pkg.reviews * 2 + pkg.slug.length * 3) % 60 + 8);
   const hotelStars = pkg.hotel?.stars ?? 3;
 
   const waBook = `https://wa.me/${WA}?text=${encodeURIComponent(`Hi Trust and Trip! 🙏\n\nI'd like to book the *${pkg.title}* package (₹${pkg.price.toLocaleString("en-IN")}/person · ${pkg.duration}).\n\nPlease help me proceed.`)}`;
@@ -178,11 +182,27 @@ export default async function PackageDetail({ params }: Props) {
               <PackageGallery images={galleryImages} title={pkg.title} />
             </div>
 
+            {/* Why this package — 3-bullet elevator pitch + best-for tag */}
+            <div className="mb-8">
+              <PackageWhyThis bullets={pkg.whyThisPackage} bestFor={pkg.bestFor} />
+            </div>
+
             {/* Tour includes ribbon + tour highlights — replaces the legacy
                 inline badge row. */}
             <div className="mb-8">
               <TourIncludesRibbon highlights={pkg.highlights} />
             </div>
+
+            {/* vs Aggregator — only renders when comparePrice is set in Sanity. */}
+            {pkg.comparePrice && pkg.comparePrice > pkg.price && (
+              <div className="mb-8">
+                <PackageVsAggregator
+                  ourPrice={pkg.price}
+                  theirPrice={pkg.comparePrice}
+                  packageTitle={pkg.title}
+                />
+              </div>
+            )}
 
             {/* Quick actions — Send Itinerary / Download Brochure / Email Itinerary */}
             <div className="mb-10">
