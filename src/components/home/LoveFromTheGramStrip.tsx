@@ -70,28 +70,20 @@ export default function LoveFromTheGramStrip({
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
-        {/* Desktop / tablet: staggered polaroid wall */}
-        <ul
-          className="hidden md:grid mt-10 lg:mt-12 grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-10 lg:gap-y-14"
+        {/* Single horizontal rail at every breakpoint — earlier this used
+            a tilted polaroid wall on desktop and a separate carousel on
+            mobile, which broke vertical column rhythm with neighbouring
+            home rails. tiltFor() retained per-card for personality without
+            breaking column alignment. */}
+        <div
+          className="mt-8 lg:mt-10 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth"
           aria-label="Traveler photographs"
         >
-          {items.slice(0, 10).map((u, i) => (
-            <li key={`d-${u.firstName}-${i}`} className={`group relative ${tiltFor(i)} ${i % 2 === 0 ? "lg:translate-y-4" : "lg:-translate-y-4"}`}>
-              <Polaroid post={u} size="md" />
-            </li>
-          ))}
-        </ul>
-
-        {/* Mobile: horizontal snap carousel of polaroids */}
-        <div
-          className="md:hidden mt-8 -mx-5 px-5 overflow-x-auto snap-x snap-mandatory no-scrollbar"
-          aria-label="Traveler photographs (mobile)"
-        >
-          <ul className="flex gap-5 pb-6 pr-5">
+          <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
             {items.map((u, i) => (
               <li
-                key={`m-${u.firstName}-${i}`}
-                className={`shrink-0 snap-start w-[68%] sm:w-[48%] ${tiltFor(i)}`}
+                key={`u-${u.firstName}-${i}`}
+                className={`shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%] ${tiltFor(i)}`}
               >
                 <Polaroid post={u} size="sm" />
               </li>

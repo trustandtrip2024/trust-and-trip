@@ -83,11 +83,13 @@ export default function VisaFreeDestinations() {
           </span>
         </div>
 
-        <ul className="mt-8 flex flex-nowrap gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-5 px-5 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-5">
+        {/* Single horizontal rail at every breakpoint — matches site-wide rhythm. */}
+        <div className="mt-8 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
+        <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
           {ITEMS.map((d) => (
             <li
               key={d.name}
-              className="shrink-0 snap-start w-[78%] sm:w-[58%] md:w-auto"
+              className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]"
             >
               <Link
                 href={d.href}
@@ -125,6 +127,7 @@ export default function VisaFreeDestinations() {
             </li>
           ))}
         </ul>
+        </div>
 
         <div className="mt-10 flex items-center justify-between flex-wrap gap-4">
           <p className="text-meta text-tat-charcoal/65 max-w-2xl">

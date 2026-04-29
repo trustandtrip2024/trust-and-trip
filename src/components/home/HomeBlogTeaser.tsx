@@ -62,23 +62,24 @@ export default function HomeBlogTeaser({ posts }: Props = {}) {
           </Link>
         </div>
 
-        {useStatic ? (
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
-            {FALLBACK.map((p) => (
-              <li key={p.slug}>
-                <BlogCardStatic post={p} />
-              </li>
-            ))}
+        {/* Single horizontal rail at every breakpoint — replaces the
+            md:grid-cols-3 layout so blog cards line up vertically with
+            the other home rails (78/48/32/24). */}
+        <div className="-mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
+          <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
+            {useStatic
+              ? FALLBACK.map((p) => (
+                  <li key={p.slug} className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]">
+                    <BlogCardStatic post={p} />
+                  </li>
+                ))
+              : posts.slice(0, 6).map((p) => (
+                  <li key={p.slug} className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]">
+                    <BlogCardSanity post={p} />
+                  </li>
+                ))}
           </ul>
-        ) : (
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
-            {posts.slice(0, 3).map((p) => (
-              <li key={p.slug}>
-                <BlogCardSanity post={p} />
-              </li>
-            ))}
-          </ul>
-        )}
+        </div>
 
         <div className="md:hidden mt-8 text-center">
           <Link

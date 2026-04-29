@@ -123,23 +123,20 @@ export default function OfferBannerStrip({ offers }: Props) {
           </Link>
         </div>
 
-        {/* Mobile: horizontal scroll-snap. Desktop: 4-col grid. */}
-        <ul
-          className="
-            grid grid-flow-col auto-cols-[80%] gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-2
-            md:grid-flow-row md:auto-cols-auto md:grid-cols-2 md:gap-4 md:overflow-visible md:pb-0
-            lg:grid-cols-4
-          "
-        >
+        {/* Single horizontal rail at every breakpoint — matches the other
+            home rails (78/48/32/24 widths, fixed aspect-[4/5]) so columns
+            line up vertically down the page. */}
+        <div className="-mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
+        <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
           {visible.map((o, idx) => {
             const gradient = o.gradient ?? DEFAULT_GRADIENT;
             return (
-              <li key={o.slug} className="snap-start">
+              <li key={o.slug} className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]">
                 <Link
                   href={o.href}
                   onClick={() => analytics.offerBannerClick(o.slug, idx + 1)}
                   className={`
-                    group relative block overflow-hidden rounded-card aspect-[16/10] md:aspect-[4/3] lg:aspect-[16/10]
+                    group relative block overflow-hidden rounded-card aspect-[4/5]
                     bg-gradient-to-br ${gradient}
                     shadow-card hover:shadow-rail transition-all duration-300 hover:-translate-y-0.5
                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2
@@ -200,6 +197,7 @@ export default function OfferBannerStrip({ offers }: Props) {
             );
           })}
         </ul>
+        </div>
       </div>
     </section>
   );
