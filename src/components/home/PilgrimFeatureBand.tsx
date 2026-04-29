@@ -118,7 +118,7 @@ export default function PilgrimFeatureBand({
                   <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-tat-gold/15 text-tat-gold">
                     <Icon className="h-4 w-4" aria-hidden />
                   </span>
-                  <p className="mt-2.5 font-serif text-[20px] text-tat-charcoal dark:text-white leading-none">
+                  <p className="mt-2.5 font-display font-medium text-h3 text-tat-charcoal dark:text-white leading-none">
                     {label}
                   </p>
                   <p className="mt-1 text-tag uppercase text-tat-slate dark:text-white/60">

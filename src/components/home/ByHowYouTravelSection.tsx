@@ -57,10 +57,10 @@ function MiniCard({ p, styleLabel }: { p: PackageCardProps; styleLabel: string }
             <span>{p.destination}</span>
           </div>
         )}
-        <h3 className="mt-1 font-serif text-[19px] md:text-[20px] text-white leading-tight line-clamp-2">
+        <h3 className="mt-1 font-display font-medium text-h3 text-white leading-tight line-clamp-2">
           {p.title}
         </h3>
-        <p className="mt-1.5 font-serif italic text-[13px] text-white/80 line-clamp-1">
+        <p className="mt-1.5 italic text-body-sm text-white/80 line-clamp-1">
           {styleLabel}
           {p.duration ? ` · ${p.duration}` : ""}
         </p>
@@ -85,7 +85,7 @@ function CustomPlanCard({ style }: { style: StyleId }) {
       <div className="h-9 w-9 rounded-full bg-tat-orange/15 grid place-items-center text-tat-gold">
         <Sparkles className="h-4 w-4" />
       </div>
-      <h3 className="font-display text-[18px] text-tat-charcoal">
+      <h3 className="font-display text-h3 text-tat-charcoal">
         {style} trips, made to order.
       </h3>
       <p className="text-body-sm text-tat-slate">

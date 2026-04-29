@@ -220,7 +220,7 @@ function DealCard({ deal }: { deal: Deal }) {
           <p className="text-[10px] uppercase tracking-[0.2em] text-white/70 mb-1">
             {deal.duration}
           </p>
-          <h3 className="font-display text-[18px] sm:text-[20px] leading-tight">
+          <h3 className="font-display font-medium text-h3 leading-tight">
             {deal.title}
           </h3>
           <p className="text-[12px] text-white/75 mt-0.5 line-clamp-1">{deal.destination}</p>
