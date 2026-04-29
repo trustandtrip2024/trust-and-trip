@@ -184,7 +184,12 @@ export default function AriaChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: updated.map((m) => ({ role: m.role, content: m.content })) }),
+        body: JSON.stringify({
+          messages: updated.map((m) => ({ role: m.role, content: m.content })),
+          // Server uses this to skip discovery questions Aria already has
+          // answers for. Null when the user never took the quiz.
+          quizContext: quizPreload,
+        }),
       });
       const data = await res.json();
       const reply: Message = { role: "assistant", content: data.message ?? "Sorry, I couldn't get a response. Please try again." };

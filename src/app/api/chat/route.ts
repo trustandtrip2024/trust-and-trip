@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { messages } = await req.json();
+    const { messages, quizContext } = await req.json();
 
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json({ error: "AI not configured." }, { status: 503 });
@@ -53,10 +53,29 @@ export async function POST(req: NextRequest) {
 
     const recentMessages = messages.slice(-10);
 
+    // Append quiz context to system prompt when the user reached Aria via the
+    // /quiz handoff. Lets Aria reason against real answers instead of asking
+    // them again. Validated minimally — bad shapes get ignored.
+    let systemPrompt = SYSTEM_PROMPT;
+    if (quizContext && typeof quizContext === "object") {
+      const q = quizContext as Record<string, unknown>;
+      const tt = typeof q.travelType === "string" ? q.travelType : null;
+      const v = typeof q.vibe === "string" ? q.vibe : null;
+      const d = typeof q.duration === "string" ? q.duration : null;
+      const b = typeof q.budget === "string" ? q.budget : null;
+      const matchTitle = typeof q.topMatchTitle === "string" ? q.topMatchTitle : null;
+      const matchSlug = typeof q.topMatchSlug === "string" ? q.topMatchSlug : null;
+      if (tt && v && d && b) {
+        const dur = d === "10+" ? "10+ days" : `${d} days`;
+        const bud = b === "lt50k" ? "under ₹50k" : b === "50-100k" ? "₹50k–₹1L" : "₹1L+";
+        systemPrompt += `\n\nUSER QUIZ CONTEXT (already given — do NOT ask again):\n- Travelling: ${tt}\n- Vibe: ${v}\n- Duration: ${dur}\n- Budget: ${bud} per person\n${matchTitle ? `- Top match shown: ${matchTitle}${matchSlug ? ` (slug: ${matchSlug})` : ""}\n` : ""}\nReference these directly. Skip discovery questions about destination/budget/travel type/duration. Move straight to customisation, comparison, or qualification (name + phone).`;
+      }
+    }
+
     const response = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 300,
-      system: SYSTEM_PROMPT,
+      system: systemPrompt,
       messages: recentMessages,
     });
 
