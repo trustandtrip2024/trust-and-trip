@@ -66,7 +66,7 @@ export default function FloatingWhatsApp() {
                       note: "Floating WhatsApp button (desktop)",
                     })
                   }
-                  className="flex items-center gap-2.5 bg-[#25D366] text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
+                  className="flex items-center gap-2.5 bg-whatsapp text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity"
                 >
                   <MessageCircle className="h-4 w-4" />
                   WhatsApp
@@ -91,9 +91,9 @@ export default function FloatingWhatsApp() {
         <button
           onClick={() => setExpanded(!expanded)}
           aria-label={expanded ? "Close contact menu" : "Open contact menu"}
-          className="relative h-14 w-14 rounded-full bg-[#25D366] text-white shadow-soft-lg hover:scale-110 transition-transform flex items-center justify-center"
+          className="relative h-14 w-14 rounded-full bg-whatsapp text-white shadow-soft-lg hover:scale-110 transition-transform flex items-center justify-center"
         >
-          <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30" />
+          <span className="absolute inset-0 rounded-full bg-whatsapp animate-ping opacity-30" />
           {expanded ? (
             <X className="h-6 w-6 relative" />
           ) : (

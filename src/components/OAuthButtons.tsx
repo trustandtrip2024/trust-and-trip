@@ -122,6 +122,7 @@ function GoogleLogo({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
+// Facebook brand blue #1877F2 — canonical constant lives in lib/brand-colors.ts.
 function FacebookLogo({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} aria-hidden>

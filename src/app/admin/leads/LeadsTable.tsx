@@ -319,8 +319,8 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
       <td className="px-5 py-4">
         <div className="flex items-center gap-2">
           <a href={`https://wa.me/${WA}?text=${waMsg}`} target="_blank" rel="noopener noreferrer" title="Reply on WhatsApp"
-            className="h-8 w-8 rounded-lg bg-[#25D366]/10 hover:bg-[#25D366]/20 flex items-center justify-center transition-colors">
-            <MessageCircle className="h-4 w-4 text-[#25D366]" />
+            className="h-8 w-8 rounded-lg bg-whatsapp/10 hover:bg-whatsapp/20 flex items-center justify-center transition-colors">
+            <MessageCircle className="h-4 w-4 text-whatsapp" />
           </a>
           <a href={`tel:${lead.phone}`} title="Call"
             className="h-8 w-8 rounded-lg bg-tat-info-bg hover:bg-tat-info-bg flex items-center justify-center transition-colors">

@@ -24,9 +24,9 @@ function AriaFace({ size = 40, className = "" }: { size?: number; className?: st
       {/* Hair back */}
       <ellipse cx="32" cy="22" rx="20" ry="21" fill="#1a0a00" />
       {/* Neck */}
-      <rect x="26" y="46" width="12" height="10" rx="4" fill="#f5c5a3" />
+      <rect x="26" y="46" width="12" height="10" rx="4" fill="#EFD9BD" />
       {/* Face */}
-      <ellipse cx="32" cy="34" rx="17" ry="19" fill="#f5c5a3" />
+      <ellipse cx="32" cy="34" rx="17" ry="19" fill="#EFD9BD" />
       {/* Hair top + sides */}
       <ellipse cx="32" cy="16" rx="18" ry="10" fill="#1a0a00" />
       <ellipse cx="13" cy="30" rx="5" ry="12" fill="#1a0a00" />
@@ -138,7 +138,7 @@ export default function AriaChatWidget() {
             {/* Header */}
             <div className="bg-tat-charcoal px-4 py-3 flex items-center gap-3 shrink-0">
               <div className="relative shrink-0">
-                <div className="h-10 w-10 rounded-full bg-[#f5c5a3] overflow-hidden flex items-end justify-center border-2 border-tat-gold/40">
+                <div className="h-10 w-10 rounded-full bg-tat-cream-warm overflow-hidden flex items-end justify-center border-2 border-tat-gold/40">
                   <AriaFace size={38} />
                 </div>
                 <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-400 border-2 border-tat-charcoal" />
@@ -160,7 +160,7 @@ export default function AriaChatWidget() {
               {messages.map((m, i) => (
                 <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} items-end gap-2`}>
                   {m.role === "assistant" && (
-                    <div className="h-7 w-7 rounded-full bg-[#f5c5a3] overflow-hidden flex items-end justify-center shrink-0 border border-tat-gold/30">
+                    <div className="h-7 w-7 rounded-full bg-tat-cream-warm overflow-hidden flex items-end justify-center shrink-0 border border-tat-gold/30">
                       <AriaFace size={26} />
                     </div>
                   )}
@@ -175,7 +175,7 @@ export default function AriaChatWidget() {
               ))}
               {loading && (
                 <div className="flex items-end gap-2">
-                  <div className="h-7 w-7 rounded-full bg-[#f5c5a3] overflow-hidden flex items-end justify-center shrink-0 border border-tat-gold/30">
+                  <div className="h-7 w-7 rounded-full bg-tat-cream-warm overflow-hidden flex items-end justify-center shrink-0 border border-tat-gold/30">
                     <AriaFace size={26} />
                   </div>
                   <div className="bg-white border border-tat-charcoal/6 rounded-2xl rounded-bl-sm px-4 py-3 shadow-sm flex items-center gap-1">
@@ -280,7 +280,7 @@ export default function AriaChatWidget() {
                 initial={{ scale: 0.7, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.7, opacity: 0 }}
-                className="h-[58px] w-[58px] rounded-full bg-[#f5c5a3] overflow-hidden flex items-end justify-center shadow-[0_4px_20px_rgba(245,158,11,0.35)] border-2 border-tat-gold/60"
+                className="h-[58px] w-[58px] rounded-full bg-tat-cream-warm overflow-hidden flex items-end justify-center shadow-[0_4px_20px_rgba(245,158,11,0.35)] border-2 border-tat-gold/60"
               >
                 <AriaFace size={56} />
               </motion.div>

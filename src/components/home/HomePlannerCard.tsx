@@ -76,7 +76,7 @@ export default function HomePlannerCard({
                   href={WHATSAPP_HREF}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 h-11 px-5 rounded-pill bg-[#25D366] hover:bg-[#1da851] text-white font-semibold text-body-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2"
+                  className="inline-flex items-center gap-2 h-11 px-5 rounded-pill bg-whatsapp hover:bg-[#1da851] text-white font-semibold text-body-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2"
                 >
                   <MessageCircle className="h-4 w-4" />
                   WhatsApp me

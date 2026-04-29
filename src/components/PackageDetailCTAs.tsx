@@ -93,7 +93,7 @@ export function PackageQuickQuestions({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => captureIntent("enquire_click", { ...baseMeta, note: `Quick question: ${q}` })}
-          className="inline-flex items-center gap-1 text-[11px] px-3 py-1.5 rounded-full border border-tat-charcoal/12 text-tat-charcoal/60 hover:border-[#25D366] hover:text-[#25D366] transition-colors"
+          className="inline-flex items-center gap-1 text-[11px] px-3 py-1.5 rounded-full border border-tat-charcoal/12 text-tat-charcoal/60 hover:border-whatsapp hover:text-whatsapp transition-colors"
         >
           <MessageCircle className="h-3 w-3" />{q}
         </a>

@@ -114,7 +114,7 @@ export default function ReferPage() {
                 {copied ? <><Check className="h-4 w-4" />Copied!</> : <><Copy className="h-4 w-4" />Copy Link</>}
               </button>
               <a href={waShare} target="_blank" rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-[#25D366] text-white hover:bg-[#20ba5a] transition-colors">
+                className="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-whatsapp text-white hover:bg-whatsapp-hover transition-colors">
                 <MessageCircle className="h-4 w-4 fill-white" />Share on WhatsApp
               </a>
             </div>
