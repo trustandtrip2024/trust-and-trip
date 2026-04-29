@@ -1,10 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 import LeadForm from "@/components/LeadForm";
-import { Compass, PenTool, Send, ThumbsUp } from "lucide-react";
+import JsonLd from "@/components/JsonLd";
+import { getPackageBySlug } from "@/lib/sanity-queries";
+import { Compass, PenTool, Send, ThumbsUp, Clock, IndianRupee, X } from "lucide-react";
 
 export const metadata = {
   title: "Customize a Trip — Trust and Trip",
   description: "Tell us where your heart wants to go. We'll design a trip that feels entirely yours.",
+  alternates: { canonical: "https://trustandtrip.com/customize-trip" },
 };
 
 const steps = [
@@ -30,9 +34,53 @@ const steps = [
   },
 ];
 
-export default function CustomizeTripPage() {
+interface Props {
+  searchParams?: { package?: string; destination?: string };
+}
+
+function prettifyDestSlug(slug: string) {
+  return slug
+    .split("-")
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join(" ");
+}
+
+export default async function CustomizeTripPage({ searchParams }: Props) {
+  // Pre-fill context from referring page. /packages → adds ?package=slug,
+  // /destinations → adds ?destination=slug. We resolve the package title
+  // server-side so the context chip says "Customising: <Real Title>" not the
+  // raw slug. Sanity miss falls back gracefully to the slug.
+  const packageSlug = searchParams?.package?.trim();
+  const destSlug = searchParams?.destination?.trim();
+  const pkg = packageSlug
+    ? await getPackageBySlug(packageSlug).catch(() => null)
+    : null;
+  const packageContext = pkg?.title;
+  const destinationContext = destSlug ? prettifyDestSlug(destSlug) : undefined;
+
+  // Light Service + FAQ JSON-LD so this lead-gen page registers with search
+  // engines as a bookable concierge service rather than just a contact form.
+  const serviceLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Trust and Trip — Custom Trip Planning",
+    serviceType: "Travel itinerary design",
+    provider: { "@type": "TravelAgency", name: "Trust and Trip" },
+    areaServed: ["India", "Asia", "Europe", "Worldwide"],
+    description:
+      "A real planner builds a hand-crafted itinerary within 24 hours. Free until you're sure.",
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "INR",
+      price: 0,
+      description: "Free proposal — no card required.",
+    },
+  };
+
   return (
     <>
+      <JsonLd data={serviceLd} />
+
       <section className="relative pt-28 md:pt-36 pb-12 md:pb-16 bg-tat-paper overflow-hidden">
         <div
           aria-hidden
@@ -48,6 +96,50 @@ export default function CustomizeTripPage() {
             Skip the templates. Tell us your idea, your budget, your people — and we'll build a
             journey that fits like a favorite jacket.
           </p>
+
+          {/* Pre-fill context chip — visible only when the page was reached
+              from a specific package or destination. Reassures the user we
+              already know what they're customising and lets them clear it. */}
+          {(pkg || destinationContext) && (
+            <div className="mt-7 inline-flex items-center gap-3 bg-white rounded-2xl ring-1 ring-tat-charcoal/8 px-4 py-3 max-w-full">
+              {pkg?.image && (
+                <span className="relative h-12 w-12 rounded-xl overflow-hidden shrink-0 bg-tat-cream">
+                  <Image src={pkg.image} alt="" fill sizes="48px" className="object-cover" />
+                </span>
+              )}
+              <div className="min-w-0">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-tat-burnt font-semibold">
+                  Customising
+                </p>
+                <p className="font-medium text-tat-charcoal truncate text-sm md:text-base">
+                  {pkg?.title ?? `Trip to ${destinationContext}`}
+                </p>
+                {pkg && (
+                  <div className="mt-1 flex items-center gap-3 text-[11px] text-tat-charcoal/55">
+                    {pkg.duration && (
+                      <span className="inline-flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {pkg.duration}
+                      </span>
+                    )}
+                    {pkg.price > 0 && (
+                      <span className="inline-flex items-center gap-1">
+                        <IndianRupee className="h-3 w-3" />
+                        from ₹{pkg.price.toLocaleString("en-IN")}/person
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+              <Link
+                href="/customize-trip"
+                aria-label="Clear pre-filled trip"
+                className="ml-auto grid place-items-center h-7 w-7 rounded-full text-tat-charcoal/40 hover:bg-tat-charcoal/5 hover:text-tat-charcoal transition-colors shrink-0"
+              >
+                <X className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -77,9 +169,16 @@ export default function CustomizeTripPage() {
       <section className="py-12 md:py-16 bg-tat-cream/40">
         <div className="container-custom max-w-4xl">
           <LeadForm
-            title="Get a free itinerary"
-            subtitle="A few details to get us started. Your message opens directly in WhatsApp — a real planner replies within 2 hours."
+            title={packageContext ? `Customise the ${packageContext} trip` : "Get a free itinerary"}
+            subtitle={
+              packageContext
+                ? "Tell us what you'd like to change — hotels, pace, activities, dates. A real planner replies within 2 hours."
+                : "A few details to get us started. Your message opens directly in WhatsApp — a real planner replies within 2 hours."
+            }
             source="trip_planner"
+            packageContext={packageContext}
+            packageSlug={packageSlug}
+            destinationContext={destinationContext}
           />
         </div>
       </section>
