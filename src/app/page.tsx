@@ -38,6 +38,7 @@ import {
   getBlogPosts,
 } from "@/lib/sanity-queries";
 import { fetchGoogleReviews } from "@/lib/google-reviews";
+import { getSiteStats } from "@/lib/site-stats";
 
 // Below-fold — chunk-split, still SSR'd for SEO. Skeletons reserve height
 // AND signal loading so a slow CDN response doesn't read as a blank gap.
@@ -88,6 +89,7 @@ export default async function HomePage() {
     pressQuote,
     ugcPosts,
     blogPosts,
+    siteStats,
   ] = await Promise.all([
     getDestinations(),
     getPilgrimPackages(),
@@ -101,6 +103,7 @@ export default async function HomePage() {
     getFeaturedPressQuote(),
     getUgcPosts(),
     getBlogPosts().catch(() => []),
+    getSiteStats(),
   ]);
 
   const c = content ?? {};
@@ -124,7 +127,7 @@ export default async function HomePage() {
         titleStart={c.hero?.titleStart}
         titleItalic={c.hero?.titleItalic}
         lede={c.hero?.lede}
-        trustStrip={c.hero?.trustStrip}
+        trustStrip={c.hero?.trustStrip ?? siteStats.trustStripLine}
         destinations={destinations.map((d) => ({
           slug: d.slug,
           name: d.name,
