@@ -1,15 +1,76 @@
 import LeadForm from "@/components/LeadForm";
 import IntentAnchor from "@/components/IntentAnchor";
+import JsonLd from "@/components/JsonLd";
 import { Mail, MapPin, Phone, Clock, MessageCircle } from "lucide-react";
 
 export const metadata = {
   title: "Contact — Trust and Trip",
   description: "Talk to our planners. Real humans, real replies, 24/7.",
+  alternates: { canonical: "https://trustandtrip.com/contact" },
 };
 
+const OFFICE_ADDRESS =
+  "R-607, Amrapali Princely, Noida Sector 71, Gautambuddh Nagar 201301";
+const PHONE_PRIMARY = "+91 8115 999 588";
+const PHONE_SECONDARY = "+91 7275 999 588";
+const WHATSAPP = "+918115999588";
+const EMAIL = "hello@trustandtrip.com";
+
 export default function ContactPage() {
+  // ContactPage + TravelAgency schema. Search engines surface call /
+  // WhatsApp / address chips next to the result when this is set.
+  const contactLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: "Contact — Trust and Trip",
+    url: "https://trustandtrip.com/contact",
+    mainEntity: {
+      "@type": "TravelAgency",
+      name: "Trust and Trip",
+      url: "https://trustandtrip.com",
+      email: EMAIL,
+      telephone: PHONE_PRIMARY,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "R-607, Amrapali Princely, Sector 71",
+        addressLocality: "Noida",
+        addressRegion: "Uttar Pradesh",
+        postalCode: "201301",
+        addressCountry: "IN",
+      },
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          telephone: PHONE_PRIMARY,
+          contactType: "customer service",
+          areaServed: "IN",
+          availableLanguage: ["English", "Hindi"],
+        },
+        {
+          "@type": "ContactPoint",
+          telephone: PHONE_SECONDARY,
+          contactType: "customer service",
+          areaServed: "IN",
+          availableLanguage: ["English", "Hindi"],
+        },
+      ],
+      // Office hours: 08:00–22:00, closed Tuesday.
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          opens: "08:00",
+          closes: "22:00",
+        },
+      ],
+    },
+  };
+
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(OFFICE_ADDRESS)}&output=embed`;
+
   return (
     <>
+      <JsonLd data={contactLd} />
       <section className="pt-28 md:pt-36 pb-12 bg-tat-paper">
         <div className="container-custom max-w-5xl">
           <span className="eyebrow">Get in touch</span>
@@ -66,6 +127,18 @@ export default function ContactPage() {
                 Some of the best trips in our history started with "I don't know where I
                 want to go, but I know how I want to feel." We'll take it from there.
               </p>
+            </div>
+
+            {/* Office location map — lazy-loaded so it doesn't block first
+                paint on a page that's mostly read, not interacted with. */}
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl border border-tat-charcoal/8 bg-tat-cream">
+              <iframe
+                title="Trust and Trip office location"
+                src={mapSrc}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="absolute inset-0 w-full h-full border-0"
+              />
             </div>
           </div>
 
