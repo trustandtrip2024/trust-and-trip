@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Play, X } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 
 interface Props {
   /** YouTube/Vimeo embed URL or a self-hosted MP4. When absent the
@@ -54,7 +55,11 @@ export default function HomeBrandReel({
 
         <button
           type="button"
-          onClick={() => hasVideo && setOpen(true)}
+          onClick={() => {
+            if (!hasVideo) return;
+            analytics.brandReelPlay();
+            setOpen(true);
+          }}
           aria-label={hasVideo ? "Play brand video" : "Brand video coming soon"}
           disabled={!hasVideo}
           className="group relative block w-full aspect-video rounded-card overflow-hidden bg-tat-charcoal shadow-card transition duration-200 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 disabled:cursor-default"
