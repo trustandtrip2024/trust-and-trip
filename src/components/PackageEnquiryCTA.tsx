@@ -28,7 +28,7 @@ export default function PackageEnquiryCTA({ packageTitle, price, duration }: Pro
       className="fixed inset-x-0 z-40 lg:hidden"
       style={{ bottom: "calc(4rem + env(safe-area-inset-bottom))" }}
     >
-      <div className="mx-3 mb-2 rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(11,28,44,0.18)] border border-white/60">
+      <div className="mx-3 mb-2 rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(42,42,42,0.18)] border border-white/60">
         {/* Price strip */}
         <div className="bg-tat-charcoal px-4 py-2.5 flex items-center justify-between">
           <div>

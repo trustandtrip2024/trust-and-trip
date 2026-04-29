@@ -15,9 +15,14 @@ export default function GlobalError({
     console.error("[global-error]", error);
   }, [error]);
 
+  // Inline styles only — this renders outside the root layout so the
+  // Tailwind stylesheet hasn't loaded. Hex literals mirror tat tokens:
+  //   PAPER    = #FBF7F1 (tat-paper)
+  //   CHARCOAL = #2A2A2A (tat-charcoal)
+  //   TEAL     = #0E7C7B (tat-teal — primary CTA)
   return (
     <html lang="en">
-      <body style={{ margin: 0, fontFamily: "system-ui, sans-serif", background: "#F6F1E7", color: "#0B1C2C" }}>
+      <body style={{ margin: 0, fontFamily: "system-ui, sans-serif", background: "#FBF7F1", color: "#2A2A2A" }}>
         <div style={{ minHeight: "70vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
           <div style={{ maxWidth: 520, textAlign: "center" }}>
             <h1 style={{ fontSize: "1.5rem", marginBottom: 12 }}>Something went wrong.</h1>
@@ -27,13 +32,13 @@ export default function GlobalError({
             <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
               <button
                 onClick={reset}
-                style={{ padding: "0.65rem 1.25rem", background: "#0B1C2C", color: "#F6F1E7", border: 0, borderRadius: 10, cursor: "pointer", fontWeight: 600 }}
+                style={{ padding: "0.65rem 1.25rem", background: "#0E7C7B", color: "#FBF7F1", border: 0, borderRadius: 10, cursor: "pointer", fontWeight: 600 }}
               >
                 Try again
               </button>
               <a
                 href="/"
-                style={{ padding: "0.65rem 1.25rem", background: "transparent", color: "#0B1C2C", border: "1px solid rgba(11,28,44,0.2)", borderRadius: 10, textDecoration: "none", fontWeight: 600 }}
+                style={{ padding: "0.65rem 1.25rem", background: "transparent", color: "#2A2A2A", border: "1px solid rgba(42,42,42,0.2)", borderRadius: 10, textDecoration: "none", fontWeight: 600 }}
               >
                 Go home
               </a>

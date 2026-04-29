@@ -135,7 +135,7 @@ export default function DashboardNav({ user }: Props) {
             className="absolute inset-0 bg-tat-charcoal/40 backdrop-blur-sm"
             onClick={() => setMoreOpen(false)}
           />
-          <div className="absolute bottom-0 inset-x-0 bg-white rounded-t-3xl p-5 pb-8 shadow-[0_-8px_32px_rgba(11,28,44,0.15)] animate-slide-up">
+          <div className="absolute bottom-0 inset-x-0 bg-white rounded-t-3xl p-5 pb-8 shadow-[0_-8px_32px_rgba(42,42,42,0.15)] animate-slide-up">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-tat-gold/20 flex items-center justify-center">
