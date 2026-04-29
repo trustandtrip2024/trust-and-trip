@@ -149,7 +149,7 @@ export default function SearchBar() {
                 <button
                   key={d.slug}
                   onClick={() => go(d.slug)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal/5 hover:bg-tat-gold hover:text-tat-charcoal text-sm text-tat-charcoal/70 transition-all duration-150 font-medium"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal/5 hover:bg-tat-teal hover:text-tat-paper text-sm text-tat-charcoal/70 transition-all duration-150 font-medium"
                 >
                   <MapPin className="h-3 w-3 text-tat-gold" />
                   {d.label}

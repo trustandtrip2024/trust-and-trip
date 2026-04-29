@@ -217,7 +217,7 @@ export default function ScheduleCallModal({ packageTitle, packageSlug, destinati
             </div>
             <button
               onClick={onClose}
-              className="mt-1 px-6 py-2.5 bg-tat-charcoal text-tat-paper rounded-full text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all"
+              className="mt-1 px-6 py-2.5 bg-tat-teal text-tat-paper rounded-full text-sm font-medium hover:bg-tat-teal-deep transition-all"
             >
               Done
             </button>

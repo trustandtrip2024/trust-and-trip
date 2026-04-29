@@ -50,20 +50,37 @@ h1, h2, h3 {
     @apply mx-auto w-full max-w-7xl px-5 md:px-8 lg:px-12;
   }
 
+  /* ─── Button system (locked 2026-04-29) ──────────────────────────
+     Hierarchy:
+       .btn-primary  — TEAL solid. Site-wide hero CTA. The user is
+                       being asked to engage. Use everywhere a single
+                       primary call-to-action lives.
+       .btn-accent   — GOLD solid. Decorative / warm CTA. Pair with
+                       cream/paper sections, "Talk to a planner",
+                       wishlist share, secondary delight buttons.
+       .btn-urgent   — ORANGE solid. Limited slots, flash deals,
+                       countdown CTAs. Use sparingly.
+       .btn-outline  — CHARCOAL outlined. Secondary CTA in pairs.
+       .btn-ghost    — Transparent. Tertiary / dismissive.
+     Legacy aliases (.btn-gold / .btn-ember) are kept as redirects so
+     existing component classNames keep rendering correctly while the
+     codebase migrates to the canonical names. */
   .btn-primary {
-    @apply inline-flex items-center gap-2 bg-tat-charcoal text-tat-paper px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-gold hover:text-tat-charcoal hover:-translate-y-0.5 hover:shadow-glow-gold;
+    @apply inline-flex items-center gap-2 bg-tat-teal text-tat-paper px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-teal-deep hover:-translate-y-0.5 hover:shadow-glow-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-teal/60;
   }
 
+  .btn-accent,
   .btn-gold {
-    @apply inline-flex items-center gap-2 bg-tat-gold text-tat-charcoal px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-charcoal hover:text-tat-paper hover:-translate-y-0.5;
+    @apply inline-flex items-center gap-2 bg-tat-gold text-tat-charcoal px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-teal hover:text-tat-paper hover:-translate-y-0.5 hover:shadow-glow-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold/60;
   }
 
+  .btn-urgent,
   .btn-ember {
     @apply inline-flex items-center gap-2 bg-tat-orange text-tat-paper px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-ember focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange/60;
   }
 
   .btn-outline {
-    @apply inline-flex items-center gap-2 border border-tat-charcoal/20 text-tat-charcoal px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal;
+    @apply inline-flex items-center gap-2 border border-tat-charcoal/20 text-tat-charcoal px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-charcoal/40;
   }
 
   .btn-ghost {

@@ -86,7 +86,7 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
             </div>
             <button
               onClick={onClose}
-              className="mt-2 px-6 py-2.5 bg-tat-charcoal text-tat-paper rounded-full text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all"
+              className="mt-2 px-6 py-2.5 bg-tat-teal text-tat-paper rounded-full text-sm font-medium hover:bg-tat-teal-deep transition-all"
             >
               Close
             </button>
