@@ -279,6 +279,7 @@ export default async function HomePage() {
           placeholder={c.newsletter?.placeholder}
           buttonLabel={c.newsletter?.buttonLabel}
           footerMicrocopy={c.newsletter?.footerMicrocopy}
+          totalTravelers={siteStats.totalTravelers}
         />
       </div>
 
