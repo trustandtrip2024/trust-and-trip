@@ -1,0 +1,16 @@
+# Local audit + report output — never needed at build time
+lighthouse-*.report.html
+lighthouse-*.report.json
+gitleaks-report.txt
+PROJECT.md
+
+# Scratch directories from local Claude Code + Sanity tooling
+.claude/
+.sanity/
+.tmp-audit/
+
+# Supabase CLI scratch
+supabase/.temp/
+
+# Worktree leftovers
+.git-worktree/
