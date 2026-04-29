@@ -121,7 +121,7 @@ export default function ByHowYouTravelSection({
   return (
     <section
       aria-labelledby="bhyt-title"
-      className="py-12 md:py-16 lg:py-20 bg-tat-paper dark:bg-tat-charcoal"
+      className="py-16 md:py-24 bg-tat-paper dark:bg-tat-charcoal"
     >
       <div className="container-custom">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />

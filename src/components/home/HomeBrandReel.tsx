@@ -34,7 +34,7 @@ export default function HomeBrandReel({
   return (
     <section
       aria-labelledby="reel-title"
-      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal"
+      className="py-16 md:py-24 bg-tat-paper dark:bg-tat-charcoal"
     >
       <div className="container-custom max-w-5xl">
         <div className="text-center max-w-2xl mx-auto mb-8 md:mb-10">

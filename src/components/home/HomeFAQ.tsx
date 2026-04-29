@@ -51,7 +51,7 @@ export default function HomeFAQ() {
   };
 
   return (
-    <section id="faq" aria-labelledby="faq-title" className="py-14 md:py-20 lg:py-24 bg-tat-paper dark:bg-tat-charcoal">
+    <section id="faq" aria-labelledby="faq-title" className="py-16 md:py-24 bg-tat-paper dark:bg-tat-charcoal">
       <div className="container-custom max-w-4xl">
         <SectionHeader
           eyebrow="Questions, answered"

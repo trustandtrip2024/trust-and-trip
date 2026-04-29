@@ -107,7 +107,7 @@ export default function PressPartnersBand({
   return (
     <section
       aria-labelledby="press-title"
-      className="py-18 md:py-22 bg-tat-paper border-y border-tat-charcoal/12"
+      className="py-16 md:py-24 bg-tat-paper border-y border-tat-charcoal/12"
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-6xl">
         <div className="text-center">

@@ -67,7 +67,7 @@ export default function VisaFreeDestinations() {
   return (
     <section
       aria-labelledby="visa-free-title"
-      className="relative py-18 md:py-22 bg-gradient-to-b from-tat-cream-warm/40 via-tat-paper to-tat-paper"
+      className="relative py-16 md:py-24 bg-gradient-to-b from-tat-cream-warm/40 via-tat-paper to-tat-paper"
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <div className="flex items-start justify-between gap-6 flex-wrap">

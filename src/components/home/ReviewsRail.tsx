@@ -158,7 +158,7 @@ export default function ReviewsRail({
       : [];
 
   return (
-    <section aria-labelledby="reviews-title" className="py-18 md:py-22">
+    <section aria-labelledby="reviews-title" className="py-16 md:py-24">
       {videoJsonLd.length > 0 &&
         videoJsonLd.map((j, i) => (
           <script

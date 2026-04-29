@@ -258,7 +258,7 @@ export default function HomeOfferDealsRail() {
   return (
     <section
       aria-labelledby="home-deals-title"
-      className="py-16 md:py-22 bg-gradient-to-b from-tat-paper via-white to-tat-paper dark:from-tat-charcoal dark:via-tat-charcoal dark:to-tat-charcoal"
+      className="py-16 md:py-24 bg-gradient-to-b from-tat-paper via-white to-tat-paper dark:from-tat-charcoal dark:via-tat-charcoal dark:to-tat-charcoal"
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <div className="flex items-end justify-between gap-4 flex-wrap">

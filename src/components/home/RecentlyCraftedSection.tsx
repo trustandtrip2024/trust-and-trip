@@ -39,7 +39,7 @@ export default function RecentlyCraftedSection({
   }, [active]);
 
   return (
-    <section aria-labelledby="recent-title" className="py-18 md:py-22">
+    <section aria-labelledby="recent-title" className="py-16 md:py-24">
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 

@@ -70,7 +70,7 @@ export default function WhyTrustAndTripPillars({
   return (
     <section
       aria-labelledby="pillars-title"
-      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal/95"
+      className="py-16 md:py-24 bg-tat-paper dark:bg-tat-charcoal/95"
     >
       <div className="container-custom max-w-6xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} align="center" />

@@ -29,7 +29,7 @@ export default function FinalCTABand({
   return (
     <section
       aria-labelledby="final-cta-title"
-      className="bg-tat-charcoal text-white py-18 md:py-22"
+      className="bg-tat-charcoal text-white py-16 md:py-24"
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-3xl text-center">
         <p className="text-eyebrow uppercase font-medium text-tat-orange-soft/90">{eyebrow}</p>

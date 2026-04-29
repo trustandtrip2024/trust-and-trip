@@ -46,14 +46,16 @@ import OfferBannerStrip from "@/components/home/OfferBannerStrip";
 
 // Below-fold — chunk-split, still SSR'd for SEO. Skeletons reserve height
 // AND signal loading so a slow CDN response doesn't read as a blank gap.
-const ReviewsRail            = dynamic(() => import("@/components/home/ReviewsRail"),            { loading: () => <RailSkeleton aspect="square"   height={560} cards={4} /> });
-const LoveFromTheGramStrip   = dynamic(() => import("@/components/home/LoveFromTheGramStrip"),   { loading: () => <RailSkeleton aspect="square"   height={480} cards={6} /> });
-const WhyTrustAndTripPillars = dynamic(() => import("@/components/home/WhyTrustAndTripPillars"), { loading: () => <div className="h-[520px]" />                                  });
-const PressPartnersBand      = dynamic(() => import("@/components/home/PressPartnersBand"),      { loading: () => <div className="h-[420px]" />                                  });
-const HomeOfferDealsRail     = dynamic(() => import("@/components/home/HomeOfferDealsRail"),     { loading: () => <RailSkeleton aspect="portrait" height={640} cards={4} /> });
+// Heights tuned to live render at desktop py-16 md:py-24 rhythm so swap-in
+// doesn't trigger CLS.
+const ReviewsRail            = dynamic(() => import("@/components/home/ReviewsRail"),            { loading: () => <RailSkeleton aspect="square"   height={720} cards={4} /> });
+const LoveFromTheGramStrip   = dynamic(() => import("@/components/home/LoveFromTheGramStrip"),   { loading: () => <RailSkeleton aspect="square"   height={640} cards={6} /> });
+const WhyTrustAndTripPillars = dynamic(() => import("@/components/home/WhyTrustAndTripPillars"), { loading: () => <div className="h-[640px]" />                                  });
+const PressPartnersBand      = dynamic(() => import("@/components/home/PressPartnersBand"),      { loading: () => <div className="h-[360px]" />                                  });
+const HomeOfferDealsRail     = dynamic(() => import("@/components/home/HomeOfferDealsRail"),     { loading: () => <RailSkeleton aspect="portrait" height={800} cards={4} /> });
 const FinalCTABand           = dynamic(() => import("@/components/home/FinalCTABand"),           { loading: () => <div className="h-[420px]" />                                  });
 const HomeNewsletter         = dynamic(() => import("@/components/home/HomeNewsletter"),         { loading: () => <div className="h-[360px]" />                                  });
-const SeoFooterIndex         = dynamic(() => import("@/components/home/SeoFooterIndex"),         { loading: () => <div className="h-[640px]" />                                  });
+const SeoFooterIndex         = dynamic(() => import("@/components/home/SeoFooterIndex"),         { loading: () => <div className="h-[720px]" />                                  });
 const LiveActivityTicker     = dynamic(() => import("@/components/home/LiveActivityTicker"),     { ssr: false });
 
 // Sanity Package -> PackageCardProps so card hrefs point at real pages.

@@ -44,7 +44,7 @@ export default function HomeBlogTeaser({ posts }: Props = {}) {
   const useStatic = !posts || posts.length === 0;
 
   return (
-    <section id="guides" aria-labelledby="guides-title" className="py-14 md:py-20 lg:py-24 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95">
+    <section id="guides" aria-labelledby="guides-title" className="py-16 md:py-24 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95">
       <div className="container-custom">
         <div className="flex flex-wrap items-end justify-between gap-6 mb-8 md:mb-12">
           <SectionHeader

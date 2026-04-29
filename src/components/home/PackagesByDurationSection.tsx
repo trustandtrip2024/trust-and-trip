@@ -37,7 +37,7 @@ export default function PackagesByDurationSection({
   );
 
   return (
-    <section aria-labelledby="duration-title" className={`${tightTop ? "pt-4 md:pt-6 pb-18 md:pb-22" : "py-18 md:py-22"} bg-tat-paper`}>
+    <section aria-labelledby="duration-title" className={`${tightTop ? "pt-4 md:pt-6 pb-16 md:pb-24" : "py-16 md:py-24"} bg-tat-paper`}>
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 

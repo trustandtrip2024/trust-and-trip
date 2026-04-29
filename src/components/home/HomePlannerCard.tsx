@@ -57,7 +57,7 @@ export default function HomePlannerCard({
   return (
     <section
       aria-labelledby="planner-card-title"
-      className="py-12 md:py-16 bg-tat-cream-warm/30 dark:bg-tat-charcoal/95"
+      className="py-16 md:py-24 bg-tat-cream-warm/30 dark:bg-tat-charcoal/95"
     >
       <script
         type="application/ld+json"
