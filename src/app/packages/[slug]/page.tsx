@@ -76,14 +76,25 @@ export default async function PackageDetail({ params }: Props) {
   ]);
   const galleryImages = getGalleryImages(pkg.destinationSlug, pkg.heroImage);
 
-  const originalPrice = Math.round(pkg.price * 1.22);
-  const discount = Math.round(((originalPrice - pkg.price) / originalPrice) * 100);
+  // Real "vs OTA" reference price comes from Sanity comparePrice — only set
+  // when the content team has verified savings against an aggregator. No
+  // synthetic 22% markup so detail pages don't fake a discount on every
+  // package.
+  const originalPrice = pkg.comparePrice && pkg.comparePrice > pkg.price ? pkg.comparePrice : undefined;
   // Real Supabase numbers (with a deterministic floor for brand-new
   // packages). Editor-supplied bookedThisMonth still wins when set so the
   // content team can override for marketing campaigns.
   const viewedCount = stats.viewedCount;
   const enquiredCount = pkg.bookedThisMonth ?? stats.enquiredCount;
   const hotelStars = pkg.hotel?.stars ?? 3;
+
+  // Soonest future fixed-departure batch — drives sticky-bar urgency.
+  const nextDeparture = pkg.departures
+    ?.filter((d) => {
+      const t = new Date(d.date).getTime();
+      return !Number.isNaN(t) && t > Date.now();
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
 
   const waBook = `https://wa.me/${WA}?text=${encodeURIComponent(`Hi Trust and Trip! 🙏\n\nI'd like to book the *${pkg.title}* package (₹${pkg.price.toLocaleString("en-IN")}/person · ${pkg.duration}).\n\nPlease help me proceed.`)}`;
 
@@ -481,13 +492,19 @@ export default async function PackageDetail({ params }: Props) {
         </section>
       )}
 
-      {/* Sticky mobile bottom bar */}
+      {/* Sticky mobile bottom bar — every promo claim backed by real
+          Sanity / Supabase data. No synthetic discounts or hash-based
+          ribbons. */}
       <PackageStickyBar
         price={pkg.price}
         title={pkg.title}
         slug={pkg.slug}
         duration={pkg.duration}
         originalPrice={originalPrice}
+        limitedSlots={pkg.limitedSlots}
+        enquiredCount={enquiredCount}
+        nextDepartureDate={nextDeparture?.date}
+        nextDepartureSlots={nextDeparture?.slotsLeft}
       />
     </>
   );

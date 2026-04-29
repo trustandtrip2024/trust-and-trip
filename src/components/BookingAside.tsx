@@ -16,7 +16,10 @@ interface Props {
   title: string;
   slug: string;
   price: number;
-  originalPrice: number;
+  /** Sanity comparePrice — only set when the content team has verified
+   *  savings against an aggregator. Drives the strikethrough + savings pill
+   *  ONLY when present. No synthetic markup. */
+  originalPrice?: number;
   duration: string;
   travelType: string;
   rating: number;
@@ -26,28 +29,15 @@ interface Props {
   viewedCount: number;
   enquiredCount: number;
   waNumber: string;
+  /** When Sanity sets a real sale-ends-at datetime, drives the countdown.
+   *  No synthetic per-slug deadlines. */
   saleEndsAt?: string;
 }
 
-function hashSlug(slug: string): number {
-  let h = 0;
-  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) >>> 0;
-  return h;
-}
-
-// Deterministic rolling 24-h sale window per package. Each calendar day a
-// fresh window starts at midnight + slug-hash offset, so refreshes don't
-// reset the timer mid-session yet every package has a different ending hour.
-function packageDeadline(slug: string): number {
-  const dayStart = new Date();
-  dayStart.setHours(0, 0, 0, 0);
-  const offsetHours = hashSlug(slug) % 24;
-  return dayStart.getTime() + (24 + offsetHours) * 3_600_000;
-}
-
-function useCountdown(target?: string, slug?: string) {
-  const fallback = slug ? packageDeadline(slug) : 0;
-  const deadline = target ? new Date(target).getTime() : fallback;
+// Real-only countdown — driven exclusively by Sanity saleEndsAt prop. No
+// per-slug fake deadlines. Returns null when target absent / past.
+function useCountdown(target?: string) {
+  const deadline = target ? new Date(target).getTime() : 0;
   const [now, setNow] = useState<number>(() => Date.now());
   useEffect(() => {
     if (!deadline) return;
@@ -69,8 +59,8 @@ export default function BookingAside({
   destinationName, departsFrom = "Dehradun", viewedCount, enquiredCount,
   waNumber, saleEndsAt,
 }: Props) {
-  const savings = originalPrice - price;
-  const countdown = useCountdown(saleEndsAt, slug);
+  const savings = originalPrice && originalPrice > price ? originalPrice - price : 0;
+  const countdown = useCountdown(saleEndsAt);
 
   const waMessage = encodeURIComponent(
     `Hi! I'm interested in "${title}" (₹${price.toLocaleString("en-IN")}). Could you share more details?`
@@ -126,7 +116,7 @@ export default function BookingAside({
 
       {/* Price */}
       <div>
-        {savings > 0 && (
+        {savings > 0 && originalPrice && (
           <Price
             inr={originalPrice}
             className="text-[12px] text-tat-slate/80 line-through block"
