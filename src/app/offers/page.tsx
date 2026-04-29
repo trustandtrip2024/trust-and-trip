@@ -7,11 +7,22 @@ import { getOfferPackages } from "@/lib/sanity-queries";
 import { Clock, Tag, ArrowRight, Flame, Star, Zap, MessageCircle } from "lucide-react";
 import CTASection from "@/components/CTASection";
 import CountdownTimer from "@/components/CountdownTimer";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata = {
   title: "Offers & Deals — Trust and Trip",
   description: "Limited-time journeys, exclusive rates, and curated deals — save up to 25% on handcrafted packages.",
   alternates: { canonical: "https://trustandtrip.com/offers" },
+  openGraph: {
+    title: "Offers & Deals — Trust and Trip",
+    description: "Limited-time journeys, exclusive rates, and curated deals — save up to 25%.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Offers & Deals — Trust and Trip",
+    description: "Save up to 25% on handcrafted packages.",
+  },
 };
 
 // End dates rolling from today — refreshes every revalidation cycle
@@ -53,8 +64,50 @@ export default async function OffersPage() {
   const hotOffers = offers.filter((o) => o.hot);
   const regularOffers = offers.filter((o) => !o.hot);
 
+  // ItemList of Product + Offer entries — search engines surface these as
+  // rich deal results with strikethrough price + sale-end date.
+  const offersLd = offers.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Trust and Trip — Active travel deals",
+    numberOfItems: offers.length,
+    itemListElement: offers.slice(0, 25).map((o, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Product",
+        name: o.title,
+        image: o.image,
+        url: `https://trustandtrip.com/packages/${o.slug}`,
+        brand: { "@type": "Brand", name: "Trust and Trip" },
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "INR",
+          price: o.price,
+          highPrice: o.originalPrice,
+          lowPrice: o.price,
+          priceValidUntil: o.endsAt,
+          availability: "https://schema.org/InStock",
+          url: `https://trustandtrip.com/packages/${o.slug}`,
+          seller: { "@type": "TravelAgency", name: "Trust and Trip" },
+        },
+        ...(o.rating && {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: o.rating,
+            reviewCount: o.reviews,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }),
+      },
+    })),
+  } : null;
+
   return (
     <>
+      {offersLd && <JsonLd data={offersLd} />}
+
       {/* Urgency banner */}
       <div className="bg-tat-gold text-tat-charcoal py-3 text-center text-sm font-medium">
         <span className="flex items-center justify-center gap-2">
