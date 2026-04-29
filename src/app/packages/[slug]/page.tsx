@@ -269,6 +269,9 @@ export default async function PackageDetail({ params }: Props) {
                   title: day.title,
                   description: day.description,
                   meals: day.meals,
+                  highlights: day.images && day.images.length > 0
+                    ? { value: "Photos from this day", images: day.images }
+                    : undefined,
                 }))}
               />
             </section>

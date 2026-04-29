@@ -44,6 +44,7 @@ export type Package = {
     title: string;
     description: string;
     meals?: { breakfast?: boolean; lunch?: boolean; dinner?: boolean };
+    images?: string[];
   }[];
   activities: string[];
   categories?: string[];

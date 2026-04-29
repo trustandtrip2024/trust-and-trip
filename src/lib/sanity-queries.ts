@@ -129,7 +129,8 @@ const PACKAGE_FIELDS = `
   "hotel": hotel,
   "itinerary": itinerary[]{
     day, title, description,
-    "meals": meals
+    "meals": meals,
+    "images": images[].asset->url
   },
   "activities": activities,
   "categories": categories,
@@ -221,6 +222,7 @@ function mapPackage(p: SanityPackage): Package {
           title: d?.title ?? "",
           description: d?.description ?? "",
           meals: d?.meals,
+          images: Array.isArray(d?.images) ? d.images.filter(Boolean) : undefined,
         }))
       : [],
     hotel: p.hotel
