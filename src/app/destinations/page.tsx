@@ -3,9 +3,10 @@ export const revalidate = 30;
 import Link from "next/link";
 import Image from "next/image";
 import CTASection from "@/components/CTASection";
-import { getDestinations } from "@/lib/sanity-queries";
+import JsonLd from "@/components/JsonLd";
+import { getDestinations, getPackages } from "@/lib/sanity-queries";
 import type { Destination } from "@/lib/data";
-import { ArrowUpRight, MapPin, IndianRupee } from "lucide-react";
+import { ArrowUpRight, MapPin, IndianRupee, Compass } from "lucide-react";
 
 export const metadata = {
   title: "Destinations — Explore Incredible India & the World",
@@ -31,7 +32,7 @@ function isIndia(d: Destination) {
 }
 
 // Compact card for India destinations
-function IndiaCard({ d, priority }: { d: Destination; priority?: boolean }) {
+function IndiaCard({ d, priority, packageCount }: { d: Destination; priority?: boolean; packageCount?: number }) {
   return (
     <Link
       href={`/destinations/${d.slug}`}
@@ -70,20 +71,27 @@ function IndiaCard({ d, priority }: { d: Destination; priority?: boolean }) {
             <ArrowUpRight className="h-3.5 w-3.5 text-tat-charcoal/50 group-hover:text-tat-charcoal transition-colors" />
           </div>
         </div>
-        {d.priceFrom > 0 && (
-          <p className="mt-3 text-xs text-tat-charcoal/40 flex items-center gap-1">
-            <IndianRupee className="h-3 w-3" />
-            from <span className="font-semibold text-tat-charcoal/70 ml-0.5">₹{d.priceFrom.toLocaleString("en-IN")}</span>
-            <span className="text-tat-charcoal/30">/person</span>
-          </p>
-        )}
+        <div className="mt-3 flex items-center justify-between gap-2 text-xs text-tat-charcoal/40">
+          {d.priceFrom > 0 ? (
+            <p className="flex items-center gap-1">
+              <IndianRupee className="h-3 w-3" />
+              from <span className="font-semibold text-tat-charcoal/70 ml-0.5">₹{d.priceFrom.toLocaleString("en-IN")}</span>
+            </p>
+          ) : <span />}
+          {typeof packageCount === "number" && packageCount > 0 && (
+            <p className="inline-flex items-center gap-1 text-[11px] font-medium text-tat-charcoal/55">
+              <Compass className="h-3 w-3" />
+              {packageCount} {packageCount === 1 ? "trip" : "trips"}
+            </p>
+          )}
+        </div>
       </div>
     </Link>
   );
 }
 
 // Wider card for International destinations
-function IntlCard({ d, priority }: { d: Destination; priority?: boolean }) {
+function IntlCard({ d, priority, packageCount }: { d: Destination; priority?: boolean; packageCount?: number }) {
   return (
     <Link
       href={`/destinations/${d.slug}`}
@@ -116,9 +124,17 @@ function IntlCard({ d, priority }: { d: Destination; priority?: boolean }) {
           <h3 className="font-display text-xl font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors leading-tight truncate">
             {d.name}
           </h3>
-          {d.tagline && (
-            <p className="text-xs text-tat-charcoal/50 mt-0.5 truncate">{d.tagline}</p>
-          )}
+          <div className="flex items-center gap-2 mt-0.5">
+            {d.tagline && (
+              <p className="text-xs text-tat-charcoal/50 truncate">{d.tagline}</p>
+            )}
+            {typeof packageCount === "number" && packageCount > 0 && (
+              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-tat-charcoal/55 shrink-0">
+                <Compass className="h-3 w-3" />
+                {packageCount} {packageCount === 1 ? "trip" : "trips"}
+              </span>
+            )}
+          </div>
         </div>
         {d.priceFrom > 0 && (
           <div className="text-right shrink-0">
@@ -133,13 +149,39 @@ function IntlCard({ d, priority }: { d: Destination; priority?: boolean }) {
 }
 
 export default async function DestinationsPage() {
-  const destinations = await getDestinations();
+  const [destinations, packages] = await Promise.all([
+    getDestinations(),
+    getPackages().catch(() => []),
+  ]);
+
+  // Pre-compute package count per destination slug so cards can show "12 trips"
+  // without each card refetching.
+  const packageCountBySlug = new Map<string, number>();
+  for (const p of packages) {
+    packageCountBySlug.set(p.destinationSlug, (packageCountBySlug.get(p.destinationSlug) ?? 0) + 1);
+  }
 
   const india = destinations.filter(isIndia);
   const international = destinations.filter((d) => !isIndia(d));
 
+  // ItemList JSON-LD seeds search engines with the canonical destination
+  // catalog regardless of how the page is split into India / International.
+  const listLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Trust and Trip — Destinations",
+    numberOfItems: destinations.length,
+    itemListElement: destinations.slice(0, 60).map((d, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `https://trustandtrip.com/destinations/${d.slug}`,
+      name: d.name,
+    })),
+  };
+
   return (
     <>
+      <JsonLd data={listLd} />
       {/* Hero */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 bg-tat-charcoal overflow-hidden">
         <div className="absolute inset-0">
@@ -205,7 +247,7 @@ export default async function DestinationsPage() {
             {/* 4-col compact grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
               {india.map((d, i) => (
-                <IndiaCard key={d.slug} d={d} priority={i < 4} />
+                <IndiaCard key={d.slug} d={d} priority={i < 4} packageCount={packageCountBySlug.get(d.slug)} />
               ))}
             </div>
 
@@ -251,7 +293,7 @@ export default async function DestinationsPage() {
             {/* 3-col wider grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
               {international.map((d, i) => (
-                <IntlCard key={d.slug} d={d} priority={i < 3} />
+                <IntlCard key={d.slug} d={d} priority={i < 3} packageCount={packageCountBySlug.get(d.slug)} />
               ))}
             </div>
 
@@ -273,7 +315,7 @@ export default async function DestinationsPage() {
           <div className="container-custom">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
               {destinations.map((d, i) => (
-                <IntlCard key={d.slug} d={d} priority={i < 3} />
+                <IntlCard key={d.slug} d={d} priority={i < 3} packageCount={packageCountBySlug.get(d.slug)} />
               ))}
             </div>
           </div>
