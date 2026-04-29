@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Sparkles, Heart, Mountain, Building2, Church, Sun, Users, User, MessageCircle, RotateCcw } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles, Heart, Mountain, Building2, Church, Sun, Users, User, MessageCircle, RotateCcw, Mail, Loader2, CheckCircle2 } from "lucide-react";
 import type { Package } from "@/lib/data";
 import {
   scorePackages,
@@ -13,6 +13,8 @@ import {
   type QuizDuration,
   type QuizBudget,
 } from "@/lib/quiz-match";
+import { submitLead } from "@/lib/submit-lead";
+import { analytics } from "@/lib/analytics";
 
 type StepKey = "travelType" | "vibe" | "duration" | "budget" | "results";
 
@@ -69,8 +71,28 @@ export default function QuizClient({ packages }: { packages: Package[] }) {
     return scorePackages(packages, answers);
   }, [answers, packages]);
 
+  // Fire quiz_start once on first mount.
+  useEffect(() => {
+    analytics.quizStart();
+  }, []);
+
+  // Fire quiz_complete the first time the user lands on results.
+  useEffect(() => {
+    if (step === "results" && isComplete(answers)) {
+      analytics.quizComplete({
+        travelType: answers.travelType,
+        vibe: answers.vibe,
+        duration: answers.duration,
+        budget: answers.budget,
+        topMatchSlug: top3[0]?.pkg.slug,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+
   function pick<K extends keyof PartialAnswers>(key: K, value: NonNullable<PartialAnswers[K]>) {
     setAnswers((prev) => ({ ...prev, [key]: value }));
+    analytics.quizStep(String(key), String(value));
     // Auto-advance after each pick so the quiz feels snappy.
     setStepIdx((i) => Math.min(i + 1, STEPS.length - 1));
   }
@@ -303,7 +325,11 @@ function Results({
               key={pkg.slug}
               className="group rounded-card overflow-hidden bg-white border border-tat-charcoal/10 shadow-card hover:shadow-rail transition-all hover:-translate-y-0.5"
             >
-              <Link href={`/packages/${pkg.slug}`} className="block">
+              <Link
+                href={`/packages/${pkg.slug}`}
+                className="block"
+                onClick={() => analytics.quizMatchClick(pkg.slug, score)}
+              >
                 <div className="relative aspect-[4/3] bg-tat-charcoal/10">
                   <Image
                     src={pkg.image}
@@ -339,6 +365,8 @@ function Results({
           </p>
         </div>
       )}
+
+      <QuizLeadCapture answers={answers} top3={top3} />
 
       <div className="mt-12 rounded-card bg-tat-charcoal text-tat-paper p-7 md:p-9 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
         <div>
@@ -381,5 +409,132 @@ function Results({
         Take quiz again
       </button>
     </div>
+  );
+}
+
+function QuizLeadCapture({
+  answers,
+  top3,
+}: {
+  answers: QuizAnswers;
+  top3: ReturnType<typeof scorePackages>;
+}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+    const res = await submitLead({
+      name: name.trim() || "Quiz visitor",
+      email: email.trim(),
+      phone: phone.trim(),
+      source: "quiz",
+      travel_type: answers.travelType,
+      destination: top3[0]?.pkg.destinationName,
+      budget: answers.budget,
+      message: `Quiz answers — ${answers.travelType} · ${answers.vibe} · ${answers.duration} · ${answers.budget}. Top match: ${top3[0]?.pkg.title ?? "n/a"} (score ${top3[0]?.score ?? 0}).`,
+    });
+    setSubmitting(false);
+    if (!res.ok) {
+      setError(res.error ?? "Could not save right now. Try again?");
+      return;
+    }
+    analytics.quizLeadSubmit();
+    setDone(true);
+  }
+
+  if (done) {
+    return (
+      <div className="mt-12 rounded-card bg-tat-success-bg border border-tat-success-fg/30 p-7 md:p-9">
+        <div className="flex items-start gap-4">
+          <CheckCircle2 className="h-6 w-6 text-tat-success-fg shrink-0 mt-0.5" />
+          <div>
+            <p className="font-display text-h3 text-tat-success-fg">Got it. We&rsquo;ll be in touch.</p>
+            <p className="mt-2 text-tat-charcoal/75 leading-relaxed max-w-xl">
+              A planner will message you within {new Date().getHours() >= 10 && new Date().getHours() < 20 ? "5 minutes" : "30 minutes"} with a draft itinerary based
+              on your quiz answers. While you wait, take a look at the matched packages above
+              — full itineraries are on each detail page.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={onSubmit}
+      className="mt-12 rounded-card bg-white border border-tat-charcoal/12 shadow-card p-6 md:p-8"
+      aria-label="Get a personalised draft itinerary"
+    >
+      <div className="flex items-start gap-3">
+        <span className="grid place-items-center h-10 w-10 rounded-full bg-tat-gold/15 text-tat-gold shrink-0">
+          <Mail className="h-5 w-5" />
+        </span>
+        <div>
+          <p className="tt-eyebrow text-tat-gold">Email me the draft</p>
+          <h3 className="mt-1 font-display text-h3 font-medium text-tat-charcoal text-balance">
+            Skip the back-and-forth. We&rsquo;ll email you a custom draft itinerary based on your quiz answers.
+          </h3>
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <input
+          type="text"
+          required
+          autoComplete="name"
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="h-12 px-4 rounded-md border border-tat-charcoal/15 bg-white focus:border-tat-gold focus:ring-2 focus:ring-tat-gold/30 outline-none text-body-sm"
+        />
+        <input
+          type="email"
+          required
+          autoComplete="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="h-12 px-4 rounded-md border border-tat-charcoal/15 bg-white focus:border-tat-gold focus:ring-2 focus:ring-tat-gold/30 outline-none text-body-sm"
+        />
+        <input
+          type="tel"
+          required
+          inputMode="tel"
+          autoComplete="tel"
+          placeholder="Phone (with country code)"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="h-12 px-4 rounded-md border border-tat-charcoal/15 bg-white focus:border-tat-gold focus:ring-2 focus:ring-tat-gold/30 outline-none text-body-sm"
+        />
+      </div>
+
+      {error && (
+        <p className="mt-3 text-body-sm text-tat-danger-fg" role="alert">
+          {error}
+        </p>
+      )}
+
+      <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="inline-flex items-center gap-2 h-12 px-6 rounded-pill bg-tat-charcoal text-tat-paper font-semibold hover:bg-tat-charcoal/90 disabled:opacity-60 transition"
+        >
+          {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+          {submitting ? "Sending…" : "Email me my draft"}
+        </button>
+        <p className="text-meta text-tat-charcoal/55">
+          We don&rsquo;t share your details. One email + a WhatsApp follow-up. Unsubscribe anytime.
+        </p>
+      </div>
+    </form>
   );
 }

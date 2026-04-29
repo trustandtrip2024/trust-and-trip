@@ -21,6 +21,7 @@ const SOURCE_WEIGHT: Record<LeadSource, number> = {
   trip_planner:       16,
   itinerary_generator:14,
   whatsapp:           14,   // user typed enough to start a WA conversation
+  quiz:               12,   // self-segmented through 4 questions before submitting
   exit_intent:        10,
   contact_form:        8,
   newsletter:          2,

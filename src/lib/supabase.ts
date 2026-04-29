@@ -14,6 +14,7 @@ export type LeadSource =
   | "newsletter"
   | "itinerary_generator"
   | "whatsapp"
+  | "quiz"
   // Anonymous click-intent sources (no contact info required — fired on CTA clicks)
   | "book_now_click"
   | "call_click"

@@ -125,4 +125,25 @@ export const analytics = {
 
   howItWorksCta: () =>
     trackEvent({ action: "how_it_works_cta_click", category: "engagement" }),
+
+  // ── Trip-finder quiz funnel ─────────────────────────────────────────────
+  quizStart: () =>
+    trackEvent({ action: "quiz_start", category: "quiz" }),
+
+  quizStep: (step: string, value: string) =>
+    trackEvent({ action: "quiz_step", category: "quiz", label: `${step}:${value}` }),
+
+  quizComplete: (a: { travelType: string; vibe: string; duration: string; budget: string; topMatchSlug?: string }) =>
+    trackEvent({
+      action: "quiz_complete",
+      category: "quiz",
+      label: `${a.travelType}|${a.vibe}|${a.duration}|${a.budget}`,
+      top_match: a.topMatchSlug,
+    }),
+
+  quizMatchClick: (slug: string, score: number) =>
+    trackEvent({ action: "quiz_match_click", category: "quiz", label: slug, value: score }),
+
+  quizLeadSubmit: () =>
+    trackEvent({ action: "quiz_lead_submit", category: "lead" }),
 };
