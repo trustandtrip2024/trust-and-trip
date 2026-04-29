@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getPackageBySlug, getAllPackageSlugs, getRelatedPackages } from "@/lib/sanity-queries";
+import { getPackageStats } from "@/lib/package-stats";
 import { getGalleryImages } from "@/lib/gallery-images";
 import PackageItinerary from "@/components/PackageItinerary";
 import PackageGallery from "@/components/PackageGallery";
@@ -62,15 +63,19 @@ export default async function PackageDetail({ params }: Props) {
   const pkg = await getPackageBySlug(params.slug);
   if (!pkg) return notFound();
 
-  const relatedPackages = await getRelatedPackages(pkg.destinationSlug, pkg.slug, pkg.travelType).catch(() => []);
+  const [relatedPackages, stats] = await Promise.all([
+    getRelatedPackages(pkg.destinationSlug, pkg.slug, pkg.travelType).catch(() => []),
+    getPackageStats(pkg.slug),
+  ]);
   const galleryImages = getGalleryImages(pkg.destinationSlug, pkg.heroImage);
 
   const originalPrice = Math.round(pkg.price * 1.22);
   const discount = Math.round(((originalPrice - pkg.price) / originalPrice) * 100);
-  const viewedCount = Math.max(20, (pkg.reviews * 3 + pkg.slug.length * 7) % 120 + 15);
-  // Prefer the editor-supplied count when set; otherwise fall back to a
-  // deterministic synthetic figure derived from review count + slug length.
-  const enquiredCount = pkg.bookedThisMonth ?? Math.max(8, (pkg.reviews * 2 + pkg.slug.length * 3) % 60 + 8);
+  // Real Supabase numbers (with a deterministic floor for brand-new
+  // packages). Editor-supplied bookedThisMonth still wins when set so the
+  // content team can override for marketing campaigns.
+  const viewedCount = stats.viewedCount;
+  const enquiredCount = pkg.bookedThisMonth ?? stats.enquiredCount;
   const hotelStars = pkg.hotel?.stars ?? 3;
 
   const waBook = `https://wa.me/${WA}?text=${encodeURIComponent(`Hi Trust and Trip! 🙏\n\nI'd like to book the *${pkg.title}* package (₹${pkg.price.toLocaleString("en-IN")}/person · ${pkg.duration}).\n\nPlease help me proceed.`)}`;
