@@ -5,12 +5,13 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { getDestinationBySlug, getAllDestinationSlugs, getPackagesByDestination } from "@/lib/sanity-queries";
+import type { Package } from "@/lib/data";
 import { DESTINATION_GALLERY } from "@/lib/gallery-images";
 import DestinationGallery from "@/components/DestinationGallery";
 import PackageSlider from "@/components/PackageSlider";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
-import { Calendar, Clock, MapPin, ChevronRight, ArrowRight, Sun, IndianRupee, Users, Check } from "lucide-react";
+import { Calendar, Clock, MapPin, ChevronRight, ArrowRight, Sun, IndianRupee, Users, Check, Heart, Star } from "lucide-react";
 
 interface Props { params: { slug: string } }
 
@@ -41,6 +42,45 @@ export default async function DestinationDetail({ params }: Props) {
   const packages = await getPackagesByDestination(destination.slug);
   const gallery = DESTINATION_GALLERY[destination.slug] ?? [];
 
+  // Aggregate the package list into per-travel-type buckets so we can render
+  // entry-style chips ("12 honeymoon trips · from ₹X"). Driven entirely by
+  // existing data, no new schema fields.
+  const TRAVEL_TYPES: Package["travelType"][] = ["Couple", "Family", "Group", "Solo"];
+  const TRAVEL_TYPE_LABEL: Record<Package["travelType"], string> = {
+    Couple: "Couples",
+    Family: "Families",
+    Group: "Groups",
+    Solo: "Solo",
+  };
+  const byType = TRAVEL_TYPES.map((t) => {
+    const list = packages.filter((p) => p.travelType === t);
+    const minPrice = list.reduce((m, p) => (m === 0 ? p.price : Math.min(m, p.price)), 0);
+    return { type: t, count: list.length, minPrice };
+  }).filter((x) => x.count > 0);
+
+  // Aggregate review/rating across this destination's packages — synthesised
+  // from package metadata, no extra round trip.
+  const totalReviews = packages.reduce((s, p) => s + (p.reviews ?? 0), 0);
+  const ratedCount = packages.filter((p) => p.rating).length;
+  const avgRating = ratedCount
+    ? packages.reduce((s, p) => s + (p.rating ?? 0), 0) / ratedCount
+    : 0;
+
+  // Schema.org ItemList of bookable trips for this destination — search
+  // engines pick this up alongside the TouristDestination block.
+  const tripsListLd = packages.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `${destination.name} — trip packages`,
+    numberOfItems: packages.length,
+    itemListElement: packages.slice(0, 25).map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `https://trustandtrip.com/packages/${p.slug}`,
+      name: p.title,
+    })),
+  } : null;
+
   return (
     <>
       <JsonLd data={{
@@ -50,7 +90,17 @@ export default async function DestinationDetail({ params }: Props) {
         image: destination.heroImage,
         touristType: ["Couple", "Family", "Group", "Solo"],
         includesAttraction: (destination.thingsToDo || []).map((t) => ({ "@type": "TouristAttraction", name: t })),
+        ...(avgRating > 0 && totalReviews > 0 && {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: Number(avgRating.toFixed(1)),
+            reviewCount: totalReviews,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }),
       }} />
+      {tripsListLd && <JsonLd data={tripsListLd} />}
 
       {/* Hero */}
       <section className="relative h-[75vh] min-h-[500px] w-full overflow-hidden bg-tat-charcoal">
@@ -155,6 +205,64 @@ export default async function DestinationDetail({ params }: Props) {
                   </span>
                   <p className="text-tat-charcoal/80 leading-relaxed text-sm">{t}</p>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Trip styles — link chips per travel-type with count + min price.
+          Each chip drops the user into the packages list pre-filtered to this
+          destination + travel-type. Synthesises rating aggregate across the
+          destination so the strip doubles as social proof. */}
+      {byType.length > 0 && (
+        <section className="py-12 md:py-14">
+          <div className="container-custom">
+            <div className="flex items-end justify-between gap-4 flex-wrap mb-6">
+              <div>
+                <span className="eyebrow">Trip styles</span>
+                <h2 className="heading-section mt-2 text-balance">
+                  Pick the trip
+                  <span className="italic text-tat-gold font-light"> that fits.</span>
+                </h2>
+              </div>
+              {avgRating > 0 && totalReviews > 0 && (
+                <div className="inline-flex items-center gap-2 text-sm text-tat-charcoal/65">
+                  <Star className="h-4 w-4 fill-tat-gold text-tat-gold" />
+                  <span className="font-semibold text-tat-charcoal">{avgRating.toFixed(1)}</span>
+                  <span>· {totalReviews.toLocaleString("en-IN")} reviews across {packages.length} trips</span>
+                </div>
+              )}
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {byType.map((t) => (
+                <Link
+                  key={t.type}
+                  href={`/packages?destination=${destination.slug}&type=${t.type}`}
+                  className="group rounded-2xl bg-tat-paper hover:bg-white border border-tat-charcoal/8 hover:border-tat-gold/40 transition-all p-4 md:p-5"
+                >
+                  <span className="inline-flex items-center gap-2 text-tat-burnt">
+                    {t.type === "Couple" ? (
+                      <Heart className="h-4 w-4" aria-hidden />
+                    ) : (
+                      <Users className="h-4 w-4" aria-hidden />
+                    )}
+                    <span className="text-[10px] uppercase tracking-[0.18em] font-semibold">
+                      {TRAVEL_TYPE_LABEL[t.type]}
+                    </span>
+                  </span>
+                  <p className="mt-2 font-display text-lg md:text-xl font-medium text-tat-charcoal leading-tight">
+                    {t.count} {t.count === 1 ? "trip" : "trips"}
+                  </p>
+                  {t.minPrice > 0 && (
+                    <p className="text-xs text-tat-charcoal/55 mt-0.5">
+                      from ₹{t.minPrice.toLocaleString("en-IN")}
+                    </p>
+                  )}
+                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-tat-burnt group-hover:gap-1.5 transition-all">
+                    Browse <ArrowRight className="h-3 w-3" />
+                  </span>
+                </Link>
               ))}
             </div>
           </div>
