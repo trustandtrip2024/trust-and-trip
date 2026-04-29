@@ -3,6 +3,7 @@ export const revalidate = 30;
 import { getPackages, getDestinations } from "@/lib/sanity-queries";
 import PackagesClient from "./PackagesClient";
 import CTASection from "@/components/CTASection";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata = {
   title: "Tour Packages — Handcrafted Trips for Every Traveller",
@@ -25,8 +26,26 @@ export default async function PackagesPage({
     Promise.resolve(searchParams),
   ]);
 
+  // ItemList JSON-LD so search engines see the catalog structure
+  // independent of client-side filter state. Caps at 50 entries to keep
+  // payload reasonable.
+  const listLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Trust and Trip — Tour Packages",
+    numberOfItems: packages.length,
+    itemListElement: packages.slice(0, 50).map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `https://trustandtrip.com/packages/${p.slug}`,
+      name: p.title,
+    })),
+  };
+
   return (
     <>
+      <JsonLd data={listLd} />
+
       <section className="pt-28 md:pt-36 pb-12 md:pb-16 bg-tat-paper border-b border-tat-charcoal/5">
         <div className="container-custom">
           <span className="eyebrow">Our Packages</span>
