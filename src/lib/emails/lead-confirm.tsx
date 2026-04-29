@@ -9,34 +9,34 @@ interface Props {
 export function LeadConfirmEmail({ name, packageTitle, destination }: Props) {
   return (
     <html>
-      <body style={{ fontFamily: "sans-serif", background: "#FAF7F2", padding: "32px 16px" }}>
-        <div style={{ maxWidth: 560, margin: "0 auto", background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 20px rgba(11,28,44,0.08)" }}>
+      <body style={{ fontFamily: "sans-serif", background: "#FBF7F1", padding: "32px 16px" }}>
+        <div style={{ maxWidth: 560, margin: "0 auto", background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 20px rgba(42,42,42,0.08)" }}>
           {/* Header */}
-          <div style={{ background: "#0B1C2C", padding: "32px", textAlign: "center" }}>
-            <div style={{ width: 48, height: 48, background: "#E8A94C", borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
-              <span style={{ color: "#0B1C2C", fontFamily: "Georgia, serif", fontSize: 22, fontWeight: 700 }}>T</span>
+          <div style={{ background: "#2A2A2A", padding: "32px", textAlign: "center" }}>
+            <div style={{ width: 48, height: 48, background: "#C8932A", borderRadius: "50%", display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 12 }}>
+              <span style={{ color: "#2A2A2A", fontFamily: "Georgia, serif", fontSize: 22, fontWeight: 700 }}>T</span>
             </div>
-            <h1 style={{ color: "#FAF7F2", fontFamily: "Georgia, serif", fontSize: 26, margin: "8px 0 4px" }}>
+            <h1 style={{ color: "#FBF7F1", fontFamily: "Georgia, serif", fontSize: 26, margin: "8px 0 4px" }}>
               We've got your enquiry!
             </h1>
-            <p style={{ color: "#E8A94C", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", margin: 0 }}>
+            <p style={{ color: "#C8932A", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", margin: 0 }}>
               Trust and Trip
             </p>
           </div>
 
           <div style={{ padding: "32px" }}>
-            <p style={{ fontSize: 16, color: "#0B1C2C", fontFamily: "Georgia, serif", marginTop: 0 }}>
+            <p style={{ fontSize: 16, color: "#2A2A2A", fontFamily: "Georgia, serif", marginTop: 0 }}>
               Hi {name},
             </p>
-            <p style={{ fontSize: 14, color: "#556678", lineHeight: 1.7 }}>
+            <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.7 }}>
               Thank you for reaching out! We've received your enquiry
               {packageTitle ? ` for <strong>${packageTitle}</strong>` : destination ? ` for ${destination}` : ""}
               {" "}and one of our travel planners will get back to you within{" "}
-              <strong style={{ color: "#0B1C2C" }}>2 hours</strong>.
+              <strong style={{ color: "#2A2A2A" }}>2 hours</strong>.
             </p>
 
-            <div style={{ background: "#FAF7F2", borderRadius: 12, padding: "20px 24px", margin: "24px 0" }}>
-              <p style={{ fontSize: 11, color: "#E8A94C", letterSpacing: "0.2em", textTransform: "uppercase", margin: "0 0 14px", fontWeight: 600 }}>
+            <div style={{ background: "#FBF7F1", borderRadius: 12, padding: "20px 24px", margin: "24px 0" }}>
+              <p style={{ fontSize: 11, color: "#C8932A", letterSpacing: "0.2em", textTransform: "uppercase", margin: "0 0 14px", fontWeight: 600 }}>
                 What happens next
               </p>
               {[
@@ -45,10 +45,10 @@ export function LeadConfirmEmail({ name, packageTitle, destination }: Props) {
                 ["On your approval", "We finalise hotels, activities and pricing together"],
               ].map(([time, desc]) => (
                 <div key={time} style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-                  <div style={{ width: 8, height: 8, background: "#E8A94C", borderRadius: "50%", marginTop: 6, flexShrink: 0 }} />
+                  <div style={{ width: 8, height: 8, background: "#C8932A", borderRadius: "50%", marginTop: 6, flexShrink: 0 }} />
                   <div>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: "#0B1C2C" }}>{time}</p>
-                    <p style={{ margin: "2px 0 0", fontSize: 12, color: "#8C9AAB" }}>{desc}</p>
+                    <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: "#2A2A2A" }}>{time}</p>
+                    <p style={{ margin: "2px 0 0", fontSize: 12, color: "#6B7280" }}>{desc}</p>
                   </div>
                 </div>
               ))}
@@ -62,8 +62,8 @@ export function LeadConfirmEmail({ name, packageTitle, destination }: Props) {
             </div>
           </div>
 
-          <div style={{ padding: "16px 32px", background: "#F4F6F8", borderTop: "1px solid #E6EAEF", textAlign: "center" }}>
-            <p style={{ fontSize: 11, color: "#8C9AAB", margin: 0 }}>
+          <div style={{ padding: "16px 32px", background: "#FBF7F1", borderTop: "1px solid rgba(42,42,42,0.08)", textAlign: "center" }}>
+            <p style={{ fontSize: 11, color: "#6B7280", margin: 0 }}>
               Trust and Trip · hello@trustandtrip.com · +91 8115 999 588
             </p>
           </div>

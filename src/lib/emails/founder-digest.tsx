@@ -23,9 +23,9 @@ interface Props {
   alerts: string[];
 }
 
-const charcoal = "#0B1C2C";
-const paper = "#FAF7F2";
-const gold = "#E8A94C";
+const charcoal = "#2A2A2A";
+const paper = "#FBF7F1";
+const gold = "#C8932A";
 const slate = "#6B7280";
 
 function fmtINR(n: number) {
@@ -71,7 +71,7 @@ export function FounderDigestEmail({
             background: "#fff",
             borderRadius: 16,
             overflow: "hidden",
-            boxShadow: "0 2px 20px rgba(11,28,44,0.08)",
+            boxShadow: "0 2px 20px rgba(42,42,42,0.08)",
           }}
         >
           <div style={{ background: charcoal, padding: "26px 32px" }}>
