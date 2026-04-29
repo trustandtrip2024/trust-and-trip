@@ -41,6 +41,7 @@ import { fetchGoogleReviews } from "@/lib/google-reviews";
 import { getSiteStats } from "@/lib/site-stats";
 import { getGeoContext, getCityRecommendations } from "@/lib/geo";
 import CityFavouritesStrip from "@/components/home/CityFavouritesStrip";
+import MobileQuizPill from "@/components/home/MobileQuizPill";
 
 // Below-fold — chunk-split, still SSR'd for SEO. Skeletons reserve height
 // AND signal loading so a slow CDN response doesn't read as a blank gap.
@@ -285,6 +286,7 @@ export default async function HomePage() {
 
       <SeoFooterIndex />
       <LiveActivityTicker />
+      <MobileQuizPill />
     </>
   );
 }
