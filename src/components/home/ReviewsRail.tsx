@@ -168,7 +168,7 @@ export default function ReviewsRail({
             dangerouslySetInnerHTML={{ __html: JSON.stringify(j) }}
           />
         ))}
-      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-[1480px]">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
         <p className="mt-4 text-meta text-tat-slate">
@@ -187,7 +187,7 @@ export default function ReviewsRail({
             {videoReviews.map((v) => (
               <li
                 key={v.videoUrl}
-                className="snap-start shrink-0 w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]"
+                className="snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[30%]"
               >
                 <VideoReviewCard v={v} />
               </li>
@@ -195,7 +195,7 @@ export default function ReviewsRail({
             {items.map((r) => (
               <li
                 key={r.id}
-                className="snap-start shrink-0 w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]"
+                className="snap-start shrink-0 w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[30%]"
               >
                 <article
                   className={`bg-white dark:bg-white/[0.04] rounded-card border border-tat-charcoal/10 dark:border-white/10 shadow-card h-full flex flex-col gap-2.5 p-4 md:p-5 ${

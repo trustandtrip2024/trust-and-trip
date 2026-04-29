@@ -106,7 +106,7 @@ export default function OfferBannerStrip({ offers }: Props) {
 
   return (
     <section className="py-10 md:py-14 bg-tat-paper" aria-label="Featured offers">
-      <div className="container-custom">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-[1480px]">
         <div className="flex items-end justify-between gap-4 mb-5">
           <div>
             <p className="tt-eyebrow text-tat-gold">Designed for you</p>
@@ -131,7 +131,7 @@ export default function OfferBannerStrip({ offers }: Props) {
           {visible.map((o, idx) => {
             const gradient = o.gradient ?? DEFAULT_GRADIENT;
             return (
-              <li key={o.slug} className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]">
+              <li key={o.slug} className="shrink-0 snap-start w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[30%]">
                 <Link
                   href={o.href}
                   onClick={() => analytics.offerBannerClick(o.slug, idx + 1)}

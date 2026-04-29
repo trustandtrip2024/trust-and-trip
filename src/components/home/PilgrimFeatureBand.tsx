@@ -61,7 +61,7 @@ export default function PilgrimFeatureBand({
       aria-labelledby="pilgrim-title"
       className={`${tightTop ? "pt-4 md:pt-6 pb-16 md:pb-24 border-b" : "py-16 md:py-24 border-y"} bg-tat-cream-warm/30 border-tat-orange/25 dark:bg-tat-charcoal/40 dark:border-tat-orange/30`}
     >
-      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-[1480px]">
         {/* Header — full width, centered for breathing room */}
         <div className="max-w-3xl">
           <SectionHeader

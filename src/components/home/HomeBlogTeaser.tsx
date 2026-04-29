@@ -45,7 +45,7 @@ export default function HomeBlogTeaser({ posts }: Props = {}) {
 
   return (
     <section id="guides" aria-labelledby="guides-title" className="py-16 md:py-24 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95">
-      <div className="container-custom">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-[1480px]">
         <div className="flex flex-wrap items-end justify-between gap-6 mb-8 md:mb-12">
           <SectionHeader
             eyebrow="From the journal"
@@ -69,12 +69,12 @@ export default function HomeBlogTeaser({ posts }: Props = {}) {
           <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
             {useStatic
               ? FALLBACK.map((p) => (
-                  <li key={p.slug} className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]">
+                  <li key={p.slug} className="shrink-0 snap-start w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[30%]">
                     <BlogCardStatic post={p} />
                   </li>
                 ))
               : posts.slice(0, 6).map((p) => (
-                  <li key={p.slug} className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]">
+                  <li key={p.slug} className="shrink-0 snap-start w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[30%]">
                     <BlogCardSanity post={p} />
                   </li>
                 ))}

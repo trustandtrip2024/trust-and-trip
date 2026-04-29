@@ -67,7 +67,7 @@ export default function LoveFromTheGramStrip({
         }}
       />
 
-      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-[1480px]">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
         {/* Single horizontal rail at every breakpoint — earlier this used
@@ -83,7 +83,7 @@ export default function LoveFromTheGramStrip({
             {items.map((u, i) => (
               <li
                 key={`u-${u.firstName}-${i}`}
-                className={`shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%] ${tiltFor(i)}`}
+                className={`shrink-0 snap-start w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[30%] ${tiltFor(i)}`}
               >
                 <Polaroid post={u} size="sm" />
               </li>

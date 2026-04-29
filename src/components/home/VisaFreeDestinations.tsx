@@ -69,7 +69,7 @@ export default function VisaFreeDestinations() {
       aria-labelledby="visa-free-title"
       className="relative py-16 md:py-24 bg-gradient-to-b from-tat-cream-warm/40 via-tat-paper to-tat-paper"
     >
-      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
+      <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-[1480px]">
         <div className="flex items-start justify-between gap-6 flex-wrap">
           <SectionHeader
             eyebrow="No visa, no wait"
@@ -89,7 +89,7 @@ export default function VisaFreeDestinations() {
           {ITEMS.map((d) => (
             <li
               key={d.name}
-              className="shrink-0 snap-start w-[78%] sm:w-[48%] md:w-[32%] lg:w-[24%]"
+              className="shrink-0 snap-start w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[30%]"
             >
               <Link
                 href={d.href}
