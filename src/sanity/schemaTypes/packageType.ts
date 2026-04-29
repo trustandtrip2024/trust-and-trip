@@ -289,6 +289,27 @@ export const packageType = defineType({
     }),
 
     defineField({
+      name: 'mapCoords',
+      title: 'Map location',
+      type: 'object',
+      description: 'Optional. When set, renders an OpenStreetMap embed in the "Where you\'ll be" section.',
+      fields: [
+        defineField({ name: 'lat', title: 'Latitude', type: 'number', validation: (R) => R.min(-90).max(90) }),
+        defineField({ name: 'lng', title: 'Longitude', type: 'number', validation: (R) => R.min(-180).max(180) }),
+        defineField({ name: 'zoom', type: 'number', initialValue: 9, description: '1 (world) — 18 (street). Default 9.' }),
+        defineField({ name: 'label', type: 'string', description: 'Optional pin label e.g. "Bali · Indonesia".' }),
+      ],
+    }),
+
+    defineField({
+      name: 'mapImage',
+      title: 'Map image (override)',
+      type: 'image',
+      options: { hotspot: true },
+      description: 'Optional. When set, replaces the OSM embed with a custom uploaded map (e.g. illustrated route).',
+    }),
+
+    defineField({
       name: 'packingList',
       title: 'What to pack',
       type: 'array',

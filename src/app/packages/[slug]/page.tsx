@@ -40,6 +40,7 @@ import BestMonthsStrip from "@/components/package-detail/BestMonthsStrip";
 import PackageQuickFacts from "@/components/package-detail/PackageQuickFacts";
 import PackingList from "@/components/package-detail/PackingList";
 import PackageGuestPhotos from "@/components/package-detail/PackageGuestPhotos";
+import PackageMap from "@/components/package-detail/PackageMap";
 
 interface Props { params: { slug: string } }
 
@@ -391,6 +392,14 @@ export default async function PackageDetail({ params }: Props) {
                 )}
               </section>
             )}
+
+            {/* MAP — Sanity mapCoords or mapImage override. Returns null
+                when neither is set. */}
+            <PackageMap
+              coords={pkg.mapCoords}
+              imageOverride={pkg.mapImage}
+              destinationName={pkg.destinationName}
+            />
 
             {/* VIDEO — only when Sanity has youtubeUrl set. */}
             {pkg.youtubeUrl && (

@@ -99,6 +99,8 @@ export type Package = {
     notes?: string;
   };
   packingList?: { category?: string; items: string[] }[];
+  mapCoords?: { lat?: number; lng?: number; zoom?: number; label?: string };
+  mapImage?: string;
 };
 
 export type Experience = {

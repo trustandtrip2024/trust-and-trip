@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   ChevronDown, Mountain, Bed, Plane, Coffee, MapPin,
 } from "lucide-react";
@@ -44,6 +44,9 @@ function mealsLine(m: NonNullable<ItineraryDay["meals"]>) {
 export default function PackageItinerary({ days, endLabel = "End of trip" }: Props) {
   const [view, setView] = useState<View>("detailed");
   const [filter, setFilter] = useState<Filter>("all");
+  const [activeDay, setActiveDay] = useState<number | null>(null);
+  const dayRefs = useRef<Map<number, HTMLLIElement>>(new Map());
+  const trackRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
     if (filter === "all") return days;
@@ -55,6 +58,51 @@ export default function PackageItinerary({ days, endLabel = "End of trip" }: Pro
       return true;
     });
   }, [days, filter]);
+
+  // Track which day's card is closest to the viewport top so the day-jump
+  // pill highlights it. IntersectionObserver with a top-band rootMargin so
+  // the active state flips as cards cross the upper third of the screen.
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length === 0) return;
+        const topMost = visible.sort(
+          (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
+        )[0];
+        const dayAttr = topMost.target.getAttribute("data-day");
+        if (dayAttr) setActiveDay(Number(dayAttr));
+      },
+      { rootMargin: "-25% 0px -65% 0px", threshold: 0 },
+    );
+    dayRefs.current.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [filtered]);
+
+  // Keep the active day-pill scrolled into view inside the horizontal track.
+  useEffect(() => {
+    if (activeDay === null) return;
+    const track = trackRef.current;
+    if (!track) return;
+    const pill = track.querySelector<HTMLButtonElement>(`[data-day-pill="${activeDay}"]`);
+    if (!pill) return;
+    const tr = track.getBoundingClientRect();
+    const pr = pill.getBoundingClientRect();
+    if (pr.left < tr.left || pr.right > tr.right) {
+      pill.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+  }, [activeDay]);
+
+  function jumpToDay(day: number) {
+    const el = dayRefs.current.get(day);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 110;
+    window.scrollTo({ top, behavior: "smooth" });
+    // Force-open the details element so the user lands on visible content.
+    const details = el.querySelector<HTMLDetailsElement>("details");
+    if (details) details.open = true;
+  }
 
   return (
     <section className="tt-card tt-card-p" aria-labelledby="itinerary-title">
@@ -109,10 +157,50 @@ export default function PackageItinerary({ days, endLabel = "End of trip" }: Pro
         </div>
       </div>
 
+      {/* Day-jump nav — sticky pill rail of Day 1, Day 2 ... that scrolls
+          to each day's card. Active pill follows the viewport. */}
+      {filtered.length > 1 && (
+        <div
+          ref={trackRef}
+          role="navigation"
+          aria-label="Jump to day"
+          className="mt-5 -mx-5 md:mx-0 px-5 md:px-0 pt-1 pb-2 flex gap-1.5 overflow-x-auto no-scrollbar sticky top-[120px] md:top-[140px] z-10 bg-white/85 backdrop-blur-sm border-b border-tat-charcoal/8"
+        >
+          {filtered.map((d) => {
+            const active = activeDay === d.day;
+            return (
+              <button
+                key={d.day}
+                type="button"
+                data-day-pill={d.day}
+                onClick={() => jumpToDay(d.day)}
+                className={[
+                  "shrink-0 inline-flex items-center h-7 px-2.5 rounded-pill text-[11px] font-semibold transition duration-150",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-1",
+                  active
+                    ? "bg-tat-gold text-tat-charcoal shadow-card"
+                    : "bg-tat-cream-warm/40 text-tat-slate hover:bg-tat-cream-warm/70",
+                ].join(" ")}
+              >
+                Day {d.day}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Timeline — tighter padding on mobile */}
       <ol className="mt-6 md:mt-8 relative pl-5 md:pl-8 border-l border-dashed border-tat-orange/40 space-y-3 md:space-y-4">
         {filtered.map((d, idx) => (
-          <li key={d.day} className="relative">
+          <li
+            key={d.day}
+            data-day={d.day}
+            ref={(el) => {
+              if (el) dayRefs.current.set(d.day, el);
+              else dayRefs.current.delete(d.day);
+            }}
+            className="relative"
+          >
             <span
               aria-hidden
               className="absolute -left-[23px] md:-left-[33px] top-4 md:top-5 w-[14px] h-[14px] md:w-[18px] md:h-[18px] rounded-full bg-white border-2 border-tat-orange"

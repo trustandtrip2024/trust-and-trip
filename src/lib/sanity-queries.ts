@@ -154,7 +154,9 @@ const PACKAGE_FIELDS = `
   "groupSize": groupSize,
   "difficulty": difficulty,
   "visaInfo": visaInfo,
-  "packingList": packingList[]{ category, items }
+  "packingList": packingList[]{ category, items },
+  "mapCoords": mapCoords,
+  "mapImage": mapImage.asset->url
 `;
 
 const PACKAGES_QUERY = `*[_type == "package"] | order(featured desc, rating desc) { ${PACKAGE_FIELDS} }`;
