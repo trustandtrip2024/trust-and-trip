@@ -18,7 +18,6 @@ import {
   Clock, Star, MapPin, ChevronRight,
   Hotel, Sparkles, Zap, Users, Flame,
 } from "lucide-react";
-import SharePackage from "@/components/SharePackage";
 import PackagePixelEvent from "@/components/PackagePixelEvent";
 import PackageStickyBar from "@/components/PackageStickyBar";
 import PackageViewTracker from "@/components/PackageViewTracker";
@@ -33,6 +32,8 @@ import PackageVsAggregator from "@/components/package-detail/PackageVsAggregator
 import PackageInclusionsGrouped from "@/components/package-detail/PackageInclusionsGrouped";
 import PackageHotelsRail from "@/components/package-detail/PackageHotelsRail";
 import PackageFAQ from "@/components/package-detail/PackageFAQ";
+import PackageHeroActions from "@/components/package-detail/PackageHeroActions";
+import { getApprovedReviewsForSchema } from "@/lib/reviews-server";
 
 interface Props { params: { slug: string } }
 
@@ -64,6 +65,9 @@ export default async function PackageDetail({ params }: Props) {
 
   const relatedPackages = await getRelatedPackages(pkg.destinationSlug, pkg.slug, pkg.travelType).catch(() => []);
   const galleryImages = getGalleryImages(pkg.destinationSlug, pkg.heroImage);
+  // Approved reviews for JSON-LD enrichment. Empty array when Supabase env
+  // is missing or no reviews exist — JSON-LD `review` field is then omitted.
+  const schemaReviews = await getApprovedReviewsForSchema(pkg.slug, 8);
 
   const originalPrice = Math.round(pkg.price * 1.22);
   const discount = Math.round(((originalPrice - pkg.price) / originalPrice) * 100);
@@ -100,12 +104,35 @@ export default async function PackageDetail({ params }: Props) {
             reviewCount: pkg.reviews, bestRating: 5, worstRating: 1,
           },
         }),
+        ...(schemaReviews.length > 0 && {
+          review: schemaReviews.map((r) => ({
+            "@type": "Review",
+            author: { "@type": "Person", name: r.reviewer_name },
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: r.rating,
+              bestRating: 5,
+              worstRating: 1,
+            },
+            ...(r.title && { name: r.title }),
+            reviewBody: r.body,
+            datePublished: r.created_at,
+          })),
+        }),
       }} />
 
       {/* ── Compact Hero ───────────────────────────────────────── */}
       <section className="relative h-[55vh] min-h-[380px] w-full overflow-hidden bg-tat-charcoal">
         <Image src={pkg.heroImage} alt={pkg.title} fill priority className="object-cover" sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/95 via-tat-charcoal/40 to-tat-charcoal/20" />
+
+        {/* Hero floating actions — wishlist heart + share menu. */}
+        <PackageHeroActions
+          slug={pkg.slug}
+          title={pkg.title}
+          price={pkg.price}
+          destination={pkg.destinationName}
+        />
 
         {/* Breadcrumb */}
         <div className="absolute top-20 md:top-24 inset-x-0 container-custom flex items-center gap-2 text-xs text-tat-paper/60 z-10">
