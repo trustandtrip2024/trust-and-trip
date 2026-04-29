@@ -86,10 +86,17 @@ export default function AboutPage() {
             "@type": "Person",
             name: "Akash Mishra",
             jobTitle: "Founder",
+            image: "https://trustandtrip.com/akash-mishra.jpg",
+            url: "https://trustandtrip.com/about",
             worksFor: {
               "@type": "Organization",
               name: "Trust and Trip Experiences Pvt. Ltd.",
             },
+            sameAs: [
+              "https://linkedin.com/in/akashmishra-trustandtrip",
+              "https://instagram.com/trust_and_trip",
+            ],
+            knowsAbout: ["Custom Itinerary Design", "Honeymoon Planning", "Pilgrim Travel"],
           },
           sameAs: [
             "https://instagram.com/trust_and_trip",
@@ -110,6 +117,36 @@ export default function AboutPage() {
           ],
           paymentAccepted: ["Visa", "Mastercard", "UPI", "Google Pay", "PhonePe"],
         },
+      }} />
+
+      {/* Standalone Person record so search engines can index the founder
+          directly (knowledge-panel eligibility). Mirrors the founder block
+          inside the AboutPage above; keeping both lets Schema validators
+          parse Trust and Trip → founder, and Akash Mishra → worksFor. */}
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Akash Mishra",
+        jobTitle: "Founder, Trust and Trip Experiences Pvt. Ltd.",
+        image: "https://trustandtrip.com/akash-mishra.jpg",
+        url: "https://trustandtrip.com/about",
+        worksFor: {
+          "@type": "TravelAgency",
+          name: "Trust and Trip Experiences Pvt. Ltd.",
+          url: "https://trustandtrip.com",
+        },
+        sameAs: [
+          "https://linkedin.com/in/akashmishra-trustandtrip",
+          "https://instagram.com/trust_and_trip",
+        ],
+        knowsAbout: [
+          "Custom Itinerary Design",
+          "Honeymoon Planning",
+          "Pilgrim Travel",
+          "Family Vacation Planning",
+          "Luxury Travel",
+        ],
+        nationality: { "@type": "Country", name: "India" },
       }} />
 
       {/* Hero */}

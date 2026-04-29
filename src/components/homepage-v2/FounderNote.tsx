@@ -1,11 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Quote, ArrowRight } from "lucide-react";
 import { captureIntent } from "@/lib/capture-intent";
 
+const FOUNDER_PHOTO = "/akash-mishra.jpg";
+
 export default function FounderNote() {
+  const [photoOk, setPhotoOk] = useState(true);
+
   return (
     <section className="py-20 md:py-28 bg-tat-cream/25" aria-labelledby="founder-heading">
       <div className="container-custom">
@@ -13,13 +18,24 @@ export default function FounderNote() {
           {/* Photo — 5 cols */}
           <div className="md:col-span-5 order-1 md:order-none">
             <div className="relative aspect-[4/5] max-w-sm mx-auto md:mx-0 rounded-3xl overflow-hidden bg-tat-charcoal/5">
-              <Image
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=85&auto=format&fit=crop"
-                alt="Founder of Trust and Trip"
-                fill
-                sizes="(max-width: 768px) 90vw, 400px"
-                className="object-cover"
-              />
+              {photoOk ? (
+                <Image
+                  src={FOUNDER_PHOTO}
+                  alt="Akash Mishra, Founder of Trust and Trip"
+                  fill
+                  sizes="(max-width: 768px) 90vw, 400px"
+                  quality={85}
+                  className="object-cover"
+                  onError={() => setPhotoOk(false)}
+                />
+              ) : (
+                <div
+                  aria-label="Akash Mishra portrait placeholder"
+                  className="absolute inset-0 grid place-items-center bg-gradient-to-br from-tat-teal-deep via-tat-teal to-tat-gold"
+                >
+                  <span className="font-display text-display-xl text-tat-paper/95 tracking-tight">AM</span>
+                </div>
+              )}
               {/* Warm overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/20 via-transparent to-transparent" />
               {/* Floating card */}
