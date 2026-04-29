@@ -130,7 +130,7 @@ export default async function PackageDetail({ params }: Props) {
                 <Users className="h-3 w-3 text-tat-gold" />{pkg.travelType}
               </span>
               {pkg.limitedSlots && (
-                <span className="inline-flex items-center gap-1.5 bg-red-500/20 border border-red-400/30 text-red-300 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1.5 bg-tat-orange/20 border border-tat-orange/40 text-tat-orange-soft text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
                   <Zap className="h-3 w-3" />Limited Slots
                 </span>
               )}

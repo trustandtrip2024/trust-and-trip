@@ -66,7 +66,7 @@ export default function NewsletterInline() {
           </button>
         </form>
       )}
-      {state === "error" && <p className="text-xs text-red-400 mt-2">Something went wrong. Try again.</p>}
+      {state === "error" && <p className="text-xs text-tat-danger-fg mt-2">Something went wrong. Try again.</p>}
     </div>
   );
 }

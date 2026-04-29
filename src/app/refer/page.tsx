@@ -88,7 +88,7 @@ export default function ReferPage() {
                 <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   placeholder="+91 98765 43210" className="input-travel" />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
+              {error && <p className="text-sm text-tat-danger-fg">{error}</p>}
               <button type="submit" disabled={loading} className="btn-primary w-full justify-center !py-3.5">
                 {loading ? "Generating…" : "Generate My Link"}
               </button>
@@ -109,7 +109,7 @@ export default function ReferPage() {
             <div className="grid grid-cols-2 gap-3">
               <button onClick={copy}
                 className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-colors border ${
-                  copied ? "bg-green-50 border-green-200 text-green-700" : "border-tat-charcoal/15 text-tat-charcoal hover:bg-tat-charcoal/5"
+                  copied ? "bg-tat-success-bg border-tat-success-fg/25 text-tat-success-fg" : "border-tat-charcoal/15 text-tat-charcoal hover:bg-tat-charcoal/5"
                 }`}>
                 {copied ? <><Check className="h-4 w-4" />Copied!</> : <><Copy className="h-4 w-4" />Copy Link</>}
               </button>

@@ -156,7 +156,7 @@ export default function DocumentUpload({ travellers, onClose, onUploaded }: Prop
             </label>
           </div>
 
-          {error && <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
+          {error && <p className="text-xs text-tat-danger-fg bg-tat-danger-bg px-3 py-2 rounded-lg">{error}</p>}
 
           <button
             type="submit"

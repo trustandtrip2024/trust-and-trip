@@ -60,7 +60,7 @@ export default function SharePackage({ title, slug, price, destination }: Props)
               ))}
               <button onClick={copy}
                 className="flex items-center gap-2.5 w-full px-3 py-2 rounded-xl text-xs font-medium bg-tat-charcoal/5 text-tat-charcoal/70 hover:bg-tat-charcoal/10 transition-colors">
-                {copied ? <><Check className="h-3.5 w-3.5 text-green-500" />Copied!</> : <><Copy className="h-3.5 w-3.5" />Copy link</>}
+                {copied ? <><Check className="h-3.5 w-3.5 text-tat-success-fg" />Copied!</> : <><Copy className="h-3.5 w-3.5" />Copy link</>}
               </button>
             </div>
           </div>

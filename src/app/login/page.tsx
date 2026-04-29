@@ -102,8 +102,8 @@ function LoginPageInner() {
 
         {success ? (
           <div className="flex flex-col items-center gap-4 py-8 text-center">
-            <div className="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center">
-              <CheckCircle2 className="h-6 w-6 text-green-600" />
+            <div className="h-12 w-12 rounded-full bg-tat-success-bg flex items-center justify-center">
+              <CheckCircle2 className="h-6 w-6 text-tat-success-fg" />
             </div>
             <p className="text-sm text-tat-charcoal/70 leading-relaxed">{success}</p>
             <button
@@ -190,7 +190,7 @@ function LoginPageInner() {
             )}
 
             {error && (
-              <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+              <p className="text-xs text-tat-danger-fg bg-tat-danger-bg px-3 py-2 rounded-lg">{error}</p>
             )}
 
             <button

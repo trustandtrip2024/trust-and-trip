@@ -85,9 +85,9 @@ function AuthCallbackInner() {
   if (error) {
     return (
       <div className="min-h-screen bg-tat-paper flex items-center justify-center px-4">
-        <div className="max-w-sm w-full bg-white border border-red-100 rounded-2xl p-6 text-center">
-          <div className="h-10 w-10 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-3">
-            <AlertCircle className="h-5 w-5 text-red-500" />
+        <div className="max-w-sm w-full bg-white border border-tat-danger-fg/15 rounded-2xl p-6 text-center">
+          <div className="h-10 w-10 rounded-full bg-tat-danger-bg flex items-center justify-center mx-auto mb-3">
+            <AlertCircle className="h-5 w-5 text-tat-danger-fg" />
           </div>
           <p className="font-medium text-tat-charcoal mb-1">Sign-in link couldn't be used</p>
           <p className="text-xs text-tat-charcoal/60 mb-5 break-words">{error}</p>

@@ -97,14 +97,14 @@ export default function PassportScanUpload({ onExtracted }: Props) {
       </label>
 
       {error && (
-        <p className="mt-3 text-meta text-rose-600 inline-flex items-center gap-1.5">
+        <p className="mt-3 text-meta text-tat-danger-fg inline-flex items-center gap-1.5">
           <X className="h-3.5 w-3.5" /> {error}
         </p>
       )}
 
       {fields && (
-        <div className="mt-5 rounded-card border border-emerald-200 bg-emerald-50/40 p-4">
-          <p className="text-meta text-emerald-700 inline-flex items-center gap-1.5">
+        <div className="mt-5 rounded-card border border-tat-success-fg/25 bg-tat-success-bg/40 p-4">
+          <p className="text-meta text-tat-success-fg inline-flex items-center gap-1.5">
             <Check className="h-3.5 w-3.5" /> Extracted (confidence {(fields.confidence * 100).toFixed(0)}%)
           </p>
           <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-meta">

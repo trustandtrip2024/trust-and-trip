@@ -131,7 +131,7 @@ export default function ReviewForm({ packageSlug, packageTitle }: Props) {
             <p className="text-[10px] text-tat-charcoal/35 mt-1">Min. 20 characters · {form.review_body.length} typed</p>
           </Field>
 
-          {errorMsg && <p className="text-sm text-red-500">{errorMsg}</p>}
+          {errorMsg && <p className="text-sm text-tat-danger-fg">{errorMsg}</p>}
 
           <button type="submit" disabled={state === "loading"}
             className="btn-primary w-full justify-center !py-3.5">

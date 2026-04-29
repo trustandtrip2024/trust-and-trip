@@ -36,9 +36,9 @@ interface Deal {
 const KIND_META: Record<DealKind, { label: string; icon: typeof Flame; bg: string; text: string }> = {
   flash:        { label: "Flash deal",     icon: Flame,     bg: "bg-tat-orange",      text: "text-white" },
   "early-bird": { label: "Early bird",     icon: Sun,       bg: "bg-tat-gold",       text: "text-tat-charcoal" },
-  "last-minute":{ label: "Last minute",    icon: Hourglass, bg: "bg-red-500",        text: "text-white" },
-  honeymoon:    { label: "Honeymoon",      icon: Sparkles,  bg: "bg-rose-500",       text: "text-white" },
-  yatra:        { label: "Yatra special",  icon: Sparkles,  bg: "bg-amber-700",      text: "text-white" },
+  "last-minute":{ label: "Last minute",    icon: Hourglass, bg: "bg-tat-orange",        text: "text-white" },
+  honeymoon:    { label: "Honeymoon",      icon: Sparkles,  bg: "bg-tat-orange",       text: "text-white" },
+  yatra:        { label: "Yatra special",  icon: Sparkles,  bg: "bg-tat-warning-fg",      text: "text-white" },
 };
 
 // Hand-picked deals. `endsInHours` is recomputed against `now` on first
@@ -148,7 +148,7 @@ function Countdown({ deadlineMs }: { deadlineMs: number }) {
   const parts = partsFromMs(deadlineMs - now);
   if (parts.over) {
     return (
-      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-200">
+      <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-tat-orange-soft">
         <Clock className="h-3 w-3" /> Offer ended
       </span>
     );

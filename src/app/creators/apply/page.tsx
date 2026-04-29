@@ -66,8 +66,8 @@ export default function CreatorApplyPage() {
     return (
       <section className="min-h-[80vh] flex items-center justify-center bg-tat-paper px-4 py-20">
         <div className="max-w-md w-full bg-white rounded-3xl border border-tat-charcoal/8 p-8 md:p-10 text-center shadow-soft">
-          <div className="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-5">
-            <CheckCircle2 className="h-7 w-7 text-green-600" />
+          <div className="h-14 w-14 rounded-full bg-tat-success-bg flex items-center justify-center mx-auto mb-5">
+            <CheckCircle2 className="h-7 w-7 text-tat-success-fg" />
           </div>
           <h1 className="font-display text-2xl font-medium text-tat-charcoal mb-2">Application received</h1>
           <p className="text-sm text-tat-charcoal/60 leading-relaxed mb-6">
@@ -206,7 +206,7 @@ export default function CreatorApplyPage() {
             <p className="text-[11px] text-tat-charcoal/40 mt-2">You can update this later. Bank IFSC asked at first payout.</p>
           </div>
 
-          {error && <p className="text-xs text-red-500 bg-red-50 px-3 py-2.5 rounded-lg">{error}</p>}
+          {error && <p className="text-xs text-tat-danger-fg bg-tat-danger-bg px-3 py-2.5 rounded-lg">{error}</p>}
 
           <button
             type="submit"

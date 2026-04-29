@@ -6,13 +6,13 @@ const STEPS = [
     icon: MessageCircle,
     title: "Tell us your vibe",
     body: "Chat with a real planner on WhatsApp or use our AI builder. Share your dates, vibe, budget — not a long form.",
-    color: "from-rose-500/10 to-rose-500/5 text-rose-600",
+    color: "from-tat-orange/10 to-tat-orange/5 text-tat-danger-fg",
   },
   {
     icon: MapPinned,
     title: "We craft your plan",
     body: "A human planner drafts a day-by-day itinerary within 24 hours. Want it tweaked? Unlimited revisions — at no cost.",
-    color: "from-amber-500/10 to-amber-500/5 text-amber-600",
+    color: "from-tat-gold/10 to-tat-gold/5 text-tat-warning-fg",
   },
   {
     icon: Plane,

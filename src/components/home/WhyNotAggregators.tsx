@@ -51,11 +51,11 @@ export default function WhyNotAggregators() {
                 {row.feature}
               </div>
               <div className="px-3 md:px-5 py-3 md:py-4 bg-tat-gold/5 flex items-start gap-2 text-tat-charcoal">
-                <Check className="h-4 w-4 text-green-600 shrink-0 mt-0.5" aria-hidden />
+                <Check className="h-4 w-4 text-tat-success-fg shrink-0 mt-0.5" aria-hidden />
                 <span>{row.us}</span>
               </div>
               <div className="px-3 md:px-5 py-3 md:py-4 flex items-start gap-2 text-tat-charcoal/55">
-                <X className="h-4 w-4 text-red-400 shrink-0 mt-0.5" aria-hidden />
+                <X className="h-4 w-4 text-tat-danger-fg shrink-0 mt-0.5" aria-hidden />
                 <span>{row.them}</span>
               </div>
             </div>

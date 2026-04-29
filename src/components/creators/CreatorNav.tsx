@@ -87,7 +87,7 @@ export default function CreatorNav({ user }: Props) {
         <div className="px-3 py-4 border-t border-tat-charcoal/8">
           <button
             onClick={signOut}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-tat-charcoal/50 hover:bg-red-50 hover:text-red-600 transition-all"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-tat-charcoal/50 hover:bg-tat-danger-bg hover:text-tat-danger-fg transition-all"
           >
             <LogOut className="h-4 w-4 shrink-0" />
             Sign Out
@@ -158,7 +158,7 @@ export default function CreatorNav({ user }: Props) {
             <div className="border-t border-tat-charcoal/8 mt-2 pt-3">
               <button
                 onClick={() => { setMoreOpen(false); signOut(); }}
-                className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50"
+                className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium text-tat-danger-fg hover:bg-tat-danger-bg"
               >
                 <LogOut className="h-4 w-4" />
                 Sign Out

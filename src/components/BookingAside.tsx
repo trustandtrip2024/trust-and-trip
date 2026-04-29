@@ -102,12 +102,12 @@ export default function BookingAside({
         <div
           className={`mb-4 flex items-center gap-2 rounded-xl px-3 py-2.5 border ${
             countdown.urgent
-              ? "bg-red-50 border-red-200 text-red-700"
+              ? "bg-tat-danger-bg border-tat-danger-fg/25 text-tat-danger-fg"
               : "bg-tat-orange/8 border-tat-orange/25 text-tat-charcoal"
           }`}
         >
           <Zap
-            className={`h-4 w-4 shrink-0 ${countdown.urgent ? "text-red-500" : "text-tat-orange"}`}
+            className={`h-4 w-4 shrink-0 ${countdown.urgent ? "text-tat-danger-fg" : "text-tat-orange"}`}
             aria-hidden
           />
           <div className="flex-1 min-w-0">

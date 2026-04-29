@@ -23,16 +23,16 @@ export default function PackageVsAggregator({ ourPrice, theirPrice, packageTitle
   return (
     <section
       aria-labelledby="vs-agg-title"
-      className="rounded-card bg-emerald-50/60 dark:bg-emerald-900/15 ring-1 ring-emerald-300/50 dark:ring-emerald-700/40 p-5 md:p-6"
+      className="rounded-card bg-tat-success-bg/60 dark:bg-tat-success-fg/10 ring-1 ring-tat-success-fg/30 dark:ring-tat-success-fg/30 p-5 md:p-6"
     >
       <div className="flex items-start gap-3">
-        <span className="shrink-0 grid h-10 w-10 place-items-center rounded-full bg-emerald-600 text-white">
+        <span className="shrink-0 grid h-10 w-10 place-items-center rounded-full bg-tat-teal text-white">
           <TrendingDown className="h-5 w-5" />
         </span>
         <div className="flex-1 min-w-0">
           <h2 id="vs-agg-title" className="font-display font-normal text-h3 text-tat-charcoal dark:text-tat-paper">
             Same trip,{" "}
-            <em className="not-italic font-display italic text-emerald-700 dark:text-emerald-400">
+            <em className="not-italic font-display italic text-tat-success-fg dark:text-tat-success-fg">
               less spend.
             </em>
           </h2>
@@ -45,28 +45,28 @@ export default function PackageVsAggregator({ ourPrice, theirPrice, packageTitle
               </p>
             </div>
             <div>
-              <p className="text-meta uppercase tracking-wider text-emerald-700 dark:text-emerald-400 font-semibold">Our price</p>
+              <p className="text-meta uppercase tracking-wider text-tat-success-fg dark:text-tat-success-fg font-semibold">Our price</p>
               <p className="mt-1 font-display text-h2 text-tat-charcoal dark:text-tat-paper tnum">
                 <Price inr={ourPrice} />
               </p>
             </div>
           </div>
 
-          <p className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-emerald-600 text-white text-meta font-semibold">
+          <p className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-tat-teal text-white text-meta font-semibold">
             You save <Price inr={saving} className="tnum" /> · {pct}% lower
           </p>
 
           <ul className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 text-meta text-tat-charcoal/75 dark:text-tat-paper/75">
             <li className="inline-flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-700 dark:text-emerald-400" />
+              <ShieldCheck className="h-3.5 w-3.5 text-tat-success-fg dark:text-tat-success-fg" />
               No middle-marketplace cut
             </li>
             <li className="inline-flex items-center gap-1.5">
-              <MessageCircle className="h-3.5 w-3.5 text-emerald-700 dark:text-emerald-400" />
+              <MessageCircle className="h-3.5 w-3.5 text-tat-success-fg dark:text-tat-success-fg" />
               Direct planner, no chatbot queue
             </li>
             <li className="inline-flex items-center gap-1.5">
-              <TrendingDown className="h-3.5 w-3.5 text-emerald-700 dark:text-emerald-400" />
+              <TrendingDown className="h-3.5 w-3.5 text-tat-success-fg dark:text-tat-success-fg" />
               Hotel/transfer rates we negotiate
             </li>
           </ul>

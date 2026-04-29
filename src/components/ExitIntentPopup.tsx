@@ -108,8 +108,8 @@ export default function ExitIntentPopup() {
 
               {success ? (
                 <div className="flex flex-col gap-3 py-2 text-center">
-                  <div className="h-12 w-12 mx-auto rounded-pill bg-emerald-500/20 grid place-items-center">
-                    <CheckCircle2 className="h-6 w-6 text-emerald-400" />
+                  <div className="h-12 w-12 mx-auto rounded-pill bg-tat-success-fg/20 grid place-items-center">
+                    <CheckCircle2 className="h-6 w-6 text-tat-success-fg" />
                   </div>
                   <h3 id="exit-intent-title" className="font-display text-xl text-tat-paper font-medium">
                     Got it. We&apos;ll be in touch soon.

@@ -124,7 +124,7 @@ export default function ScheduleCallModal({ packageTitle, packageSlug, destinati
                 <ChevronLeft className="h-4 w-4 text-tat-charcoal/60" />
               </button>
               <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${
-                callType === "video" ? "bg-blue-50 text-blue-700 border border-blue-100" : "bg-green-50 text-green-700 border border-green-100"
+                callType === "video" ? "bg-tat-info-bg text-tat-info-fg border border-tat-info-fg/15" : "bg-tat-success-bg text-tat-success-fg border border-tat-success-fg/15"
               }`}>
                 {callType === "video" ? <Video className="h-3 w-3" /> : <Phone className="h-3 w-3" />}
                 {callType === "video" ? "Video Call" : "Voice Call"} selected
@@ -187,7 +187,7 @@ export default function ScheduleCallModal({ packageTitle, packageSlug, destinati
               </div>
             </div>
 
-            {error && <p className="text-xs text-red-500">{error}</p>}
+            {error && <p className="text-xs text-tat-danger-fg">{error}</p>}
 
             <button
               type="submit"
@@ -205,8 +205,8 @@ export default function ScheduleCallModal({ packageTitle, packageSlug, destinati
 
         {step === "success" && (
           <div className="flex flex-col items-center gap-4 py-6 text-center">
-            <div className="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center">
-              <CheckCircle2 className="h-7 w-7 text-green-600" />
+            <div className="h-14 w-14 rounded-full bg-tat-success-bg flex items-center justify-center">
+              <CheckCircle2 className="h-7 w-7 text-tat-success-fg" />
             </div>
             <div>
               <p className="font-display text-lg font-medium text-tat-charcoal">Call scheduled!</p>

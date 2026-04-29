@@ -120,12 +120,12 @@ export default function CancellationLadder({ price, departureDate }: Props) {
                   active
                     ? "bg-tat-gold"
                     : t.pct >= 75
-                      ? "bg-red-500"
+                      ? "bg-tat-danger-fg"
                       : t.pct >= 40
-                        ? "bg-amber-500"
+                        ? "bg-tat-warning-bg0"
                         : t.pct >= 20
-                          ? "bg-yellow-500"
-                          : "bg-green-500"
+                          ? "bg-tat-warning-fg"
+                          : "bg-tat-success-fg"
                 }`}
               />
               <div className="flex-1 min-w-0">

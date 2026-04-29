@@ -39,8 +39,8 @@ export default function WishlistClient({
           {saved.length === 0 ? (
             <>
               <div className="text-center py-16 max-w-md mx-auto">
-                <div className="h-20 w-20 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-6">
-                  <Heart className="h-9 w-9 text-red-300" />
+                <div className="h-20 w-20 rounded-full bg-tat-orange/10 flex items-center justify-center mx-auto mb-6">
+                  <Heart className="h-9 w-9 text-tat-orange/60" />
                 </div>
                 <h2 className="font-display text-2xl font-medium mb-3">Nothing saved yet</h2>
                 <p className="text-tat-charcoal/60 mb-8 leading-relaxed">

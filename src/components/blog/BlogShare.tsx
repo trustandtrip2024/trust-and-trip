@@ -82,7 +82,7 @@ export default function BlogShare({ title, slug }: Props) {
         aria-label="Copy article link"
         className="grid place-items-center h-8 w-8 rounded-full text-tat-charcoal/55 hover:text-tat-gold transition-colors"
       >
-        {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Link2 className="h-3.5 w-3.5" />}
+        {copied ? <Check className="h-3.5 w-3.5 text-tat-success-fg" /> : <Link2 className="h-3.5 w-3.5" />}
       </button>
     </div>
   );

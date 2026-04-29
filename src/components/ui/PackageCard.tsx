@@ -34,8 +34,8 @@ export interface PackageCardProps {
 }
 
 const DEAL_COLOR: Record<NonNullable<PackageCardProps["dealKind"]>, string> = {
-  flash:         "bg-rose-600 text-white",
-  "early-bird":  "bg-emerald-600 text-white",
+  flash:         "bg-tat-orange text-white",
+  "early-bird":  "bg-tat-teal text-white",
   "last-minute": "bg-tat-orange text-white",
   standard:      "bg-tat-charcoal text-white",
 };
@@ -128,7 +128,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         className={[
           "absolute top-3 right-3 h-9 w-9 rounded-full grid place-items-center shadow-card transition duration-120",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2",
-          wished ? "bg-rose-600 text-white" : "bg-white/95 text-tat-charcoal/80 hover:text-rose-600",
+          wished ? "bg-tat-orange text-white" : "bg-white/95 text-tat-charcoal/80 hover:text-tat-danger-fg",
         ].join(" ")}
       >
         <Heart className={`h-4 w-4 ${wished ? "fill-white" : ""}`} />
@@ -165,7 +165,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         {/* Rating */}
         {typeof p.rating === "number" && (
           <div className="mt-2 inline-flex items-center gap-1.5 text-meta">
-            <span className="inline-flex items-center gap-1 bg-emerald-600 text-white px-1.5 py-0.5 rounded text-[11px] font-semibold">
+            <span className="inline-flex items-center gap-1 bg-tat-teal text-white px-1.5 py-0.5 rounded text-[11px] font-semibold">
               <Star className="h-3 w-3 fill-white" />
               {p.rating.toFixed(1)}
             </span>
@@ -197,7 +197,7 @@ export default function PackageCardUI(p: PackageCardProps) {
                 <p className="text-[12px] text-tat-slate/70 leading-none">
                   <Price inr={p.originalPrice} className="line-through" />
                   {discountPct !== null && (
-                    <span className="ml-1.5 text-emerald-700 font-semibold">
+                    <span className="ml-1.5 text-tat-success-fg font-semibold">
                       {discountPct}% off
                     </span>
                   )}
@@ -208,7 +208,7 @@ export default function PackageCardUI(p: PackageCardProps) {
                 <span className="text-meta font-sans text-tat-slate font-normal ml-1">/ person</span>
               </p>
               {p.saveAmount && p.saveAmount > 0 && (
-                <p className="mt-1 inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-emerald-700 font-semibold">
+                <p className="mt-1 inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-tat-success-fg font-semibold">
                   Save <Price inr={p.saveAmount} />
                 </p>
               )}
