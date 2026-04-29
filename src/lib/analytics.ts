@@ -146,4 +146,7 @@ export const analytics = {
 
   quizLeadSubmit: () =>
     trackEvent({ action: "quiz_lead_submit", category: "lead" }),
+
+  offerBannerClick: (slug: string, position: number) =>
+    trackEvent({ action: "offer_banner_click", category: "promo", label: slug, value: position }),
 };

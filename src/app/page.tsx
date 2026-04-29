@@ -42,6 +42,7 @@ import { getSiteStats } from "@/lib/site-stats";
 import { getGeoContext, getCityRecommendations } from "@/lib/geo";
 import CityFavouritesStrip from "@/components/home/CityFavouritesStrip";
 import MobileQuizPill from "@/components/home/MobileQuizPill";
+import OfferBannerStrip from "@/components/home/OfferBannerStrip";
 
 // Below-fold — chunk-split, still SSR'd for SEO. Skeletons reserve height
 // AND signal loading so a slow CDN response doesn't read as a blank gap.
@@ -161,6 +162,8 @@ export default async function HomePage() {
       <div id="destinations" className={ANCHOR_OFFSET}>
         <HomeTopDestChips destinations={destinations} />
       </div>
+
+      <OfferBannerStrip />
 
       <RecentlyCraftedSection
         eyebrow={c.recentlyCrafted?.eyebrow}
