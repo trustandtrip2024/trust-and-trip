@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import GoogleReviewsPill from "@/components/GoogleReviewsPill";
 import {
   Search, Calendar, Users, User, Heart, Star, ArrowRight, ChevronLeft,
-  Mountain, Sparkles, Briefcase, Crown, Sunset, Church, MapPin, X, Zap,
+  Mountain, Sparkles, Briefcase, Crown, Sunset, Church, MapPin, X, Zap, Play,
 } from "lucide-react";
 
 // Hero photo. Light, vibrant — a family enjoying a beachside luxury moment.
@@ -24,6 +24,35 @@ const HERO_IMAGE_URL =
 const ENABLE_HERO_VIDEO = false;
 const VIDEO_MP4 = "/video/hero.mp4";
 const VIDEO_WEBM = "/video/hero.webm";
+
+// YouTube / Vimeo URL → embed URL. Returns null when the URL is not a
+// recognised provider — caller falls back to the still hero image only.
+function parseHeroVideoUrl(raw?: string): string | null {
+  if (!raw) return null;
+  try {
+    const u = new URL(raw);
+    const host = u.hostname.replace(/^www\./, "");
+    if (host === "youtube.com" || host === "m.youtube.com") {
+      const id = u.searchParams.get("v");
+      if (id) return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+    }
+    if (host === "youtu.be") {
+      const id = u.pathname.replace(/^\//, "");
+      if (id) return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+    }
+    if (host === "youtube-nocookie.com") {
+      const id = u.pathname.split("/").filter(Boolean).pop();
+      if (id) return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+    }
+    if (host === "vimeo.com" || host === "player.vimeo.com") {
+      const id = u.pathname.split("/").filter(Boolean).pop();
+      if (id && /^\d+$/.test(id)) return `https://player.vimeo.com/video/${id}?autoplay=1&dnt=1`;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
 
 type StepId = "destination" | "with" | "interest" | "duration" | "place";
 
@@ -358,6 +387,12 @@ interface HeroProps {
   titleItalic?: string;
   lede?: string;
   trustStrip?: string;
+  /** Sanity-driven hero background image. Falls back to HERO_IMAGE_URL. */
+  heroImage?: string;
+  /** Sanity-driven YouTube / Vimeo URL. When set, click-to-play overlay. */
+  videoUrl?: string;
+  /** Optional poster URL for the video pre-play state (defaults to heroImage). */
+  videoPosterUrl?: string;
 }
 
 export default function HeroSearchWizard({
@@ -366,14 +401,22 @@ export default function HeroSearchWizard({
   titleItalic = "made just for you.",
   lede = "A real planner. An itinerary in 24 hours. Free until you're sure.",
   trustStrip = "143+ trips planned this week · 4.9★ from 8,000+ travelers · 60+ destinations",
+  heroImage,
+  videoUrl,
+  videoPosterUrl,
 }: HeroProps) {
   const router = useRouter();
   const [state, setState] = useState<WizardState>(emptyState);
   const [step, setStep] = useState(0);
+  const [playingVideo, setPlayingVideo] = useState(false);
 
   const handleSubmit = () => {
     router.push(buildUrl(state));
   };
+
+  const finalHeroImage = heroImage || HERO_IMAGE_URL;
+  const videoEmbed = parseHeroVideoUrl(videoUrl);
+  const posterImage = videoPosterUrl || finalHeroImage;
 
   return (
     <section
@@ -381,15 +424,41 @@ export default function HeroSearchWizard({
       aria-label="Plan your trip"
       className="relative w-full min-h-[88vh] md:min-h-[88vh] flex items-center overflow-hidden bg-tat-charcoal"
     >
-      <Image
-        src={HERO_IMAGE_URL}
-        alt="A family enjoying a sunny beachside luxury holiday — Trust and Trip hero"
-        fill
-        priority
-        sizes="100vw"
-        quality={80}
-        className="object-cover"
-      />
+      {/* Hero media — Sanity-driven. The still image always renders first
+          (and stays the LCP) so a YouTube/Vimeo iframe never blocks initial
+          paint. When a videoUrl is set, a play button overlays the still
+          and click swaps in the autoplay embed. */}
+      {playingVideo && videoEmbed ? (
+        <iframe
+          src={videoEmbed}
+          title="Trust and Trip — hero video"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+          className="absolute inset-0 w-full h-full border-0"
+        />
+      ) : (
+        <Image
+          src={videoEmbed ? posterImage : finalHeroImage}
+          alt="A family enjoying a sunny beachside luxury holiday — Trust and Trip hero"
+          fill
+          priority
+          sizes="100vw"
+          quality={80}
+          className="object-cover"
+        />
+      )}
+      {videoEmbed && !playingVideo && (
+        <button
+          type="button"
+          onClick={() => setPlayingVideo(true)}
+          aria-label="Play hero video"
+          className="absolute inset-0 z-[5] grid place-items-center group focus-visible:outline-none"
+        >
+          <span className="grid place-items-center h-16 w-16 md:h-20 md:w-20 rounded-full bg-tat-paper/95 text-tat-charcoal shadow-[0_12px_36px_-8px_rgba(0,0,0,0.55)] ring-4 ring-tat-paper/15 group-hover:scale-105 group-focus-visible:ring-tat-orange/60 transition-transform">
+            <Play className="h-6 w-6 md:h-7 md:w-7 fill-current translate-x-0.5" aria-hidden />
+          </span>
+        </button>
+      )}
       {ENABLE_HERO_VIDEO && (
         <video
           className="absolute inset-0 w-full h-full object-cover motion-reduce:hidden"

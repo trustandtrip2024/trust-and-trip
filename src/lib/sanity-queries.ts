@@ -345,7 +345,18 @@ export type SectionCopy = {
 };
 
 export type HomepageContent = {
-  hero?: SectionCopy & { searchPlaceholder?: string; ctaLabel?: string; trustStrip?: string };
+  hero?: SectionCopy & {
+    searchPlaceholder?: string;
+    ctaLabel?: string;
+    trustStrip?: string;
+    /** Resolved hero background image URL — Sanity image takes precedence,
+     *  then imageUrl override, otherwise undefined (caller falls back). */
+    heroImage?: string;
+    /** YouTube / Vimeo URL. When set, the hero overlays a play button. */
+    videoUrl?: string;
+    /** Optional poster URL for the video play state. */
+    videoPosterUrl?: string;
+  };
   recentlyCrafted?: SectionCopy;
   threeSteps?: SectionCopy & {
     closingLine?: string;
@@ -368,10 +379,35 @@ export type HomepageContent = {
 
 export async function getHomepageContent(): Promise<HomepageContent | null> {
   return cached("sanity:homepageContent", TTL.medium, async () => {
-    const raw = await sanityClient.fetch<HomepageContent | null>(
-      `*[_id == "homepageContent"][0]`
-    );
-    return raw ?? null;
+    // Project the hero block explicitly so we can resolve the Sanity image
+    // asset URL server-side. Everything else flows through unchanged.
+    const raw = await sanityClient.fetch<
+      (Omit<HomepageContent, "hero"> & {
+        hero?: HomepageContent["hero"] & {
+          image?: { asset?: { url?: string } };
+          imageUrl?: string;
+        };
+      }) | null
+    >(`*[_id == "homepageContent"][0]{
+      ...,
+      hero{
+        ...,
+        "image": image{ asset->{ url } },
+        imageUrl,
+        videoUrl,
+        videoPosterUrl
+      }
+    }`);
+
+    if (!raw) return null;
+    if (raw.hero) {
+      const sanityImg = raw.hero.image?.asset?.url;
+      raw.hero = {
+        ...raw.hero,
+        heroImage: sanityImg || raw.hero.imageUrl || undefined,
+      };
+    }
+    return raw as HomepageContent;
   });
 }
 

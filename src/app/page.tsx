@@ -127,6 +127,9 @@ export default async function HomePage() {
         titleItalic={c.hero?.titleItalic}
         lede={c.hero?.lede}
         trustStrip={c.hero?.trustStrip}
+        heroImage={c.hero?.heroImage}
+        videoUrl={c.hero?.videoUrl}
+        videoPosterUrl={c.hero?.videoPosterUrl}
       />
       <MobileStickySearch />
       <HomeStickySubnav />
