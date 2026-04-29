@@ -39,7 +39,8 @@ import {
 } from "@/lib/sanity-queries";
 import { fetchGoogleReviews } from "@/lib/google-reviews";
 import { getSiteStats } from "@/lib/site-stats";
-import { getGeoContext } from "@/lib/geo";
+import { getGeoContext, getCityRecommendations } from "@/lib/geo";
+import CityFavouritesStrip from "@/components/home/CityFavouritesStrip";
 
 // Below-fold — chunk-split, still SSR'd for SEO. Skeletons reserve height
 // AND signal loading so a slow CDN response doesn't read as a blank gap.
@@ -111,6 +112,7 @@ export default async function HomePage() {
   const geo = getGeoContext();
   const cityPrefix = geo.city ? ` · From ${geo.city}` : "";
   const trustStripWithCity = (c.hero?.trustStrip ?? siteStats.trustStripLine) + cityPrefix;
+  const cityRec = getCityRecommendations(geo.city);
 
   // Map schema travelTypes onto the brief's 8 mood chips. Styles without a
   // direct schema flag (Adventure / Wellness / Luxury) render the
@@ -150,6 +152,10 @@ export default async function HomePage() {
         reviewCount={siteStats.googleReviewCount}
         rating={siteStats.googleRating}
       />
+
+      {cityRec && (
+        <CityFavouritesStrip city={cityRec.city} picks={cityRec.picks} />
+      )}
 
       <div id="destinations" className={ANCHOR_OFFSET}>
         <HomeTopDestChips destinations={destinations} />

@@ -46,3 +46,56 @@ export function getGeoContext(): GeoContext {
     isIndia: country === "IN",
   };
 }
+
+/**
+ * Top-3 destinations to surface for a given metro. Picked on flight
+ * connectivity + popularity, not pricing — keeps copy honest when we
+ * don't have live inventory. Order matters; first is the "headline".
+ */
+const CITY_RECOMMENDATIONS: Record<DetectedCity, { slug: string; name: string; reason: string }[]> = {
+  Mumbai: [
+    { slug: "maldives",     name: "Maldives",     reason: "Direct flights, 4 hr" },
+    { slug: "bali",         name: "Bali",         reason: "Direct flights, 6 hr" },
+    { slug: "dubai",        name: "Dubai",        reason: "Direct flights, 3 hr" },
+  ],
+  Delhi: [
+    { slug: "uttarakhand",  name: "Char Dham Yatra", reason: "Direct overland, 6 hr" },
+    { slug: "kashmir",      name: "Kashmir",      reason: "Direct flights, 1.5 hr" },
+    { slug: "thailand",     name: "Thailand",     reason: "Direct flights, 4.5 hr" },
+  ],
+  Bengaluru: [
+    { slug: "kerala",       name: "Kerala",       reason: "Direct flights, 1 hr" },
+    { slug: "andaman",      name: "Andaman",      reason: "Direct flights, 3 hr" },
+    { slug: "sri-lanka",    name: "Sri Lanka",    reason: "Direct flights, 1.5 hr" },
+  ],
+  Hyderabad: [
+    { slug: "kerala",       name: "Kerala",       reason: "Direct flights, 1.5 hr" },
+    { slug: "thailand",     name: "Thailand",     reason: "Direct flights, 4 hr" },
+    { slug: "singapore",    name: "Singapore",    reason: "Direct flights, 5 hr" },
+  ],
+  Chennai: [
+    { slug: "sri-lanka",    name: "Sri Lanka",    reason: "Direct flights, 1.5 hr" },
+    { slug: "andaman",      name: "Andaman",      reason: "Direct flights, 2.5 hr" },
+    { slug: "thailand",     name: "Thailand",     reason: "Direct flights, 4 hr" },
+  ],
+  Kolkata: [
+    { slug: "bhutan",       name: "Bhutan",       reason: "Direct flights, 1 hr" },
+    { slug: "thailand",     name: "Thailand",     reason: "Direct flights, 2.5 hr" },
+    { slug: "sikkim",       name: "Sikkim",       reason: "Closest hill state" },
+  ],
+  Pune: [
+    { slug: "goa",          name: "Goa",          reason: "Drive 7 hr or fly 1 hr" },
+    { slug: "bali",         name: "Bali",         reason: "Connect via Mumbai, 7 hr" },
+    { slug: "kerala",       name: "Kerala",       reason: "Direct flights, 2 hr" },
+  ],
+  Ahmedabad: [
+    { slug: "rajasthan",    name: "Rajasthan",    reason: "Drive 6 hr or fly 1 hr" },
+    { slug: "dubai",        name: "Dubai",        reason: "Direct flights, 3 hr" },
+    { slug: "maldives",     name: "Maldives",     reason: "Connect via Mumbai, 6 hr" },
+  ],
+};
+
+export function getCityRecommendations(city: DetectedCity | null) {
+  if (!city) return null;
+  return { city, picks: CITY_RECOMMENDATIONS[city] };
+}
