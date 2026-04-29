@@ -9,6 +9,8 @@ export interface SubmitLeadResult {
   score?: number;
   /** Lead tier (A/B/C) for downstream analytics. */
   tier?: string;
+  /** Supabase leads.id — used by quiz to link quiz_responses → lead. */
+  leadId?: string;
 }
 
 export async function submitLead(
@@ -38,6 +40,7 @@ export async function submitLead(
       eventId: data.eventId,
       score: typeof data.score === "number" ? data.score : undefined,
       tier: typeof data.tier === "string" ? data.tier : undefined,
+      leadId: typeof data.leadId === "string" ? data.leadId : undefined,
     };
   } catch {
     return { ok: false, error: "Network error. Please try again." };

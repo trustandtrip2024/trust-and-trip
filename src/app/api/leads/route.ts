@@ -362,7 +362,7 @@ export async function POST(req: NextRequest) {
     }
     mark(`9. lead alert fired (tier=${tier} reasons=${reasons.length})`);
 
-    return NextResponse.json({ success: true, eventId, score, tier, debug });
+    return NextResponse.json({ success: true, eventId, score, tier, leadId: leadRow?.id, debug });
   } catch (err) {
     const e = err as Error & { code?: string; digest?: string };
     console.error("Lead API error:", e);

@@ -62,6 +62,9 @@ function isComplete(a: PartialAnswers): a is QuizAnswers {
 export default function QuizClient({ packages }: { packages: Package[] }) {
   const [stepIdx, setStepIdx] = useState(0);
   const [answers, setAnswers] = useState<PartialAnswers>({});
+  // Server-side row id returned by POST /api/quiz/responses. Used to
+  // PATCH the row with lead_id once the user submits the lead form.
+  const [responseId, setResponseId] = useState<string | null>(null);
 
   const step = STEPS[stepIdx];
   const progress = Math.round(((stepIdx) / (STEPS.length - 1)) * 100);
@@ -76,9 +79,11 @@ export default function QuizClient({ packages }: { packages: Package[] }) {
     analytics.quizStart();
   }, []);
 
-  // Fire quiz_complete the first time the user lands on results.
+  // Fire quiz_complete the first time the user lands on results, and persist
+  // the answer set anonymously so we capture data even when the user bounces
+  // before submitting the lead form.
   useEffect(() => {
-    if (step === "results" && isComplete(answers)) {
+    if (step === "results" && isComplete(answers) && !responseId) {
       analytics.quizComplete({
         travelType: answers.travelType,
         vibe: answers.vibe,
@@ -86,6 +91,26 @@ export default function QuizClient({ packages }: { packages: Package[] }) {
         budget: answers.budget,
         topMatchSlug: top3[0]?.pkg.slug,
       });
+      fetch("/api/quiz/responses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          travel_type: answers.travelType,
+          vibe: answers.vibe,
+          duration: answers.duration,
+          budget: answers.budget,
+          top_match_slug: top3[0]?.pkg.slug,
+          top_match_score: top3[0]?.score,
+          top3_slugs: top3.map((m) => m.pkg.slug),
+        }),
+      })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data: { id?: string } | null) => {
+          if (data?.id) setResponseId(data.id);
+        })
+        .catch(() => {
+          // Storage failure is silent — analytics still fired above.
+        });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
@@ -202,7 +227,7 @@ export default function QuizClient({ packages }: { packages: Package[] }) {
           )}
 
           {step === "results" && isComplete(answers) && (
-            <Results answers={answers} top3={top3} onReset={reset} />
+            <Results answers={answers} top3={top3} onReset={reset} responseId={responseId} />
           )}
 
           {step !== "travelType" && step !== "results" && (
@@ -294,10 +319,12 @@ function Results({
   answers,
   top3,
   onReset,
+  responseId,
 }: {
   answers: QuizAnswers;
   top3: ReturnType<typeof scorePackages>;
   onReset: () => void;
+  responseId: string | null;
 }) {
   const summaryParts = [
     answers.travelType,
@@ -366,7 +393,7 @@ function Results({
         </div>
       )}
 
-      <QuizLeadCapture answers={answers} top3={top3} />
+      <QuizLeadCapture answers={answers} top3={top3} responseId={responseId} />
 
       <div className="mt-12 rounded-card bg-tat-charcoal text-tat-paper p-7 md:p-9 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
         <div>
@@ -415,9 +442,11 @@ function Results({
 function QuizLeadCapture({
   answers,
   top3,
+  responseId,
 }: {
   answers: QuizAnswers;
   top3: ReturnType<typeof scorePackages>;
+  responseId: string | null;
 }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -447,6 +476,15 @@ function QuizLeadCapture({
     }
     analytics.quizLeadSubmit();
     setDone(true);
+
+    // Link the anonymous quiz_responses row to the new lead. Fire-and-forget.
+    if (responseId && res.leadId) {
+      fetch("/api/quiz/responses", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: responseId, lead_id: res.leadId }),
+      }).catch(() => {});
+    }
   }
 
   if (done) {
