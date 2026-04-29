@@ -184,7 +184,7 @@ export default function AboutPage() {
         <div className="container-custom">
           <div className="max-w-2xl mb-12">
             <span className="eyebrow">What we offer</span>
-            <h2 className="heading-section mt-3 text-balance">
+            <h2 className="heading-section mt-3">
               Every kind of journey,
               <span className="italic text-tat-gold font-light"> built for you.</span>
             </h2>
@@ -205,7 +205,7 @@ export default function AboutPage() {
         <div className="container-custom">
           <div className="max-w-2xl mb-12 md:mb-16">
             <span className="eyebrow">What we stand for</span>
-            <h2 className="heading-section mt-3 text-balance">
+            <h2 className="heading-section mt-3">
               Four values, lived every day.
             </h2>
           </div>
@@ -247,7 +247,7 @@ export default function AboutPage() {
           {/* Contact details */}
           <div>
             <span className="eyebrow">Reach us</span>
-            <h2 className="heading-section mt-3 text-balance mb-8">
+            <h2 className="heading-section mt-3 mb-8">
               Real people,
               <span className="italic text-tat-gold font-light"> real replies.</span>
             </h2>
@@ -281,7 +281,7 @@ export default function AboutPage() {
           <div className="space-y-8">
             <div>
               <span className="eyebrow">We accept</span>
-              <h3 className="font-display text-2xl font-medium mt-3 mb-5">Secure payments</h3>
+              <h3 className="font-display text-h2 font-medium mt-3 mb-5">Secure payments</h3>
               <div className="flex flex-wrap gap-3">
                 {paymentMethods.map((m) => (
                   <span key={m} className="px-4 py-2 bg-tat-paper rounded-xl border border-tat-charcoal/10 text-sm font-medium text-tat-charcoal/80">
@@ -293,7 +293,7 @@ export default function AboutPage() {
             </div>
             <div>
               <span className="eyebrow">Legal</span>
-              <h3 className="font-display text-2xl font-medium mt-3 mb-5">Company policies</h3>
+              <h3 className="font-display text-h2 font-medium mt-3 mb-5">Company policies</h3>
               <div className="space-y-3">
                 {[
                   { label: "Privacy Policy", href: "/privacy-policy" },

@@ -159,7 +159,7 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                     <button key={b.value}
                       onClick={() => { setSel({ ...sel, budget: [b.min, b.max] }); go("dates"); }}
                       className={`p-6 rounded-2xl border-2 text-left transition-all ${sel.budget[0] === b.min ? "border-tat-gold bg-tat-gold/8" : "border-tat-charcoal/10 hover:border-tat-charcoal/30"}`}>
-                      <p className="font-display text-2xl font-medium text-tat-gold">{b.label}</p>
+                      <p className="font-display text-h2 font-medium text-tat-gold">{b.label}</p>
                       <p className="text-sm text-tat-charcoal/60 mt-1">{b.range} / person</p>
                     </button>
                   ))}

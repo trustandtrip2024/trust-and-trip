@@ -146,7 +146,7 @@ export default async function OffersPage() {
         <div className="container-custom flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <p className="eyebrow text-tat-gold">Exclusive rates</p>
-            <h2 className="font-display text-2xl md:text-3xl font-medium mt-1 text-balance">
+            <h2 className="font-display text-h2 font-medium mt-1 text-balance">
               Don't see your destination? Ask for an unlisted deal.
             </h2>
           </div>

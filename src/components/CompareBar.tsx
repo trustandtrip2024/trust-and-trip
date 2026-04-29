@@ -86,7 +86,7 @@ export default function CompareBar() {
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-5 border-b border-tat-charcoal/8">
                   <div>
-                    <h2 className="font-display text-2xl font-medium">Compare Packages</h2>
+                    <h2 className="font-display text-h2 font-medium">Compare Packages</h2>
                     <p className="text-sm text-tat-charcoal/50 mt-0.5">Side-by-side breakdown</p>
                   </div>
                   <button

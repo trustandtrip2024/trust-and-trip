@@ -37,7 +37,7 @@ export default function Accordion({ items, defaultOpen = 0 }: Props) {
                     {item.subtitle}
                   </p>
                 )}
-                <h3 className="font-display text-xl md:text-2xl font-medium leading-tight text-tat-charcoal group-hover:text-tat-gold transition-colors">
+                <h3 className="font-display text-h3 font-medium leading-tight text-tat-charcoal group-hover:text-tat-gold transition-colors">
                   {item.title}
                 </h3>
                 <AnimatePresence initial={false}>

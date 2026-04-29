@@ -21,7 +21,7 @@ export default function GlobalError({
         <div className="font-display text-8xl text-tat-gold/30 font-medium leading-none mb-6 select-none">
           Oops.
         </div>
-        <h1 className="font-display text-2xl md:text-3xl font-medium text-tat-charcoal mb-4">
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal mb-4">
           Something went wrong.
         </h1>
         <p className="text-tat-charcoal/60 leading-relaxed mb-8">

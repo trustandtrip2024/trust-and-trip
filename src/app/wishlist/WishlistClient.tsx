@@ -42,7 +42,7 @@ export default function WishlistClient({
                 <div className="h-20 w-20 rounded-full bg-tat-orange/10 flex items-center justify-center mx-auto mb-6">
                   <Heart className="h-9 w-9 text-tat-orange/60" />
                 </div>
-                <h2 className="font-display text-2xl font-medium mb-3">Nothing saved yet</h2>
+                <h2 className="font-display text-h2 font-medium mb-3">Nothing saved yet</h2>
                 <p className="text-tat-charcoal/60 mb-8 leading-relaxed">
                   Tap the heart on any package to save it here for later.
                 </p>
@@ -63,7 +63,7 @@ export default function WishlistClient({
                   <div className="flex items-end justify-between mb-6">
                     <div>
                       <span className="eyebrow">Trending right now</span>
-                      <h3 className="mt-1.5 font-display text-2xl md:text-3xl font-medium">
+                      <h3 className="mt-1.5 font-display text-h3 font-medium">
                         Travelers are loving these
                       </h3>
                     </div>

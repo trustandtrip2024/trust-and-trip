@@ -40,7 +40,7 @@ export default async function DashboardOffersPage() {
     <div>
       <div className="mb-6">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Dashboard</p>
-        <h1 className="font-display text-2xl font-medium text-tat-charcoal">Offers for You</h1>
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal">Offers for You</h1>
         <p className="text-sm text-tat-charcoal/50 mt-1">Curated deals — updated daily just for members.</p>
       </div>
 

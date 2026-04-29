@@ -220,7 +220,7 @@ export default async function BlogPostPage({ params }: Props) {
       {related.length > 0 && (
         <section className="py-14 bg-tat-cream/40">
           <div className="container-custom">
-            <h3 className="font-display text-2xl font-medium mb-8">Keep reading</h3>
+            <h3 className="font-display text-h2 font-medium mb-8">Keep reading</h3>
             <div className="grid md:grid-cols-3 gap-6">
               {related.map((p: any) => {
                 const pSlug = p.slug?.current ?? p.slug;

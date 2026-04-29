@@ -98,7 +98,7 @@ export default function TravellersPage() {
       {/* Header */}
       <div className="mb-6">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Dashboard</p>
-        <h1 className="font-display text-2xl font-medium text-tat-charcoal">Travellers & Documents</h1>
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal">Travellers & Documents</h1>
         <p className="text-sm text-tat-charcoal/55 mt-1">Save co-travellers and secure important papers — reuse in bookings.</p>
       </div>
 

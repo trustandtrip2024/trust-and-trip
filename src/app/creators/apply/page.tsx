@@ -69,7 +69,7 @@ export default function CreatorApplyPage() {
           <div className="h-14 w-14 rounded-full bg-tat-success-bg flex items-center justify-center mx-auto mb-5">
             <CheckCircle2 className="h-7 w-7 text-tat-success-fg" />
           </div>
-          <h1 className="font-display text-2xl font-medium text-tat-charcoal mb-2">Application received</h1>
+          <h1 className="font-display text-h2 font-medium text-tat-charcoal mb-2">Application received</h1>
           <p className="text-sm text-tat-charcoal/60 leading-relaxed mb-6">
             We&apos;ll review your audience and Instagram and get back within <strong>48 hours</strong>.
             If approved, you&apos;ll get your unique referral link + onboarding call invite.
@@ -94,7 +94,7 @@ export default function CreatorApplyPage() {
           <Sparkles className="h-3.5 w-3.5 text-tat-gold" />
           Creator application
         </p>
-        <h1 className="font-display text-3xl md:text-4xl font-medium text-tat-charcoal mt-2 leading-[1.1] mb-3">
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal mt-2 leading-[1.1] mb-3">
           Tell us a bit about you.
         </h1>
         <p className="text-sm text-tat-charcoal/60 mb-8">

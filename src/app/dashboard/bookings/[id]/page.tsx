@@ -121,7 +121,7 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
       {/* Header */}
       <div className="mb-8">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Booking #{booking.id.slice(0, 8).toUpperCase()}</p>
-        <h1 className="font-display text-2xl md:text-3xl font-medium text-tat-charcoal leading-tight mb-3">
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal leading-tight mb-3">
           {booking.package_title}
         </h1>
         <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${cfg.badge}`}>

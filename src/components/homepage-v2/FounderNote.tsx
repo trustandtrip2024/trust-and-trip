@@ -43,7 +43,7 @@ export default function FounderNote() {
               A note from the founder
             </p>
             <Quote className="h-8 w-8 text-tat-gold mb-5 opacity-60" />
-            <h2 className="font-display text-2xl md:text-4xl leading-[1.15] font-medium text-tat-charcoal text-balance">
+            <h2 className="heading-section leading-[1.15] text-tat-charcoal text-balance">
               We started Trust and Trip because{" "}
               <span className="italic text-tat-gold font-light">
                 travel shouldn&apos;t feel transactional.

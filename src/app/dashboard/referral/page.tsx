@@ -70,7 +70,7 @@ export default function ReferralDashboardPage() {
     <div>
       <div className="mb-6">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Dashboard</p>
-        <h1 className="font-display text-2xl font-medium text-tat-charcoal">Refer & Earn</h1>
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal">Refer & Earn</h1>
         <p className="text-sm text-tat-charcoal/50 mt-1">Refer friends, earn ₹500 for every successful booking.</p>
       </div>
 

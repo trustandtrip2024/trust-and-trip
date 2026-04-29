@@ -126,7 +126,7 @@ export default async function BlogPage({
               </div>
               <div className="p-7 md:p-10 flex flex-col justify-center">
                 <span className="text-[10px] uppercase tracking-[0.25em] text-tat-gold font-medium">{featured.category}</span>
-                <h2 className="mt-3 font-display text-2xl md:text-3xl font-medium leading-tight text-balance group-hover:text-tat-gold transition-colors">
+                <h2 className="mt-3 font-display text-h2 font-medium leading-tight text-balance group-hover:text-tat-gold transition-colors">
                   {featured.title}
                 </h2>
                 <p className="mt-4 text-tat-charcoal/60 text-sm leading-relaxed line-clamp-3">{featured.excerpt}</p>

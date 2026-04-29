@@ -133,7 +133,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="mb-8">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Dashboard</p>
-        <h1 className="font-display text-2xl md:text-3xl font-medium text-tat-charcoal">
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal">
           Welcome back, {displayName} 👋
         </h1>
         <p className="text-sm text-tat-charcoal/50 mt-1.5">Here&apos;s a summary of your travel activity.</p>
@@ -232,7 +232,7 @@ export default function DashboardPage() {
               <Icon className="h-[18px] w-[18px]" />
             </div>
             {value !== null && (
-              <p className="font-display text-2xl font-medium text-tat-charcoal mb-0.5">
+              <p className="font-display text-h2 font-medium text-tat-charcoal mb-0.5">
                 {loadingStats ? "—" : value}
               </p>
             )}

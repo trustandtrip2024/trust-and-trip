@@ -53,7 +53,7 @@ export default function SacredJourneys({ packages = FALLBACK }: Props) {
             <p className="mb-3 inline-block bg-tat-orange-soft/70 px-2 py-1 text-xs font-semibold uppercase tracking-wider">
               Sacred Journeys
             </p>
-            <h2 className="text-3xl font-semibold leading-tight text-tat-charcoal sm:text-4xl md:text-5xl">
+            <h2 className="heading-section font-semibold leading-tight text-tat-charcoal">
               Char Dham, Kedarnath &{" "}
               <span className="italic text-tat-gold">Devbhumi yatras.</span>
             </h2>

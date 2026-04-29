@@ -80,7 +80,7 @@ export default function CreatorEarningsPage() {
     <div>
       <div className="mb-6">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Creator dashboard</p>
-        <h1 className="font-display text-2xl font-medium text-tat-charcoal">Earnings & payouts</h1>
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal">Earnings & payouts</h1>
         <p className="text-sm text-tat-charcoal/55 mt-1">Every commission, every payout. Settled monthly via your chosen method.</p>
       </div>
 

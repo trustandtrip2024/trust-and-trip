@@ -65,7 +65,7 @@ export default function CreatorLeadsPage() {
     <div>
       <div className="mb-6">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Creator dashboard</p>
-        <h1 className="font-display text-2xl font-medium text-tat-charcoal">Lead activity</h1>
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal">Lead activity</h1>
         <p className="text-sm text-tat-charcoal/55 mt-1">
           Every visitor who landed via your referral link and submitted a form. Names are partially masked for privacy.
         </p>

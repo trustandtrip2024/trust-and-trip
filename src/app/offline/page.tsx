@@ -14,7 +14,7 @@ export default function OfflinePage() {
         <div className="h-20 w-20 rounded-full bg-tat-charcoal/5 flex items-center justify-center mx-auto mb-6">
           <WifiOff className="h-9 w-9 text-tat-charcoal/30" />
         </div>
-        <h1 className="font-display text-2xl font-medium mb-3">You're offline</h1>
+        <h1 className="font-display text-h2 font-medium mb-3">You're offline</h1>
         <p className="text-tat-charcoal/60 text-sm leading-relaxed mb-8">
           No internet connection. Check your connection and try again — or{" "}
           <a href="https://wa.me/918115999588" className="text-tat-gold hover:underline">WhatsApp us</a>{" "}

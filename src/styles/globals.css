@@ -99,12 +99,15 @@ h1, h2, h3 {
     @apply text-[11px] uppercase tracking-[0.28em] font-semibold text-tat-orange;
   }
 
+  /* Display + section headings — Fraunces 500 medium + balanced wrap.
+     Components used to hand-add `font-medium` and `text-balance`; codify
+     them here so the override pattern goes away. */
   .heading-display {
-    @apply font-display text-display-lg font-normal tracking-[-0.01em];
+    @apply font-display text-display-lg font-medium tracking-[-0.01em] text-balance;
   }
 
   .heading-section {
-    @apply font-display text-display-md font-normal tracking-[-0.01em];
+    @apply font-display text-display-md font-medium tracking-[-0.01em] text-balance;
   }
 
   .prose-travel {

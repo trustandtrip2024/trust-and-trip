@@ -74,7 +74,7 @@ export default function RewardsPage() {
       {/* Header */}
       <div className="mb-6">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Dashboard</p>
-        <h1 className="font-display text-2xl font-medium text-tat-charcoal">Trust Points & Rewards</h1>
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal">Trust Points & Rewards</h1>
         <p className="text-sm text-tat-charcoal/55 mt-1">Earn 1 point for every ₹100 you book. Tiers stack forever.</p>
       </div>
 
@@ -89,12 +89,12 @@ export default function RewardsPage() {
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-[0.28em] text-tat-paper/55">Current tier</p>
-                <p className="font-display text-2xl font-medium">{tierConfig.label}</p>
+                <p className="font-display text-h2 font-medium">{tierConfig.label}</p>
               </div>
             </div>
             <div className="text-right">
               <p className="text-[10px] uppercase tracking-widest text-tat-paper/50">Points balance</p>
-              <p className="font-display text-3xl md:text-4xl font-medium">{row.total_points.toLocaleString("en-IN")}</p>
+              <p className="font-display text-h2 font-medium">{row.total_points.toLocaleString("en-IN")}</p>
               <p className="text-[10px] text-tat-paper/40 mt-0.5">Lifetime: {row.lifetime_points.toLocaleString("en-IN")}</p>
             </div>
           </div>

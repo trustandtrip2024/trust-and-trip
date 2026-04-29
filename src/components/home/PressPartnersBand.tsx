@@ -178,7 +178,7 @@ export default function PressPartnersBand({
       <div className="mt-16 md:mt-20 pt-12 border-t border-tat-charcoal/10 dark:border-white/10">
         <div className="container mx-auto px-5 md:px-8 max-w-6xl text-center">
           <p className="tt-eyebrow">Corporate &amp; institutional travel</p>
-          <h3 className="mt-2 font-display text-2xl md:text-3xl font-medium text-tat-charcoal dark:text-tat-paper text-balance">
+          <h3 className="mt-2 font-display text-h2 font-medium text-tat-charcoal dark:text-tat-paper text-balance">
             AGMs, faculty retreats, school tours —{" "}
             <em className="not-italic font-display italic text-tat-gold dark:text-tat-gold">
               curated by us.

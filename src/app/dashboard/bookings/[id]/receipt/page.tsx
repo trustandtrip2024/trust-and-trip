@@ -101,7 +101,7 @@ export default function ReceiptPage({ params }: { params: { id: string } }) {
         {/* Header */}
         <div className="flex items-start justify-between border-b border-tat-charcoal/10 pb-6 mb-8 flex-wrap gap-4">
           <div>
-            <p className="font-display text-2xl font-medium text-tat-charcoal">Trust and Trip</p>
+            <p className="font-display text-h2 font-medium text-tat-charcoal">Trust and Trip</p>
             <p className="text-xs text-tat-charcoal/50 mt-0.5">Experiences Pvt. Ltd.</p>
             <p className="text-[11px] text-tat-charcoal/45 mt-3 leading-relaxed">
               R-607, Amrapali Princely, Sector 71<br />
