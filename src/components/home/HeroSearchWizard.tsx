@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import GoogleReviewsPill from "@/components/GoogleReviewsPill";
+import LivePlannerStatus from "@/components/home/LivePlannerStatus";
 import {
   Search, Calendar, Users, User, Heart, Star, ArrowRight, ChevronLeft,
   Mountain, Sparkles, Briefcase, Crown, Sunset, Church, MapPin, X, Zap, Play,
@@ -549,9 +550,12 @@ export default function HeroSearchWizard({
         </div>
 
         {/* Google review pill sits above the brand trust strip — third-
-            party verification reads stronger than self-reported copy. */}
-        <div className="mt-6 flex justify-center">
+            party verification reads stronger than self-reported copy.
+            LivePlannerStatus right next to it gives the "humans are
+            standing by" beat that converts indecisive visitors. */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <GoogleReviewsPill tone="light" />
+          <LivePlannerStatus />
         </div>
         <p className="mt-3 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-meta text-white/85">
           <Star className="h-3.5 w-3.5 fill-tat-orange-soft text-tat-orange-soft" aria-hidden />
