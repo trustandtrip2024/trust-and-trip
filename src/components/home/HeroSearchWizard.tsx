@@ -8,6 +8,7 @@ import GoogleReviewsPill from "@/components/GoogleReviewsPill";
 import {
   Search, Calendar, Users, User, Heart, Star, ArrowRight, ChevronLeft,
   Mountain, Sparkles, Briefcase, Crown, Sunset, Church, MapPin, X, Zap, Play,
+  MessageCircle,
 } from "lucide-react";
 
 // Hero photo. Light, vibrant — a family enjoying a beachside luxury moment.
@@ -530,6 +531,22 @@ export default function HeroSearchWizard({
           setStep={setStep}
           onSubmit={handleSubmit}
         />
+
+        {/* Zero-friction escape hatch — users who don't want to use the
+            wizard can talk to a real planner on WhatsApp in one tap. */}
+        <div className="relative z-10 mt-4 flex items-center justify-center gap-2 text-white/85 text-[13px] md:text-sm">
+          <span className="text-white/55">Don&rsquo;t feel like clicking?</span>
+          <a
+            href="/api/wa/click?src=hero_chat&msg=Hi%20Trust%20and%20Trip%2C%20I%27d%20like%20to%20plan%20a%20trip."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 font-semibold text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold/60 rounded-md"
+          >
+            <MessageCircle className="h-4 w-4 text-tat-orange-soft" aria-hidden />
+            Chat with a planner
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+          </a>
+        </div>
 
         {/* Google review pill sits above the brand trust strip — third-
             party verification reads stronger than self-reported copy. */}
