@@ -533,10 +533,20 @@ export default function HeroSearchWizard({
           onSubmit={handleSubmit}
         />
 
-        {/* Zero-friction escape hatch — users who don't want to use the
-            wizard can talk to a real planner on WhatsApp in one tap. */}
-        <div className="relative z-10 mt-4 flex items-center justify-center gap-2 text-white/85 text-[13px] md:text-sm">
-          <span className="text-white/55">Don&rsquo;t feel like clicking?</span>
+        {/* Zero-friction escape hatches — users who don't want to use the
+            wizard can either talk to a real planner on WhatsApp, or take
+            a 60s quiz that scores three matches from our catalogue. */}
+        <div className="relative z-10 mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-white/85 text-[13px] md:text-sm">
+          <span className="text-white/55">Not sure where to start?</span>
+          <Link
+            href="/quiz"
+            className="inline-flex items-center gap-1.5 font-semibold text-white underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold/60 rounded-md"
+          >
+            <Sparkles className="h-4 w-4 text-tat-gold" aria-hidden />
+            Take 60-sec quiz
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+          </Link>
+          <span aria-hidden className="text-white/30">·</span>
           <a
             href="/api/wa/click?src=hero_chat&msg=Hi%20Trust%20and%20Trip%2C%20I%27d%20like%20to%20plan%20a%20trip."
             target="_blank"
