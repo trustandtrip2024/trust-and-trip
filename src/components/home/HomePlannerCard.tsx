@@ -18,6 +18,8 @@ interface Props {
   bioHref?: string;
   /** Trips planned to date — drives the credibility line in the card. */
   tripsPlanned?: number;
+  /** When part of a Why-us cluster, drop top padding to flow tight. */
+  tightTop?: boolean;
 }
 
 /**
@@ -33,6 +35,7 @@ export default function HomePlannerCard({
   oneLiner = "I read every form myself. Tell me your dates and I'll send your itinerary in 24 hours.",
   bioHref = "/about",
   tripsPlanned = 8000,
+  tightTop = false,
 }: Props = {}) {
   const initials = name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
   // /akash-mishra.jpg is the production photo path. If the asset hasn't
@@ -57,7 +60,7 @@ export default function HomePlannerCard({
   return (
     <section
       aria-labelledby="planner-card-title"
-      className="py-16 md:py-24 bg-tat-cream-warm/30 dark:bg-tat-charcoal/95"
+      className={`${tightTop ? "pt-4 md:pt-6 pb-16 md:pb-24" : "py-16 md:py-24"} bg-tat-cream-warm/30 dark:bg-tat-charcoal/95`}
     >
       <script
         type="application/ld+json"

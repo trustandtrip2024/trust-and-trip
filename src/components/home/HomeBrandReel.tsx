@@ -17,6 +17,9 @@ interface Props {
   lede?: string;
   /** Caption shown below the poster — sets up what the viewer is about to watch. */
   caption?: string;
+  /** When part of a Why-us cluster, drop top padding so it flows under
+   *  the preceding section without doubling the gap. */
+  tightTop?: boolean;
 }
 
 export default function HomeBrandReel({
@@ -27,6 +30,7 @@ export default function HomeBrandReel({
   italicTail = "actually plan a trip.",
   lede = "Real planner, real itinerary, real customer call. No marketing voiceover.",
   caption = "Filmed at our Noida studio · 0:58",
+  tightTop = false,
 }: Props = {}) {
   const [open, setOpen] = useState(false);
   const hasVideo = Boolean(videoUrl);
@@ -34,7 +38,7 @@ export default function HomeBrandReel({
   return (
     <section
       aria-labelledby="reel-title"
-      className="py-16 md:py-24 bg-tat-paper dark:bg-tat-charcoal"
+      className={`${tightTop ? "pt-4 md:pt-6 pb-16 md:pb-24" : "py-16 md:py-24"} bg-tat-paper dark:bg-tat-charcoal`}
     >
       <div className="container-custom max-w-5xl">
         <div className="text-center max-w-2xl mx-auto mb-8 md:mb-10">

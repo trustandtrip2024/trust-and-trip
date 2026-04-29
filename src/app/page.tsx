@@ -221,20 +221,23 @@ export default async function HomePage() {
           same trust pitch with better visual treatment, and HowItWorks fills
           the "why us" beat directly after. */}
 
-      <HowItWorks />
-
-      <HomePlannerCard tripsPlanned={siteStats.totalTravelers} />
-
-      <HomeBrandReel />
-
-      <WhyTrustAndTripPillars
-        eyebrow={c.pillars?.eyebrow}
-        titleStart={c.pillars?.titleStart}
-        titleItalic={c.pillars?.titleItalic}
-        lede={c.pillars?.lede}
-        closingLine={c.pillars?.closingLine}
-        pillars={c.pillars?.pillars}
-      />
+      {/* Why-us cluster — process, founder, brand reel, pillars all read
+          as one trust beat. tightTop on the followers tightens vertical
+          gap so they don't read as four separate sections. */}
+      <div id="why">
+        <HowItWorks />
+        <HomePlannerCard tripsPlanned={siteStats.totalTravelers} tightTop />
+        <HomeBrandReel tightTop />
+        <WhyTrustAndTripPillars
+          eyebrow={c.pillars?.eyebrow}
+          titleStart={c.pillars?.titleStart}
+          titleItalic={c.pillars?.titleItalic}
+          lede={c.pillars?.lede}
+          closingLine={c.pillars?.closingLine}
+          pillars={c.pillars?.pillars}
+          tightTop
+        />
+      </div>
 
       <div id="reviews" className={ANCHOR_OFFSET}>
         <ReviewsRail

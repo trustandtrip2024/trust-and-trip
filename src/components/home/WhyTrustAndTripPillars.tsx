@@ -55,6 +55,9 @@ interface Props {
   lede?: string;
   closingLine?: string;
   pillars?: Pillar[];
+  /** When part of a Why-us cluster, drop top padding to flow tight under
+   *  the preceding section. */
+  tightTop?: boolean;
 }
 
 export default function WhyTrustAndTripPillars({
@@ -64,13 +67,14 @@ export default function WhyTrustAndTripPillars({
   lede,
   closingLine = "Originality. Human care. Detail. Honest pricing.",
   pillars,
+  tightTop = false,
 }: Props = {}) {
   const items = (pillars && pillars.length >= 2) ? pillars : DEFAULT_PILLARS;
 
   return (
     <section
       aria-labelledby="pillars-title"
-      className="py-16 md:py-24 bg-tat-paper dark:bg-tat-charcoal/95"
+      className={`${tightTop ? "pt-4 md:pt-6 pb-16 md:pb-24" : "py-16 md:py-24"} bg-tat-paper dark:bg-tat-charcoal/95`}
     >
       <div className="container-custom max-w-6xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} align="center" />

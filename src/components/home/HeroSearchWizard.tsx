@@ -13,11 +13,12 @@ import {
 } from "lucide-react";
 
 // Hero photo. Light, vibrant — a family enjoying a beachside luxury moment.
-// Swap this URL to update the hero. The image is lazy-loaded by the
-// browser image cache after the first paint; we use Next/Image with
-// `priority` so it lands in the LCP.
+// Swap this URL to update the hero. Width capped at 1920 (covers most
+// desktops; Next/Image picks a smaller srcset entry for tablets/phones)
+// and quality 70 trims ~25-30% off the LCP byte budget vs q=80 with
+// no perceptible difference on a heavily overlaid hero.
 const HERO_IMAGE_URL =
-  "https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?auto=format&fit=crop&w=2400&q=80";
+  "https://images.unsplash.com/photo-1602002418816-5c0aeef426aa?auto=format&fit=crop&w=1920&q=70";
 
 // Optional looping background video — kept as enhancement only. If
 // present the file is served from /public/video; otherwise the image
@@ -448,8 +449,9 @@ export default function HeroSearchWizard({
           alt="A family enjoying a sunny beachside luxury holiday — Trust and Trip hero"
           fill
           priority
+          fetchPriority="high"
           sizes="100vw"
-          quality={80}
+          quality={70}
           className="object-cover"
         />
       )}
