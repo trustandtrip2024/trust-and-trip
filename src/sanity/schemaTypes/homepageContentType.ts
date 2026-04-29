@@ -40,6 +40,43 @@ export const homepageContentType = defineType({
         defineField({ name: 'searchPlaceholder',type: 'string', description: 'e.g. Where to? Try "Bali"…' }),
         defineField({ name: 'ctaLabel',         type: 'string', description: 'Search button. e.g. Plan my trip — free' }),
         defineField({ name: 'trustStrip',       type: 'string', description: 'Single line: ⭐ 4.9 on Google · 8,000+ travelers …' }),
+
+        // ─── Hero media ────────────────────────────────────────────────
+        defineField({
+          name: 'image',
+          title: 'Hero background image',
+          type: 'image',
+          options: { hotspot: true },
+          description: 'Optional. Falls back to the hard-coded hero photo when empty.',
+        }),
+        defineField({
+          name: 'imageUrl',
+          title: 'Hero image URL (override)',
+          type: 'url',
+          description: 'Optional. External image (Unsplash etc.). Takes precedence only if no Sanity image is uploaded.',
+        }),
+        defineField({
+          name: 'videoUrl',
+          title: 'Hero video URL (YouTube / Vimeo)',
+          type: 'url',
+          description:
+            'Optional. When set, the hero shows a play button over the image. Click swaps the still for an autoplay iframe (LCP stays the static image).',
+          validation: (R) =>
+            R.uri({ scheme: ['http', 'https'] })
+              .custom((v?: string) => {
+                if (!v) return true;
+                return /youtube\.com|youtu\.be|youtube-nocookie\.com|vimeo\.com|player\.vimeo\.com/i.test(v)
+                  ? true
+                  : 'Must be a YouTube or Vimeo URL.';
+              }),
+        }),
+        defineField({
+          name: 'videoPosterUrl',
+          title: 'Video poster image (override)',
+          type: 'url',
+          description:
+            'Optional. Custom thumbnail shown before play. Defaults to the hero image when empty.',
+        }),
       ],
     }),
 

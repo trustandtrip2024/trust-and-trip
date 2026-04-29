@@ -130,6 +130,9 @@ export default async function HomePage() {
           name: d.name,
           country: d.country,
         }))}
+        heroImage={c.hero?.heroImage}
+        videoUrl={c.hero?.videoUrl}
+        videoPosterUrl={c.hero?.videoPosterUrl}
       />
       {/* MobileStickySearch removed — Header search modal already covers
           mobile re-engagement and the in-page subnav anchors are enough. */}
