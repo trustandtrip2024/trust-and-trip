@@ -191,7 +191,7 @@ function OfferCard({ offer, size }: { offer: any; size: "sm" | "lg" }) {
             <Tag className="h-3 w-3" />{offer.discount}% OFF
           </div>
           {offer.hot && (
-            <div className="bg-red-500 text-white px-3 py-1.5 rounded-full text-[10px] font-semibold flex items-center gap-1">
+            <div className="bg-tat-orange text-white px-3 py-1.5 rounded-full text-[10px] font-semibold flex items-center gap-1">
               <Zap className="h-3 w-3" />Flash
             </div>
           )}

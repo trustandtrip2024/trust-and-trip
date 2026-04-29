@@ -141,7 +141,7 @@ export default function AriaChatWidget() {
                 <div className="h-10 w-10 rounded-full bg-tat-cream-warm overflow-hidden flex items-end justify-center border-2 border-tat-gold/40">
                   <AriaFace size={38} />
                 </div>
-                <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-400 border-2 border-tat-charcoal" />
+                <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-tat-success-fg border-2 border-tat-charcoal" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
@@ -289,7 +289,7 @@ export default function AriaChatWidget() {
 
           {/* Online dot */}
           {!open && (
-            <span className="absolute bottom-0.5 right-0.5 h-3.5 w-3.5 rounded-full bg-green-400 border-2 border-white shadow-sm" />
+            <span className="absolute bottom-0.5 right-0.5 h-3.5 w-3.5 rounded-full bg-tat-success-fg border-2 border-white shadow-sm" />
           )}
 
           {/* Unread badge */}
@@ -297,7 +297,7 @@ export default function AriaChatWidget() {
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-[10px] font-semibold flex items-center justify-center shadow"
+              className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-tat-orange text-white text-[10px] font-semibold flex items-center justify-center shadow"
             >
               {unread}
             </motion.span>

@@ -255,11 +255,11 @@ export default function TripBuilderClient({ packages, destinations }: { packages
                     </form>
                   </div>
                 ) : (
-                  <div className="bg-green-50 border border-green-200 rounded-2xl p-5 flex items-center gap-4">
-                    <Check className="h-8 w-8 text-green-500 shrink-0" />
+                  <div className="bg-tat-success-bg border border-tat-success-fg/25 rounded-2xl p-5 flex items-center gap-4">
+                    <Check className="h-8 w-8 text-tat-success-fg shrink-0" />
                     <div>
-                      <p className="font-medium text-green-800">We've got your details!</p>
-                      <p className="text-sm text-green-600">A planner will call you within 2 hours.</p>
+                      <p className="font-medium text-tat-success-fg">We've got your details!</p>
+                      <p className="text-sm text-tat-success-fg">A planner will call you within 2 hours.</p>
                     </div>
                   </div>
                 )}

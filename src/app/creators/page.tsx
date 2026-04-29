@@ -38,7 +38,7 @@ export default function CreatorsPage() {
       {/* Hero */}
       <section className="relative pt-28 md:pt-36 pb-16 md:pb-24 bg-gradient-to-br from-tat-charcoal via-tat-charcoal to-tat-charcoal/95 text-tat-paper overflow-hidden">
         <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-tat-gold/15 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-rose-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -left-24 h-96 w-96 rounded-full bg-tat-orange/10 blur-3xl pointer-events-none" />
 
         <div className="container-custom relative">
           <p className="text-[10px] uppercase tracking-[0.28em] text-tat-gold/80 mb-4 flex items-center gap-2">
@@ -74,10 +74,10 @@ export default function CreatorsPage() {
 
           {/* Trust pills */}
           <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-tat-paper/55">
-            <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-emerald-400" /> Transparent dashboard</span>
-            <span className="flex items-center gap-1.5"><Zap className="h-3.5 w-3.5 text-emerald-400" /> Instagram automation kit</span>
-            <span className="flex items-center gap-1.5"><Wallet className="h-3.5 w-3.5 text-emerald-400" /> Monthly UPI / bank payouts</span>
-            <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5 text-emerald-400" /> 10K+ travellers served</span>
+            <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-tat-success-fg" /> Transparent dashboard</span>
+            <span className="flex items-center gap-1.5"><Zap className="h-3.5 w-3.5 text-tat-success-fg" /> Instagram automation kit</span>
+            <span className="flex items-center gap-1.5"><Wallet className="h-3.5 w-3.5 text-tat-success-fg" /> Monthly UPI / bank payouts</span>
+            <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5 text-tat-success-fg" /> 10K+ travellers served</span>
           </div>
         </div>
       </section>

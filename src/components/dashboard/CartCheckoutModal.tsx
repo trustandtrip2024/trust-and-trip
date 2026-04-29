@@ -141,8 +141,8 @@ export default function CartCheckoutModal({ totalDeposit, itemCount, onClose, on
         <div className="p-5">
           {stage === "done" ? (
             <div className="text-center py-8">
-              <div className="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle2 className="h-7 w-7 text-green-600" />
+              <div className="h-14 w-14 rounded-full bg-tat-success-bg flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="h-7 w-7 text-tat-success-fg" />
               </div>
               <h3 className="font-display text-lg font-medium text-tat-charcoal mb-1">Payment confirmed</h3>
               <p className="text-sm text-tat-charcoal/60">Redirecting to your bookings…</p>
@@ -188,11 +188,11 @@ export default function CartCheckoutModal({ totalDeposit, itemCount, onClose, on
               </div>
 
               {error && (
-                <p className="text-xs text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+                <p className="text-xs text-tat-danger-fg bg-tat-danger-bg px-3 py-2 rounded-lg">{error}</p>
               )}
 
               <div className="bg-tat-cream/30 rounded-xl p-3 flex items-start gap-2.5">
-                <ShieldCheck className="h-4 w-4 text-green-600 shrink-0 mt-0.5" />
+                <ShieldCheck className="h-4 w-4 text-tat-success-fg shrink-0 mt-0.5" />
                 <div className="text-[11px] text-tat-charcoal/65 leading-relaxed">
                   You&apos;ll be charged <strong>₹{totalDeposit.toLocaleString("en-IN")}</strong> now as a 30% deposit. Balance due 14 days before departure. Refundable within 14 days of booking.
                 </div>

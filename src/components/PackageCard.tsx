@@ -130,7 +130,7 @@ export default function PackageCard({
           )}
           {limitedSlots && (
             <span className="inline-flex items-center gap-1 bg-tat-charcoal/90 backdrop-blur-sm text-tat-paper text-[10px] tracking-wider uppercase font-medium px-2.5 py-1 rounded-full">
-              <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
+              <span className="h-1.5 w-1.5 rounded-full bg-tat-orange animate-pulse" />
               Limited Slots
             </span>
           )}
@@ -219,7 +219,7 @@ export default function PackageCard({
               <div className="flex items-center gap-1.5 mb-0.5">
                 <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${tier.color}`}>{tier.badge}</span>
                 {savings > 0 && (
-                  <span className="text-[9px] text-green-600 font-medium">
+                  <span className="text-[9px] text-tat-success-fg font-medium">
                     Save <Price inr={savings} />
                   </span>
                 )}
@@ -251,7 +251,7 @@ export default function PackageCard({
               disabled={addingCart}
               className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] font-semibold transition-all duration-200 border ${
                 inCart
-                  ? "bg-green-50 border-green-200 text-green-700"
+                  ? "bg-tat-success-bg border-tat-success-fg/25 text-tat-success-fg"
                   : "bg-tat-charcoal/5 border-tat-charcoal/12 text-tat-charcoal/70 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal"
               }`}
             >

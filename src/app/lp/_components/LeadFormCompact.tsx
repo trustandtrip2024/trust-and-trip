@@ -148,7 +148,7 @@ export default function LeadFormCompact({
           )}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-5 inline-flex items-center justify-center gap-2 h-11 px-5 rounded-pill bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition"
+          className="mt-5 inline-flex items-center justify-center gap-2 h-11 px-5 rounded-pill bg-tat-teal text-white text-sm font-medium hover:bg-tat-teal-deep transition"
         >
           Chat on WhatsApp now →
         </a>
@@ -196,7 +196,7 @@ export default function LeadFormCompact({
         />
       </div>
 
-      {error && <p className="mt-3 text-meta text-red-600">{error}</p>}
+      {error && <p className="mt-3 text-meta text-tat-danger-fg">{error}</p>}
 
       <button
         type="submit"

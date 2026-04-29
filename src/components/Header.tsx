@@ -404,7 +404,7 @@ export default function Header() {
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onSelect={async () => { await supabase.auth.signOut(); }}
-                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-red-500 hover:bg-red-50 outline-none cursor-pointer data-[highlighted]:bg-red-50"
+                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-tat-danger-fg hover:bg-tat-danger-bg outline-none cursor-pointer data-[highlighted]:bg-tat-danger-bg"
                       >
                         <LogOut className="h-4 w-4" />
                         Sign Out

@@ -77,8 +77,8 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
       <div className="px-6 py-5">
         {success ? (
           <div className="flex flex-col items-center gap-4 py-8 text-center">
-            <div className="h-14 w-14 rounded-full bg-green-50 flex items-center justify-center">
-              <CheckCircle2 className="h-7 w-7 text-green-600" />
+            <div className="h-14 w-14 rounded-full bg-tat-success-bg flex items-center justify-center">
+              <CheckCircle2 className="h-7 w-7 text-tat-success-fg" />
             </div>
             <div>
               <p className="font-display text-lg font-medium text-tat-charcoal">Request received!</p>
@@ -193,7 +193,7 @@ export default function CustomizeModal({ packageTitle, packageSlug, destinationN
               </div>
             </div>
 
-            {error && <p className="text-xs text-red-500">{error}</p>}
+            {error && <p className="text-xs text-tat-danger-fg">{error}</p>}
 
             <button
               type="submit"

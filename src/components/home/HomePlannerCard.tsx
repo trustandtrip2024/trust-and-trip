@@ -51,7 +51,7 @@ export default function HomePlannerCard({
               />
               {/* Verified-human badge */}
               <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-white/95 text-tat-charcoal text-[10px] uppercase tracking-wider font-semibold px-2.5 py-1 rounded-pill shadow-card">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="h-1.5 w-1.5 rounded-full bg-tat-success-bg0 animate-pulse" />
                 Online now
               </span>
             </div>

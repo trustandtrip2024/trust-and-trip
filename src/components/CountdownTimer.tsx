@@ -28,7 +28,7 @@ export default function CountdownTimer({ endsAt, label = "Offer ends in" }: Prop
   }, [endsAt]);
 
   if (timeLeft.expired) {
-    return <span className="text-[10px] text-red-400 uppercase tracking-wider font-medium">Expired</span>;
+    return <span className="text-[10px] text-tat-danger-fg uppercase tracking-wider font-medium">Expired</span>;
   }
 
   return (

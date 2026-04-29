@@ -156,7 +156,7 @@ export default function PilgrimFeatureBand({
                 href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-pill border border-emerald-700/40 bg-white text-emerald-800 text-body-sm font-medium hover:bg-emerald-50 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 dark:bg-white/10 dark:text-emerald-300 dark:border-emerald-500/40"
+                className="inline-flex items-center justify-center gap-1.5 h-11 px-5 rounded-pill border border-tat-success-fg/40 bg-white text-tat-success-fg text-body-sm font-medium hover:bg-tat-success-bg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 dark:bg-white/10 dark:text-tat-success-fg dark:border-tat-success-fg/40"
               >
                 <MessageCircle className="h-4 w-4" />
                 Speak to our yatra desk

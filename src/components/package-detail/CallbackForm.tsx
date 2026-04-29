@@ -43,13 +43,13 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
 
   if (done) {
     return (
-      <div className="rounded-2xl bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-400/30 p-5 flex items-center gap-3">
-        <CheckCircle2 className="h-6 w-6 text-green-500 shrink-0" />
+      <div className="rounded-2xl bg-tat-success-bg dark:bg-tat-success-fg/10 border border-tat-success-fg/25 dark:border-tat-success-fg/30 p-5 flex items-center gap-3">
+        <CheckCircle2 className="h-6 w-6 text-tat-success-fg shrink-0" />
         <div>
-          <p className="font-medium text-green-800 dark:text-green-200">
+          <p className="font-medium text-tat-success-fg dark:text-tat-success-fg">
             Got it — a planner will call you shortly.
           </p>
-          <p className="text-xs text-green-700/80 dark:text-green-200/70 mt-0.5">
+          <p className="text-xs text-tat-success-fg/80 dark:text-tat-success-fg/70 mt-0.5">
             8 AM – 10 PM, 6 days a week. Usually within 30 minutes during work hours.
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
             />
           </div>
         </div>
-        {err && <p className="text-xs text-red-500">{err}</p>}
+        {err && <p className="text-xs text-tat-danger-fg">{err}</p>}
         <button
           type="submit"
           disabled={busy}

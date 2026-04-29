@@ -141,7 +141,7 @@ export default async function CartResumePage({ searchParams }: Props) {
               href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip%2C%20I%27d%20like%20to%20resume%20my%20cart."
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-pill border border-emerald-700/40 text-emerald-800 font-medium hover:bg-emerald-50 transition"
+              className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-pill border border-tat-teal/40 text-tat-teal-deep font-medium hover:bg-tat-teal/10 transition"
             >
               Get help on WhatsApp
             </Link>

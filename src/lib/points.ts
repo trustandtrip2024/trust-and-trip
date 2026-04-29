@@ -14,7 +14,7 @@ export const TIER_PERKS: Record<Tier, { label: string; discount: string; perks: 
   silver: {
     label: "Silver",
     discount: "2% off every booking",
-    color: "bg-slate-100 text-slate-700 border-slate-200",
+    color: "bg-tat-charcoal/5 text-tat-charcoal border-tat-charcoal/12",
     accent: "text-slate-600",
     perks: [
       "2% loyalty discount on bookings",

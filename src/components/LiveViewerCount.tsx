@@ -42,7 +42,7 @@ export default function LiveViewerCount({ slug, fallbackWeek = 0 }: Props) {
       <Eye className="w-3.5 h-3.5 text-tat-orange" />
       {live > 0 ? (
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+          <span className="h-1.5 w-1.5 rounded-full bg-tat-success-fg animate-pulse" />
           <span>
             <span className="font-semibold text-tat-charcoal">{live}</span> viewing now
           </span>

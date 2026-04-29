@@ -110,11 +110,11 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
 
   if (success) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-2xl p-5 flex items-center gap-4">
-        <CheckCircle2 className="h-8 w-8 text-green-500 shrink-0" />
+      <div className="bg-tat-success-bg border border-tat-success-fg/25 rounded-2xl p-5 flex items-center gap-4">
+        <CheckCircle2 className="h-8 w-8 text-tat-success-fg shrink-0" />
         <div>
-          <p className="font-medium text-green-800">Deposit paid! Booking confirmed.</p>
-          <p className="text-sm text-green-600 mt-0.5">Our team will reach out within 2 hours to confirm your trip details.</p>
+          <p className="font-medium text-tat-success-fg">Deposit paid! Booking confirmed.</p>
+          <p className="text-sm text-tat-success-fg mt-0.5">Our team will reach out within 2 hours to confirm your trip details.</p>
         </div>
       </div>
     );
@@ -207,13 +207,13 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
                   className="input-travel text-sm uppercase tracking-wider"
                 />
                 {appliedCoupon && (
-                  <p className="mt-1 text-[11px] text-green-700 font-medium">
+                  <p className="mt-1 text-[11px] text-tat-success-fg font-medium">
                     ✓ {appliedCoupon.code} applied — ₹{appliedCoupon.amount_off.toLocaleString("en-IN")} off
                   </p>
                 )}
               </div>
 
-              {error && <p className="text-sm text-red-500 bg-red-50 rounded-xl px-3 py-2">{error}</p>}
+              {error && <p className="text-sm text-tat-danger-fg bg-tat-danger-bg rounded-xl px-3 py-2">{error}</p>}
 
               <button type="submit" disabled={loading}
                 className="w-full flex items-center justify-center gap-2 bg-tat-gold text-tat-charcoal font-semibold py-3.5 rounded-xl hover:bg-tat-gold/90 transition-colors text-sm disabled:opacity-70">
@@ -221,7 +221,7 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
               </button>
 
               <div className="flex items-center justify-center gap-2 text-[11px] text-tat-charcoal/40">
-                <Shield className="h-3 w-3 text-green-500" />
+                <Shield className="h-3 w-3 text-tat-success-fg" />
                 Secured by Razorpay · 256-bit SSL encryption
               </div>
             </form>

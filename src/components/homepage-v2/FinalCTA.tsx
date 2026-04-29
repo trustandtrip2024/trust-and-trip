@@ -108,7 +108,7 @@ export default function FinalCTA() {
               One email a month — offbeat routes + member-only deals.
             </p>
             {done ? (
-              <div className="inline-flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+              <div className="inline-flex items-center gap-1.5 text-xs text-tat-success-fg font-medium">
                 <CheckCircle2 className="h-3.5 w-3.5" />
                 You&apos;re on the list.
               </div>
@@ -132,26 +132,26 @@ export default function FinalCTA() {
                 </button>
               </form>
             )}
-            {error && <p className="mt-1.5 text-[11px] text-red-400">{error}</p>}
+            {error && <p className="mt-1.5 text-[11px] text-tat-danger-fg">{error}</p>}
           </div>
         </div>
 
         {/* Reassurance row */}
         <div className="mt-14 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-tat-paper/45">
           <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="h-1.5 w-1.5 rounded-full bg-tat-success-fg" />
             30% deposit · refundable 14 days
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="h-1.5 w-1.5 rounded-full bg-tat-success-fg" />
             Price protection
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="h-1.5 w-1.5 rounded-full bg-tat-success-fg" />
             24/7 on-trip support
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="h-1.5 w-1.5 rounded-full bg-tat-success-fg" />
             No hidden costs
           </span>
         </div>

@@ -92,7 +92,7 @@ export default function NewsletterBlock({
         </form>
 
         {status === "err" && (
-          <p role="alert" className="mt-3 text-meta text-rose-300">Something went wrong. Try again, or email plan@trustandtrip.com.</p>
+          <p role="alert" className="mt-3 text-meta text-tat-danger-fg">Something went wrong. Try again, or email plan@trustandtrip.com.</p>
         )}
         {status === "ok" && coupon && (
           <div

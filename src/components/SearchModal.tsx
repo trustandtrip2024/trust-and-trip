@@ -17,7 +17,7 @@ type Result = {
 
 const TYPE_META = {
   package:     { label: "Package",     icon: Package,  color: "text-tat-gold bg-tat-gold/10" },
-  destination: { label: "Destination", icon: MapPin,    color: "text-blue-600 bg-blue-50" },
+  destination: { label: "Destination", icon: MapPin,    color: "text-tat-info-fg bg-tat-info-bg" },
   post:        { label: "Article",     icon: BookOpen,  color: "text-purple-600 bg-purple-50" },
 };
 

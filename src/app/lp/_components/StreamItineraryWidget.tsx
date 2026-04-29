@@ -359,7 +359,7 @@ export default function StreamItineraryWidget({
               </details>
             </div>
 
-            {error && <p className="mt-3 text-meta text-red-600">{error}</p>}
+            {error && <p className="mt-3 text-meta text-tat-danger-fg">{error}</p>}
 
             <button
               type="submit"
@@ -462,7 +462,7 @@ export default function StreamItineraryWidget({
                         <strong>Stay. </strong>{d.stay}
                       </p>
                       {d.tip && (
-                        <p className="mt-1 text-[12px] bg-amber-50 text-amber-900 px-2.5 py-1.5 rounded">
+                        <p className="mt-1 text-[12px] bg-tat-warning-bg text-tat-warning-fg px-2.5 py-1.5 rounded">
                           <strong>Tip. </strong>{d.tip}
                         </p>
                       )}
@@ -496,7 +496,7 @@ export default function StreamItineraryWidget({
                     href={`/api/wa/click?src=stream_widget_${destination.toLowerCase().replace(/\s+/g, "_")}&dest=${encodeURIComponent(destination)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-pill bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition"
+                    className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-pill bg-tat-teal text-white text-sm font-medium hover:bg-tat-teal-deep transition"
                   >
                     <MessageCircle className="h-4 w-4" />
                     Refine with a planner on WhatsApp

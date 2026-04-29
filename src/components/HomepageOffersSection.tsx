@@ -84,7 +84,7 @@ export default async function HomepageOffersSection() {
                     {offer.discount}% OFF
                   </span>
                   {offer.hot && (
-                    <span className="inline-flex items-center gap-1 bg-red-500 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 bg-tat-orange text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">
                       <Flame className="h-2.5 w-2.5" />
                       Hot
                     </span>
@@ -110,7 +110,7 @@ export default async function HomepageOffersSection() {
                     <Clock className="h-3 w-3" />
                     {offer.duration}
                   </span>
-                  <span className="flex items-center gap-1 text-red-400/80">
+                  <span className="flex items-center gap-1 text-tat-warning-fg">
                     <Clock className="h-3 w-3" />
                     Ends {offer.endsLabel}
                   </span>

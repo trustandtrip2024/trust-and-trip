@@ -20,7 +20,7 @@ const STATS = [
     label: "Tripadvisor",
     value: "4.9",
     sub: "Travelers' Choice",
-    icon: <Star className="h-4 w-4 fill-emerald-500 text-emerald-500" />,
+    icon: <Star className="h-4 w-4 fill-tat-success-fg text-tat-success-fg" />,
   },
   {
     href: "#",
@@ -117,7 +117,7 @@ export default function VerifiedByTravelers() {
           <p className="mb-3 inline-block bg-tat-orange-soft/70 px-2 py-1 text-xs font-semibold uppercase tracking-wider">
             Verified by Travelers
           </p>
-          <h2 className="text-3xl font-semibold leading-tight text-slate-900 sm:text-4xl md:text-5xl">
+          <h2 className="text-3xl font-semibold leading-tight text-tat-charcoal sm:text-4xl md:text-5xl">
             Trusted on every{" "}
             <span className="italic text-tat-gold">platform.</span>
           </h2>
@@ -131,15 +131,15 @@ export default function VerifiedByTravelers() {
               href={s.href}
               target={s.href.startsWith("http") ? "_blank" : undefined}
               rel="noreferrer"
-              className="group flex flex-col gap-1 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-amber-400 hover:shadow-sm"
+              className="group flex flex-col gap-1 rounded-xl border border-tat-charcoal/12 bg-white p-4 transition hover:border-tat-gold hover:shadow-sm"
             >
-              <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-slate-500">
+              <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-tat-slate">
                 {s.icon} {s.label}
               </div>
-              <div className="text-2xl font-semibold text-slate-900">
+              <div className="text-2xl font-semibold text-tat-charcoal">
                 {s.value}
               </div>
-              <div className="text-xs text-slate-500">{s.sub}</div>
+              <div className="text-xs text-tat-slate">{s.sub}</div>
             </Link>
           ))}
         </div>
@@ -158,13 +158,13 @@ export default function VerifiedByTravelers() {
                       {r.name[0]}
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-slate-900">
+                      <div className="text-sm font-semibold text-tat-charcoal">
                         {r.name}
                       </div>
-                      <div className="text-xs text-slate-500">{r.when}</div>
+                      <div className="text-xs text-tat-slate">{r.when}</div>
                     </div>
                   </div>
-                  <span className="text-xs font-medium text-slate-400">
+                  <span className="text-xs font-medium text-tat-slate/70">
                     {r.platform}
                   </span>
                 </div>
@@ -178,11 +178,11 @@ export default function VerifiedByTravelers() {
                   ))}
                 </div>
 
-                <p className="line-clamp-3 text-sm leading-relaxed text-slate-700">
+                <p className="line-clamp-3 text-sm leading-relaxed text-tat-charcoal">
                   &ldquo;{r.quote}&rdquo;
                 </p>
 
-                <span className="mt-auto inline-block w-fit rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
+                <span className="mt-auto inline-block w-fit rounded-full bg-tat-charcoal/5 px-2.5 py-1 text-xs text-tat-slate">
                   {r.tag}
                 </span>
               </article>
@@ -197,22 +197,22 @@ export default function VerifiedByTravelers() {
               <span
                 key={i}
                 className={`h-1.5 rounded-full transition-all ${
-                  i === selected ? "w-8 bg-tat-orange" : "w-3 bg-slate-300"
+                  i === selected ? "w-8 bg-tat-orange" : "w-3 bg-tat-charcoal/15"
                 }`}
               />
             ))}
           </div>
           <Link
             href="/reviews"
-            className="inline-flex items-center gap-2 text-sm font-medium text-slate-900 hover:text-tat-gold"
+            className="inline-flex items-center gap-2 text-sm font-medium text-tat-charcoal hover:text-tat-gold"
           >
             Read all 200+ reviews <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
         {/* Partner / "as seen on" greyscale strip */}
-        <div className="mt-14 border-t border-slate-200 pt-8">
-          <p className="mb-4 text-center text-xs uppercase tracking-widest text-slate-500">
+        <div className="mt-14 border-t border-tat-charcoal/12 pt-8">
+          <p className="mb-4 text-center text-xs uppercase tracking-widest text-tat-slate">
             As seen on
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-70">

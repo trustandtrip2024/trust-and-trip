@@ -295,7 +295,7 @@ export default function KeralaFamilyLanding() {
               href="/api/wa/click?src=lp_kerala_cta&dest=Kerala"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-pill bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition"
+              className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-pill bg-tat-teal text-white font-medium hover:bg-tat-teal-deep transition"
             >
               <MessageCircle className="h-4 w-4" />
               Chat on WhatsApp
@@ -308,7 +308,7 @@ export default function KeralaFamilyLanding() {
         href="/api/wa/click?src=lp_kerala_sticky&dest=Kerala"
         target="_blank"
         rel="noopener noreferrer"
-        className="md:hidden fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 h-12 px-5 rounded-pill bg-emerald-600 text-white text-sm font-medium shadow-[0_10px_30px_-10px_rgba(0,0,0,0.4)]"
+        className="md:hidden fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 h-12 px-5 rounded-pill bg-tat-teal text-white text-sm font-medium shadow-[0_10px_30px_-10px_rgba(0,0,0,0.4)]"
       >
         <MessageCircle className="h-4 w-4" />
         WhatsApp

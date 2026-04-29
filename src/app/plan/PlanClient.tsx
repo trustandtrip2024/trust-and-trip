@@ -201,7 +201,7 @@ export default function PlanClient() {
               />
             </div>
 
-            {error && <p className="text-sm text-red-500 bg-red-50 px-4 py-3 rounded-xl">{error}</p>}
+            {error && <p className="text-sm text-tat-danger-fg bg-tat-danger-bg px-4 py-3 rounded-xl">{error}</p>}
 
             <button
               type="submit"

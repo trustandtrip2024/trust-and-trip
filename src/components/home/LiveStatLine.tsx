@@ -61,8 +61,8 @@ export default function LiveStatLine({ className = "" }: { className?: string })
         return (
           <li key={i} className="inline-flex items-center gap-1.5">
             <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 animate-ping opacity-50" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              <span className="absolute inline-flex h-full w-full rounded-full bg-tat-success-bg0 animate-ping opacity-50" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-tat-success-bg0" />
             </span>
             <Icon className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
             <span>
