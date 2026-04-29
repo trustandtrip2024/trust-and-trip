@@ -7,6 +7,7 @@ import { experiences } from "@/lib/data";
 import { getPackages } from "@/lib/sanity-queries";
 import PackageCard from "@/components/PackageCard";
 import CTASection from "@/components/CTASection";
+import JsonLd from "@/components/JsonLd";
 import { ChevronRight, Check, ArrowRight } from "lucide-react";
 
 interface Props {
@@ -41,8 +42,30 @@ export default async function ExperienceDetailPage({ params }: Props) {
 
   const otherExperiences = experiences.filter((e) => e.slug !== exp.slug);
 
+  // CollectionPage JSON-LD wraps the visible package set so search engines
+  // see this experience hub as a curated catalogue of bookable trips.
+  const collectionLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${exp.title} — Trust and Trip`,
+    description: exp.description,
+    url: `https://trustandtrip.com/experiences/${exp.slug}`,
+    image: exp.image,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: packages.length,
+      itemListElement: packages.slice(0, 25).map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `https://trustandtrip.com/packages/${p.slug}`,
+        name: p.title,
+      })),
+    },
+  };
+
   return (
     <>
+      <JsonLd data={collectionLd} />
       {/* Hero */}
       <section className="relative h-[70vh] min-h-[500px] w-full overflow-hidden bg-tat-charcoal">
         <Image
@@ -137,7 +160,10 @@ export default async function ExperienceDetailPage({ params }: Props) {
             <div className="text-center py-16 bg-tat-paper rounded-3xl border border-tat-charcoal/5">
               <p className="font-display text-2xl mb-3">Coming soon</p>
               <p className="text-tat-charcoal/60 mb-6">We're curating the perfect experiences for this experience.</p>
-              <Link href="/customize-trip" className="btn-primary inline-flex">
+              <Link
+                href={`/customize-trip${exp.travelType ? `?type=${encodeURIComponent(exp.travelType)}` : ""}`}
+                className="btn-primary inline-flex"
+              >
                 Build a custom trip <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
