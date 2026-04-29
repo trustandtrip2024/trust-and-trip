@@ -4,7 +4,7 @@ export const dynamicParams = true;
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getPackageBySlug, getAllPackageSlugs, getRelatedPackages } from "@/lib/sanity-queries";
+import { getPackageBySlug, getAllPackageSlugs, getRelatedPackages, getUgcPostsForDestination } from "@/lib/sanity-queries";
 import { getPackageStats } from "@/lib/package-stats";
 import { getGalleryImages } from "@/lib/gallery-images";
 import PackageItinerary from "@/components/PackageItinerary";
@@ -39,6 +39,7 @@ import PriceBreakdown from "@/components/package-detail/PriceBreakdown";
 import BestMonthsStrip from "@/components/package-detail/BestMonthsStrip";
 import PackageQuickFacts from "@/components/package-detail/PackageQuickFacts";
 import PackingList from "@/components/package-detail/PackingList";
+import PackageGuestPhotos from "@/components/package-detail/PackageGuestPhotos";
 
 interface Props { params: { slug: string } }
 
@@ -68,9 +69,10 @@ export default async function PackageDetail({ params }: Props) {
   const pkg = await getPackageBySlug(params.slug);
   if (!pkg) return notFound();
 
-  const [relatedPackages, stats] = await Promise.all([
+  const [relatedPackages, stats, guestPhotos] = await Promise.all([
     getRelatedPackages(pkg.destinationSlug, pkg.slug, pkg.travelType).catch(() => []),
     getPackageStats(pkg.slug),
+    getUgcPostsForDestination(pkg.destinationName).catch(() => []),
   ]);
   const galleryImages = getGalleryImages(pkg.destinationSlug, pkg.heroImage);
 
@@ -404,6 +406,9 @@ export default async function PackageDetail({ params }: Props) {
                 <ReviewForm packageSlug={pkg.slug} packageTitle={pkg.title} />
               </div>
             </section>
+
+            {/* GUEST PHOTOS — Sanity UGC filtered by destination match. */}
+            <PackageGuestPhotos posts={guestPhotos} destinationName={pkg.destinationName} />
 
             {/* CALLBACK FORM */}
             <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">

@@ -493,6 +493,35 @@ export async function getUgcPosts(): Promise<UgcPost[]> {
   });
 }
 
+/**
+ * Pull UGC posts for a specific package's destination. Case-insensitive
+ * match against the destination string field on the UGC document. Used by
+ * the package detail page to render real travelers' photos from the same
+ * destination — falls back to the broader pool when nothing matches so a
+ * Bali package still gets photos even if no Sanity posts are tagged Bali.
+ */
+export async function getUgcPostsForDestination(
+  destinationName: string,
+  limit = 8,
+): Promise<UgcPost[]> {
+  return cached(`sanity:ugc:dest:${destinationName.toLowerCase()}`, TTL.medium, async () => {
+    const raw = await sanityClient.fetch<(Omit<UgcPost, "image"> & { image: any })[]>(
+      `*[_type == "ugcPost" && active == true && permissionGranted == true
+         && lower(destination) match $needle]
+        | order(order asc, _createdAt desc) [0...$limit] {
+        firstName, destination, caption, image, instagramHandle
+      }`,
+      { needle: `*${destinationName.toLowerCase()}*`, limit },
+    );
+    return raw
+      .filter((p) => !!p.image)
+      .map((p) => ({
+        ...p,
+        image: urlFor(p.image).width(600).height(750).quality(75).url(),
+      }));
+  });
+}
+
 // ─── Blog queries ─────────────────────────────────────────────────────────
 
 const BLOG_FIELDS = `
