@@ -406,6 +406,7 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
         hero?: HomepageContent["hero"] & {
           image?: { asset?: { url?: string } };
           imageUrl?: string;
+          videoFile?: { asset?: { url?: string } };
         };
       }) | null
     >(`*[_id == "homepageContent"][0]{
@@ -414,6 +415,7 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
         ...,
         "image": image{ asset->{ url } },
         imageUrl,
+        "videoFile": videoFile{ asset->{ url } },
         videoMp4Url,
         videoUrl,
         videoPosterUrl
@@ -423,9 +425,13 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
     if (!raw) return null;
     if (raw.hero) {
       const sanityImg = raw.hero.image?.asset?.url;
+      // Resolve hero video — prefer the uploaded Sanity asset (served via
+      // cdn.sanity.io), fall back to the external CDN override URL.
+      const uploadedVideo = raw.hero.videoFile?.asset?.url;
       raw.hero = {
         ...raw.hero,
         heroImage: sanityImg || raw.hero.imageUrl || undefined,
+        videoMp4Url: uploadedVideo || raw.hero.videoMp4Url || undefined,
       };
     }
     return raw as HomepageContent;

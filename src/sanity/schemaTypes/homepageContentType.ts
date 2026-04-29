@@ -56,11 +56,19 @@ export const homepageContentType = defineType({
           description: 'Optional. External image (Unsplash etc.). Takes precedence only if no Sanity image is uploaded.',
         }),
         defineField({
+          name: 'videoFile',
+          title: 'Hero background video',
+          type: 'file',
+          description:
+            'Upload an .mp4 (H.264) or .webm. Plays muted-autoplay-loop as the hero background. Keep under ~8 MB and 1920×1080. Also set "Hero background image" or "Video poster" so first paint is not black.',
+          options: { accept: 'video/mp4,video/webm' },
+        }),
+        defineField({
           name: 'videoMp4Url',
-          title: 'Hero background video (direct .mp4 / .webm)',
+          title: 'Hero video URL — external CDN override',
           type: 'url',
           description:
-            'Recommended. When set, the hero plays this video as an autoplay-loop-muted background — no play button, no third-party branding. Use a CDN-served mp4/webm. Mobile/Safari needs a poster (videoPosterUrl) so initial paint is not blank.',
+            'Optional override. Use only if hosting the video outside Sanity (Cloudinary, Mux, Bunny). Ignored when "Hero background video" is uploaded.',
           validation: (R) =>
             R.uri({ scheme: ['http', 'https'] }).custom((v?: string) => {
               if (!v) return true;
