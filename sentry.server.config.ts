@@ -1,4 +1,6 @@
 // Sentry — Node runtime. Fires for API routes / Server Components.
+//
+// Loaded by src/instrumentation.ts when NEXT_RUNTIME === "nodejs".
 
 import * as Sentry from "@sentry/nextjs";
 
@@ -13,7 +15,18 @@ if (dsn) {
       process.env.VERCEL_GIT_COMMIT_SHA ??
       undefined,
     tracesSampleRate: 0.1,
-    // Don't include request bodies — they often contain PII / secrets
-    sendDefaultPii: false,
+    // Skill recommends sendDefaultPii: true so request URLs, headers, and
+    // user IPs land on the event — much easier to triage. We still strip
+    // cookies in beforeSend.
+    sendDefaultPii: true,
+    // Ship console.log / structured logs to Sentry Logs
+    enableLogs: true,
+    // Capture local variable state on uncaught exceptions — invaluable for
+    // production stack traces but adds a small perf cost on each throw.
+    includeLocalVariables: true,
+    beforeSend(event) {
+      if (event.request?.headers) delete event.request.headers["cookie"];
+      return event;
+    },
   });
 }

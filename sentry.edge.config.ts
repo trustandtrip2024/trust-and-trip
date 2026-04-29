@@ -1,4 +1,8 @@
 // Sentry — Edge runtime (middleware, edge route handlers).
+//
+// Loaded by src/instrumentation.ts when NEXT_RUNTIME === "edge".
+// Edge runtime can't use the Node integrations (no fs, no inspector),
+// so includeLocalVariables is intentionally absent here.
 
 import * as Sentry from "@sentry/nextjs";
 
@@ -13,5 +17,7 @@ if (dsn) {
       process.env.VERCEL_GIT_COMMIT_SHA ??
       undefined,
     tracesSampleRate: 0.1,
+    sendDefaultPii: true,
+    enableLogs: true,
   });
 }

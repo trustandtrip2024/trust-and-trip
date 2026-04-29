@@ -17,6 +17,10 @@ const sentryOptions = {
   hideSourceMaps: true,
   tunnelRoute: "/monitoring",
   disableLogger: true,
+  // Per Sentry Next.js skill — uploads source maps for the entire client
+  // bundle (not just the server-rendered chunks) so stack traces in the
+  // browser get unminified to original sources.
+  widenClientFileUpload: true,
 };
 
 /** @type {import('next').NextConfig} */

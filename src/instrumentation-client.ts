@@ -1,5 +1,9 @@
-// Sentry — browser. Fires when client-side code throws.
-// DSN is the only required env var; everything else is opinionated defaults.
+// Sentry — browser. Replaces legacy sentry.client.config.ts.
+//
+// Next 15+ / @sentry/nextjs >= 9 expects client init in src/instrumentation-client.ts
+// and exports `onRouterTransitionStart` so App Router navigation transactions
+// finish cleanly. Without that export, client-side route changes show up as
+// dangling pending transactions in Sentry.
 
 import * as Sentry from "@sentry/nextjs";
 
@@ -18,6 +22,10 @@ if (dsn) {
     replaysOnErrorSampleRate: 1.0,
     // 10% of transactions are traced — keeps quota usage sane
     tracesSampleRate: 0.1,
+    // Send headers + IP so user-tied breadcrumbs are useful in Sentry.
+    // We still strip cookies in beforeSend below.
+    sendDefaultPii: true,
+    enableLogs: true,
     integrations: [
       Sentry.replayIntegration({
         maskAllText: false,
@@ -31,11 +39,12 @@ if (dsn) {
       "Network request failed",
     ],
     beforeSend(event) {
-      // Strip PII fields if a form bubbled a sensitive value into the
-      // breadcrumb stack. Email/phone in URL is also scrubbed automatically
-      // by sendDefaultPii=false (the SDK default).
       if (event.request?.headers) delete event.request.headers["cookie"];
       return event;
     },
   });
 }
+
+// App Router navigation hook — required by @sentry/nextjs to attach
+// pageload + navigation spans to client transitions.
+export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
