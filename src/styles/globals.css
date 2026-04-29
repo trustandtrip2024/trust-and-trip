@@ -212,6 +212,27 @@ h1, h2, h3 {
   /* Long-form prose measure — pair with text-prose for blog/itinerary body. */
   .text-prose-mx { max-width: 65ch; }
 
+  /* Honor prefers-reduced-motion globally. Tailwind's motion-reduce: prefix
+     covers individual utilities, but our marquee + slow-zoom + bespoke
+     keyframes need a blanket guard so users with the OS toggle never see
+     them spin. Animations are reduced to a single static frame; transitions
+     are kept short so focus rings still feel responsive. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+    .animate-marquee,
+    .animate-slow-zoom,
+    .animate-shimmer {
+      animation: none !important;
+    }
+  }
+
   .mask-fade-b {
     mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
   }

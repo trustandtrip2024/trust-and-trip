@@ -28,6 +28,7 @@ const inter = Inter({
 });
 import ConditionalNavbar from "@/components/ConditionalNavbar";
 import MainWrapper from "@/components/MainWrapper";
+import SkipToMain from "@/components/SkipToMain";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import JsonLd from "@/components/JsonLd";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -228,6 +229,7 @@ export default function RootLayout({
             },
           },
         ]} />
+        <SkipToMain />
         <ThemeProvider>
         <CookieConsentProvider>
         <AuthProvider>

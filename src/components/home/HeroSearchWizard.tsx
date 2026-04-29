@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import GoogleReviewsPill from "@/components/GoogleReviewsPill";
 import {
   Search, Calendar, Users, User, Heart, Star, ArrowRight, ChevronLeft,
   Mountain, Sparkles, Briefcase, Crown, Sunset, Church, MapPin, X, Zap,
@@ -450,7 +452,12 @@ export default function HeroSearchWizard({
           onSubmit={handleSubmit}
         />
 
-        <p className="mt-6 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-meta text-white/85">
+        {/* Google review pill sits above the brand trust strip — third-
+            party verification reads stronger than self-reported copy. */}
+        <div className="mt-6 flex justify-center">
+          <GoogleReviewsPill tone="light" />
+        </div>
+        <p className="mt-3 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-meta text-white/85">
           <Star className="h-3.5 w-3.5 fill-tat-orange-soft text-tat-orange-soft" aria-hidden />
           {trustStrip.split(" · ").map((part, i, arr) => (
             <span key={i} className="inline-flex items-center gap-3">
