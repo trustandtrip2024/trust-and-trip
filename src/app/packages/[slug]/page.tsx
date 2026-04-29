@@ -2,7 +2,6 @@ export const revalidate = 30;
 export const dynamicParams = true;
 
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import { getPackageBySlug, getAllPackageSlugs, getRelatedPackages } from "@/lib/sanity-queries";
 import { getGalleryImages } from "@/lib/gallery-images";
@@ -33,6 +32,7 @@ import PackageInclusionsGrouped from "@/components/package-detail/PackageInclusi
 import PackageHotelsRail from "@/components/package-detail/PackageHotelsRail";
 import PackageFAQ from "@/components/package-detail/PackageFAQ";
 import PackageHeroActions from "@/components/package-detail/PackageHeroActions";
+import PackageHeroMedia from "@/components/package-detail/PackageHeroMedia";
 import { getApprovedReviewsForSchema } from "@/lib/reviews-server";
 
 interface Props { params: { slug: string } }
@@ -123,8 +123,8 @@ export default async function PackageDetail({ params }: Props) {
 
       {/* ── Compact Hero ───────────────────────────────────────── */}
       <section className="relative h-[55vh] min-h-[380px] w-full overflow-hidden bg-tat-charcoal">
-        <Image src={pkg.heroImage} alt={pkg.title} fill priority className="object-cover" sizes="100vw" />
-        <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/95 via-tat-charcoal/40 to-tat-charcoal/20" />
+        <PackageHeroMedia image={pkg.heroImage} alt={pkg.title} videoUrl={pkg.youtubeUrl} />
+        <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/95 via-tat-charcoal/40 to-tat-charcoal/20 pointer-events-none" />
 
         {/* Hero floating actions — wishlist heart + share menu. */}
         <PackageHeroActions
