@@ -70,6 +70,15 @@ export function middleware(req: NextRequest) {
   const reqHeaders = new Headers(req.headers);
   reqHeaders.set("x-nonce", nonce);
 
+  // ─── Geo-IP city forward ──────────────────────────────────────────────
+  // Vercel auto-populates request.geo from edge IP geolocation. Mirror the
+  // city + country into custom headers so server components can read them
+  // via next/headers. Empty when geolocation is missing (e.g. local dev).
+  const geoCity = (req as unknown as { geo?: { city?: string; country?: string } }).geo?.city ?? "";
+  const geoCountry = (req as unknown as { geo?: { city?: string; country?: string } }).geo?.country ?? "";
+  if (geoCity) reqHeaders.set("x-tt-geo-city", decodeURIComponent(geoCity));
+  if (geoCountry) reqHeaders.set("x-tt-geo-country", geoCountry);
+
   function applyHeaders(res: NextResponse): NextResponse {
     res.headers.set("Content-Security-Policy", csp);
     res.headers.set("x-nonce", nonce);

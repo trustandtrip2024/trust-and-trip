@@ -39,6 +39,7 @@ import {
 } from "@/lib/sanity-queries";
 import { fetchGoogleReviews } from "@/lib/google-reviews";
 import { getSiteStats } from "@/lib/site-stats";
+import { getGeoContext } from "@/lib/geo";
 
 // Below-fold — chunk-split, still SSR'd for SEO. Skeletons reserve height
 // AND signal loading so a slow CDN response doesn't read as a blank gap.
@@ -107,6 +108,9 @@ export default async function HomePage() {
   ]);
 
   const c = content ?? {};
+  const geo = getGeoContext();
+  const cityPrefix = geo.city ? ` · From ${geo.city}` : "";
+  const trustStripWithCity = (c.hero?.trustStrip ?? siteStats.trustStripLine) + cityPrefix;
 
   // Map schema travelTypes onto the brief's 8 mood chips. Styles without a
   // direct schema flag (Adventure / Wellness / Luxury) render the
@@ -127,7 +131,7 @@ export default async function HomePage() {
         titleStart={c.hero?.titleStart}
         titleItalic={c.hero?.titleItalic}
         lede={c.hero?.lede}
-        trustStrip={c.hero?.trustStrip ?? siteStats.trustStripLine}
+        trustStrip={trustStripWithCity}
         destinations={destinations.map((d) => ({
           slug: d.slug,
           name: d.name,
