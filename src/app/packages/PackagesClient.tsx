@@ -280,6 +280,26 @@ export default function PackagesClient({
           </AnimatePresence>
 
           <div>
+            {/* Active filter chips — visible on both mobile and desktop. */}
+            {activeFilterCount > 0 && (
+              <ActiveFilterChips
+                destinations={destinations}
+                filterDestination={filterDestination}
+                clearDestination={() => setFilterDestination("")}
+                filterTravelType={filterTravelType}
+                clearTravelType={() => setFilterTravelType("")}
+                filterDuration={filterDuration}
+                clearDuration={() => setFilterDuration("")}
+                filterPrice={filterPrice}
+                clearPrice={() => setFilterPrice("")}
+                filterRating={filterRating}
+                clearRating={() => setFilterRating("")}
+                filterCategory={filterCategory}
+                clearCategory={() => setFilterCategory("")}
+                clearAll={clearAll}
+              />
+            )}
+
             {/* Desktop results header */}
             <div className="hidden lg:flex items-center justify-between mb-6 gap-4 flex-wrap">
               <p className="text-sm text-tat-charcoal/60">
@@ -638,6 +658,77 @@ function DestinationFilter({
             onChange={onChange}
           />
         </div>
+      )}
+    </div>
+  );
+}
+
+// Inline summary of every applied filter as removable chips. Shown above
+// the results grid so users see what's filtering without opening the panel
+// and can remove a single filter without touching the rest.
+interface ChipsProps {
+  destinations: Destination[];
+  filterDestination: string;
+  clearDestination: () => void;
+  filterTravelType: string;
+  clearTravelType: () => void;
+  filterDuration: string;
+  clearDuration: () => void;
+  filterPrice: string;
+  clearPrice: () => void;
+  filterRating: string;
+  clearRating: () => void;
+  filterCategory: string;
+  clearCategory: () => void;
+  clearAll: () => void;
+}
+
+function ActiveFilterChips({
+  destinations,
+  filterDestination, clearDestination,
+  filterTravelType, clearTravelType,
+  filterDuration, clearDuration,
+  filterPrice, clearPrice,
+  filterRating, clearRating,
+  filterCategory, clearCategory,
+  clearAll,
+}: ChipsProps) {
+  const destName = filterDestination
+    ? destinations.find((d) => d.slug === filterDestination)?.name ?? filterDestination
+    : "";
+
+  const chips: { label: string; onRemove: () => void }[] = [];
+  if (filterDestination) chips.push({ label: destName, onRemove: clearDestination });
+  if (filterTravelType) chips.push({ label: filterTravelType, onRemove: clearTravelType });
+  if (filterCategory) chips.push({ label: filterCategory, onRemove: clearCategory });
+  if (filterDuration) chips.push({ label: filterDuration, onRemove: clearDuration });
+  if (filterPrice) chips.push({ label: filterPrice, onRemove: clearPrice });
+  if (filterRating) chips.push({ label: `${filterRating}★ +`, onRemove: clearRating });
+
+  if (chips.length === 0) return null;
+
+  return (
+    <div className="flex items-center flex-wrap gap-2 mb-5">
+      {chips.map((c) => (
+        <button
+          key={c.label}
+          type="button"
+          onClick={c.onRemove}
+          className="inline-flex items-center gap-1.5 pl-3 pr-2 py-1 rounded-full bg-tat-charcoal/8 hover:bg-tat-charcoal/15 text-tat-charcoal text-xs transition-colors"
+          aria-label={`Remove filter ${c.label}`}
+        >
+          {c.label}
+          <X className="h-3 w-3 opacity-60" aria-hidden />
+        </button>
+      ))}
+      {chips.length > 1 && (
+        <button
+          type="button"
+          onClick={clearAll}
+          className="text-xs text-tat-burnt hover:text-tat-charcoal underline-offset-2 hover:underline transition-colors"
+        >
+          Clear all
+        </button>
       )}
     </div>
   );
