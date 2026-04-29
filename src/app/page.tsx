@@ -127,6 +127,11 @@ export default async function HomePage() {
         titleItalic={c.hero?.titleItalic}
         lede={c.hero?.lede}
         trustStrip={c.hero?.trustStrip}
+        destinations={destinations.map((d) => ({
+          slug: d.slug,
+          name: d.name,
+          country: d.country,
+        }))}
       />
       <MobileStickySearch />
       <HomeStickySubnav />

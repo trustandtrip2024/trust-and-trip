@@ -358,6 +358,9 @@ interface HeroProps {
   titleItalic?: string;
   lede?: string;
   trustStrip?: string;
+  /** Used to power the inline quick-search. Optional — when absent, the
+   *  search bar still works but only matches against POPULAR_DESTS. */
+  destinations?: { slug: string; name: string; country?: string }[];
 }
 
 export default function HeroSearchWizard({
@@ -366,6 +369,7 @@ export default function HeroSearchWizard({
   titleItalic = "made just for you.",
   lede = "A real planner. An itinerary in 24 hours. Free until you're sure.",
   trustStrip = "143+ trips planned this week · 4.9★ from 8,000+ travelers · 60+ destinations",
+  destinations = [],
 }: HeroProps) {
   const router = useRouter();
   const [state, setState] = useState<WizardState>(emptyState);
@@ -423,8 +427,14 @@ export default function HeroSearchWizard({
         </h1>
         <p className="mt-4 text-base md:text-lead text-white/85 max-w-2xl mx-auto text-balance [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">{lede}</p>
 
+        {/* Quick destination search — for users who already know where they
+            want to go. Bypasses the multi-step wizard and lands them straight
+            on /packages?destination=…. Type-ahead matches Sanity destinations
+            first, falls back to a free-text slug submission on Enter. */}
+        <HeroQuickSearch destinations={destinations} />
+
         {/* Pre-segmentation tiles — quick start by traveller persona */}
-        <div className="relative z-10 mt-6 flex flex-wrap items-center justify-center gap-2">
+        <div className="relative z-10 mt-5 flex flex-wrap items-center justify-center gap-2">
           {TRAVELING_WITH.slice(0, 5).map((t) => {
             const Icon = t.icon;
             return (
@@ -558,5 +568,151 @@ export function MobileStickySearch() {
         </div>
       )}
     </>
+  );
+}
+
+// ─── Quick destination search ─────────────────────────────────────────────
+//
+// Shipped alongside the multi-step Wizard so users with destination intent
+// can skip the 5 steps and go straight to the filtered packages list. Type-
+// ahead matches Sanity destinations first; popular fallback list seeds the
+// dropdown when input is empty so the affordance reads as "browseable" not
+// "search-empty".
+interface QuickSearchProps {
+  destinations: { slug: string; name: string; country?: string }[];
+}
+
+function HeroQuickSearch({ destinations }: QuickSearchProps) {
+  const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(-1);
+
+  // Pool used for matching. Sanity destinations take priority; if the catalog
+  // is empty (e.g. dev without Sanity creds) fall back to popular slugs.
+  const pool: { slug: string; name: string; country?: string }[] =
+    destinations.length > 0
+      ? destinations
+      : POPULAR_DESTS.map((p) => ({ slug: p.slug, name: p.label }));
+
+  const q = query.trim().toLowerCase();
+  const matches = q
+    ? pool
+        .filter((d) =>
+          d.name.toLowerCase().includes(q) ||
+          d.slug.toLowerCase().includes(q) ||
+          (d.country?.toLowerCase().includes(q) ?? false)
+        )
+        .slice(0, 6)
+    : pool.slice(0, 6);
+
+  const goToDestination = (slug: string) => {
+    router.push(`/packages?destination=${encodeURIComponent(slug)}`);
+  };
+
+  const submit = () => {
+    if (!q) return;
+    if (matches.length > 0) {
+      goToDestination(matches[Math.max(0, activeIdx)]?.slug ?? matches[0].slug);
+      return;
+    }
+    // No catalog match — push the typed string as a slug attempt; the
+    // packages list page falls through to "no results" cleanly.
+    goToDestination(slugify(q));
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIdx((i) => Math.min(matches.length - 1, i + 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIdx((i) => Math.max(-1, i - 1));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      submit();
+    } else if (e.key === "Escape") {
+      setFocused(false);
+    }
+  };
+
+  const showDropdown = focused && matches.length > 0;
+
+  return (
+    <div className="relative z-20 mt-7 mx-auto w-full max-w-xl">
+      <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md rounded-pill shadow-[0_18px_38px_-18px_rgba(0,0,0,0.45)] ring-1 ring-white/40 pl-5 pr-1.5 py-1.5">
+        <Search className="h-4 w-4 text-tat-charcoal/55 shrink-0" aria-hidden />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setActiveIdx(-1);
+          }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => {
+            // Delay so click events on dropdown items still register.
+            setTimeout(() => setFocused(false), 120);
+          }}
+          onKeyDown={onKeyDown}
+          placeholder="Already know? Search destination — Bali, Kerala, Maldives…"
+          aria-label="Search destinations"
+          className="flex-1 min-w-0 bg-transparent text-tat-charcoal placeholder:text-tat-charcoal/50 text-sm md:text-[14px] py-2 outline-none"
+        />
+        <button
+          type="button"
+          onClick={submit}
+          disabled={!q && matches.length === 0}
+          className="hidden sm:inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-pill bg-tat-burnt text-white text-sm font-semibold hover:bg-tat-burnt/90 transition disabled:opacity-50"
+        >
+          Find trips
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+        </button>
+        <button
+          type="button"
+          onClick={submit}
+          aria-label="Find trips"
+          disabled={!q && matches.length === 0}
+          className="sm:hidden grid place-items-center h-10 w-10 rounded-pill bg-tat-burnt text-white disabled:opacity-50"
+        >
+          <ArrowRight className="h-4 w-4" aria-hidden />
+        </button>
+      </div>
+
+      {showDropdown && (
+        <ul
+          role="listbox"
+          aria-label="Destination suggestions"
+          className="absolute left-0 right-0 mt-2 bg-white rounded-card shadow-[0_24px_48px_-18px_rgba(0,0,0,0.45)] ring-1 ring-tat-charcoal/8 overflow-hidden text-left"
+        >
+          {!q && (
+            <li className="px-4 pt-3 pb-1.5 text-[10px] uppercase tracking-[0.2em] text-tat-charcoal/45 font-semibold">
+              Popular destinations
+            </li>
+          )}
+          {matches.map((d, i) => (
+            <li key={d.slug}>
+              <button
+                type="button"
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => goToDestination(d.slug)}
+                onMouseEnter={() => setActiveIdx(i)}
+                className={`flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors ${
+                  i === activeIdx
+                    ? "bg-tat-orange/10 text-tat-charcoal"
+                    : "text-tat-charcoal/85 hover:bg-tat-charcoal/5"
+                }`}
+              >
+                <MapPin className="h-3.5 w-3.5 text-tat-burnt" aria-hidden />
+                <span className="flex-1 text-left">{d.name}</span>
+                {d.country && d.country !== d.name && (
+                  <span className="text-[11px] text-tat-charcoal/45">{d.country}</span>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
