@@ -11,9 +11,9 @@ const ADMIN_LINKS = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-tat-paper">
       {/* Top bar — sticky, holds Home + section nav */}
-      <header className="sticky top-0 z-30 bg-white border-b border-gray-200">
+      <header className="sticky top-0 z-30 bg-white border-b border-tat-charcoal/12">
         <div className="max-w-6xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between gap-4">
           <Link
             href="/"
@@ -21,7 +21,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             <Home className="h-4 w-4" />
             <span>Trust &amp; Trip</span>
-            <span className="hidden sm:inline ml-1 text-[10px] uppercase tracking-widest text-gray-400">
+            <span className="hidden sm:inline ml-1 text-[10px] uppercase tracking-widest text-tat-slate/70">
               Home
             </span>
           </Link>
@@ -30,7 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             href="/admin"
             className="hidden sm:inline-flex items-center gap-1.5 text-[12px] font-semibold text-tat-slate hover:text-tat-charcoal"
           >
-            <ShieldCheck className="h-3.5 w-3.5 text-gray-400" />
+            <ShieldCheck className="h-3.5 w-3.5 text-tat-slate/70" />
             Admin
           </Link>
         </div>

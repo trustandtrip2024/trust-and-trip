@@ -125,7 +125,7 @@ export default function CartPage() {
                       <button
                         onClick={() => removeItem(item.id)}
                         disabled={removing === item.id}
-                        className="h-7 w-7 rounded-lg hover:bg-red-50 hover:text-red-500 text-tat-charcoal/35 flex items-center justify-center transition-all shrink-0"
+                        className="h-7 w-7 rounded-lg hover:bg-tat-danger-bg hover:text-tat-danger-fg text-tat-charcoal/35 flex items-center justify-center transition-all shrink-0"
                       >
                         {removing === item.id ? (
                           <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -204,7 +204,7 @@ export default function CartPage() {
               </button>
             </div>
             {!items.every((i) => i.travel_date) && (
-              <p className="text-[11px] text-amber-200">
+              <p className="text-[11px] text-tat-warning-fg">
                 Select a travel date for each trip to enable checkout.
               </p>
             )}

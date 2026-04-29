@@ -40,8 +40,8 @@ module.exports = {
           'warning-fg': '#9A4E15',          // burnt-of-old, fg only
           'danger-bg':  '#FCE8E8',
           'danger-fg':  '#9B1C1C',
-          'info-bg':    '#FBF7F1',          // paper
-          'info-fg':    '#2A2A2A',          // charcoal
+          'info-bg':    '#E8EFF4',          // cool gray-blue
+          'info-fg':    '#1F3645',          // deep cool slate
         },
       },
       fontFamily: {

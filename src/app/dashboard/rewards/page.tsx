@@ -84,8 +84,8 @@ export default function RewardsPage() {
         <div className="relative">
           <div className="flex items-start justify-between flex-wrap gap-3 mb-6">
             <div className="flex items-center gap-3">
-              <div className={`h-12 w-12 rounded-2xl flex items-center justify-center ${row.tier === "platinum" ? "bg-indigo-400/20" : row.tier === "gold" ? "bg-tat-gold/25" : "bg-slate-300/15"}`}>
-                <Crown className={`h-6 w-6 ${row.tier === "platinum" ? "text-indigo-300" : row.tier === "gold" ? "text-tat-gold" : "text-slate-200"}`} />
+              <div className={`h-12 w-12 rounded-2xl flex items-center justify-center ${row.tier === "platinum" ? "bg-tat-gold/20" : row.tier === "gold" ? "bg-tat-gold/25" : "bg-tat-paper/15"}`}>
+                <Crown className={`h-6 w-6 ${row.tier === "platinum" ? "text-tat-gold/85" : row.tier === "gold" ? "text-tat-gold" : "text-tat-paper/80"}`} />
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-[0.28em] text-tat-paper/55">Current tier</p>
@@ -203,7 +203,7 @@ export default function RewardsPage() {
                     {row.ref_id && <span className="font-mono ml-2">· {row.ref_id.slice(0, 8).toUpperCase()}</span>}
                   </p>
                 </div>
-                <span className={`font-display text-base font-medium ${row.delta > 0 ? "text-green-600" : "text-red-500"}`}>
+                <span className={`font-display text-base font-medium ${row.delta > 0 ? "text-tat-success-fg" : "text-tat-danger-fg"}`}>
                   {row.delta > 0 ? "+" : ""}{row.delta.toLocaleString("en-IN")}
                 </span>
               </li>

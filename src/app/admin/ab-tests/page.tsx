@@ -93,7 +93,7 @@ export default async function AbTestsPage({
     .order("created_at", { ascending: false })
     .limit(5000);
 
-  if (error) return <main className="p-8 text-red-600">DB error: {error.message}</main>;
+  if (error) return <main className="p-8 text-tat-danger-fg">DB error: {error.message}</main>;
 
   const rows = (data ?? []) as LeadRow[];
 
@@ -176,7 +176,7 @@ function Group({ title, rows }: { title: string; rows: VariantStat[] }) {
                 <td className="px-3 py-2 truncate max-w-[280px] text-tat-charcoal">{r.key}</td>
                 <td className="px-3 py-2 text-right font-semibold tabular-nums">{r.variant}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{r.trials}</td>
-                <td className="px-3 py-2 text-right text-emerald-700 tabular-nums">{r.tierA}</td>
+                <td className="px-3 py-2 text-right text-tat-success-fg tabular-nums">{r.tierA}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{r.conversions}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{pct(r.conversions, r.trials)}</td>
                 <td className="px-3 py-2 text-right text-tat-charcoal font-semibold tabular-nums">

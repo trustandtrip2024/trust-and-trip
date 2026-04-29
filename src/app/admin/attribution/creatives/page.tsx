@@ -78,7 +78,7 @@ export default async function CreativesAttributionPage({
     .order("created_at", { ascending: false })
     .limit(5000);
 
-  if (error) return <main className="p-8 text-red-600">DB error: {error.message}</main>;
+  if (error) return <main className="p-8 text-tat-danger-fg">DB error: {error.message}</main>;
 
   const rows = (data ?? []) as LeadRow[];
 
@@ -172,8 +172,8 @@ function Card({
     <div
       className={`rounded-card border p-5 md:p-6 ${
         tone === "emerald"
-          ? "border-emerald-300/50 bg-emerald-50/40"
-          : "border-rose-300/50 bg-rose-50/40"
+          ? "border-tat-success-fg/30 bg-tat-success-bg/40"
+          : "border-tat-danger-fg/30 bg-tat-danger-bg/40"
       }`}
     >
       <h3 className="font-display text-h3 text-tat-charcoal">{title}</h3>
@@ -182,7 +182,7 @@ function Card({
           <li key={b.key} className="py-2.5 flex items-baseline justify-between gap-3">
             <span className="text-[13px] text-tat-charcoal truncate max-w-[60%]">{b.key}</span>
             <span className="text-meta text-tat-slate tabular-nums">
-              <span className={`font-semibold ${tone === "emerald" ? "text-emerald-700" : "text-rose-700"}`}>
+              <span className={`font-semibold ${tone === "emerald" ? "text-tat-success-fg" : "text-tat-danger-fg"}`}>
                 {(rate(b) * 100).toFixed(1)}%
               </span>{" "}
               · {b.total} leads · {b.tierA} A · score {b.avgScore}
@@ -216,8 +216,8 @@ function Group({ title, rows }: { title: string; rows: Bucket[] }) {
               <tr key={b.key}>
                 <td className="px-3 py-2 truncate max-w-[420px] text-tat-charcoal">{b.key}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{b.total}</td>
-                <td className="px-3 py-2 text-right text-emerald-700 tabular-nums">{b.tierA}</td>
-                <td className="px-3 py-2 text-right text-amber-700 tabular-nums">{b.tierB}</td>
+                <td className="px-3 py-2 text-right text-tat-success-fg tabular-nums">{b.tierA}</td>
+                <td className="px-3 py-2 text-right text-tat-warning-fg tabular-nums">{b.tierB}</td>
                 <td className="px-3 py-2 text-right font-semibold text-tat-charcoal tabular-nums">
                   {pct(b.tierA, b.total)}
                 </td>

@@ -117,8 +117,8 @@ export default function ReceiptPage({ params }: { params: { id: string } }) {
             </p>
             <span className={`inline-block mt-2 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded ${
               booking.status === "verified" || booking.status === "paid"
-                ? "bg-green-50 text-green-700 border border-green-200"
-                : "bg-amber-50 text-amber-700 border border-amber-200"
+                ? "bg-tat-success-bg text-tat-success-fg border border-tat-success-fg/25"
+                : "bg-tat-warning-bg text-tat-warning-fg border border-tat-warning-fg/25"
             }`}>
               {booking.status === "verified" ? "Paid" : booking.status}
             </span>
@@ -176,7 +176,7 @@ export default function ReceiptPage({ params }: { params: { id: string } }) {
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-tat-charcoal/60">Deposit received</span>
-            <span className="text-green-700 font-medium">-₹{booking.deposit_amount.toLocaleString("en-IN")}</span>
+            <span className="text-tat-success-fg font-medium">-₹{booking.deposit_amount.toLocaleString("en-IN")}</span>
           </div>
           <div className="flex items-center justify-between pt-2 border-t border-tat-charcoal/15">
             <span className="text-tat-charcoal font-semibold">Balance due</span>

@@ -99,7 +99,7 @@ export default function DashboardPage() {
       label: "My Bookings",
       value: stats.bookings,
       icon: CalendarCheck,
-      color: "bg-blue-50 text-blue-600",
+      color: "bg-tat-info-bg text-tat-info-fg",
       desc: "View booking history & status",
     },
     {
@@ -107,7 +107,7 @@ export default function DashboardPage() {
       label: "Saved Trips",
       value: stats.saved,
       icon: Heart,
-      color: "bg-red-50 text-red-500",
+      color: "bg-tat-danger-bg text-tat-danger-fg",
       desc: "Your wishlist of dream experiences",
     },
     {
@@ -115,7 +115,7 @@ export default function DashboardPage() {
       label: "My Cart",
       value: stats.cart,
       icon: ShoppingCart,
-      color: "bg-amber-50 text-amber-600",
+      color: "bg-tat-warning-bg text-tat-warning-fg",
       desc: "Experiences ready to book",
     },
     {
@@ -123,7 +123,7 @@ export default function DashboardPage() {
       label: "Offers for You",
       value: null,
       icon: Tag,
-      color: "bg-green-50 text-green-600",
+      color: "bg-tat-success-bg text-tat-success-fg",
       desc: "Deals curated just for you",
     },
   ];
@@ -259,8 +259,8 @@ export default function DashboardPage() {
             </div>
           </Link>
           <Link href="/offers" className="flex items-center gap-3 p-3 rounded-xl hover:bg-tat-cream/40 transition-colors group">
-            <div className="h-9 w-9 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
-              <Tag className="h-4 w-4 text-green-600" />
+            <div className="h-9 w-9 rounded-xl bg-tat-success-bg flex items-center justify-center shrink-0">
+              <Tag className="h-4 w-4 text-tat-success-fg" />
             </div>
             <div>
               <p className="text-sm font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors">Current Offers</p>
@@ -268,8 +268,8 @@ export default function DashboardPage() {
             </div>
           </Link>
           <Link href="/plan" className="flex items-center gap-3 p-3 rounded-xl hover:bg-tat-cream/40 transition-colors group">
-            <div className="h-9 w-9 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
-              <CalendarCheck className="h-4 w-4 text-blue-600" />
+            <div className="h-9 w-9 rounded-xl bg-tat-info-bg flex items-center justify-center shrink-0">
+              <CalendarCheck className="h-4 w-4 text-tat-info-fg" />
             </div>
             <div>
               <p className="text-sm font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors">Plan a Trip</p>

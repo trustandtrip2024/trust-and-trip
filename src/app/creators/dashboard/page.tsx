@@ -116,10 +116,10 @@ export default function CreatorOverview() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6">
-        <KpiCard icon={MousePointerClick} label="Link clicks" value={stats?.attributions ?? 0} color="bg-blue-50 text-blue-600" />
-        <KpiCard icon={Megaphone} label="Leads captured" value={stats?.leads ?? 0} color="bg-rose-50 text-rose-600" sub={stats && stats.leads > 0 ? `${conversionRate}% convert` : undefined} />
-        <KpiCard icon={IndianRupee} label="Bookings" value={stats?.bookings ?? 0} color="bg-amber-50 text-amber-600" />
-        <KpiCard icon={Wallet} label="Earned (lifetime)" value={fmtINR(stats?.earned_paise ?? 0)} color="bg-emerald-50 text-tat-teal" />
+        <KpiCard icon={MousePointerClick} label="Link clicks" value={stats?.attributions ?? 0} color="bg-tat-info-bg text-tat-info-fg" />
+        <KpiCard icon={Megaphone} label="Leads captured" value={stats?.leads ?? 0} color="bg-tat-danger-bg text-tat-danger-fg" sub={stats && stats.leads > 0 ? `${conversionRate}% convert` : undefined} />
+        <KpiCard icon={IndianRupee} label="Bookings" value={stats?.bookings ?? 0} color="bg-tat-warning-bg text-tat-warning-fg" />
+        <KpiCard icon={Wallet} label="Earned (lifetime)" value={fmtINR(stats?.earned_paise ?? 0)} color="bg-tat-success-bg text-tat-teal" />
       </div>
 
       {/* Pending vs paid */}
@@ -141,9 +141,9 @@ export default function CreatorOverview() {
         <p className="text-sm font-semibold text-tat-charcoal mb-4">Jump to</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
-            { href: "/creators/dashboard/leads", label: "Lead activity", desc: "Every visitor who came via your link", icon: Megaphone, color: "bg-rose-50 text-rose-600" },
-            { href: "/creators/dashboard/earnings", label: "Earnings & payouts", desc: "Commission journey, paid history", icon: IndianRupee, color: "bg-amber-50 text-amber-600" },
-            { href: "/creators/dashboard/profile", label: "Profile & payout", desc: "Update payout method, KYC", icon: Wallet, color: "bg-blue-50 text-blue-600" },
+            { href: "/creators/dashboard/leads", label: "Lead activity", desc: "Every visitor who came via your link", icon: Megaphone, color: "bg-tat-danger-bg text-tat-danger-fg" },
+            { href: "/creators/dashboard/earnings", label: "Earnings & payouts", desc: "Commission journey, paid history", icon: IndianRupee, color: "bg-tat-warning-bg text-tat-warning-fg" },
+            { href: "/creators/dashboard/profile", label: "Profile & payout", desc: "Update payout method, KYC", icon: Wallet, color: "bg-tat-info-bg text-tat-info-fg" },
           ].map(({ href, label, desc, icon: Icon, color }) => (
             <Link key={href} href={href} className="flex items-center gap-3 p-3 rounded-xl hover:bg-tat-cream/40 group transition-colors">
               <div className={`h-9 w-9 rounded-xl ${color} flex items-center justify-center shrink-0`}>

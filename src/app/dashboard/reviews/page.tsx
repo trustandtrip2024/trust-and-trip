@@ -113,7 +113,7 @@ export default function ReviewsPage() {
                   <div>
                     <h3 className="font-display text-base font-medium text-tat-charcoal">{booking.package_title}</h3>
                     {done && (
-                      <span className="inline-flex items-center gap-1.5 text-xs text-green-600 mt-1">
+                      <span className="inline-flex items-center gap-1.5 text-xs text-tat-success-fg mt-1">
                         <CheckCircle2 className="h-3.5 w-3.5" /> Review submitted (pending approval)
                       </span>
                     )}
@@ -174,7 +174,7 @@ export default function ReviewsPage() {
                       </div>
                     </div>
 
-                    {error && <p className="text-xs text-red-500">{error}</p>}
+                    {error && <p className="text-xs text-tat-danger-fg">{error}</p>}
 
                     <button type="submit" disabled={submitting}
                       className="flex items-center gap-2 px-5 py-2.5 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal rounded-xl text-sm font-semibold transition-all disabled:opacity-60">

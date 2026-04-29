@@ -26,13 +26,13 @@ export default async function ReferralsPage() {
   const totalRewards = referrals.filter((r) => r.status === "redeemed").reduce((s, r) => s + r.reward_amount, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-tat-paper">
       <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="mb-8 flex items-center gap-4">
           <Link href="/admin" className="flex items-center gap-1.5 text-sm text-tat-slate hover:text-tat-charcoal transition-colors">
             <ArrowLeft className="h-4 w-4" /> Admin
           </Link>
-          <span className="text-gray-300">/</span>
+          <span className="text-tat-slate/50">/</span>
           <h1 className="text-xl font-semibold text-tat-charcoal flex items-center gap-2">
             <Gift className="h-5 w-5 text-tat-gold" /> Referrals
           </h1>
@@ -41,12 +41,12 @@ export default async function ReferralsPage() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { label: "Total Referrers", value: referrals.length, icon: Users, color: "text-blue-500" },
-            { label: "Total Clicks", value: totalClicks, icon: TrendingUp, color: "text-purple-500" },
-            { label: "Conversions", value: totalConversions, icon: Gift, color: "text-green-500" },
+            { label: "Total Referrers", value: referrals.length, icon: Users, color: "text-tat-info-fg" },
+            { label: "Total Clicks", value: totalClicks, icon: TrendingUp, color: "text-tat-charcoal/60" },
+            { label: "Conversions", value: totalConversions, icon: Gift, color: "text-tat-success-fg" },
             { label: "Rewards Paid", value: `₹${totalRewards.toLocaleString("en-IN")}`, icon: IndianRupee, color: "text-tat-gold" },
           ].map(({ label, value, icon: Icon, color }) => (
-            <div key={label} className="bg-white rounded-xl border border-gray-200 p-4">
+            <div key={label} className="bg-white rounded-xl border border-tat-charcoal/12 p-4">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs text-tat-slate">{label}</p>
                 <Icon className={`h-4 w-4 ${color}`} />
@@ -57,13 +57,13 @@ export default async function ReferralsPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100">
+        <div className="bg-white rounded-2xl border border-tat-charcoal/12 overflow-hidden">
+          <div className="px-6 py-4 border-b border-tat-charcoal/8">
             <p className="text-sm font-semibold text-tat-charcoal">{referrals.length} referrers</p>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-100">
+              <thead className="bg-tat-paper border-b border-tat-charcoal/8">
                 <tr>
                   {["Name", "Email", "Phone", "Code", "Clicks", "Conversions", "Status", "Joined"].map((h) => (
                     <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-tat-slate uppercase tracking-wider whitespace-nowrap">
@@ -75,29 +75,29 @@ export default async function ReferralsPage() {
               <tbody className="divide-y divide-gray-50">
                 {referrals.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="text-center py-12 text-gray-400">No referrals yet.</td>
+                    <td colSpan={8} className="text-center py-12 text-tat-slate/70">No referrals yet.</td>
                   </tr>
                 ) : (
                   referrals.map((r) => (
-                    <tr key={r.id} className="hover:bg-gray-50 transition-colors">
+                    <tr key={r.id} className="hover:bg-tat-paper transition-colors">
                       <td className="px-4 py-3 font-medium text-tat-charcoal whitespace-nowrap">{r.referrer_name}</td>
                       <td className="px-4 py-3 text-tat-slate max-w-[180px] truncate">{r.referrer_email}</td>
                       <td className="px-4 py-3 text-tat-slate whitespace-nowrap">{r.referrer_phone ?? "—"}</td>
                       <td className="px-4 py-3">
-                        <code className="bg-gray-100 px-2 py-0.5 rounded text-xs font-mono text-tat-charcoal">{r.code}</code>
+                        <code className="bg-tat-charcoal/5 px-2 py-0.5 rounded text-xs font-mono text-tat-charcoal">{r.code}</code>
                       </td>
                       <td className="px-4 py-3 text-center font-semibold text-tat-charcoal">{r.clicks}</td>
-                      <td className="px-4 py-3 text-center font-semibold text-green-600">{r.conversions}</td>
+                      <td className="px-4 py-3 text-center font-semibold text-tat-success-fg">{r.conversions}</td>
                       <td className="px-4 py-3">
                         <span className={`px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${
-                          r.status === "active" ? "bg-green-100 text-green-700" :
-                          r.status === "redeemed" ? "bg-blue-100 text-blue-700" :
-                          "bg-gray-100 text-tat-slate"
+                          r.status === "active" ? "bg-tat-success-bg text-tat-success-fg" :
+                          r.status === "redeemed" ? "bg-tat-info-bg text-tat-info-fg" :
+                          "bg-tat-charcoal/5 text-tat-slate"
                         }`}>
                           {r.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-gray-400 whitespace-nowrap text-xs">
+                      <td className="px-4 py-3 text-tat-slate/70 whitespace-nowrap text-xs">
                         {new Date(r.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
                       </td>
                     </tr>

@@ -35,7 +35,7 @@ export default async function LeadsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-tat-paper">
       <div className="max-w-7xl mx-auto px-4 py-10">
         {/* Header */}
         <div className="mb-8">
@@ -54,7 +54,7 @@ export default async function LeadsPage() {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-tat-charcoal/12 overflow-hidden">
           <LeadsTable leads={leads} />
         </div>
       </div>
@@ -64,12 +64,12 @@ export default async function LeadsPage() {
 
 function StatCard({ label, value, color }: { label: string; value: number; color: string }) {
   const colors: Record<string, string> = {
-    blue: "bg-blue-50 text-blue-700 border-blue-100",
-    yellow: "bg-yellow-50 text-yellow-700 border-yellow-100",
-    purple: "bg-purple-50 text-purple-700 border-purple-100",
-    green: "bg-green-50 text-green-700 border-green-100",
-    indigo: "bg-indigo-50 text-indigo-700 border-indigo-100",
-    emerald: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    blue: "bg-tat-info-bg text-tat-info-fg border-tat-info-fg/15",
+    yellow: "bg-tat-warning-bg text-tat-warning-fg border-tat-warning-fg/15",
+    purple: "bg-tat-cream-warm/40 text-tat-charcoal border-tat-cream-warm",
+    green: "bg-tat-success-bg text-tat-success-fg border-tat-success-fg/15",
+    indigo: "bg-tat-gold/10 text-tat-charcoal border-tat-gold/20",
+    emerald: "bg-tat-success-bg text-tat-success-fg border-tat-success-fg/25",
   };
   return (
     <div className={`rounded-xl border p-4 ${colors[color]}`}>

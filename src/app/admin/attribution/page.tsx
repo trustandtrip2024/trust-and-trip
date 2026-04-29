@@ -63,7 +63,7 @@ export default async function AttributionPage({
     .limit(2000);
 
   if (error) {
-    return <main className="p-8 text-red-600">DB error: {error.message}</main>;
+    return <main className="p-8 text-tat-danger-fg">DB error: {error.message}</main>;
   }
 
   const rows = (data ?? []) as LeadRow[];
@@ -152,9 +152,9 @@ export default async function AttributionPage({
                     <span
                       className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-semibold ${
                         r.tier === "A"
-                          ? "bg-emerald-100 text-emerald-700"
+                          ? "bg-tat-success-bg text-tat-success-fg"
                           : r.tier === "B"
-                          ? "bg-amber-100 text-amber-700"
+                          ? "bg-tat-warning-bg text-tat-warning-fg"
                           : "bg-tat-charcoal/10 text-tat-charcoal/60"
                       }`}
                     >
@@ -196,7 +196,7 @@ function Stat({
       <p
         className={`mt-1 font-display text-h3 leading-none ${
           accent === "emerald"
-            ? "text-emerald-700"
+            ? "text-tat-success-fg"
             : accent === "gold"
             ? "text-tat-gold"
             : "text-tat-charcoal"
@@ -240,8 +240,8 @@ function Group({
                 <td className="px-3 py-2 truncate max-w-[280px]">{r.label}</td>
                 <td className="px-3 py-2 text-right tabular-nums">{r.total}</td>
                 <td className="px-3 py-2 text-right text-tat-slate tabular-nums">{pct(r.total, total)}</td>
-                <td className="px-3 py-2 text-right text-emerald-700 tabular-nums">{r.tierA}</td>
-                <td className="px-3 py-2 text-right text-amber-700 tabular-nums">{r.tierB}</td>
+                <td className="px-3 py-2 text-right text-tat-success-fg tabular-nums">{r.tierA}</td>
+                <td className="px-3 py-2 text-right text-tat-warning-fg tabular-nums">{r.tierB}</td>
                 <td className="px-3 py-2 text-right text-tat-charcoal tabular-nums">
                   {pct(r.tierA + r.tierB, r.total)}
                 </td>

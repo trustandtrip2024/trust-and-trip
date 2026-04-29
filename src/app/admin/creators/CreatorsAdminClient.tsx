@@ -27,11 +27,11 @@ interface Creator {
 }
 
 const STATUS_CFG: Record<Creator["status"], string> = {
-  pending:  "bg-amber-100 text-amber-800",
-  active:   "bg-emerald-100 text-emerald-800",
-  paused:   "bg-slate-100 text-slate-700",
-  rejected: "bg-red-100 text-red-700",
-  banned:   "bg-red-200 text-red-800",
+  pending:  "bg-tat-warning-bg text-tat-warning-fg",
+  active:   "bg-tat-success-bg text-tat-success-fg",
+  paused:   "bg-tat-charcoal/5 text-tat-slate",
+  rejected: "bg-tat-danger-bg text-tat-danger-fg",
+  banned:   "bg-tat-danger-bg text-tat-danger-fg",
 };
 
 export default function CreatorsAdminClient({ initialCreators }: { initialCreators: Creator[] }) {
@@ -118,13 +118,13 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-tat-paper p-6">
       <div className="max-w-6xl mx-auto">
         <Link href="/admin" className="inline-flex items-center gap-1.5 text-sm text-tat-slate hover:text-tat-charcoal mb-4">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to admin
         </Link>
         <div className="flex items-center gap-2 mb-1">
-          <Sparkles className="h-5 w-5 text-purple-500" />
+          <Sparkles className="h-5 w-5 text-tat-charcoal/60" />
           <h1 className="text-2xl font-semibold text-tat-charcoal">Creator Program</h1>
         </div>
         <p className="text-sm text-tat-slate mb-6">{counts.all} total · {counts.pending} pending · {counts.active} active</p>
@@ -141,7 +141,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
               key={t.k}
               onClick={() => setFilter(t.k as "" | Creator["status"])}
               className={`px-4 py-2 rounded-lg text-sm font-medium border transition ${
-                filter === t.k ? "bg-gray-900 text-white border-gray-900" : "bg-white text-tat-slate border-gray-200 hover:border-gray-300"
+                filter === t.k ? "bg-tat-charcoal text-white border-tat-charcoal" : "bg-white text-tat-slate border-tat-charcoal/12 hover:border-tat-charcoal/20"
               }`}
             >
               {t.label} <span className="text-xs opacity-60">({t.count})</span>
@@ -150,7 +150,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
         </div>
 
         {/* List */}
-        <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl border border-tat-charcoal/12 divide-y divide-gray-100 overflow-hidden">
           {visible.length === 0 && (
             <div className="p-10 text-center text-sm text-tat-slate">No creators in this view.</div>
           )}
@@ -166,7 +166,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                         {c.status}
                       </span>
                       <span className="text-xs font-mono text-tat-slate">{c.ref_code}</span>
-                      <span className="text-xs text-gray-400">{c.commission_pct}%</span>
+                      <span className="text-xs text-tat-slate/70">{c.commission_pct}%</span>
                     </div>
                     <div className="mt-1 text-xs text-tat-slate flex items-center gap-3 flex-wrap">
                       <span>{c.email}</span>
@@ -179,7 +179,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                             href={`https://instagram.com/${c.instagram_handle}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-purple-600 hover:underline inline-flex items-center gap-1"
+                            className="text-tat-charcoal hover:underline inline-flex items-center gap-1"
                           >
                             @{c.instagram_handle}
                             <ExternalLink className="h-2.5 w-2.5" />
@@ -195,7 +195,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                       {c.audience_size_verified !== null && (
                         <>
                           <span>·</span>
-                          <span className="inline-flex items-center gap-1 text-emerald-700">
+                          <span className="inline-flex items-center gap-1 text-tat-success-fg">
                             <ShieldCheck className="h-3 w-3" />
                             {c.audience_size_verified.toLocaleString("en-IN")} verified
                           </span>
@@ -213,13 +213,13 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                             value={audienceDraft}
                             onChange={(e) => setAudienceDraft(e.target.value)}
                             placeholder="e.g. 24500 (or 0 to clear)"
-                            className="w-44 px-2 py-1 border border-gray-200 rounded text-xs"
+                            className="w-44 px-2 py-1 border border-tat-charcoal/12 rounded text-xs"
                             autoFocus
                           />
                           <button
                             onClick={() => saveAudience(c)}
                             disabled={savingAudience === c.id}
-                            className="inline-flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded text-[11px] font-semibold disabled:opacity-60"
+                            className="inline-flex items-center gap-1 bg-tat-teal hover:bg-tat-teal-deep text-white px-2 py-1 rounded text-[11px] font-semibold disabled:opacity-60"
                           >
                             {savingAudience === c.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
                             Save
@@ -242,10 +242,10 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                       )}
                     </div>
                     {c.notes && (
-                      <p className="mt-2 text-xs text-tat-slate whitespace-pre-line bg-gray-50 rounded-lg p-2.5 max-w-2xl">{c.notes}</p>
+                      <p className="mt-2 text-xs text-tat-slate whitespace-pre-line bg-tat-paper rounded-lg p-2.5 max-w-2xl">{c.notes}</p>
                     )}
                     {c.payout_method && (
-                      <p className="mt-1.5 text-[11px] text-gray-400">
+                      <p className="mt-1.5 text-[11px] text-tat-slate/70">
                         Payout: {c.payout_method} {c.payout_details?.raw ?? ""}
                       </p>
                     )}
@@ -258,7 +258,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                         <button
                           onClick={() => approve(c)}
                           disabled={busyId === c.id}
-                          className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-60"
+                          className="inline-flex items-center gap-1.5 bg-tat-teal hover:bg-tat-teal-deep text-white px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-60"
                         >
                           {busyId === c.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
                           Approve
@@ -266,7 +266,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                         <button
                           onClick={() => reject(c)}
                           disabled={busyId === c.id}
-                          className="inline-flex items-center gap-1.5 bg-white border border-red-200 text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-60"
+                          className="inline-flex items-center gap-1.5 bg-white border border-tat-danger-fg/25 text-tat-danger-fg hover:bg-tat-danger-bg px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-60"
                         >
                           <XCircle className="h-3.5 w-3.5" />
                           Reject
@@ -276,7 +276,7 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
                     {c.status === "active" && (
                       <button
                         onClick={() => copyText(c.id, `https://trustandtrip.com/?ref=${c.ref_code}`)}
-                        className="inline-flex items-center gap-1.5 bg-white border border-gray-200 text-tat-charcoal hover:border-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold"
+                        className="inline-flex items-center gap-1.5 bg-white border border-tat-charcoal/12 text-tat-charcoal hover:border-tat-charcoal/20 px-3 py-1.5 rounded-lg text-xs font-semibold"
                       >
                         {copied === c.id ? <><Check className="h-3.5 w-3.5 text-tat-teal" />Copied</> : <><Copy className="h-3.5 w-3.5" />Copy link</>}
                       </button>
@@ -286,18 +286,18 @@ export default function CreatorsAdminClient({ initialCreators }: { initialCreato
 
                 {/* Temp password disclosure */}
                 {tempPw && (
-                  <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
-                    <p className="text-[11px] uppercase tracking-wider text-amber-700 font-semibold mb-1">⚠ Temp password — share securely</p>
+                  <div className="mt-3 bg-tat-warning-bg border border-tat-warning-fg/25 rounded-lg p-3">
+                    <p className="text-[11px] uppercase tracking-wider text-tat-warning-fg font-semibold mb-1">⚠ Temp password — share securely</p>
                     <div className="flex items-center gap-2">
-                      <code className="font-mono text-sm text-amber-900 bg-white px-2 py-1 rounded">{tempPw}</code>
+                      <code className="font-mono text-sm text-tat-warning-fg bg-white px-2 py-1 rounded">{tempPw}</code>
                       <button
                         onClick={() => copyText(`pw-${c.id}`, tempPw)}
-                        className="inline-flex items-center gap-1 text-xs text-amber-700 hover:text-amber-900"
+                        className="inline-flex items-center gap-1 text-xs text-tat-warning-fg hover:text-tat-warning-fg"
                       >
                         {copied === `pw-${c.id}` ? <><Check className="h-3 w-3" />copied</> : <><Copy className="h-3 w-3" />copy</>}
                       </button>
                     </div>
-                    <p className="text-[10px] text-amber-700 mt-2">Send to {c.email} via secure channel. Password disappears when you reload this page.</p>
+                    <p className="text-[10px] text-tat-warning-fg mt-2">Send to {c.email} via secure channel. Password disappears when you reload this page.</p>
                   </div>
                 )}
               </div>

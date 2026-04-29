@@ -68,8 +68,8 @@ export default async function FunnelPage({
       .limit(5000),
   ]);
 
-  if (leadsRes.error) return <main className="p-8 text-red-600">Leads error: {leadsRes.error.message}</main>;
-  if (bookingsRes.error) return <main className="p-8 text-red-600">Bookings error: {bookingsRes.error.message}</main>;
+  if (leadsRes.error) return <main className="p-8 text-tat-danger-fg">Leads error: {leadsRes.error.message}</main>;
+  if (bookingsRes.error) return <main className="p-8 text-tat-danger-fg">Bookings error: {bookingsRes.error.message}</main>;
 
   const leads = (leadsRes.data ?? []) as LeadRow[];
   const bookings = (bookingsRes.data ?? []) as BookingRow[];
@@ -224,7 +224,7 @@ export default async function FunnelPage({
                 <tr key={r.src}>
                   <td className="px-3 py-2 truncate max-w-[280px] text-tat-charcoal">{r.src}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{r.leads}</td>
-                  <td className="px-3 py-2 text-right text-emerald-700 tabular-nums">{r.tierA}</td>
+                  <td className="px-3 py-2 text-right text-tat-success-fg tabular-nums">{r.tierA}</td>
                   <td className="px-3 py-2 text-right tabular-nums">{pct(r.tierA, r.leads)}</td>
                   <td className="px-3 py-2 text-right text-violet-700 tabular-nums">{r.verified}</td>
                   <td className="px-3 py-2 text-right font-semibold tabular-nums">{pct(r.verified, r.leads)}</td>
@@ -269,9 +269,9 @@ function Stage({
   large?: boolean;
 }) {
   const tones: Record<string, string> = {
-    emerald: "text-emerald-700",
-    amber: "text-amber-700",
-    green: "text-green-700",
+    emerald: "text-tat-success-fg",
+    amber: "text-tat-warning-fg",
+    green: "text-tat-success-fg",
     violet: "text-violet-700",
   };
   return (
@@ -301,9 +301,9 @@ function TierCard({
   accent: "emerald" | "amber" | "slate";
 }) {
   const palette: Record<string, { bg: string; text: string }> = {
-    emerald: { bg: "bg-emerald-50 border-emerald-200", text: "text-emerald-700" },
-    amber:   { bg: "bg-amber-50 border-amber-200",     text: "text-amber-700" },
-    slate:   { bg: "bg-slate-50 border-slate-200",     text: "text-slate-600" },
+    emerald: { bg: "bg-tat-success-bg border-tat-success-fg/25", text: "text-tat-success-fg" },
+    amber:   { bg: "bg-tat-warning-bg border-tat-warning-fg/25",     text: "text-tat-warning-fg" },
+    slate:   { bg: "bg-tat-paper border-tat-charcoal/12",     text: "text-tat-slate" },
   };
   return (
     <div className={`rounded-card border px-4 py-4 ${palette[accent].bg}`}>

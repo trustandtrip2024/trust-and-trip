@@ -16,10 +16,10 @@ interface Lead {
 }
 
 const STATUS_LABEL: Record<Lead["status"], { label: string; cls: string }> = {
-  new:       { label: "New",        cls: "bg-blue-50 text-blue-700 border-blue-100" },
-  contacted: { label: "Contacted",  cls: "bg-amber-50 text-amber-700 border-amber-100" },
-  qualified: { label: "Qualified",  cls: "bg-indigo-50 text-indigo-700 border-indigo-100" },
-  booked:    { label: "Booked",     cls: "bg-emerald-50 text-emerald-700 border-emerald-100" },
+  new:       { label: "New",        cls: "bg-tat-info-bg text-tat-info-fg border-tat-info-fg/15" },
+  contacted: { label: "Contacted",  cls: "bg-tat-warning-bg text-tat-warning-fg border-tat-warning-fg/15" },
+  qualified: { label: "Qualified",  cls: "bg-tat-gold/10 text-tat-charcoal border-tat-gold/20" },
+  booked:    { label: "Booked",     cls: "bg-tat-success-bg text-tat-success-fg border-tat-success-fg/15" },
   lost:      { label: "Lost",       cls: "bg-tat-charcoal/5 text-tat-charcoal/55 border-tat-charcoal/10" },
 };
 

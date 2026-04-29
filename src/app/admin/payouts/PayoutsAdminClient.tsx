@@ -9,10 +9,10 @@ const fmtINR = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN", { 
 const fmtDate = (iso: string | null) => iso ? new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
 
 const STATUS_BADGE: Record<Payout["status"], string> = {
-  pending: "bg-amber-100 text-amber-800",
-  processing: "bg-blue-100 text-blue-800",
-  paid: "bg-emerald-100 text-emerald-800",
-  failed: "bg-red-100 text-red-800",
+  pending: "bg-tat-warning-bg text-tat-warning-fg",
+  processing: "bg-tat-info-bg text-tat-info-fg",
+  paid: "bg-tat-success-bg text-tat-success-fg",
+  failed: "bg-tat-danger-bg text-tat-danger-fg",
 };
 
 export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary[] }) {
@@ -90,13 +90,13 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-tat-paper p-6">
       <div className="max-w-6xl mx-auto">
         <Link href="/admin" className="inline-flex items-center gap-1.5 text-sm text-tat-slate hover:text-tat-charcoal mb-4">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to admin
         </Link>
         <div className="flex items-center gap-2 mb-1">
-          <Wallet className="h-5 w-5 text-emerald-500" />
+          <Wallet className="h-5 w-5 text-tat-success-fg" />
           <h1 className="text-2xl font-semibold text-tat-charcoal">Creator Payouts</h1>
         </div>
         <p className="text-sm text-tat-slate mb-6">{rows.length} creators · {eligibleCreators} ready to pay</p>
@@ -113,7 +113,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
           <button
             onClick={releaseAll}
             disabled={busyId === "release"}
-            className="inline-flex items-center gap-2 bg-white border border-gray-200 text-tat-charcoal hover:border-gray-300 px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-60"
+            className="inline-flex items-center gap-2 bg-white border border-tat-charcoal/12 text-tat-charcoal hover:border-tat-charcoal/20 px-4 py-2 rounded-lg text-sm font-semibold disabled:opacity-60"
           >
             {busyId === "release" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             Release pending earnings (cool-off elapsed)
@@ -124,7 +124,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl border border-tat-charcoal/12 divide-y divide-gray-100 overflow-hidden">
           {rows.length === 0 && (
             <div className="p-10 text-center text-sm text-tat-slate">No active creators yet.</div>
           )}
@@ -140,15 +140,15 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
                         <span className="text-xs font-mono text-tat-slate">{r.ref_code}</span>
                       </div>
                       <p className="mt-1 text-xs text-tat-slate">{r.email}</p>
-                      <p className="mt-1.5 text-[11px] text-gray-400">
+                      <p className="mt-1.5 text-[11px] text-tat-slate/70">
                         Payout: {r.payout_method ?? "—"} {r.payout_details_raw ?? ""}
                       </p>
                       <div className="mt-3 flex flex-wrap items-center gap-3 text-xs">
-                        <span className="px-2 py-1 rounded bg-emerald-50 text-emerald-700 font-semibold">
+                        <span className="px-2 py-1 rounded bg-tat-success-bg text-tat-success-fg font-semibold">
                           Payable: {fmtINR(r.payable_paise)}
                         </span>
                         {r.pending_paise > 0 && (
-                          <span className="px-2 py-1 rounded bg-amber-50 text-amber-700 font-medium">
+                          <span className="px-2 py-1 rounded bg-tat-warning-bg text-tat-warning-fg font-medium">
                             Pending: {fmtINR(r.pending_paise)}
                           </span>
                         )}
@@ -161,7 +161,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
                         <button
                           onClick={() => createPayout(r)}
                           disabled={busyId === r.id}
-                          className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-60"
+                          className="inline-flex items-center gap-1.5 bg-tat-teal hover:bg-tat-teal-deep text-white px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-60"
                         >
                           {busyId === r.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Wallet className="h-3.5 w-3.5" />}
                           Create payout
@@ -181,11 +181,11 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
                 </div>
 
                 {open && r.payouts.length > 0 && (
-                  <div className="bg-gray-50 px-5 py-4 border-t border-gray-100">
+                  <div className="bg-tat-paper px-5 py-4 border-t border-tat-charcoal/8">
                     <p className="text-[10px] uppercase tracking-widest text-tat-slate font-semibold mb-2">Payout history</p>
                     <div className="space-y-2">
                       {r.payouts.map((p) => (
-                        <div key={p.id} className="flex items-center justify-between gap-3 bg-white rounded-lg p-3 border border-gray-100">
+                        <div key={p.id} className="flex items-center justify-between gap-3 bg-white rounded-lg p-3 border border-tat-charcoal/8">
                           <div className="min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className="font-semibold text-sm text-tat-charcoal">{fmtINR(p.amount_paise)}</span>
@@ -203,7 +203,7 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
                             <button
                               onClick={() => markPaid(r, p)}
                               disabled={busyId === p.id}
-                              className="inline-flex items-center gap-1 bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-60 shrink-0"
+                              className="inline-flex items-center gap-1 bg-tat-charcoal hover:bg-tat-charcoal/90 text-white px-3 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-60 shrink-0"
                             >
                               {busyId === p.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : null}
                               Mark paid
@@ -224,9 +224,9 @@ export default function PayoutsAdminClient({ initial }: { initial: PayoutSummary
 }
 
 function Card({ label, value, tone }: { label: string; value: string; tone: "emerald" | "amber" | "slate" }) {
-  const toneCls = tone === "emerald" ? "text-emerald-700" : tone === "amber" ? "text-amber-700" : "text-tat-charcoal";
+  const toneCls = tone === "emerald" ? "text-tat-success-fg" : tone === "amber" ? "text-tat-warning-fg" : "text-tat-charcoal";
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-4">
+    <div className="bg-white border border-tat-charcoal/12 rounded-xl p-4">
       <p className="text-[10px] uppercase tracking-widest text-tat-slate font-semibold">{label}</p>
       <p className={`text-xl font-semibold mt-1 ${toneCls}`}>{value}</p>
     </div>
