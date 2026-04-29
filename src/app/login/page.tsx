@@ -90,7 +90,7 @@ function LoginPageInner() {
 
         {/* Logo / brand */}
         <div className="mb-8">
-          <p className="font-display text-2xl font-medium text-tat-charcoal">
+          <p className="font-display text-h2 font-medium text-tat-charcoal">
             Trust & Trip
           </p>
           <p className="text-sm text-tat-charcoal/50 mt-1">

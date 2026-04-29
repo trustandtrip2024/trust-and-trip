@@ -34,7 +34,7 @@ export default function HomeTopDestChips({ destinations, featured = DEFAULT_FEAT
         <div className="flex items-end justify-between gap-4 mb-5 md:mb-6">
           <div>
             <p className="tt-eyebrow">Top destinations</p>
-            <h2 id="topdest-title" className="mt-1 font-display font-normal text-2xl md:text-3xl text-tat-charcoal dark:text-tat-paper">
+            <h2 id="topdest-title" className="mt-1 font-display text-h2 font-medium text-tat-charcoal dark:text-tat-paper">
               Where travelers are going{" "}
               <em className="not-italic font-display italic text-tat-gold dark:text-tat-gold">this season.</em>
             </h2>

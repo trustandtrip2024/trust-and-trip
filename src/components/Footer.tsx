@@ -103,7 +103,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
               <p className="eyebrow text-tat-gold mb-1">Travel updates</p>
-              <h3 className="font-display text-xl md:text-2xl font-medium">
+              <h3 className="font-display text-h3 font-medium">
                 Get exclusive deals in your inbox.
               </h3>
               <p className="text-sm text-tat-paper/45 mt-1">Early-bird offers, new destinations, travel tips. No spam.</p>

@@ -77,7 +77,7 @@ export default function CreatorOverview() {
     <div>
       <div className="mb-6">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Creator dashboard</p>
-        <h1 className="font-display text-2xl md:text-3xl font-medium text-tat-charcoal">
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal">
           Hey {creator.full_name.split(" ")[0]} 👋
         </h1>
         <p className="text-sm text-tat-charcoal/55 mt-1">
@@ -176,7 +176,7 @@ function KpiCard({
       <div className={`h-9 w-9 rounded-xl ${color} flex items-center justify-center mb-3`}>
         <Icon className="h-4 w-4" />
       </div>
-      <p className="font-display text-2xl font-medium text-tat-charcoal">{value}</p>
+      <p className="font-display text-h2 font-medium text-tat-charcoal">{value}</p>
       <p className="text-xs text-tat-charcoal/65 mt-0.5">{label}</p>
       {sub && <p className="text-[10px] text-tat-charcoal/40 mt-0.5">{sub}</p>}
     </div>

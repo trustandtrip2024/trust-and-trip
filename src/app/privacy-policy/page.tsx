@@ -152,7 +152,7 @@ function PolicySection({
 }) {
   return (
     <div>
-      <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
+      <h2 className="font-display text-h2 font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
         {title}
       </h2>
       <div className="space-y-4 text-tat-charcoal/75 leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_li]:leading-relaxed">

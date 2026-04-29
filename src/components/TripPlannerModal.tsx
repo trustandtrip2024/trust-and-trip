@@ -424,7 +424,7 @@ function StepDestination({
 }) {
   return (
     <div className="px-6 py-6">
-      <h2 className="font-display text-2xl md:text-3xl font-medium text-balance">
+      <h2 className="font-display text-h2 font-medium text-balance">
         Where would you like to go?
       </h2>
       <p className="mt-2 text-sm text-tat-charcoal/55">Pick a destination or browse all packages.</p>
@@ -501,7 +501,7 @@ function StepTravelers({
 }) {
   return (
     <div className="px-6 py-6">
-      <h2 className="font-display text-2xl md:text-3xl font-medium text-balance">
+      <h2 className="font-display text-h2 font-medium text-balance">
         Who&apos;s joining the adventure?
       </h2>
       <p className="mt-2 text-sm text-tat-charcoal/55">We&apos;ll tailor packages to your travel style.</p>
@@ -548,7 +548,7 @@ function StepDuration({
 }) {
   return (
     <div className="px-6 py-6">
-      <h2 className="font-display text-2xl md:text-3xl font-medium text-balance">
+      <h2 className="font-display text-h2 font-medium text-balance">
         When are you planning?
       </h2>
       <p className="mt-2 text-sm text-tat-charcoal/55">Pick a rough timeframe — nothing is fixed yet.</p>
@@ -624,7 +624,7 @@ function StepBudget({
 }) {
   return (
     <div className="px-6 py-6">
-      <h2 className="font-display text-2xl md:text-3xl font-medium text-balance">
+      <h2 className="font-display text-h2 font-medium text-balance">
         What&apos;s your budget per person?
       </h2>
       <p className="mt-2 text-sm text-tat-charcoal/55">Approximate is fine — we have options at every level.</p>
@@ -688,7 +688,7 @@ function StepResults({
         <>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="font-display text-2xl font-medium">
+              <h2 className="font-display text-h2 font-medium">
                 {packages.length > 0
                   ? `✨ We found ${packages.length} trips for you!`
                   : "No exact matches"}

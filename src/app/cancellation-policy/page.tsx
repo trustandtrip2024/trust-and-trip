@@ -41,7 +41,7 @@ export default function CancellationPolicyPage() {
 
           {/* Overview */}
           <div>
-            <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
+            <h2 className="font-display text-h2 font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
               Overview
             </h2>
             <p className="text-tat-charcoal/75 leading-relaxed">
@@ -54,7 +54,7 @@ export default function CancellationPolicyPage() {
 
           {/* Cancellation Fee Schedule */}
           <div>
-            <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
+            <h2 className="font-display text-h2 font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
               Cancellation Fee Schedule
             </h2>
             <div className="bg-white rounded-2xl border border-tat-charcoal/8 overflow-hidden">
@@ -131,7 +131,7 @@ export default function CancellationPolicyPage() {
 
           {/* How to Cancel */}
           <div className="bg-tat-charcoal text-tat-paper rounded-3xl p-8">
-            <h2 className="font-display text-2xl font-medium mb-4">How to Request a Cancellation</h2>
+            <h2 className="font-display text-h2 font-medium mb-4">How to Request a Cancellation</h2>
             <ol className="space-y-3 text-tat-paper/80 text-sm leading-relaxed list-decimal pl-5">
               <li>Email <a href="mailto:support@trustandtrip.com" className="text-tat-gold hover:underline">support@trustandtrip.com</a> with your booking reference and reason for cancellation.</li>
               <li>Our team will confirm receipt within 24 hours and initiate the cancellation with all suppliers.</li>
@@ -174,7 +174,7 @@ function PolicySection({
 }) {
   return (
     <div>
-      <h2 className="font-display text-2xl font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
+      <h2 className="font-display text-h2 font-medium text-tat-charcoal mb-4 pb-3 border-b border-tat-charcoal/8">
         {title}
       </h2>
       <div className="space-y-4 text-tat-charcoal/75 leading-relaxed [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_li]:leading-relaxed">

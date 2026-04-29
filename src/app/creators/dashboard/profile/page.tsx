@@ -99,7 +99,7 @@ export default function CreatorProfilePage() {
     <div>
       <div className="mb-6">
         <p className="text-xs uppercase tracking-widest text-tat-charcoal/40 mb-1">Creator dashboard</p>
-        <h1 className="font-display text-2xl font-medium text-tat-charcoal">Profile & payout</h1>
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal">Profile & payout</h1>
         <p className="text-sm text-tat-charcoal/55 mt-1">Update your details and how you want to get paid.</p>
       </div>
 
@@ -164,7 +164,7 @@ export default function CreatorProfilePage() {
         {/* Ref code */}
         <div className="bg-tat-gold/8 border border-tat-gold/20 rounded-2xl p-5">
           <p className="text-[10px] uppercase tracking-widest text-tat-charcoal/55 mb-1">Your code</p>
-          <p className="font-display text-2xl font-medium text-tat-charcoal font-mono">{creator.ref_code}</p>
+          <p className="font-display text-h2 font-medium text-tat-charcoal font-mono">{creator.ref_code}</p>
           <p className="text-xs text-tat-charcoal/55 mt-1">{creator.commission_pct}% commission per booking · cannot be changed</p>
         </div>
 

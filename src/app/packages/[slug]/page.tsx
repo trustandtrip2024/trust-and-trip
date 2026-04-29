@@ -302,7 +302,7 @@ export default async function PackageDetail({ params }: Props) {
                   <Hotel className="h-7 w-7 text-tat-gold" />
                 </div>
                 <div>
-                  <h3 className="font-display text-2xl font-medium">{pkg.hotel.name}</h3>
+                  <h3 className="font-display text-h2 font-medium">{pkg.hotel.name}</h3>
                   <div className="flex items-center gap-1 mt-1.5">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} />

@@ -326,7 +326,7 @@ export default function PackagesClient({
             {filtered.length === 0 ? (
               <div className="text-center py-20 bg-tat-paper rounded-3xl border border-tat-charcoal/5 px-6">
                 <p className="text-5xl mb-5">🧭</p>
-                <p className="font-display text-2xl font-medium mb-2">
+                <p className="font-display text-h2 font-medium mb-2">
                   No packages match these filters
                 </p>
                 <p className="text-tat-charcoal/60 mb-8 max-w-sm mx-auto leading-relaxed">
@@ -749,7 +749,7 @@ function CustomTripCTACard() {
           <Sparkles className="h-5 w-5" />
         </span>
         <p className="text-[10px] uppercase tracking-[0.22em] text-tat-gold font-semibold">Don&apos;t see what you want?</p>
-        <h3 className="mt-2 font-display text-xl md:text-2xl font-medium text-tat-charcoal text-balance">
+        <h3 className="mt-2 font-display text-h3 font-medium text-tat-charcoal text-balance">
           We craft custom itineraries in <em className="not-italic italic font-display text-tat-gold">24 hours</em>.
         </h3>
         <p className="mt-3 text-sm text-tat-charcoal/65 leading-relaxed">

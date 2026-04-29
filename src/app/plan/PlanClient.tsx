@@ -248,7 +248,7 @@ export default function PlanClient() {
                 <Sparkles className="h-4 w-4 text-tat-gold" />
                 <span className="text-xs uppercase tracking-[0.2em] text-tat-gold font-medium">Your personalised itinerary</span>
               </div>
-              <h2 className="font-display text-3xl md:text-4xl font-medium leading-tight mb-3">{itinerary.title}</h2>
+              <h2 className="font-display text-h2 font-medium leading-tight mb-3">{itinerary.title}</h2>
               <p className="text-tat-paper/70 text-base leading-relaxed mb-6 max-w-2xl">{itinerary.tagline}</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {itinerary.highlights.map((h, i) => (
@@ -269,7 +269,7 @@ export default function PlanClient() {
               {itinerary.days.map((day) => (
                 <div key={day.day} className="bg-white rounded-2xl border border-tat-charcoal/8 overflow-hidden">
                   <div className="flex items-center gap-4 px-6 py-4 border-b border-tat-charcoal/6 bg-tat-cream/30">
-                    <span className="font-display text-2xl font-medium text-tat-gold/80 tabular-nums w-8">{String(day.day).padStart(2, "0")}</span>
+                    <span className="font-display text-h2 font-medium text-tat-gold/80 tabular-nums w-8">{String(day.day).padStart(2, "0")}</span>
                     <h3 className="font-display text-lg font-medium text-tat-charcoal">{day.title}</h3>
                   </div>
                   <div className="p-6 grid md:grid-cols-3 gap-5">
@@ -321,14 +321,14 @@ export default function PlanClient() {
                   <div className="h-14 w-14 rounded-full bg-tat-gold/20 flex items-center justify-center mx-auto mb-4">
                     <Check className="h-7 w-7 text-tat-gold" />
                   </div>
-                  <h3 className="font-display text-2xl font-medium mb-2">We've got your details!</h3>
+                  <h3 className="font-display text-h2 font-medium mb-2">We've got your details!</h3>
                   <p className="text-tat-paper/60 max-w-sm mx-auto">A planner will call you within 2 hours to discuss your {form.destination} trip and book everything for you.</p>
                 </div>
               ) : (
                 <>
                   <div className="mb-6">
                     <span className="text-xs uppercase tracking-[0.2em] text-tat-gold font-medium">Next step</span>
-                    <h3 className="font-display text-2xl md:text-3xl font-medium mt-2 mb-2">
+                    <h3 className="font-display text-h2 font-medium mt-2 mb-2">
                       Want us to book this for you?
                     </h3>
                     <p className="text-tat-paper/60 text-sm leading-relaxed">

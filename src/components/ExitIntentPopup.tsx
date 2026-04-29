@@ -127,7 +127,7 @@ export default function ExitIntentPopup() {
                 </div>
               ) : (
                 <>
-                  <h3 id="exit-intent-title" className="font-display text-2xl text-tat-paper font-medium leading-tight text-balance">
+                  <h3 id="exit-intent-title" className="font-display text-h2 text-tat-paper font-medium leading-tight text-balance">
                     Before you go — tell us where you want to travel.
                   </h3>
                   <p className="mt-2 text-tat-paper/60 text-sm leading-relaxed">

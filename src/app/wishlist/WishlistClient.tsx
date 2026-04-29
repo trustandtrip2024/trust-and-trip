@@ -35,7 +35,7 @@ export default function WishlistClient({ allPackages }: { allPackages: Package[]
               <div className="h-20 w-20 rounded-full bg-tat-orange/10 flex items-center justify-center mx-auto mb-6">
                 <Heart className="h-9 w-9 text-tat-orange/60" />
               </div>
-              <h2 className="font-display text-2xl font-medium mb-3">Nothing saved yet</h2>
+              <h2 className="font-display text-h2 font-medium mb-3">Nothing saved yet</h2>
               <p className="text-tat-charcoal/60 mb-8 leading-relaxed">
                 Browse our packages and tap the heart icon to save the ones you love.
               </p>

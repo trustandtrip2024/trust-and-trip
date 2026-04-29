@@ -65,7 +65,7 @@ export default function NotFound() {
           404
         </p>
 
-        <h1 className="font-display text-3xl md:text-4xl font-medium text-tat-charcoal -mt-4 text-balance">
+        <h1 className="font-display text-h2 font-medium text-tat-charcoal -mt-4 text-balance">
           This page took a detour.
         </h1>
         <p className="mt-4 text-tat-charcoal/65 leading-relaxed max-w-md mx-auto">

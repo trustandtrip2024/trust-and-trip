@@ -33,7 +33,7 @@ export default function NewsletterInline() {
   return (
     <div className="bg-tat-charcoal text-tat-paper rounded-3xl p-8 md:p-10">
       <span className="eyebrow text-tat-gold">Newsletter</span>
-      <h3 className="mt-3 font-display text-2xl md:text-3xl font-medium text-balance">
+      <h3 className="mt-3 font-display text-h2 font-medium text-balance">
         Monthly travel stories,
         <span className="italic text-tat-gold font-light"> straight to your inbox.</span>
       </h3>

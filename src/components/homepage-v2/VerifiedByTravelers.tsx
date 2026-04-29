@@ -117,7 +117,7 @@ export default function VerifiedByTravelers() {
           <p className="mb-3 inline-block bg-tat-orange-soft/70 px-2 py-1 text-xs font-semibold uppercase tracking-wider">
             Verified by Travelers
           </p>
-          <h2 className="text-3xl font-semibold leading-tight text-tat-charcoal sm:text-4xl md:text-5xl">
+          <h2 className="heading-section font-semibold leading-tight text-tat-charcoal">
             Trusted on every{" "}
             <span className="italic text-tat-gold">platform.</span>
           </h2>

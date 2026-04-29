@@ -88,7 +88,7 @@ export default async function ExperiencesPage() {
                   <p className="text-[10px] uppercase tracking-[0.25em] text-tat-gold mb-2">
                     {exp.category}
                   </p>
-                  <h3 className="font-display text-3xl font-medium leading-tight mb-3">
+                  <h3 className="font-display text-h3 font-medium leading-tight mb-3">
                     {exp.title}
                   </h3>
                   <p className="text-sm text-tat-paper/70 leading-relaxed max-w-sm">
