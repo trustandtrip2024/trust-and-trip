@@ -9,6 +9,9 @@ import { blogPosts as staticPosts } from "@/lib/data";
 import { Clock, ChevronRight, ArrowRight, Tag } from "lucide-react";
 import CTASection from "@/components/CTASection";
 import NewsletterInline from "@/components/NewsletterInline";
+import JsonLd from "@/components/JsonLd";
+import ReadingProgress from "@/components/blog/ReadingProgress";
+import BlogShare from "@/components/blog/BlogShare";
 
 interface Props { params: { slug: string } }
 
@@ -48,8 +51,41 @@ export default async function BlogPostPage({ params }: Props) {
   const slug = (post as any).slug?.current ?? (post as any).slug;
   const image = (post as any).image ?? "";
 
+  // Best-effort ISO date for Schema.org. Free-text dates ("March 18, 2026")
+  // parse cleanly via JS Date; fallback to the raw string when they don't.
+  let isoDate = post.date as string;
+  const parsed = new Date(post.date);
+  if (!isNaN(parsed.getTime())) isoDate = parsed.toISOString();
+
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    image: image ? [image] : undefined,
+    datePublished: isoDate,
+    author: { "@type": "Person", name: post.author },
+    publisher: {
+      "@type": "Organization",
+      name: "Trust and Trip",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://trustandtrip.com/icon.svg",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://trustandtrip.com/blog/${slug}`,
+    },
+    ...((post as any).tags?.length ? { keywords: (post as any).tags } : {}),
+    articleSection: post.category,
+  };
+
   return (
     <>
+      <ReadingProgress />
+      <JsonLd data={articleLd} />
+
       {/* Hero */}
       <section className="pt-24 md:pt-32 pb-8 bg-tat-paper">
         <div className="container-custom max-w-3xl">
@@ -82,6 +118,8 @@ export default async function BlogPostPage({ params }: Props) {
               ))}
             </div>
           )}
+
+          <BlogShare title={post.title} slug={slug} />
         </div>
       </section>
 

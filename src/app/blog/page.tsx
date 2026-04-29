@@ -6,6 +6,7 @@ import { getBlogPosts } from "@/lib/sanity-queries";
 import { blogPosts as staticPosts } from "@/lib/data";
 import { ArrowRight, Clock } from "lucide-react";
 import NewsletterInline from "@/components/NewsletterInline";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata = {
   title: "Journal — Trust and Trip",
@@ -44,8 +45,27 @@ export default async function BlogPage({
 
   const [featured, ...rest] = posts;
 
+  // Blog index ItemList — surfaces the article catalogue to search engines
+  // independent of the active category filter. Caps at 50 entries.
+  const listLd = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    name: "Trust and Trip — Journal",
+    url: "https://trustandtrip.com/blog",
+    blogPost: posts.slice(0, 50).map((p) => ({
+      "@type": "BlogPosting",
+      headline: p.title,
+      url: `https://trustandtrip.com/blog/${p.slug}`,
+      ...(p.image ? { image: p.image } : {}),
+      datePublished: p.date,
+      author: { "@type": "Person", name: p.author },
+    })),
+  };
+
   return (
     <>
+      <JsonLd data={listLd} />
+
       <section className="pt-28 md:pt-36 pb-10 bg-tat-paper border-b border-tat-charcoal/5">
         <div className="container-custom">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
