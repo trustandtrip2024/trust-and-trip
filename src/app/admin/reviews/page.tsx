@@ -22,7 +22,7 @@ export default async function AdminReviewsPage() {
   const approved = reviews.filter((r) => r.status === "approved").length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-tat-paper">
       <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -30,10 +30,10 @@ export default async function AdminReviewsPage() {
             <p className="text-tat-slate text-sm mt-1">Approve or reject customer reviews</p>
           </div>
           <div className="flex gap-3">
-            <span className="bg-yellow-100 text-yellow-800 px-3 py-1.5 rounded-full text-sm font-medium">
+            <span className="bg-tat-warning-bg text-tat-warning-fg px-3 py-1.5 rounded-full text-sm font-medium">
               {pending} pending
             </span>
-            <span className="bg-green-100 text-green-800 px-3 py-1.5 rounded-full text-sm font-medium">
+            <span className="bg-tat-success-bg text-tat-success-fg px-3 py-1.5 rounded-full text-sm font-medium">
               {approved} approved
             </span>
           </div>

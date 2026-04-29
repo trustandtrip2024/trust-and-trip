@@ -68,7 +68,7 @@ export default function CustomerItinerariesPage() {
       )}
 
       {error && (
-        <p className="mt-12 text-meta text-red-600">{error}</p>
+        <p className="mt-12 text-meta text-tat-danger-fg">{error}</p>
       )}
 
       {!loading && !error && rows.length === 0 && (
@@ -188,7 +188,7 @@ export default function CustomerItinerariesPage() {
                     href={`/api/wa/click?src=customer_dashboard_itineraries&dest=${encodeURIComponent(r.destination)}&msg=${encodeURIComponent(`Hi Trust and Trip — I'd like to refine the "${r.itinerary.title}" draft.`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-5 inline-flex items-center justify-center gap-2 h-10 px-4 rounded-pill bg-emerald-600 text-white text-meta font-medium hover:bg-emerald-700"
+                    className="mt-5 inline-flex items-center justify-center gap-2 h-10 px-4 rounded-pill bg-tat-teal text-white text-meta font-medium hover:bg-tat-teal-deep"
                   >
                     Refine on WhatsApp
                   </a>

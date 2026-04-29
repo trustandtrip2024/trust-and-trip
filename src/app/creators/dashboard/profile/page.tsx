@@ -141,7 +141,7 @@ export default function CreatorProfilePage() {
         {/* Payout */}
         <form onSubmit={saveProfile} className="bg-white rounded-2xl border border-tat-charcoal/8 p-5 md:p-6">
           <div className="flex items-center gap-2 mb-5">
-            <div className="h-8 w-8 rounded-xl bg-emerald-50 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-xl bg-tat-success-bg flex items-center justify-center">
               <Wallet className="h-4 w-4 text-tat-teal" />
             </div>
             <p className="text-sm font-semibold text-tat-charcoal">Payout details</p>
@@ -175,7 +175,7 @@ export default function CreatorProfilePage() {
             <Field label="New password">
               <input type="password" value={newPw} onChange={(e) => setNewPw(e.target.value)} placeholder="Min. 8 characters" required className={INPUT} />
             </Field>
-            {pwError && <p className="text-xs text-red-500 mt-2">{pwError}</p>}
+            {pwError && <p className="text-xs text-tat-danger-fg mt-2">{pwError}</p>}
             <div className="mt-4 flex items-center gap-3">
               <button type="submit" disabled={savingPw} className="flex items-center gap-2 px-5 py-2.5 bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal rounded-xl text-sm font-semibold transition-all disabled:opacity-60">
                 {savingPw ? <Loader2 className="h-4 w-4 animate-spin" /> : null}

@@ -80,7 +80,7 @@ export default async function DashboardOffersPage() {
                     {offer.discount}% OFF
                   </span>
                   {offer.hot && (
-                    <span className="inline-flex items-center gap-1 bg-red-500 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                    <span className="inline-flex items-center gap-1 bg-tat-danger-fg text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">
                       <Flame className="h-2.5 w-2.5" />Hot
                     </span>
                   )}
@@ -94,7 +94,7 @@ export default async function DashboardOffersPage() {
                 <h3 className="font-display text-base font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors line-clamp-2 mb-1.5">{offer.title}</h3>
                 <div className="flex items-center gap-3 text-[11px] text-tat-charcoal/45 mb-3">
                   <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{offer.duration}</span>
-                  <span className="flex items-center gap-1 text-red-500/70"><Clock className="h-3 w-3" />Ends {offer.endsLabel}</span>
+                  <span className="flex items-center gap-1 text-tat-danger-fg/70"><Clock className="h-3 w-3" />Ends {offer.endsLabel}</span>
                 </div>
                 <div className="flex items-end justify-between">
                   <div>

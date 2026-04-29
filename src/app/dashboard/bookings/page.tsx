@@ -24,11 +24,11 @@ interface Booking {
 }
 
 const STATUS_CONFIG = {
-  created: { label: "Pending Payment", icon: AlertCircle, color: "text-amber-600 bg-amber-50 border-amber-100" },
-  paid: { label: "Payment Received", icon: Clock, color: "text-blue-600 bg-blue-50 border-blue-100" },
-  verified: { label: "Confirmed", icon: CheckCircle2, color: "text-green-600 bg-green-50 border-green-100" },
+  created: { label: "Pending Payment", icon: AlertCircle, color: "text-tat-warning-fg bg-tat-warning-bg border-tat-warning-fg/15" },
+  paid: { label: "Payment Received", icon: Clock, color: "text-tat-info-fg bg-tat-info-bg border-tat-info-fg/15" },
+  verified: { label: "Confirmed", icon: CheckCircle2, color: "text-tat-success-fg bg-tat-success-bg border-tat-success-fg/15" },
   refunded: { label: "Refunded", icon: XCircle, color: "text-tat-charcoal/60 bg-tat-charcoal/5 border-tat-charcoal/10" },
-  cancelled: { label: "Cancelled", icon: XCircle, color: "text-red-600 bg-red-50 border-red-100" },
+  cancelled: { label: "Cancelled", icon: XCircle, color: "text-tat-danger-fg bg-tat-danger-bg border-tat-danger-fg/15" },
 };
 
 export default function BookingsPage() {

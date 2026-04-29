@@ -21,11 +21,11 @@ type Booking = {
 };
 
 const STATUS_CONFIG = {
-  created:   { icon: Clock,        color: "text-tat-gold",  bg: "bg-amber-50",  border: "border-amber-200", label: "Payment Pending",    desc: "Your booking was created. Complete payment to confirm." },
-  paid:      { icon: CheckCircle2, color: "text-blue-500",   bg: "bg-blue-50",   border: "border-blue-200",  label: "Payment Received",   desc: "We received your deposit! Our team is reviewing your booking." },
-  verified:  { icon: CheckCircle2, color: "text-green-500",  bg: "bg-green-50",  border: "border-green-200", label: "Booking Confirmed",  desc: "Your trip is confirmed! Our planner will reach out within 24 hours." },
-  refunded:  { icon: AlertCircle,  color: "text-purple-500", bg: "bg-purple-50", border: "border-purple-200", label: "Refunded",           desc: "Your deposit has been refunded to the original payment method." },
-  cancelled: { icon: XCircle,      color: "text-red-500",    bg: "bg-red-50",    border: "border-red-200",   label: "Cancelled",          desc: "This booking has been cancelled. Contact us if you need help." },
+  created:   { icon: Clock,        color: "text-tat-gold",  bg: "bg-tat-warning-bg",  border: "border-tat-warning-fg/25", label: "Payment Pending",    desc: "Your booking was created. Complete payment to confirm." },
+  paid:      { icon: CheckCircle2, color: "text-tat-info-fg",   bg: "bg-tat-info-bg",   border: "border-tat-info-fg/25",  label: "Payment Received",   desc: "We received your deposit! Our team is reviewing your booking." },
+  verified:  { icon: CheckCircle2, color: "text-tat-success-fg",  bg: "bg-tat-success-bg",  border: "border-tat-success-fg/25", label: "Booking Confirmed",  desc: "Your trip is confirmed! Our planner will reach out within 24 hours." },
+  refunded:  { icon: AlertCircle,  color: "text-tat-charcoal/60", bg: "bg-tat-cream-warm/30", border: "border-tat-cream-warm", label: "Refunded",           desc: "Your deposit has been refunded to the original payment method." },
+  cancelled: { icon: XCircle,      color: "text-tat-danger-fg",    bg: "bg-tat-danger-bg",    border: "border-tat-danger-fg/25",   label: "Cancelled",          desc: "This booking has been cancelled. Contact us if you need help." },
 };
 
 function BookingCard({ b }: { b: Booking }) {
@@ -86,12 +86,12 @@ function BookingCard({ b }: { b: Booking }) {
           </div>
           <div className="flex justify-between">
             <span className="text-tat-charcoal/60">Deposit Paid</span>
-            <span className="font-semibold text-green-600">₹{b.deposit_amount.toLocaleString("en-IN")}</span>
+            <span className="font-semibold text-tat-success-fg">₹{b.deposit_amount.toLocaleString("en-IN")}</span>
           </div>
           {remaining > 0 && b.status !== "cancelled" && b.status !== "refunded" && (
             <div className="flex justify-between pt-2 border-t border-tat-charcoal/10">
               <span className="text-tat-charcoal/60">Balance Due</span>
-              <span className="font-semibold text-amber-600">₹{remaining.toLocaleString("en-IN")}</span>
+              <span className="font-semibold text-tat-warning-fg">₹{remaining.toLocaleString("en-IN")}</span>
             </div>
           )}
         </div>
@@ -168,7 +168,7 @@ function MyBookingInner() {
                 key={m}
                 type="button"
                 onClick={() => { setMode(m); setInput(""); setBookings([]); setError(""); }}
-                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${mode === m ? "bg-tat-charcoal text-tat-paper" : "bg-gray-100 text-tat-charcoal/60 hover:bg-gray-200"}`}
+                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${mode === m ? "bg-tat-charcoal text-tat-paper" : "bg-tat-charcoal/5 text-tat-charcoal/60 hover:bg-tat-charcoal/10"}`}
               >
                 {m === "id" ? "Booking ID" : "Phone Number"}
               </button>
@@ -198,7 +198,7 @@ function MyBookingInner() {
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-xl mb-5 flex items-center gap-2">
+          <div className="bg-tat-danger-bg border border-tat-danger-fg/25 text-tat-danger-fg text-sm px-4 py-3 rounded-xl mb-5 flex items-center gap-2">
             <XCircle className="h-4 w-4 shrink-0" />
             {error}
           </div>

@@ -34,9 +34,9 @@ interface Payout {
 }
 
 const STATUS_CFG: Record<Earning["status"], { label: string; cls: string; icon: typeof Clock }> = {
-  pending:  { label: "Pending", cls: "text-amber-700 bg-amber-50 border-amber-100", icon: Clock },
-  payable:  { label: "Payable", cls: "text-blue-700 bg-blue-50 border-blue-100", icon: ArrowDownToLine },
-  paid:     { label: "Paid",    cls: "text-emerald-700 bg-emerald-50 border-emerald-100", icon: CheckCircle2 },
+  pending:  { label: "Pending", cls: "text-tat-warning-fg bg-tat-warning-bg border-tat-warning-fg/15", icon: Clock },
+  payable:  { label: "Payable", cls: "text-tat-info-fg bg-tat-info-bg border-tat-info-fg/15", icon: ArrowDownToLine },
+  paid:     { label: "Paid",    cls: "text-tat-success-fg bg-tat-success-bg border-tat-success-fg/15", icon: CheckCircle2 },
   reversed: { label: "Reversed", cls: "text-tat-charcoal/55 bg-tat-charcoal/5 border-tat-charcoal/10", icon: XCircle },
 };
 
@@ -153,9 +153,9 @@ export default function CreatorEarningsPage() {
                   </p>
                 </div>
                 <span className={`inline-flex items-center text-[10px] font-medium px-2.5 py-1 rounded-full border ${
-                  p.status === "paid" ? "text-emerald-700 bg-emerald-50 border-emerald-100"
-                  : p.status === "failed" ? "text-red-700 bg-red-50 border-red-100"
-                  : "text-amber-700 bg-amber-50 border-amber-100"
+                  p.status === "paid" ? "text-tat-success-fg bg-tat-success-bg border-tat-success-fg/15"
+                  : p.status === "failed" ? "text-tat-danger-fg bg-tat-danger-bg border-tat-danger-fg/15"
+                  : "text-tat-warning-fg bg-tat-warning-bg border-tat-warning-fg/15"
                 }`}>
                   {p.status}
                 </span>
@@ -172,7 +172,7 @@ function Card({ label, value, icon: Icon, accent, good }: {
   label: string; value: string; icon: typeof Clock; accent?: boolean; good?: boolean;
 }) {
   return (
-    <div className={`rounded-2xl border p-4 ${accent ? "bg-tat-gold/10 border-tat-gold/25" : good ? "bg-emerald-50/60 border-emerald-100" : "bg-white border-tat-charcoal/8"}`}>
+    <div className={`rounded-2xl border p-4 ${accent ? "bg-tat-gold/10 border-tat-gold/25" : good ? "bg-tat-success-bg/60 border-tat-success-fg/15" : "bg-white border-tat-charcoal/8"}`}>
       <div className="flex items-center gap-2 mb-2">
         <Icon className={`h-4 w-4 ${accent ? "text-tat-gold" : good ? "text-tat-teal" : "text-tat-charcoal/45"}`} />
         <p className="text-[10px] uppercase tracking-widest text-tat-charcoal/55">{label}</p>

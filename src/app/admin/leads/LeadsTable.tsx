@@ -29,11 +29,11 @@ type SortKey = "created_at" | "name" | "status";
 type SortDir = "asc" | "desc";
 
 const STATUS_COLORS: Record<string, string> = {
-  new:       "bg-yellow-100 text-yellow-800",
-  contacted: "bg-blue-100 text-blue-800",
-  qualified: "bg-purple-100 text-purple-800",
-  booked:    "bg-green-100 text-green-800",
-  lost:      "bg-gray-100 text-tat-slate",
+  new:       "bg-tat-warning-bg text-tat-warning-fg",
+  contacted: "bg-tat-info-bg text-tat-info-fg",
+  qualified: "bg-tat-cream-warm/40 text-tat-charcoal",
+  booked:    "bg-tat-success-bg text-tat-success-fg",
+  lost:      "bg-tat-charcoal/5 text-tat-slate",
 };
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -127,35 +127,35 @@ export default function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
   return (
     <>
       {/* Toolbar */}
-      <div className="px-5 py-4 border-b border-gray-100 flex flex-wrap gap-3 items-center">
+      <div className="px-5 py-4 border-b border-tat-charcoal/8 flex flex-wrap gap-3 items-center">
         <input
           type="text" placeholder="Search name, phone, email…" value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-blue-200"
+          className="border border-tat-charcoal/12 rounded-lg px-3 py-1.5 text-sm flex-1 min-w-[180px] focus:outline-none focus:ring-2 focus:ring-tat-teal/30"
         />
         <div className="flex gap-1.5 flex-wrap">
           {["all", ...STATUSES].map((s) => (
             <button key={s} onClick={() => setFilter(s)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-                filter === s ? "bg-gray-900 text-white" : "bg-gray-100 text-tat-slate hover:bg-gray-200"
+                filter === s ? "bg-tat-charcoal text-white" : "bg-tat-charcoal/5 text-tat-slate hover:bg-tat-charcoal/10"
               }`}
             >{s}</button>
           ))}
         </div>
-        <button onClick={exportCSV} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 ml-auto">
+        <button onClick={exportCSV} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-tat-info-bg text-tat-info-fg hover:bg-tat-info-bg ml-auto">
           <Download className="h-3.5 w-3.5" /> Export CSV
         </button>
-        <span className="text-xs text-gray-400">{filtered.length} leads</span>
+        <span className="text-xs text-tat-slate/70">{filtered.length} leads</span>
       </div>
 
       {/* Bulk action bar */}
       {selected.size > 0 && (
-        <div className="px-5 py-3 bg-blue-50 border-b border-blue-100 flex items-center gap-3 flex-wrap">
-          <span className="text-sm font-medium text-blue-800">{selected.size} selected</span>
+        <div className="px-5 py-3 bg-tat-info-bg border-b border-tat-info-fg/15 flex items-center gap-3 flex-wrap">
+          <span className="text-sm font-medium text-tat-info-fg">{selected.size} selected</span>
           <select
             value={bulkStatus}
             onChange={(e) => setBulkStatus(e.target.value)}
-            className="text-xs border border-blue-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="text-xs border border-tat-info-fg/25 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-tat-teal/40"
           >
             <option value="">Change status to…</option>
             {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -168,7 +168,7 @@ export default function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
             {bulkUpdating && <Loader2 className="h-3 w-3 animate-spin" />}
             Apply
           </button>
-          <button onClick={() => setSelected(new Set())} className="text-xs text-blue-600 hover:underline ml-1">
+          <button onClick={() => setSelected(new Set())} className="text-xs text-tat-info-fg hover:underline ml-1">
             Deselect all
           </button>
         </div>
@@ -177,11 +177,11 @@ export default function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-xs text-tat-slate uppercase tracking-wide">
+          <thead className="bg-tat-paper text-xs text-tat-slate uppercase tracking-wide">
             <tr>
               <th className="pl-5 py-3 w-8">
                 <button onClick={toggleAll}>
-                  {allSelected ? <CheckSquare className="h-4 w-4 text-blue-600" /> : <Square className="h-4 w-4 text-gray-400" />}
+                  {allSelected ? <CheckSquare className="h-4 w-4 text-tat-info-fg" /> : <Square className="h-4 w-4 text-tat-slate/70" />}
                 </button>
               </th>
               <th className="px-5 py-3 text-left">
@@ -206,7 +206,7 @@ export default function LeadsTable({ leads: initialLeads }: { leads: Lead[] }) {
           </thead>
           <tbody className="divide-y divide-gray-50">
             {filtered.length === 0 ? (
-              <tr><td colSpan={7} className="px-5 py-12 text-center text-gray-400">No leads found</td></tr>
+              <tr><td colSpan={7} className="px-5 py-12 text-center text-tat-slate/70">No leads found</td></tr>
             ) : (
               filtered.map((lead) => (
                 <LeadRow
@@ -247,10 +247,10 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
   const waMsg = encodeURIComponent(`Hi ${lead.name}! 🙏\n\nThank you for your enquiry with Trust and Trip.${lead.package_title ? `\n\nWe noticed you were interested in *${lead.package_title}*.` : ""}\n\nWe'd love to help you plan your trip. When would be a good time to connect?`);
 
   return (
-    <tr className={`hover:bg-gray-50 transition-colors ${selected ? "bg-blue-50/40" : ""}`}>
+    <tr className={`hover:bg-tat-paper transition-colors ${selected ? "bg-tat-info-bg/40" : ""}`}>
       <td className="pl-5 py-4 w-8">
         <button onClick={onToggle}>
-          {selected ? <CheckSquare className="h-4 w-4 text-blue-600" /> : <Square className="h-4 w-4 text-gray-300 hover:text-tat-slate" />}
+          {selected ? <CheckSquare className="h-4 w-4 text-tat-info-fg" /> : <Square className="h-4 w-4 text-tat-slate/50 hover:text-tat-slate" />}
         </button>
       </td>
       <td className="px-5 py-4">
@@ -262,10 +262,10 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
               className={
                 "inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-semibold " +
                 (lead.tier === "A"
-                  ? "bg-emerald-100 text-emerald-700 ring-1 ring-emerald-300"
+                  ? "bg-tat-success-bg text-tat-success-fg ring-1 ring-tat-success-fg/30"
                   : lead.tier === "B"
-                  ? "bg-amber-100 text-amber-700"
-                  : "bg-gray-100 text-tat-slate")
+                  ? "bg-tat-warning-bg text-tat-warning-fg"
+                  : "bg-tat-charcoal/5 text-tat-slate")
               }
             >
               {lead.tier}
@@ -275,11 +275,11 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
             <span className="text-[10px] text-tat-slate tabular-nums">{lead.score}</span>
           )}
         </div>
-        <a href={`tel:${lead.phone}`} className="text-xs text-tat-slate hover:text-blue-600 flex items-center gap-1 mt-0.5">
+        <a href={`tel:${lead.phone}`} className="text-xs text-tat-slate hover:text-tat-info-fg flex items-center gap-1 mt-0.5">
           <Phone className="h-3 w-3" />{lead.phone}
         </a>
         {lead.email && (
-          <a href={`mailto:${lead.email}`} className="text-xs text-gray-400 hover:text-blue-600 flex items-center gap-1 mt-0.5">
+          <a href={`mailto:${lead.email}`} className="text-xs text-tat-slate/70 hover:text-tat-info-fg flex items-center gap-1 mt-0.5">
             <Mail className="h-3 w-3" />{lead.email}
           </a>
         )}
@@ -288,27 +288,27 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
         {lead.package_title && <p className="text-xs font-medium text-tat-charcoal truncate max-w-[180px]">{lead.package_title}</p>}
         {lead.destination && <p className="text-xs text-tat-slate mt-0.5">{lead.destination}</p>}
         <div className="flex gap-1.5 mt-1 flex-wrap">
-          {lead.travel_type && <span className="text-[10px] bg-gray-100 text-tat-slate px-1.5 py-0.5 rounded">{lead.travel_type}</span>}
-          {lead.num_travellers && <span className="text-[10px] bg-gray-100 text-tat-slate px-1.5 py-0.5 rounded">{lead.num_travellers} pax</span>}
-          {lead.budget && <span className="text-[10px] bg-gray-100 text-tat-slate px-1.5 py-0.5 rounded">{lead.budget}</span>}
-          {lead.travel_date && <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">{lead.travel_date}</span>}
+          {lead.travel_type && <span className="text-[10px] bg-tat-charcoal/5 text-tat-slate px-1.5 py-0.5 rounded">{lead.travel_type}</span>}
+          {lead.num_travellers && <span className="text-[10px] bg-tat-charcoal/5 text-tat-slate px-1.5 py-0.5 rounded">{lead.num_travellers} pax</span>}
+          {lead.budget && <span className="text-[10px] bg-tat-charcoal/5 text-tat-slate px-1.5 py-0.5 rounded">{lead.budget}</span>}
+          {lead.travel_date && <span className="text-[10px] bg-tat-info-bg text-tat-info-fg px-1.5 py-0.5 rounded">{lead.travel_date}</span>}
         </div>
-        {lead.message && <p className="text-[11px] text-gray-400 mt-1 truncate max-w-[180px]" title={lead.message}>{lead.message}</p>}
+        {lead.message && <p className="text-[11px] text-tat-slate/70 mt-1 truncate max-w-[180px]" title={lead.message}>{lead.message}</p>}
       </td>
       <td className="px-5 py-4">
-        <span className="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-medium">
+        <span className="text-xs bg-tat-gold/10 text-tat-charcoal px-2 py-0.5 rounded-full font-medium">
           {SOURCE_LABELS[lead.source] ?? lead.source}
         </span>
-        {lead.utm_source && <p className="text-[10px] text-gray-400 mt-1">{lead.utm_source}</p>}
+        {lead.utm_source && <p className="text-[10px] text-tat-slate/70 mt-1">{lead.utm_source}</p>}
       </td>
       <td className="px-5 py-4">
         <select
           value={status} onChange={(e) => updateStatus(e.target.value)} disabled={updating}
-          className={`text-xs px-2 py-1 rounded-full font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-300 ${STATUS_COLORS[status] ?? "bg-gray-100 text-tat-slate"}`}
+          className={`text-xs px-2 py-1 rounded-full font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-tat-charcoal/20 ${STATUS_COLORS[status] ?? "bg-tat-charcoal/5 text-tat-slate"}`}
         >
           {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
-        {updating && <Loader2 className="h-3 w-3 animate-spin inline ml-1 text-gray-400" />}
+        {updating && <Loader2 className="h-3 w-3 animate-spin inline ml-1 text-tat-slate/70" />}
         <PlannerCell leadId={lead.id} initial={lead.assigned_planner ?? null} />
       </td>
       <td className="px-5 py-4 text-xs text-tat-slate whitespace-nowrap">
@@ -323,13 +323,13 @@ function LeadRow({ lead, selected, onToggle, onStatusChange }: {
             <MessageCircle className="h-4 w-4 text-[#25D366]" />
           </a>
           <a href={`tel:${lead.phone}`} title="Call"
-            className="h-8 w-8 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center transition-colors">
-            <Phone className="h-4 w-4 text-blue-600" />
+            className="h-8 w-8 rounded-lg bg-tat-info-bg hover:bg-tat-info-bg flex items-center justify-center transition-colors">
+            <Phone className="h-4 w-4 text-tat-info-fg" />
           </a>
           {lead.page_url && (
             <a href={lead.page_url} target="_blank" rel="noopener noreferrer" title="View page"
-              className="h-8 w-8 rounded-lg bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition-colors">
-              <ExternalLink className="h-4 w-4 text-gray-400" />
+              className="h-8 w-8 rounded-lg bg-tat-paper hover:bg-tat-charcoal/5 flex items-center justify-center transition-colors">
+              <ExternalLink className="h-4 w-4 text-tat-slate/70" />
             </a>
           )}
         </div>
@@ -386,10 +386,10 @@ function PlannerCell({
         }}
         placeholder="planner"
         disabled={busy}
-        className="text-[11px] px-2 py-0.5 rounded border border-gray-200 w-20 outline-none focus:border-tat-orange/40 disabled:opacity-60"
+        className="text-[11px] px-2 py-0.5 rounded border border-tat-charcoal/12 w-20 outline-none focus:border-tat-orange/40 disabled:opacity-60"
       />
-      {busy && <Loader2 className="h-3 w-3 animate-spin text-gray-400" />}
-      {error && <span className="text-[10px] text-rose-600" title={error}>!</span>}
+      {busy && <Loader2 className="h-3 w-3 animate-spin text-tat-slate/70" />}
+      {error && <span className="text-[10px] text-tat-danger-fg" title={error}>!</span>}
     </div>
   );
 }

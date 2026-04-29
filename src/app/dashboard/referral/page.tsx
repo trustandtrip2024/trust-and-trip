@@ -88,7 +88,7 @@ export default function ReferralDashboardPage() {
           <p className="text-sm text-tat-charcoal/50 mb-6 leading-relaxed">
             Share with friends. You earn ₹500 for every friend who books with Trust and Trip.
           </p>
-          {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
+          {error && <p className="text-xs text-tat-danger-fg mb-3">{error}</p>}
           <button
             onClick={generate}
             disabled={generating}
@@ -103,9 +103,9 @@ export default function ReferralDashboardPage() {
           {/* Stats */}
           <div className="grid grid-cols-3 gap-3">
             {[
-              { label: "Link Clicks", value: referral.clicks, icon: TrendingUp, color: "bg-blue-50 text-blue-600" },
-              { label: "Conversions", value: referral.conversions, icon: Users, color: "bg-green-50 text-green-600" },
-              { label: "Earned", value: `₹${(referral.conversions * referral.reward_amount).toLocaleString("en-IN")}`, icon: IndianRupee, color: "bg-tat-gold/10 text-amber-700" },
+              { label: "Link Clicks", value: referral.clicks, icon: TrendingUp, color: "bg-tat-info-bg text-tat-info-fg" },
+              { label: "Conversions", value: referral.conversions, icon: Users, color: "bg-tat-success-bg text-tat-success-fg" },
+              { label: "Earned", value: `₹${(referral.conversions * referral.reward_amount).toLocaleString("en-IN")}`, icon: IndianRupee, color: "bg-tat-gold/10 text-tat-warning-fg" },
             ].map(({ label, value, icon: Icon, color }) => (
               <div key={label} className="bg-white rounded-2xl border border-tat-charcoal/8 p-4 text-center">
                 <div className={`h-9 w-9 rounded-xl ${color} flex items-center justify-center mx-auto mb-2`}>

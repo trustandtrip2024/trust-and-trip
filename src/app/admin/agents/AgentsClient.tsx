@@ -125,7 +125,7 @@ function ItineraryTester() {
         <button type="submit" disabled={busy} className={btnCls}>
           {busy ? <><Loader2 className="h-4 w-4 animate-spin" /> Running…</> : <><Sparkles className="h-4 w-4" /> Run engine</>}
         </button>
-        {error && <p className="text-meta text-red-600">{error}</p>}
+        {error && <p className="text-meta text-tat-danger-fg">{error}</p>}
       </form>
 
       <div className="lg:col-span-3 space-y-4">
@@ -201,7 +201,7 @@ function IntentTester() {
         <button type="submit" disabled={busy} className={btnCls}>
           {busy ? <><Loader2 className="h-4 w-4 animate-spin" /> Parsing…</> : <><MessageSquare className="h-4 w-4" /> Parse intent</>}
         </button>
-        {error && <p className="text-meta text-red-600">{error}</p>}
+        {error && <p className="text-meta text-tat-danger-fg">{error}</p>}
         <details className="text-meta text-tat-slate">
           <summary className="cursor-pointer hover:text-tat-charcoal">Examples</summary>
           <ul className="mt-2 space-y-2">
@@ -273,7 +273,7 @@ function JsonOutput({ data }: { data: unknown }) {
           }}
           className="inline-flex items-center gap-1.5 text-meta text-tat-slate hover:text-tat-charcoal"
         >
-          {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+          {copied ? <Check className="h-3.5 w-3.5 text-tat-success-fg" /> : <Copy className="h-3.5 w-3.5" />}
           Copy
         </button>
       </div>

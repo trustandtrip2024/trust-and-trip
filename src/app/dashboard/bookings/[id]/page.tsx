@@ -38,11 +38,11 @@ const STATUS_STEPS = [
 ] as const;
 
 const STATUS_MAP: Record<Booking["status"], { label: string; badge: string; icon: typeof CheckCircle2 }> = {
-  created: { label: "Pending Payment", badge: "text-amber-600 bg-amber-50 border-amber-100", icon: AlertCircle },
-  paid: { label: "Payment Received", badge: "text-blue-600 bg-blue-50 border-blue-100", icon: Clock },
-  verified: { label: "Confirmed", badge: "text-green-600 bg-green-50 border-green-100", icon: CheckCircle2 },
+  created: { label: "Pending Payment", badge: "text-tat-warning-fg bg-tat-warning-bg border-tat-warning-fg/15", icon: AlertCircle },
+  paid: { label: "Payment Received", badge: "text-tat-info-fg bg-tat-info-bg border-tat-info-fg/15", icon: Clock },
+  verified: { label: "Confirmed", badge: "text-tat-success-fg bg-tat-success-bg border-tat-success-fg/15", icon: CheckCircle2 },
   refunded: { label: "Refunded", badge: "text-tat-charcoal/60 bg-tat-charcoal/5 border-tat-charcoal/10", icon: XCircle },
-  cancelled: { label: "Cancelled", badge: "text-red-600 bg-red-50 border-red-100", icon: XCircle },
+  cancelled: { label: "Cancelled", badge: "text-tat-danger-fg bg-tat-danger-bg border-tat-danger-fg/15", icon: XCircle },
 };
 
 export default function BookingDetailPage({ params }: { params: { id: string } }) {
@@ -91,7 +91,7 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
         <Link href="/dashboard/bookings" className="inline-flex items-center gap-1.5 text-sm text-tat-charcoal/55 hover:text-tat-charcoal mb-6">
           <ArrowLeft className="h-3.5 w-3.5" /> Back to bookings
         </Link>
-        <div className="bg-white rounded-2xl border border-red-100 p-8 text-center">
+        <div className="bg-white rounded-2xl border border-tat-danger-fg/15 p-8 text-center">
           <p className="font-medium text-tat-charcoal">{error || "Booking not found"}</p>
         </div>
       </div>
@@ -219,7 +219,7 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-tat-charcoal/60">Deposit paid</span>
-                <span className="text-sm font-medium text-green-700">₹{booking.deposit_amount.toLocaleString("en-IN")}</span>
+                <span className="text-sm font-medium text-tat-success-fg">₹{booking.deposit_amount.toLocaleString("en-IN")}</span>
               </div>
               <div className="flex items-center justify-between border-t border-tat-charcoal/8 pt-3">
                 <span className="text-sm font-semibold text-tat-charcoal">Balance due</span>

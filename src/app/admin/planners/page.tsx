@@ -75,8 +75,8 @@ export default async function PlannersPage({
       .limit(5000),
   ]);
 
-  if (leadsRes.error) return <main className="p-8 text-red-600">Leads error: {leadsRes.error.message}</main>;
-  if (bookingsRes.error) return <main className="p-8 text-red-600">Bookings error: {bookingsRes.error.message}</main>;
+  if (leadsRes.error) return <main className="p-8 text-tat-danger-fg">Leads error: {leadsRes.error.message}</main>;
+  if (bookingsRes.error) return <main className="p-8 text-tat-danger-fg">Bookings error: {bookingsRes.error.message}</main>;
 
   const leads = (leadsRes.data ?? []) as LeadRow[];
   const bookings = (bookingsRes.data ?? []) as BookingRow[];
@@ -178,7 +178,7 @@ export default async function PlannersPage({
 
       {/* Action banner */}
       {unassignedCount && unassignedCount > 0 && (
-        <div className="mt-6 rounded-card border border-amber-300/60 bg-amber-50/60 p-4">
+        <div className="mt-6 rounded-card border border-tat-warning-fg/30 bg-tat-warning-bg p-4">
           <p className="text-tat-charcoal">
             <strong>{unassignedCount}</strong> new leads in this window have <em>no planner assigned</em>.
             Open <a href="/admin/leads" className="underline hover:text-tat-orange">/admin/leads</a> to
@@ -212,7 +212,7 @@ export default async function PlannersPage({
                 <tr key={r.planner}>
                   <td className="px-3 py-2.5 font-medium text-tat-charcoal">{r.planner}</td>
                   <td className="px-3 py-2.5 text-right tabular-nums">{r.leads}</td>
-                  <td className="px-3 py-2.5 text-right text-emerald-700 tabular-nums">{r.tierA}</td>
+                  <td className="px-3 py-2.5 text-right text-tat-success-fg tabular-nums">{r.tierA}</td>
                   <td className="px-3 py-2.5 text-right tabular-nums">{r.contacted}</td>
                   <td className="px-3 py-2.5 text-right tabular-nums">{r.qualified}</td>
                   <td className="px-3 py-2.5 text-right text-violet-700 tabular-nums">{r.bookedLeads}</td>

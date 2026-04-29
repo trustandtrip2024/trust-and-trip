@@ -100,7 +100,7 @@ export default function ProfilePage() {
                 Save Changes
               </button>
               {profileOk && (
-                <span className="flex items-center gap-1.5 text-sm text-green-600">
+                <span className="flex items-center gap-1.5 text-sm text-tat-success-fg">
                   <CheckCircle2 className="h-4 w-4" /> Saved
                 </span>
               )}
@@ -111,8 +111,8 @@ export default function ProfilePage() {
         {/* Change password */}
         <div className="bg-white rounded-2xl border border-tat-charcoal/8 p-5 md:p-6">
           <div className="flex items-center gap-2 mb-5">
-            <div className="h-8 w-8 rounded-xl bg-blue-50 flex items-center justify-center">
-              <Lock className="h-4 w-4 text-blue-600" />
+            <div className="h-8 w-8 rounded-xl bg-tat-info-bg flex items-center justify-center">
+              <Lock className="h-4 w-4 text-tat-info-fg" />
             </div>
             <p className="text-sm font-semibold text-tat-charcoal">Change Password</p>
           </div>
@@ -129,7 +129,7 @@ export default function ProfilePage() {
                 className="w-full px-4 py-2.5 rounded-xl border border-tat-charcoal/15 bg-tat-paper text-sm text-tat-charcoal placeholder-tat-charcoal/35 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 focus:border-tat-gold transition"
               />
             </div>
-            {pwError && <p className="text-xs text-red-500">{pwError}</p>}
+            {pwError && <p className="text-xs text-tat-danger-fg">{pwError}</p>}
             <div className="flex items-center gap-3">
               <button
                 type="submit"
@@ -140,7 +140,7 @@ export default function ProfilePage() {
                 Update Password
               </button>
               {pwOk && (
-                <span className="flex items-center gap-1.5 text-sm text-green-600">
+                <span className="flex items-center gap-1.5 text-sm text-tat-success-fg">
                   <CheckCircle2 className="h-4 w-4" /> Updated
                 </span>
               )}
@@ -149,10 +149,10 @@ export default function ProfilePage() {
         </div>
 
         {/* Danger zone */}
-        <div className="bg-white rounded-2xl border border-red-100 p-5 md:p-6">
+        <div className="bg-white rounded-2xl border border-tat-danger-fg/15 p-5 md:p-6">
           <div className="flex items-center gap-2 mb-3">
-            <div className="h-8 w-8 rounded-xl bg-red-50 flex items-center justify-center">
-              <Trash2 className="h-4 w-4 text-red-500" />
+            <div className="h-8 w-8 rounded-xl bg-tat-danger-bg flex items-center justify-center">
+              <Trash2 className="h-4 w-4 text-tat-danger-fg" />
             </div>
             <p className="text-sm font-semibold text-tat-charcoal">Danger Zone</p>
           </div>

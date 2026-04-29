@@ -185,7 +185,7 @@ export default function CreativesClient() {
         </label>
 
         {error && (
-          <p className="text-meta text-red-600 bg-red-50 border border-red-200 rounded p-2.5">
+          <p className="text-meta text-tat-danger-fg bg-tat-danger-bg border border-tat-danger-fg/25 rounded p-2.5">
             {error}
           </p>
         )}
@@ -240,7 +240,7 @@ export default function CreativesClient() {
         {creative && (
           <div className="space-y-5">
             {cached && (
-              <p className="text-meta text-amber-700 bg-amber-50 border border-amber-200 rounded p-2.5">
+              <p className="text-meta text-tat-warning-fg bg-tat-warning-bg border border-tat-warning-fg/25 rounded p-2.5">
                 Returned from 24h cache. Tick "Force refresh" or click Regenerate for new variants.
               </p>
             )}
@@ -326,7 +326,7 @@ function CopyButton({ value }: { value: string }) {
       className="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-full text-tat-slate hover:bg-tat-charcoal/8 hover:text-tat-charcoal"
       title="Copy"
     >
-      {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+      {copied ? <Check className="h-3.5 w-3.5 text-tat-success-fg" /> : <Copy className="h-3.5 w-3.5" />}
     </button>
   );
 }

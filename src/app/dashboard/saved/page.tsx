@@ -101,7 +101,7 @@ export default function SavedTripsPage() {
                 <button
                   onClick={() => removeTrip(trip.id)}
                   disabled={removing === trip.id}
-                  className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover:bg-red-50 hover:text-red-500 text-tat-charcoal/50 transition-all"
+                  className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover:bg-tat-danger-bg hover:text-tat-danger-fg text-tat-charcoal/50 transition-all"
                 >
                   {removing === trip.id ? (
                     <Loader2 className="h-3.5 w-3.5 animate-spin" />

@@ -51,7 +51,7 @@ export default async function BookingsPage() {
   const fmt = (n: number) => "₹" + n.toLocaleString("en-IN");
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-tat-paper">
       <div className="max-w-7xl mx-auto px-4 py-10">
         <header className="mb-8">
           <h1 className="text-2xl font-semibold text-tat-charcoal">Bookings</h1>
@@ -66,7 +66,7 @@ export default async function BookingsPage() {
           <Stat label="Refunded ₹" value={fmt(stats.refunded)} />
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-tat-charcoal/12 overflow-hidden">
           <BookingsTable bookings={bookings} />
         </div>
       </div>
@@ -84,12 +84,12 @@ function Stat({
   color?: "green" | "yellow" | "amber";
 }) {
   const map: Record<string, string> = {
-    green:  "bg-green-50 text-green-700 border-green-100",
-    yellow: "bg-yellow-50 text-yellow-700 border-yellow-100",
-    amber:  "bg-amber-50 text-amber-700 border-amber-100",
+    green:  "bg-tat-success-bg text-tat-success-fg border-tat-success-fg/15",
+    yellow: "bg-tat-warning-bg text-tat-warning-fg border-tat-warning-fg/15",
+    amber:  "bg-tat-warning-bg text-tat-warning-fg border-tat-warning-fg/15",
   };
   return (
-    <div className={`rounded-xl border p-4 ${map[color ?? ""] ?? "bg-blue-50 text-blue-700 border-blue-100"}`}>
+    <div className={`rounded-xl border p-4 ${map[color ?? ""] ?? "bg-tat-info-bg text-tat-info-fg border-tat-info-fg/15"}`}>
       <p className="text-xs font-medium opacity-70">{label}</p>
       <p className="text-2xl font-semibold mt-1">{value}</p>
     </div>

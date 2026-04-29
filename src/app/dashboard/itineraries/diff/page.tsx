@@ -67,7 +67,7 @@ export default function DiffPage() {
       </main>
     );
   }
-  if (error) return <main className="p-8 text-red-600">{error}</main>;
+  if (error) return <main className="p-8 text-tat-danger-fg">{error}</main>;
 
   return (
     <main className="container-custom py-10 max-w-7xl">
@@ -171,7 +171,7 @@ function Column({ label, row, other }: { label: string; row: Row; other: Row }) 
 function Stat({ label, value, other }: { label: string; value: string; other: string }) {
   const changed = value !== other;
   return (
-    <div className={changed ? "rounded p-2 bg-amber-50/70 border border-amber-200" : ""}>
+    <div className={changed ? "rounded p-2 bg-tat-warning-bg border border-tat-warning-fg/25" : ""}>
       <dt className="text-tag uppercase text-tat-slate">{label}</dt>
       <dd className="text-tat-charcoal">{value}</dd>
     </div>
@@ -194,7 +194,7 @@ function DiffLine({
     <p
       className={`text-meta leading-relaxed ${
         muted ? "text-tat-slate" : "text-tat-charcoal/85"
-      } ${changed ? "bg-amber-50/70 px-2 py-1 rounded mt-1" : ""}`}
+      } ${changed ? "bg-tat-warning-bg px-2 py-1 rounded mt-1" : ""}`}
     >
       <strong className={muted ? "text-tat-charcoal" : ""}>{label}. </strong>
       {a}

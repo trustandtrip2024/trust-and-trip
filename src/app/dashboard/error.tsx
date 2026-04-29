@@ -17,9 +17,9 @@ export default function DashboardError({
 
   return (
     <div className="min-h-screen bg-tat-paper flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl border border-red-100 p-6 md:p-8 shadow-soft">
-        <div className="h-12 w-12 rounded-2xl bg-red-50 flex items-center justify-center mb-4">
-          <AlertTriangle className="h-6 w-6 text-red-500" />
+      <div className="max-w-md w-full bg-white rounded-2xl border border-tat-danger-fg/15 p-6 md:p-8 shadow-soft">
+        <div className="h-12 w-12 rounded-2xl bg-tat-danger-bg flex items-center justify-center mb-4">
+          <AlertTriangle className="h-6 w-6 text-tat-danger-fg" />
         </div>
         <h1 className="font-display text-xl md:text-2xl font-medium text-tat-charcoal mb-2">
           Dashboard couldn&apos;t load
@@ -29,11 +29,11 @@ export default function DashboardError({
         </p>
 
         {error.message && (
-          <div className="mb-5 p-3 rounded-xl bg-red-50/60 border border-red-100">
-            <p className="text-[11px] uppercase tracking-wider text-red-500/70 font-medium mb-1">
+          <div className="mb-5 p-3 rounded-xl bg-tat-danger-bg border border-tat-danger-fg/15">
+            <p className="text-[11px] uppercase tracking-wider text-tat-danger-fg/70 font-medium mb-1">
               Error details
             </p>
-            <p className="text-xs text-red-700 font-mono break-words leading-relaxed">
+            <p className="text-xs text-tat-danger-fg font-mono break-words leading-relaxed">
               {error.message}
             </p>
           </div>
