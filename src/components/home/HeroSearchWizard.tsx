@@ -342,7 +342,7 @@ function Wizard({ state, setState, step, setStep, onSubmit, variant = "hero" }: 
           type="button"
           onClick={handleNext}
           disabled={!canNext}
-          className="inline-flex items-center justify-center gap-2 h-12 px-5 min-w-[160px] rounded-pill font-semibold text-white bg-tat-burnt hover:bg-tat-burnt/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center justify-center gap-2 h-12 px-5 min-w-[160px] rounded-pill font-semibold text-white bg-tat-teal hover:bg-tat-teal-deep transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLast ? "Show trips" : "Next"}
           <ArrowRight className="h-4 w-4" />
@@ -423,7 +423,7 @@ export default function HeroSearchWizard({
         <h1
           className="mt-4 font-display font-normal text-[40px] leading-[1.04] md:text-display text-white text-balance [text-shadow:0_2px_24px_rgba(0,0,0,0.55)]"
         >
-          {titleStart} <em className="not-italic font-display italic text-tat-burnt">{titleItalic}</em>
+          {titleStart} <em className="not-italic font-display italic text-tat-gold">{titleItalic}</em>
         </h1>
         <p className="mt-4 text-base md:text-lead text-white/85 max-w-2xl mx-auto text-balance [text-shadow:0_1px_12px_rgba(0,0,0,0.55)]">{lede}</p>
 
@@ -663,7 +663,7 @@ function HeroQuickSearch({ destinations }: QuickSearchProps) {
           type="button"
           onClick={submit}
           disabled={!q && matches.length === 0}
-          className="hidden sm:inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-pill bg-tat-burnt text-white text-sm font-semibold hover:bg-tat-burnt/90 transition disabled:opacity-50"
+          className="hidden sm:inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-pill bg-tat-teal text-white text-sm font-semibold hover:bg-tat-teal-deep transition disabled:opacity-50"
         >
           Find trips
           <ArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -673,7 +673,7 @@ function HeroQuickSearch({ destinations }: QuickSearchProps) {
           onClick={submit}
           aria-label="Find trips"
           disabled={!q && matches.length === 0}
-          className="sm:hidden grid place-items-center h-10 w-10 rounded-pill bg-tat-burnt text-white disabled:opacity-50"
+          className="sm:hidden grid place-items-center h-10 w-10 rounded-pill bg-tat-teal text-white disabled:opacity-50"
         >
           <ArrowRight className="h-4 w-4" aria-hidden />
         </button>
@@ -703,7 +703,7 @@ function HeroQuickSearch({ destinations }: QuickSearchProps) {
                     : "text-tat-charcoal/85 hover:bg-tat-charcoal/5"
                 }`}
               >
-                <MapPin className="h-3.5 w-3.5 text-tat-burnt" aria-hidden />
+                <MapPin className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
                 <span className="flex-1 text-left">{d.name}</span>
                 {d.country && d.country !== d.name && (
                   <span className="text-[11px] text-tat-charcoal/45">{d.country}</span>

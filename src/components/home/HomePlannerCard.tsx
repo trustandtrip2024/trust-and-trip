@@ -58,7 +58,7 @@ export default function HomePlannerCard({
 
             {/* Text */}
             <div className="p-5 md:p-7 flex flex-col justify-center">
-              <p className="text-eyebrow uppercase font-semibold text-tat-burnt dark:text-tat-gold">
+              <p className="text-eyebrow uppercase font-semibold text-tat-gold dark:text-tat-gold">
                 Meet your planner
               </p>
               <h2
@@ -84,7 +84,7 @@ export default function HomePlannerCard({
                 </Link>
                 <a
                   href={PHONE_HREF}
-                  className="inline-flex items-center gap-2 text-body-sm font-semibold text-tat-charcoal dark:text-tat-paper hover:text-tat-burnt dark:hover:text-tat-gold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
+                  className="inline-flex items-center gap-2 text-body-sm font-semibold text-tat-charcoal dark:text-tat-paper hover:text-tat-gold dark:hover:text-tat-gold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
                 >
                   <Phone className="h-4 w-4" />
                   Call +91 8115 999 588

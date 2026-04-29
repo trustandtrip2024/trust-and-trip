@@ -180,7 +180,7 @@ export default function PressPartnersBand({
           <p className="tt-eyebrow">Corporate &amp; institutional travel</p>
           <h3 className="mt-2 font-display text-2xl md:text-3xl font-medium text-tat-charcoal dark:text-tat-paper text-balance">
             AGMs, faculty retreats, school tours —{" "}
-            <em className="not-italic font-display italic text-tat-burnt dark:text-tat-gold">
+            <em className="not-italic font-display italic text-tat-gold dark:text-tat-gold">
               curated by us.
             </em>
           </h3>
@@ -210,7 +210,7 @@ export default function PressPartnersBand({
 
         <p className="mt-6 text-center text-[12px] text-tat-charcoal/45 dark:text-tat-paper/55 italic px-4">
           Logos belong to their respective owners. Group references available
-          on request — <Link href="/contact" className="underline underline-offset-2 hover:text-tat-burnt dark:hover:text-tat-gold">talk to us</Link>.
+          on request — <Link href="/contact" className="underline underline-offset-2 hover:text-tat-gold dark:hover:text-tat-gold">talk to us</Link>.
         </p>
       </div>
     </section>

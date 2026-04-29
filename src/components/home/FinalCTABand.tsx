@@ -39,7 +39,7 @@ export default function FinalCTABand({
         </span>
         <h2 id="final-cta-title" className="mt-2 font-display font-normal text-h1 md:text-display text-white text-balance">
           {titleStart}{" "}
-          <em className="not-italic font-display italic text-tat-burnt">{titleItalic}</em>
+          <em className="not-italic font-display italic text-tat-gold">{titleItalic}</em>
         </h2>
         <p className="mt-3 text-lead text-white/75 max-w-xl mx-auto">{lede}</p>
 

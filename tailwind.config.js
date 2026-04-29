@@ -10,18 +10,38 @@ module.exports = {
     extend: {
       colors: {
         tat: {
+          // ─── Brand identity (locked 2026-04-29) ────────────────────
+          // Primary brand voice: TEAL. "Trust + travel". Owns CTAs,
+          // links, focus rings, scrollbar, selection. Use everywhere
+          // the user is being asked to engage.
           teal: '#0E7C7B',
           'teal-deep': '#094948',
           'teal-mist': '#B5D4D4',
+          // Surface canvas
           cream: '#F5E6D3',
           'cream-warm': '#EFD9BD',
+          paper: '#FBF7F1',
+          // Decorative accent — gold for eyebrows, prices, italic
+          // flourishes, badges. NOT for CTAs.
+          gold: '#C8932A',
+          // Urgency lane — limited slots, flash deals, countdown,
+          // "ends soon". Single warm-bright hue, used sparingly.
           orange: '#E87B3D',
           'orange-soft': '#F4A876',
-          gold: '#C8932A',
-          burnt: '#C2541C',
+          // Ground tones
           charcoal: '#2A2A2A',
           slate: '#6B7280',
-          paper: '#FBF7F1',
+          // Semantic status tokens — admin tables + state pills.
+          // Mapped onto the brand palette so admin chrome shares the
+          // same visual language as the marketing site.
+          'success-bg': '#E6F2F1',          // teal-mist tint
+          'success-fg': '#094948',          // teal-deep
+          'warning-bg': '#FCEDE0',          // cream-warm tint
+          'warning-fg': '#9A4E15',          // burnt-of-old, fg only
+          'danger-bg':  '#FCE8E8',
+          'danger-fg':  '#9B1C1C',
+          'info-bg':    '#FBF7F1',          // paper
+          'info-fg':    '#2A2A2A',          // charcoal
         },
       },
       fontFamily: {
@@ -103,22 +123,19 @@ module.exports = {
         },
       },
       boxShadow: {
-        "soft": "0 2px 20px -8px rgba(11, 28, 44, 0.08)",
-        "soft-lg": "0 20px 60px -20px rgba(11, 28, 44, 0.15)",
-        "card": "0 4px 16px rgba(45,30,15,0.04), 0 1px 2px rgba(45,30,15,0.04)",
-        "rail": "0 8px 32px rgba(45,30,15,0.08)",
-        "hover": "0 8px 24px rgba(45,30,15,0.10)",
-        "glow-gold": "0 10px 40px -10px rgba(242, 179, 64, 0.55)",
-        "glow-ember": "0 10px 40px -10px rgba(242, 107, 31, 0.55)",
-        "glow-crimson": "0 10px 40px -10px rgba(201, 24, 59, 0.45)",
-        "premium-lift": "0 24px 60px -24px rgba(45, 26, 55, 0.35), 0 6px 18px -8px rgba(242, 107, 31, 0.18)",
+        "soft":         "0 2px 20px -8px rgba(11, 28, 44, 0.08)",
+        "soft-lg":      "0 20px 60px -20px rgba(11, 28, 44, 0.15)",
+        "card":         "0 4px 16px rgba(45,30,15,0.04), 0 1px 2px rgba(45,30,15,0.04)",
+        "rail":         "0 8px 32px rgba(45,30,15,0.08)",
+        "hover":        "0 8px 24px rgba(45,30,15,0.10)",
+        // Two glows aligned to the locked accents — gold (decorative)
+        // and ember/orange (urgency). Crimson glow killed.
+        "glow-gold":    "0 10px 40px -10px rgba(200, 147, 42, 0.55)",
+        "glow-ember":   "0 10px 40px -10px rgba(232, 123, 61, 0.55)",
+        "glow-teal":    "0 10px 40px -10px rgba(14, 124, 123, 0.45)",
       },
       backgroundImage: {
         "grain": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E\")",
-        "gradient-passion":  "linear-gradient(135deg, #F26B1F 0%, #C9183B 100%)",
-        "gradient-aurora":   "linear-gradient(135deg, #F2B340 0%, #F26B1F 60%, #C9183B 100%)",
-        "gradient-premium":  "linear-gradient(135deg, #0B1C2C 0%, #2D1A37 50%, #43295A 100%)",
-        "gradient-sunset":   "linear-gradient(180deg, rgba(242,179,64,0.18) 0%, rgba(242,107,31,0.08) 50%, transparent 100%)",
       },
     },
   },

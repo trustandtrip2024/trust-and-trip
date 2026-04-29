@@ -34,7 +34,7 @@ interface Deal {
 }
 
 const KIND_META: Record<DealKind, { label: string; icon: typeof Flame; bg: string; text: string }> = {
-  flash:        { label: "Flash deal",     icon: Flame,     bg: "bg-tat-burnt",      text: "text-white" },
+  flash:        { label: "Flash deal",     icon: Flame,     bg: "bg-tat-orange",      text: "text-white" },
   "early-bird": { label: "Early bird",     icon: Sun,       bg: "bg-tat-gold",       text: "text-tat-charcoal" },
   "last-minute":{ label: "Last minute",    icon: Hourglass, bg: "bg-red-500",        text: "text-white" },
   honeymoon:    { label: "Honeymoon",      icon: Sparkles,  bg: "bg-rose-500",       text: "text-white" },

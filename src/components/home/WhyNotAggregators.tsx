@@ -23,7 +23,7 @@ export default function WhyNotAggregators() {
             className="heading-section mt-2 text-balance"
           >
             What you actually get with a
-            <span className="italic font-display text-tat-burnt font-normal"> real planner.</span>
+            <span className="italic font-display text-tat-gold font-normal"> real planner.</span>
           </h2>
           <p className="mt-4 text-tat-charcoal/65 max-w-xl mx-auto text-balance">
             We're not a marketplace. Every itinerary here is hand-built by a planner who's been to the destination — not a script you fill in.

@@ -101,7 +101,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
           {/* Header — step indicator (visual cue, matches wizard) */}
           <div className="flex items-center justify-between px-5 pt-4 pb-2">
             <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-tat-slate">
-              <span className="font-semibold text-tat-burnt">Where to</span>
+              <span className="font-semibold text-tat-gold">Where to</span>
               <span aria-hidden className="text-tat-charcoal/30">·</span>
               <span>Search</span>
             </div>
@@ -116,7 +116,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
 
           {/* Input — cream pill, matches wizard */}
           <div className="px-5 pb-4">
-            <div className="flex items-center gap-3 h-12 px-4 rounded-pill bg-tat-cream-warm/40 border border-tat-charcoal/10 focus-within:border-tat-burnt focus-within:bg-white transition">
+            <div className="flex items-center gap-3 h-12 px-4 rounded-pill bg-tat-cream-warm/40 border border-tat-charcoal/10 focus-within:border-tat-gold focus-within:bg-white transition">
               {loading ? (
                 <Loader2 className="h-4 w-4 text-tat-charcoal/40 shrink-0 animate-spin" />
               ) : (
@@ -148,7 +148,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                     <button
                       key={label}
                       onClick={() => navigate(href)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-white border border-tat-charcoal/15 text-tat-charcoal text-[14px] font-medium hover:border-tat-burnt hover:bg-tat-burnt/5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-pill bg-white border border-tat-charcoal/15 text-tat-charcoal text-[14px] font-medium hover:border-tat-gold hover:bg-tat-gold/5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
                     >
                       <span aria-hidden className="text-base leading-none">{emoji}</span>
                       {label}

@@ -136,7 +136,7 @@ function Polaroid({ post, size }: { post: UgcPost; size: "sm" | "md" }) {
         />
         {/* Tiny "loved" pill on hover */}
         <div className="absolute top-2 right-2 h-7 w-7 rounded-full bg-white/95 backdrop-blur-sm grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-soft">
-          <Heart className="h-3.5 w-3.5 fill-tat-burnt text-tat-burnt" />
+          <Heart className="h-3.5 w-3.5 fill-tat-gold text-tat-gold" />
         </div>
       </div>
       <figcaption className={`pt-3 ${padBottom} px-1`}>

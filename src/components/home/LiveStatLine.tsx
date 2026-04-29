@@ -64,7 +64,7 @@ export default function LiveStatLine({ className = "" }: { className?: string })
               <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-500 animate-ping opacity-50" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
             </span>
-            <Icon className="h-3.5 w-3.5 text-tat-burnt" aria-hidden />
+            <Icon className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
             <span>
               <span className="tnum font-semibold text-tat-charcoal dark:text-tat-paper">
                 {values[i]}

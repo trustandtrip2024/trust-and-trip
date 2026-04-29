@@ -75,18 +75,18 @@ export default function WhyTrustAndTripPillars({
             return (
               <li
                 key={title}
-                className="relative flex flex-col rounded-2xl bg-white dark:bg-white/5 ring-1 ring-tat-charcoal/8 dark:ring-white/10 px-6 py-7 md:px-7 md:py-8 transition duration-200 hover:ring-tat-burnt/30"
+                className="relative flex flex-col rounded-2xl bg-white dark:bg-white/5 ring-1 ring-tat-charcoal/8 dark:ring-white/10 px-6 py-7 md:px-7 md:py-8 transition duration-200 hover:ring-tat-gold/30"
               >
                 {/* Tiny index — sits as a hairline number, not a billboard. */}
                 <span
                   aria-hidden
-                  className="font-display text-[13px] tracking-[0.32em] text-tat-burnt/70 dark:text-tat-gold/80"
+                  className="font-display text-[13px] tracking-[0.32em] text-tat-gold/70 dark:text-tat-gold/80"
                 >
                   {String(idx + 1).padStart(2, "0")}
                 </span>
 
                 {/* Quiet outlined icon — no gradient tile. */}
-                <div className="mt-3 inline-flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-tat-burnt/30 text-tat-burnt dark:text-tat-gold dark:ring-tat-gold/30">
+                <div className="mt-3 inline-flex h-10 w-10 items-center justify-center rounded-full ring-1 ring-tat-gold/30 text-tat-gold dark:text-tat-gold dark:ring-tat-gold/30">
                   <Icon className="h-[18px] w-[18px]" strokeWidth={1.6} aria-hidden />
                 </div>
 
@@ -102,7 +102,7 @@ export default function WhyTrustAndTripPillars({
 
                 {proof && (
                   <div className="mt-6 pt-4 border-t border-tat-charcoal/8 dark:border-white/10 flex items-baseline gap-2">
-                    <span className="font-display text-[16px] font-medium text-tat-burnt dark:text-tat-gold">
+                    <span className="font-display text-[16px] font-medium text-tat-gold dark:text-tat-gold">
                       {proof.value}
                     </span>
                     <span className="text-[11px] uppercase tracking-[0.16em] text-tat-charcoal/50 dark:text-tat-paper/55">
@@ -131,7 +131,7 @@ export default function WhyTrustAndTripPillars({
             <span aria-hidden className="hidden sm:inline-block w-px h-4 bg-tat-charcoal/20 self-center" />
             <Link
               href="/reviews"
-              className="inline-flex items-center justify-center gap-1.5 text-body-sm font-semibold text-tat-burnt dark:text-tat-gold underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
+              className="inline-flex items-center justify-center gap-1.5 text-body-sm font-semibold text-tat-gold dark:text-tat-gold underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
             >
               Read 4.9★ reviews
               <ArrowRight className="h-4 w-4" />

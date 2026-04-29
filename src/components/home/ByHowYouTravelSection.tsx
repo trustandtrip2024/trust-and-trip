@@ -82,7 +82,7 @@ function CustomPlanCard({ style }: { style: StyleId }) {
   const { open: openPlanner } = useTripPlanner();
   return (
     <div className="rounded-2xl bg-tat-cream-warm/40 border border-tat-orange/25 p-5 md:p-6 flex flex-col items-start gap-3">
-      <div className="h-9 w-9 rounded-full bg-tat-orange/15 grid place-items-center text-tat-burnt">
+      <div className="h-9 w-9 rounded-full bg-tat-orange/15 grid place-items-center text-tat-gold">
         <Sparkles className="h-4 w-4" />
       </div>
       <h3 className="font-display text-[18px] text-tat-charcoal">
@@ -93,7 +93,7 @@ function CustomPlanCard({ style }: { style: StyleId }) {
       </p>
       <button
         onClick={() => openPlanner()}
-        className="mt-1 inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-burnt hover:underline underline-offset-4"
+        className="mt-1 inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-gold hover:underline underline-offset-4"
       >
         Plan my {style.toLowerCase()} trip
         <ArrowRight className="h-4 w-4" />
@@ -162,7 +162,7 @@ export default function ByHowYouTravelSection({
         <div className="mt-7 flex items-center justify-between gap-4">
           <Link
             href="/packages"
-            className="inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-burnt dark:text-tat-gold hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
+            className="inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-gold dark:text-tat-gold hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
           >
             Browse all journeys
             <ArrowRight className="h-4 w-4" />

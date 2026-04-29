@@ -22,7 +22,7 @@ export default function NeedToKnowGrid({ destinationName }: Props) {
             href={`https://www.accuweather.com/en/search-locations?query=${encodeURIComponent(destinationName)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-tat-burnt dark:text-tat-gold underline underline-offset-2 hover:no-underline"
+            className="text-tat-gold dark:text-tat-gold underline underline-offset-2 hover:no-underline"
           >
             AccuWeather
           </a>{" "}
@@ -89,7 +89,7 @@ export default function NeedToKnowGrid({ destinationName }: Props) {
 
   return (
     <div className="rounded-3xl border border-tat-charcoal/8 dark:border-white/10 bg-white dark:bg-white/5 shadow-soft p-5 md:p-7">
-      <p className="tt-eyebrow !text-tat-burnt dark:!text-tat-gold mb-1.5">Need to know</p>
+      <p className="tt-eyebrow !text-tat-gold dark:!text-tat-gold mb-1.5">Need to know</p>
       <p className="font-display text-[20px] md:text-[22px] font-medium text-tat-charcoal dark:text-tat-paper leading-tight">
         Things to consider before the trip.
       </p>
@@ -101,7 +101,7 @@ export default function NeedToKnowGrid({ destinationName }: Props) {
               key={it.title}
               className="flex gap-3 rounded-2xl border border-tat-charcoal/6 dark:border-white/8 bg-tat-cream-warm/30 dark:bg-white/[0.04] p-4"
             >
-              <span className="grid place-items-center h-9 w-9 rounded-xl bg-tat-burnt/10 dark:bg-tat-gold/15 text-tat-burnt dark:text-tat-gold shrink-0">
+              <span className="grid place-items-center h-9 w-9 rounded-xl bg-tat-gold/10 dark:bg-tat-gold/15 text-tat-gold dark:text-tat-gold shrink-0">
                 <Icon className="h-4 w-4" />
               </span>
               <div className="min-w-0">
@@ -121,7 +121,7 @@ export default function NeedToKnowGrid({ destinationName }: Props) {
       <p className="mt-5 text-[12px] text-tat-charcoal/55 dark:text-tat-paper/60 italic">
         Standard hotel check-in is 1.30 PM and check-out 10 AM. For
         questions specific to your booking,{" "}
-        <Link href="/contact" className="text-tat-burnt dark:text-tat-gold underline underline-offset-2 hover:no-underline">
+        <Link href="/contact" className="text-tat-gold dark:text-tat-gold underline underline-offset-2 hover:no-underline">
           message your planner
         </Link>
         .

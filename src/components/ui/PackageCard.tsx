@@ -70,7 +70,7 @@ export default function PackageCardUI(p: PackageCardProps) {
       <Link
         href={p.href}
         className={[
-          "relative block overflow-hidden bg-tat-charcoal/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2",
+          "relative block overflow-hidden bg-tat-charcoal/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2",
           horizontal ? "md:w-[40%] aspect-[4/3] md:aspect-auto" : "aspect-[4/3]",
         ].join(" ")}
         aria-label={p.title}
@@ -92,7 +92,7 @@ export default function PackageCardUI(p: PackageCardProps) {
             </span>
           )}
           {p.trending && (
-            <span className="inline-flex items-center gap-1 bg-tat-burnt text-white text-[10px] uppercase tracking-wider font-medium px-2.5 py-1 rounded-pill">
+            <span className="inline-flex items-center gap-1 bg-tat-orange text-white text-[10px] uppercase tracking-wider font-medium px-2.5 py-1 rounded-pill">
               <Flame className="h-3 w-3" />
               Trending
             </span>
@@ -108,7 +108,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/55 to-transparent pointer-events-none" />
         {p.duration && (
           <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-white/95 text-tat-charcoal text-[11px] font-semibold px-2.5 py-1 rounded-pill shadow-card">
-            <Clock className="h-3 w-3 text-tat-burnt" />
+            <Clock className="h-3 w-3 text-tat-gold" />
             {p.duration}
           </span>
         )}
@@ -127,7 +127,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         aria-pressed={wished}
         className={[
           "absolute top-3 right-3 h-9 w-9 rounded-full grid place-items-center shadow-card transition duration-120",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2",
           wished ? "bg-rose-600 text-white" : "bg-white/95 text-tat-charcoal/80 hover:text-rose-600",
         ].join(" ")}
       >
@@ -141,13 +141,13 @@ export default function PackageCardUI(p: PackageCardProps) {
           <div className="flex items-center gap-2 text-tag uppercase text-tat-slate/80">
             {p.destination && (
               <span className="inline-flex items-center gap-1">
-                <MapPin className="h-3 w-3 text-tat-burnt" />
+                <MapPin className="h-3 w-3 text-tat-gold" />
                 {p.destination}
               </span>
             )}
             {p.destination && p.travelStyle && <span aria-hidden className="text-tat-charcoal/30">·</span>}
             {p.travelStyle && (
-              <span className="bg-tat-burnt/10 text-tat-burnt px-2 py-0.5 rounded-pill normal-case tracking-normal font-medium">
+              <span className="bg-tat-gold/10 text-tat-gold px-2 py-0.5 rounded-pill normal-case tracking-normal font-medium">
                 {p.travelStyle}
               </span>
             )}
@@ -221,14 +221,14 @@ export default function PackageCardUI(p: PackageCardProps) {
         <div className={`${compact ? "mt-3 gap-1.5" : "mt-4 gap-2"} flex flex-col`}>
           <Link
             href={p.href}
-            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-10" : "h-11"} px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2`}
+            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-10" : "h-11"} px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
           >
             View details
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
           <Link
             href={p.customizeHref ?? `${p.href}?customize=1`}
-            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-8" : "h-9"} text-meta font-medium text-tat-charcoal/80 hover:text-tat-burnt transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2 rounded-md`}
+            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-8" : "h-9"} text-meta font-medium text-tat-charcoal/80 hover:text-tat-gold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 rounded-md`}
           >
             Customise this trip
             <ArrowRight className="h-3 w-3" />

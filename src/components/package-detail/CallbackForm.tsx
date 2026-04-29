@@ -60,8 +60,8 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
   return (
     <div className="rounded-2xl border border-tat-charcoal/8 dark:border-white/10 bg-white dark:bg-white/5 p-5 md:p-6 shadow-soft">
       <div className="flex items-center gap-2 mb-3">
-        <span className="grid place-items-center h-9 w-9 rounded-full bg-tat-burnt/10 dark:bg-tat-gold/15">
-          <Phone className="h-4 w-4 text-tat-burnt dark:text-tat-gold" />
+        <span className="grid place-items-center h-9 w-9 rounded-full bg-tat-gold/10 dark:bg-tat-gold/15">
+          <Phone className="h-4 w-4 text-tat-gold dark:text-tat-gold" />
         </span>
         <div>
           <p className="font-display text-[16px] md:text-[17px] font-medium text-tat-charcoal dark:text-tat-paper leading-tight">
@@ -83,7 +83,7 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
             onChange={(e) => setName(e.target.value)}
             required
             placeholder="Your full name"
-            className="w-full bg-tat-charcoal/[0.04] dark:bg-white/8 border border-tat-charcoal/10 dark:border-white/15 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-tat-burnt/40 dark:focus:ring-tat-gold/40"
+            className="w-full bg-tat-charcoal/[0.04] dark:bg-white/8 border border-tat-charcoal/10 dark:border-white/15 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-tat-gold/40 dark:focus:ring-tat-gold/40"
           />
         </div>
         <div>
@@ -101,7 +101,7 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
               type="tel"
               inputMode="tel"
               placeholder="98765 43210"
-              className="flex-1 bg-tat-charcoal/[0.04] dark:bg-white/8 border border-tat-charcoal/10 dark:border-white/15 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-tat-burnt/40 dark:focus:ring-tat-gold/40"
+              className="flex-1 bg-tat-charcoal/[0.04] dark:bg-white/8 border border-tat-charcoal/10 dark:border-white/15 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-tat-gold/40 dark:focus:ring-tat-gold/40"
             />
           </div>
         </div>
@@ -109,7 +109,7 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
         <button
           type="submit"
           disabled={busy}
-          className="w-full inline-flex items-center justify-center gap-2 bg-tat-burnt text-white font-semibold py-3 rounded-xl hover:bg-tat-burnt/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full inline-flex items-center justify-center gap-2 bg-tat-teal text-white font-semibold py-3 rounded-xl hover:bg-tat-teal-deep transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {busy ? (
             <>

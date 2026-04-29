@@ -99,7 +99,7 @@ export default function PackageStickyBar({
             <p className="mt-0.5 text-[10px] text-tat-charcoal/50 dark:text-tat-paper/55">
               per person, twin sharing
               {savingsPct > 0 && (
-                <span className="ml-1.5 font-semibold text-tat-burnt dark:text-tat-gold">
+                <span className="ml-1.5 font-semibold text-tat-gold dark:text-tat-gold">
                   · save {savingsPct}%
                 </span>
               )}
@@ -175,7 +175,7 @@ function pickPromo(slug: string, price: number, originalPrice?: number): Promo {
     const pct = Math.round(((originalPrice - price) / originalPrice) * 100);
     return {
       label: `Saving ₹${(originalPrice - price).toLocaleString("en-IN")} · ${pct}% off`,
-      bg: "bg-gradient-to-r from-tat-burnt to-rose-600",
+      bg: "bg-tat-orange",
       Icon: Tag,
     };
   }
@@ -189,7 +189,7 @@ function pickPromo(slug: string, price: number, originalPrice?: number): Promo {
     },
     {
       label: "Special edition departure",
-      bg: "bg-gradient-to-r from-tat-burnt to-amber-600",
+      bg: "bg-tat-gold",
       Icon: Sparkles,
     },
     {

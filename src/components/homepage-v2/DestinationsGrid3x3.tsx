@@ -27,7 +27,7 @@ export default function DestinationsGrid3x3({
             <p className="eyebrow-ember">{eyebrow}</p>
             <h2 id="dest-grid-heading" className="heading-section mt-2 max-w-lg text-balance">
               {heading}
-              <span className="italic text-gradient-passion font-light"> {highlight}</span>
+              <span className="italic text-tat-gold font-light"> {highlight}</span>
             </h2>
           </div>
           <Link

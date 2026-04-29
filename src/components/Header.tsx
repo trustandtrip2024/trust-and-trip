@@ -147,7 +147,7 @@ export default function Header() {
           {l.label}
           <span
             className={clsx(
-              "absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-gradient-passion transition-transform duration-300",
+              "absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-tat-teal transition-transform duration-300",
               isActive(l.href) ? "scale-x-100" : "scale-x-0"
             )}
           />
@@ -177,7 +177,7 @@ export default function Header() {
             />
             <span
               className={clsx(
-                "absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-gradient-passion transition-transform duration-300",
+                "absolute left-4 right-4 -bottom-0.5 h-0.5 origin-left rounded-full bg-tat-teal transition-transform duration-300",
                 isActive(l.href) ? "scale-x-100" : "scale-x-0"
               )}
             />
@@ -235,7 +235,7 @@ export default function Header() {
         <div className="absolute inset-y-0 left-1/3 w-1/3 bg-gradient-to-r from-transparent via-tat-orange/15 to-transparent blur-2xl pointer-events-none" />
         <div className="relative container-custom flex items-center justify-between gap-4">
           <p className="lg:hidden text-center w-full text-[11px] font-semibold tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">
-            <span className="text-gradient-aurora"><FlashDealRotator /></span>
+            <span className="text-tat-orange"><FlashDealRotator /></span>
           </p>
           <div className="hidden lg:flex items-center gap-5 opacity-90">
             <span className="flex items-center gap-1.5 whitespace-nowrap">
@@ -252,7 +252,7 @@ export default function Header() {
               <Phone className="h-3 w-3" />+91 8115 999 588
             </a>
             <span className="opacity-40">|</span>
-            <span className="font-semibold tracking-wide text-gradient-aurora"><FlashDealRotator /></span>
+            <span className="font-semibold tracking-wide text-tat-orange"><FlashDealRotator /></span>
           </div>
         </div>
       </div>
@@ -282,7 +282,7 @@ export default function Header() {
           {/* Logo — desktop / tablet (≥md) */}
           <Link href="/" className="hidden lg:flex items-center gap-2.5 group shrink-0">
             <div className="relative">
-              <div className="h-10 w-10 rounded-full bg-gradient-passion flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-crimson">
+              <div className="h-10 w-10 rounded-full bg-tat-teal flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-gold">
                 <span className="text-white text-lg font-display font-semibold tracking-tight">T</span>
               </div>
               <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-tat-gold shadow-[0_0_10px_rgba(242,179,64,0.85)] ring-1 ring-white" />
@@ -290,10 +290,10 @@ export default function Header() {
             <div className="flex flex-col leading-none">
               <span className="font-display text-lg md:text-xl font-semibold tracking-tight whitespace-nowrap">
                 <span className="text-tat-charcoal">Trust</span>
-                <span className="text-gradient-passion italic">&amp;</span>
-                <span className="text-gradient-aurora">Trip</span>
+                <span className="text-tat-gold italic">&amp;</span>
+                <span className="text-tat-teal">Trip</span>
               </span>
-              <span className="eyebrow-ember text-[8.5px] tracking-[0.28em] mt-1 hidden sm:block whitespace-nowrap text-gradient-passion">
+              <span className="eyebrow-ember text-[8.5px] tracking-[0.28em] mt-1 hidden sm:block whitespace-nowrap text-tat-gold">
                 Crafted with passion
               </span>
             </div>
@@ -301,12 +301,12 @@ export default function Header() {
 
           {/* Logo — mobile (compact, on dark) */}
           <Link href="/" className="lg:hidden flex items-center gap-2 shrink-0">
-            <span className="relative h-8 w-8 rounded-md bg-tat-burnt grid place-items-center font-display font-semibold text-tat-paper text-sm">
+            <span className="relative h-8 w-8 rounded-md bg-tat-teal grid place-items-center font-display font-semibold text-tat-paper text-sm">
               T
               <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-tat-gold ring-1 ring-tat-charcoal" />
             </span>
             <span className="font-display text-base font-semibold tracking-tight text-tat-paper whitespace-nowrap">
-              Trust<span className="text-tat-burnt italic"> &amp; </span>Trip
+              Trust<span className="text-tat-gold italic"> &amp; </span>Trip
             </span>
           </Link>
 
@@ -428,7 +428,7 @@ export default function Header() {
             {/* Plan My Trip CTA — desktop */}
             <button
               onClick={() => openPlanner()}
-              className="hidden lg:inline-flex btn-passion !py-2.5 !px-5 !text-xs whitespace-nowrap"
+              className="hidden lg:inline-flex btn-primary !py-2.5 !px-5 !text-xs whitespace-nowrap"
             >
               Plan My Trip
             </button>
@@ -468,8 +468,8 @@ export default function Header() {
                   <div className="flex items-center justify-between px-6 py-5 border-b border-tat-charcoal/8">
                     <Dialog.Title className="font-display text-xl font-semibold tracking-tight">
                       <span className="text-tat-charcoal">Trust</span>
-                      <span className="text-gradient-passion italic">&amp;</span>
-                      <span className="text-gradient-aurora">Trip</span>
+                      <span className="text-tat-gold italic">&amp;</span>
+                      <span className="text-tat-teal">Trip</span>
                     </Dialog.Title>
                     <Dialog.Close asChild>
                       <button aria-label="Close menu" className="h-9 w-9 rounded-full bg-tat-charcoal/6 flex items-center justify-center">
@@ -541,7 +541,7 @@ export default function Header() {
                     <div className="mt-4 space-y-2">
                       <button
                         onClick={() => { setDrawerOpen(false); openPlanner(); }}
-                        className="w-full btn-passion justify-center py-3.5"
+                        className="w-full btn-primary justify-center py-3.5"
                       >
                         Plan My Trip
                       </button>
@@ -605,7 +605,7 @@ export default function Header() {
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
-            className="w-full flex items-center gap-3 h-11 px-4 rounded-full bg-white/10 border border-white/15 text-white/80 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt"
+            className="w-full flex items-center gap-3 h-11 px-4 rounded-full bg-white/10 border border-white/15 text-white/80 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold"
             aria-label="Open search"
           >
             <Search className="h-4 w-4 text-white/70" aria-hidden />

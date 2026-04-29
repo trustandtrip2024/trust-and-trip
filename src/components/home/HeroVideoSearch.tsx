@@ -87,7 +87,7 @@ export default function HeroVideoSearch({
       <div className="relative w-full mx-auto max-w-3xl px-5 md:px-8 lg:px-12 py-22 text-center text-white">
         <p className="text-eyebrow uppercase font-medium text-tat-orange-soft/90">{eyebrow}</p>
         <h1 className="mt-3 font-display font-normal text-display md:text-display text-white text-balance">
-          {titleStart} <em className="not-italic font-display italic text-tat-burnt">{titleItalic}</em>
+          {titleStart} <em className="not-italic font-display italic text-tat-gold">{titleItalic}</em>
         </h1>
         <p className="mt-4 text-lead text-white/85 max-w-2xl mx-auto text-balance">{lede}</p>
 

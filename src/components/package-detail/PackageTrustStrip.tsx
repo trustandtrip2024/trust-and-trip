@@ -18,7 +18,7 @@ export default function PackageTrustStrip({ compact = false }: { compact?: boole
       <ul className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-tat-charcoal/60 dark:text-tat-paper/60">
         {ITEMS.map(({ icon: Icon, label }) => (
           <li key={label} className="inline-flex items-center gap-1">
-            <Icon className="h-3 w-3 text-tat-burnt dark:text-tat-gold" aria-hidden />
+            <Icon className="h-3 w-3 text-tat-gold dark:text-tat-gold" aria-hidden />
             {label}
           </li>
         ))}
@@ -33,7 +33,7 @@ export default function PackageTrustStrip({ compact = false }: { compact?: boole
           key={label}
           className="flex items-start gap-2 rounded-md bg-tat-cream-warm/40 dark:bg-white/5 ring-1 ring-tat-charcoal/5 dark:ring-white/10 p-2.5"
         >
-          <Icon className="h-3.5 w-3.5 mt-0.5 shrink-0 text-tat-burnt dark:text-tat-gold" aria-hidden />
+          <Icon className="h-3.5 w-3.5 mt-0.5 shrink-0 text-tat-gold dark:text-tat-gold" aria-hidden />
           <div className="min-w-0">
             <p className="text-[11.5px] font-semibold text-tat-charcoal dark:text-tat-paper leading-tight">
               {label}
