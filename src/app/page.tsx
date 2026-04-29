@@ -199,7 +199,7 @@ export default async function HomePage() {
 
       <HowItWorks />
 
-      <HomePlannerCard />
+      <HomePlannerCard tripsPlanned={siteStats.totalTravelers} />
 
       <HomeBrandReel />
 

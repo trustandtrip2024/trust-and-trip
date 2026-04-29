@@ -7,6 +7,8 @@ const WHATSAPP_HREF =
   encodeURIComponent("Hi Akash — I'd like help planning my trip.");
 const PHONE_HREF = "tel:+918115999588";
 
+const FOUNDER_PHOTO_DEFAULT = "/akash-mishra.jpg";
+
 interface Props {
   name?: string;
   role?: string;
@@ -14,6 +16,8 @@ interface Props {
   oneLiner?: string;
   /** Anchor href for the "About me" link. */
   bioHref?: string;
+  /** Trips planned to date — drives the credibility line in the card. */
+  tripsPlanned?: number;
 }
 
 /**
@@ -25,33 +29,65 @@ interface Props {
 export default function HomePlannerCard({
   name = "Akash Mishra",
   role = "Founder & lead planner",
-  // Placeholder until /akash-mishra.jpg is uploaded to /public.
-  // Replace by passing the `photo` prop or by dropping the file in.
-  photo = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80&auto=format&fit=crop",
+  photo = FOUNDER_PHOTO_DEFAULT,
   oneLiner = "I read every form myself. Tell me your dates and I'll send your itinerary in 24 hours.",
   bioHref = "/about",
+  tripsPlanned = 8000,
 }: Props = {}) {
+  const initials = name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
+  // /akash-mishra.jpg is the production photo path. If the asset hasn't
+  // been uploaded yet, the gradient initials block stands in.
+  const usePhoto = !!photo && photo !== "";
+
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name,
+    jobTitle: role,
+    image: usePhoto ? `https://trustandtrip.com${photo.startsWith("/") ? photo : `/${photo}`}` : undefined,
+    url: `https://trustandtrip.com${bioHref}`,
+    worksFor: {
+      "@type": "TravelAgency",
+      name: "Trust and Trip",
+      url: "https://trustandtrip.com",
+    },
+    sameAs: ["https://www.linkedin.com/company/trustandtrip"],
+  };
+
   return (
     <section
       aria-labelledby="planner-card-title"
       className="py-12 md:py-16 bg-tat-cream-warm/30 dark:bg-tat-charcoal/95"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       <div className="container-custom max-w-5xl">
         <div className="rounded-card bg-white dark:bg-white/[0.04] ring-1 ring-tat-charcoal/8 dark:ring-white/10 shadow-card overflow-hidden">
           <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] md:grid-cols-[240px_1fr] gap-0">
             {/* Photo */}
             <div className="relative aspect-square sm:aspect-auto sm:min-h-[260px] bg-tat-charcoal/15">
-              <Image
-                src={photo}
-                alt={`${name}, ${role}`}
-                fill
-                sizes="(max-width: 640px) 100vw, 240px"
-                quality={75}
-                className="object-cover"
-              />
+              {usePhoto ? (
+                <Image
+                  src={photo}
+                  alt={`${name}, ${role}`}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 240px"
+                  quality={75}
+                  className="object-cover"
+                />
+              ) : (
+                <div
+                  aria-label={`${name} portrait placeholder`}
+                  className="absolute inset-0 grid place-items-center bg-gradient-to-br from-tat-teal-deep via-tat-teal to-tat-gold"
+                >
+                  <span className="font-display text-display text-tat-paper/95 tracking-tight">{initials}</span>
+                </div>
+              )}
               {/* Verified-human badge */}
               <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-white/95 text-tat-charcoal text-[10px] uppercase tracking-wider font-semibold px-2.5 py-1 rounded-pill shadow-card">
-                <span className="h-1.5 w-1.5 rounded-full bg-tat-success-bg0 animate-pulse" />
+                <span className="h-1.5 w-1.5 rounded-full bg-tat-teal animate-pulse" />
                 Online now
               </span>
             </div>
@@ -99,7 +135,7 @@ export default function HomePlannerCard({
               </div>
 
               <p className="mt-4 text-meta text-tat-slate/80 dark:text-tat-paper/55">
-                {role} · Replies in under 5 minutes during 10 AM – 8 PM IST.
+                {role} · {tripsPlanned.toLocaleString("en-IN")}+ trips planned · Replies under 5 min, 10 AM – 8 PM IST.
               </p>
             </div>
           </div>
