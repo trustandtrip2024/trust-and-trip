@@ -1,8 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Star, ExternalLink } from "lucide-react";
+import { ArrowRight, Star, ExternalLink, Play } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
 import type { GoogleReview, GooglePlaceData } from "@/lib/google-reviews";
+
+export interface VideoReview {
+  /** YouTube / Vimeo URL — opens in a new tab when the card is clicked. */
+  videoUrl: string;
+  /** Poster frame for the card. Falls back to YouTube i.ytimg.com auto-thumb. */
+  posterUrl?: string;
+  /** Reviewer name + city + summary line shown over the poster. */
+  name: string;
+  city?: string;
+  summary: string;
+  /** Optional badges that mirror the text-card chips. */
+  destination?: string;
+  rating?: number;
+  when?: string;
+  /** ISO-8601 duration (e.g. "PT1M12S") — fed into VideoObject schema. */
+  durationISO?: string;
+  /** Upload date for VideoObject schema (YYYY-MM-DD). */
+  uploadDate?: string;
+}
 
 // Curated fallback. Used only when Google Places API isn't configured
 // (no GOOGLE_PLACES_API_KEY in env). Names + cities + destinations are
@@ -29,6 +48,65 @@ interface Props {
   lede?: string;
   /** Live Google Places data; null when the API isn't configured. */
   googleData?: GooglePlaceData | null;
+  /** Optional video reviews — render as poster cards at the head of the
+   *  rail. Empty list (default) ships no video card. */
+  videoReviews?: VideoReview[];
+}
+
+function youtubeIdFromUrl(raw: string): string | null {
+  try {
+    const u = new URL(raw);
+    const host = u.hostname.replace(/^www\./, "");
+    if (host === "youtube.com" || host === "m.youtube.com") return u.searchParams.get("v");
+    if (host === "youtu.be") return u.pathname.replace(/^\//, "") || null;
+    if (host === "youtube-nocookie.com") return u.pathname.split("/").filter(Boolean).pop() ?? null;
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function VideoReviewCard({ v }: { v: VideoReview }) {
+  const ytId = youtubeIdFromUrl(v.videoUrl);
+  const poster = v.posterUrl ?? (ytId ? `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg` : undefined);
+
+  return (
+    <article className="relative group h-full rounded-card overflow-hidden bg-tat-charcoal shadow-card hover:shadow-rail transition-all">
+      <Link
+        href={v.videoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Play ${v.name}'s video review`}
+        className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold"
+      />
+      {poster && (
+        <Image
+          src={poster}
+          alt=""
+          fill
+          sizes="(max-width: 768px) 78vw, 22vw"
+          className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition duration-300"
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal via-tat-charcoal/40 to-tat-charcoal/0" />
+      <span className="absolute top-3 left-3 inline-flex items-center gap-1 bg-white/90 text-tat-charcoal text-[10px] uppercase tracking-[0.18em] font-semibold px-2 py-0.5 rounded-pill">
+        Video
+      </span>
+      <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grid place-items-center h-14 w-14 rounded-full bg-tat-paper/95 text-tat-charcoal shadow-[0_12px_36px_-8px_rgba(0,0,0,0.55)] ring-4 ring-tat-paper/15 group-hover:scale-105 transition-transform">
+        <Play className="h-5 w-5 fill-current translate-x-0.5" aria-hidden />
+      </span>
+      <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 text-white">
+        <p className="font-display font-medium text-h4 text-white leading-tight line-clamp-2">
+          {v.summary}
+        </p>
+        <p className="mt-1 text-[12px] text-white/85">
+          {v.name}
+          {v.city ? ` · ${v.city}` : ""}
+          {v.when ? ` · ${v.when}` : ""}
+        </p>
+      </div>
+    </article>
+  );
 }
 
 function reviewItems(googleData?: GooglePlaceData | null) {
@@ -56,14 +134,40 @@ export default function ReviewsRail({
   titleItalic = "not ours.",
   lede = "Real reviews from travelers who've actually been there — including the small things that didn't go to plan, and how we fixed them.",
   googleData,
+  videoReviews = [],
 }: Props = {}) {
   const items = reviewItems(googleData);
-  const hasLive = items[0]?.live === true;
   const totalRating = googleData?.rating ?? 4.9;
   const totalReviews = googleData?.user_ratings_total ?? 200;
 
+  // VideoObject JSON-LD per video card so search can pull it as a video
+  // result. Each entry is a Review embedded with VideoObject content.
+  const videoJsonLd =
+    videoReviews.length > 0
+      ? videoReviews.map((v) => ({
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          name: `${v.name}'s Trust and Trip review`,
+          description: v.summary,
+          thumbnailUrl: v.posterUrl,
+          contentUrl: v.videoUrl,
+          embedUrl: v.videoUrl,
+          uploadDate: v.uploadDate,
+          duration: v.durationISO,
+        }))
+      : [];
+
   return (
     <section aria-labelledby="reviews-title" className="py-18 md:py-22">
+      {videoJsonLd.length > 0 &&
+        videoJsonLd.map((j, i) => (
+          <script
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(j) }}
+          />
+        ))}
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} />
 
@@ -80,6 +184,14 @@ export default function ReviewsRail({
           aria-label="Traveler reviews scroller"
         >
           <ul className="flex gap-4 pb-2">
+            {videoReviews.map((v) => (
+              <li
+                key={v.videoUrl}
+                className="snap-start shrink-0 w-[78%] sm:w-[50%] md:w-[32%] lg:w-[22%] xl:w-[19%]"
+              >
+                <VideoReviewCard v={v} />
+              </li>
+            ))}
             {items.map((r) => (
               <li
                 key={r.id}
