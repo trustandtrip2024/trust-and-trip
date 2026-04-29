@@ -176,33 +176,37 @@ export default async function HomePage() {
         <HomeOfferDealsRail />
       </div>
 
-      <div id="by-style" className={ANCHOR_OFFSET}>
-        <ByHowYouTravelSection
-          eyebrow={c.byHowYouTravel?.eyebrow}
-          titleStart={c.byHowYouTravel?.titleStart}
-          titleItalic={c.byHowYouTravel?.titleItalic}
-          lede={c.byHowYouTravel?.lede}
-          packagesByStyle={packagesByStyle}
-        />
-      </div>
-
-      <div id="by-duration" className={ANCHOR_OFFSET}>
-        <PackagesByDurationSection
-          eyebrow={c.packagesByDuration?.eyebrow}
-          titleStart={c.packagesByDuration?.titleStart}
-          titleItalic={c.packagesByDuration?.titleItalic}
-          lede={c.packagesByDuration?.lede}
-        />
-      </div>
-
-      <div id="pilgrim" className={ANCHOR_OFFSET}>
-        <PilgrimFeatureBand
-          eyebrow={c.pilgrimFeature?.eyebrow}
-          titleStart={c.pilgrimFeature?.titleStart}
-          titleItalic={c.pilgrimFeature?.titleItalic}
-          lede={c.pilgrimFeature?.lede}
-          yatras={pilgrimPackages.map(toCardProps)}
-        />
+      {/* Browse cluster — three "browse by X" sections share one anchor and
+          a tight inter-section gap so they read as one editorial beat. */}
+      <div id="browse" className={ANCHOR_OFFSET}>
+        <div id="by-style">
+          <ByHowYouTravelSection
+            eyebrow={c.byHowYouTravel?.eyebrow}
+            titleStart={c.byHowYouTravel?.titleStart}
+            titleItalic={c.byHowYouTravel?.titleItalic}
+            lede={c.byHowYouTravel?.lede}
+            packagesByStyle={packagesByStyle}
+          />
+        </div>
+        <div id="by-duration">
+          <PackagesByDurationSection
+            eyebrow={c.packagesByDuration?.eyebrow}
+            titleStart={c.packagesByDuration?.titleStart}
+            titleItalic={c.packagesByDuration?.titleItalic}
+            lede={c.packagesByDuration?.lede}
+            tightTop
+          />
+        </div>
+        <div id="pilgrim">
+          <PilgrimFeatureBand
+            eyebrow={c.pilgrimFeature?.eyebrow}
+            titleStart={c.pilgrimFeature?.titleStart}
+            titleItalic={c.pilgrimFeature?.titleItalic}
+            lede={c.pilgrimFeature?.lede}
+            yatras={pilgrimPackages.map(toCardProps)}
+            tightTop
+          />
+        </div>
       </div>
 
       <VisaFreeDestinations />
@@ -244,6 +248,7 @@ export default async function HomePage() {
           titleItalic={c.ugc?.titleItalic}
           lede={c.ugc?.lede}
           posts={ugcPosts}
+          tightTop
         />
       </div>
 

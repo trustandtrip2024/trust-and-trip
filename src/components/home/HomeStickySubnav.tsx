@@ -7,11 +7,8 @@ interface Item { id: string; label: string }
 const DEFAULT_ITEMS: Item[] = [
   { id: "destinations",  label: "Destinations" },
   { id: "deals",         label: "Deals" },
-  { id: "by-style",      label: "Travel style" },
-  { id: "by-duration",   label: "Duration" },
-  { id: "pilgrim",       label: "Pilgrim" },
+  { id: "browse",        label: "Browse" },
   { id: "reviews",       label: "Reviews" },
-  { id: "press",         label: "Press" },
   { id: "guides",        label: "Travel guides" },
   { id: "faq",           label: "FAQ" },
 ];

@@ -35,6 +35,9 @@ interface Props {
   titleItalic?: string;
   lede?: string;
   yatras?: PackageCardProps[];
+  /** When part of a Browse cluster, drop top padding + top border so the
+   *  band reads as a continuation of the section above. */
+  tightTop?: boolean;
 }
 
 export default function PilgrimFeatureBand({
@@ -43,6 +46,7 @@ export default function PilgrimFeatureBand({
   titleItalic = "quiet care.",
   lede = "Helicopter darshans, calm transfers, vegetarian planning, and hotels close to the temples. We've shepherded 600+ yatris this season — and our planners know which queue moves fastest at Kedarnath.",
   yatras: yatrasProp,
+  tightTop = false,
 }: Props = {}) {
   const yatras = (yatrasProp ?? []).slice(0, 3);
 
@@ -53,7 +57,7 @@ export default function PilgrimFeatureBand({
   return (
     <section
       aria-labelledby="pilgrim-title"
-      className="py-18 md:py-22 bg-tat-cream-warm/30 border-y border-tat-orange/25 dark:bg-tat-charcoal/40 dark:border-tat-orange/30"
+      className={`${tightTop ? "pt-4 md:pt-6 pb-18 md:pb-22 border-b" : "py-18 md:py-22 border-y"} bg-tat-cream-warm/30 border-tat-orange/25 dark:bg-tat-charcoal/40 dark:border-tat-orange/30`}
     >
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         {/* Header — full width, centered for breathing room */}

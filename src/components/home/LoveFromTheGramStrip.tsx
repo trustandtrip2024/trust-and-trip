@@ -10,6 +10,9 @@ interface Props {
   titleItalic?: string;
   lede?: string;
   posts?: UgcPost[];
+  /** When part of a Loved-by cluster, drop top padding so it flows
+   *  visually with the ReviewsRail above. */
+  tightTop?: boolean;
 }
 
 /**
@@ -45,6 +48,7 @@ export default function LoveFromTheGramStrip({
   titleItalic = "No filters needed.",
   lede,
   posts,
+  tightTop = false,
 }: Props = {}) {
   const items = (posts && posts.length > 0 ? posts : FALLBACK_POSTS).slice(0, 12);
   const usingFallback = !posts || posts.length === 0;
@@ -52,7 +56,7 @@ export default function LoveFromTheGramStrip({
   return (
     <section
       aria-labelledby="ugc-title"
-      className="relative py-16 md:py-24 bg-tat-paper overflow-hidden"
+      className={`relative ${tightTop ? "pt-4 md:pt-6 pb-16 md:pb-24" : "py-16 md:py-24"} bg-tat-paper overflow-hidden`}
     >
       {/* Soft gradient backdrop so the polaroids feel pinned to a board. */}
       <div
