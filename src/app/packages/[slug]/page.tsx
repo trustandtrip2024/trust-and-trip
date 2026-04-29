@@ -30,6 +30,9 @@ import UpgradesTabs from "@/components/package-detail/UpgradesTabs";
 import NeedToKnowGrid from "@/components/package-detail/NeedToKnowGrid";
 import PackageWhyThis from "@/components/package-detail/PackageWhyThis";
 import PackageVsAggregator from "@/components/package-detail/PackageVsAggregator";
+import PackageHotels from "@/components/package-detail/PackageHotels";
+import PackageFaqs from "@/components/package-detail/PackageFaqs";
+import PackageVideo from "@/components/package-detail/PackageVideo";
 
 interface Props { params: { slug: string } }
 
@@ -190,7 +193,7 @@ export default async function PackageDetail({ params }: Props) {
             {/* Tour includes ribbon + tour highlights — replaces the legacy
                 inline badge row. */}
             <div className="mb-8">
-              <TourIncludesRibbon highlights={pkg.highlights} />
+              <TourIncludesRibbon highlights={pkg.highlights} inclusions={pkg.inclusions} />
             </div>
 
             {/* vs Aggregator — only renders when comparePrice is set in Sanity. */}
@@ -290,41 +293,56 @@ export default async function PackageDetail({ params }: Props) {
               </div>
             </section>
 
-            {/* HOTEL */}
-            <section id="hotel" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
-              <span className="eyebrow">Where you'll stay</span>
-              <h2 className="heading-section mt-2 mb-6 text-balance">
-                Comfort you'll
-                <span className="italic text-tat-gold font-light"> remember.</span>
-              </h2>
-              <div className="bg-tat-cream/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
-                <div className="h-14 w-14 rounded-2xl bg-tat-gold/15 flex items-center justify-center shrink-0">
-                  <Hotel className="h-7 w-7 text-tat-gold" />
-                </div>
-                <div>
-                  <h3 className="font-display text-h2 font-medium">{pkg.hotel.name}</h3>
-                  <div className="flex items-center gap-1 mt-1.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} />
-                    ))}
-                    <span className="text-xs text-tat-charcoal/50 ml-1">{hotelStars}-star accommodation</span>
+            {/* HOTEL — multi-city array when set, single-hotel fallback. */}
+            {pkg.hotels && pkg.hotels.length > 0 ? (
+              <PackageHotels hotels={pkg.hotels} activities={pkg.activities} />
+            ) : (
+              <section id="hotel" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+                <span className="eyebrow">Where you&rsquo;ll stay</span>
+                <h2 className="heading-section mt-2 mb-6 text-balance">
+                  Comfort you&rsquo;ll
+                  <span className="italic text-tat-gold font-light"> remember.</span>
+                </h2>
+                <div className="bg-tat-cream/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
+                  <div className="h-14 w-14 rounded-2xl bg-tat-gold/15 flex items-center justify-center shrink-0">
+                    <Hotel className="h-7 w-7 text-tat-gold" />
                   </div>
-                  <p className="mt-3 text-tat-charcoal/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
+                  <div>
+                    <h3 className="font-display text-h2 font-medium">{pkg.hotel.name}</h3>
+                    <div className="flex items-center gap-1 mt-1.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} />
+                      ))}
+                      <span className="text-xs text-tat-charcoal/50 ml-1">{hotelStars}-star accommodation</span>
+                    </div>
+                    <p className="mt-3 text-tat-charcoal/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Activities */}
-              <div className="mt-6">
-                <p className="text-xs uppercase tracking-[0.2em] text-tat-charcoal/50 mb-3 font-medium">Signature activities</p>
-                <div className="flex flex-wrap gap-2">
-                  {pkg.activities.map((a) => (
-                    <span key={a} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal text-tat-paper text-xs">
-                      <span className="h-1.5 w-1.5 rounded-full bg-tat-gold" />{a}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </section>
+                {/* Activities */}
+                {pkg.activities.length > 0 && (
+                  <div className="mt-6">
+                    <p className="text-xs uppercase tracking-[0.2em] text-tat-charcoal/50 mb-3 font-medium">Signature activities</p>
+                    <div className="flex flex-wrap gap-2">
+                      {pkg.activities.map((a) => (
+                        <span key={a} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal text-tat-paper text-xs">
+                          <span className="h-1.5 w-1.5 rounded-full bg-tat-gold" />{a}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* VIDEO — only when Sanity has youtubeUrl set. */}
+            {pkg.youtubeUrl && (
+              <PackageVideo
+                url={pkg.youtubeUrl}
+                poster={pkg.heroImage}
+                title={pkg.title}
+              />
+            )}
 
             {/* REVIEWS */}
             <section id="reviews" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
@@ -357,6 +375,12 @@ export default async function PackageDetail({ params }: Props) {
             <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <CancellationLadder price={pkg.price} />
             </section>
+
+            {/* FAQS — Sanity-driven, FAQPage JSON-LD inside the component. */}
+            <PackageFaqs
+              faqs={pkg.faqs ?? []}
+              pageUrl={`https://trustandtrip.com/packages/${pkg.slug}`}
+            />
 
             {/* NEED TO KNOW */}
             <section className="mb-4 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">

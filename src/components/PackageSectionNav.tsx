@@ -10,6 +10,7 @@ const SECTIONS = [
   { id: "inclusions", label: "Inclusions" },
   { id: "hotel",      label: "Hotel" },
   { id: "reviews",    label: "Reviews" },
+  { id: "faqs",       label: "FAQs" },
 ];
 
 interface Props {

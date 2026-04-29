@@ -1,33 +1,32 @@
 "use client";
 
-import { useState } from "react";
-import { Hotel, Utensils, Plane, Camera, Bus, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Sparkles, ChevronDown, ChevronUp } from "lucide-react";
+import { deriveTourIncludes } from "@/lib/tour-includes";
 
 interface Props {
   highlights: string[];
+  /** Inclusions text array — drives which icons render in the top ribbon.
+   *  Heuristically matched to icon buckets (Hotel/Meals/Flight/etc.). */
+  inclusions?: string[];
 }
 
-const INCLUDED = [
-  { icon: Hotel,    label: "Hotel" },
-  { icon: Utensils, label: "Meals" },
-  { icon: Plane,    label: "Flight" },
-  { icon: Camera,   label: "Sightseeing" },
-  { icon: Bus,      label: "Transport" },
-];
-
 /**
- * Tour includes + highlights ribbon. Replaces the legacy 5-icon "What's
- * included" row with a richer two-block layout: a top ribbon listing the
- * services bundled into the trip, plus an expandable Tour Highlights list
- * (collapsed to 6 items by default with a "View more" toggle).
- *
- * Designed to mirror the Veena-World style reference but cleaner — proper
- * icon tiles, hover affordance, and the highlights list lives in the same
- * card so the user gets the full picture at a glance.
+ * Tour includes + highlights ribbon. The top ribbon's icons are derived
+ * per-package from the inclusions[] array (e.g. an inclusions list with
+ * "houseboat cruise" lights up the Cruise icon, not the generic Bus).
+ * Expandable highlights list lives below.
  */
-export default function TourIncludesRibbon({ highlights }: Props) {
+export default function TourIncludesRibbon({ highlights, inclusions = [] }: Props) {
   const [expanded, setExpanded] = useState(false);
   const visible = expanded ? highlights : highlights.slice(0, 6);
+  const includes = useMemo(() => deriveTourIncludes(inclusions), [inclusions]);
+  // Grid-cols varies with detected count so 3 tiles don't look orphaned
+  // in a 5-col grid. Maps 3→3, 4→4, 5→5.
+  const gridCols =
+    includes.length >= 5 ? "grid-cols-5"
+    : includes.length === 4 ? "grid-cols-4"
+    : "grid-cols-3";
 
   return (
     <div className="rounded-3xl border border-tat-charcoal/8 dark:border-white/10 bg-white dark:bg-white/5 shadow-soft overflow-hidden">
@@ -37,10 +36,10 @@ export default function TourIncludesRibbon({ highlights }: Props) {
           <Sparkles className="h-3.5 w-3.5" />
           Tour includes
         </p>
-        <ul className="grid grid-cols-5 gap-3 md:gap-5">
-          {INCLUDED.map(({ icon: Icon, label }) => (
+        <ul className={`grid ${gridCols} gap-3 md:gap-5`}>
+          {includes.map(({ id, icon: Icon, label }) => (
             <li
-              key={label}
+              key={id}
               className="flex flex-col items-center gap-2 text-center group/include"
             >
               <span className="grid place-items-center h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-gradient-to-br from-tat-gold/15 to-tat-gold/5 ring-1 ring-tat-gold/25 group-hover/include:scale-105 transition-transform">
