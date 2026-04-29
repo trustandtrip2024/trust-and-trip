@@ -57,12 +57,12 @@ export default function UpgradesTabs() {
   return (
     <div className="rounded-3xl border border-tat-charcoal/8 dark:border-white/10 bg-white dark:bg-white/5 shadow-soft overflow-hidden">
       <div className="px-5 md:px-7 pt-5 md:pt-6">
-        <p className="tt-eyebrow !text-tat-burnt dark:!text-tat-gold mb-1.5">
+        <p className="tt-eyebrow !text-tat-gold dark:!text-tat-gold mb-1.5">
           Upgrades available
         </p>
         <p className="font-display text-[20px] md:text-[22px] font-medium text-tat-charcoal dark:text-tat-paper leading-tight">
           Want luxury?{" "}
-          <em className="not-italic font-display italic text-tat-burnt dark:text-tat-gold">
+          <em className="not-italic font-display italic text-tat-gold dark:text-tat-gold">
             Add it at minimum cost.
           </em>
         </p>
@@ -81,7 +81,7 @@ export default function UpgradesTabs() {
               onClick={() => setActive(t.id)}
               className={`shrink-0 inline-flex items-center gap-2 px-4 py-3 text-[13px] font-semibold border-b-2 transition-colors ${
                 on
-                  ? "border-tat-burnt dark:border-tat-gold text-tat-charcoal dark:text-tat-paper"
+                  ? "border-tat-gold dark:border-tat-gold text-tat-charcoal dark:text-tat-paper"
                   : "border-transparent text-tat-charcoal/55 dark:text-tat-paper/55 hover:text-tat-charcoal dark:hover:text-tat-paper"
               }`}
             >
@@ -103,7 +103,7 @@ export default function UpgradesTabs() {
               key={i}
               className="flex items-start gap-2.5 text-[13.5px] text-tat-charcoal/85 dark:text-tat-paper/85 leading-relaxed"
             >
-              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-tat-burnt dark:bg-tat-gold shrink-0" />
+              <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-tat-gold shrink-0" />
               <span>{b}</span>
             </li>
           ))}
@@ -117,7 +117,7 @@ export default function UpgradesTabs() {
         </p>
         <a
           href="tel:+918115999588"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-tat-charcoal text-tat-paper text-[13px] font-semibold hover:bg-tat-burnt transition-colors shrink-0"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-tat-charcoal text-tat-paper text-[13px] font-semibold hover:bg-tat-teal transition-colors shrink-0"
         >
           <Phone className="h-4 w-4" />
           Talk to a planner

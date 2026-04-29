@@ -146,7 +146,7 @@ export default function SeoFooterIndex() {
       <div className="container mx-auto px-5 md:px-8 lg:px-12 max-w-7xl">
         <header className="max-w-3xl">
           <p className="tt-eyebrow flex items-center gap-2">
-            <MapPin className="h-3.5 w-3.5 text-tat-burnt" />
+            <MapPin className="h-3.5 w-3.5 text-tat-gold" />
             Explore the index
           </p>
           <h2
@@ -154,7 +154,7 @@ export default function SeoFooterIndex() {
             className="mt-2 font-display text-2xl md:text-3xl lg:text-4xl font-medium text-tat-charcoal dark:text-tat-paper text-balance"
           >
             Every place we travel,{" "}
-            <em className="not-italic font-display italic text-tat-burnt dark:text-tat-gold">
+            <em className="not-italic font-display italic text-tat-gold dark:text-tat-gold">
               one tap away.
             </em>
           </h2>
@@ -169,7 +169,7 @@ export default function SeoFooterIndex() {
                 className="group relative rounded-2xl bg-white/90 dark:bg-white/5 backdrop-blur-[2px] ring-1 ring-tat-charcoal/8 dark:ring-white/10 shadow-soft hover:shadow-soft-lg transition-shadow duration-300 p-5 md:p-6"
               >
                 <div className="flex items-start gap-3">
-                  <span className="shrink-0 grid place-items-center h-10 w-10 rounded-xl bg-tat-burnt/10 dark:bg-tat-gold/15 text-tat-burnt dark:text-tat-gold ring-1 ring-tat-burnt/10 dark:ring-tat-gold/20 group-hover:scale-105 transition-transform duration-200">
+                  <span className="shrink-0 grid place-items-center h-10 w-10 rounded-xl bg-tat-gold/10 dark:bg-tat-gold/15 text-tat-gold dark:text-tat-gold ring-1 ring-tat-gold/10 dark:ring-tat-gold/20 group-hover:scale-105 transition-transform duration-200">
                     <Icon className="h-4.5 w-4.5" strokeWidth={2} />
                   </span>
                   <div className="min-w-0">
@@ -186,7 +186,7 @@ export default function SeoFooterIndex() {
                   {col.links.map((l) => {
                     const ext = isExternal(l.href);
                     const cls =
-                      "inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-tat-charcoal/[0.04] dark:bg-white/8 hover:bg-tat-burnt hover:text-white dark:hover:bg-tat-gold dark:hover:text-tat-charcoal text-[12px] font-medium text-tat-charcoal/80 dark:text-tat-paper/80 ring-1 ring-tat-charcoal/5 dark:ring-white/10 transition-colors duration-150 max-w-full";
+                      "inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-tat-charcoal/[0.04] dark:bg-white/8 hover:bg-tat-teal hover:text-white dark:hover:bg-tat-gold dark:hover:text-tat-charcoal text-[12px] font-medium text-tat-charcoal/80 dark:text-tat-paper/80 ring-1 ring-tat-charcoal/5 dark:ring-white/10 transition-colors duration-150 max-w-full";
                     const inner = (
                       <>
                         <span className="truncate">{l.label}</span>

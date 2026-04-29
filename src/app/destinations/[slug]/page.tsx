@@ -241,7 +241,7 @@ export default async function DestinationDetail({ params }: Props) {
                   href={`/packages?destination=${destination.slug}&type=${t.type}`}
                   className="group rounded-2xl bg-tat-paper hover:bg-white border border-tat-charcoal/8 hover:border-tat-gold/40 transition-all p-4 md:p-5"
                 >
-                  <span className="inline-flex items-center gap-2 text-tat-burnt">
+                  <span className="inline-flex items-center gap-2 text-tat-gold">
                     {t.type === "Couple" ? (
                       <Heart className="h-4 w-4" aria-hidden />
                     ) : (
@@ -259,7 +259,7 @@ export default async function DestinationDetail({ params }: Props) {
                       from ₹{t.minPrice.toLocaleString("en-IN")}
                     </p>
                   )}
-                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-tat-burnt group-hover:gap-1.5 transition-all">
+                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-tat-gold group-hover:gap-1.5 transition-all">
                     Browse <ArrowRight className="h-3 w-3" />
                   </span>
                 </Link>

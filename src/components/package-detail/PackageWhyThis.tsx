@@ -28,8 +28,8 @@ export default function PackageWhyThis({ bullets, bestFor }: Props) {
       className="rounded-card bg-gradient-to-br from-tat-cream-warm/50 via-tat-paper to-tat-paper dark:from-white/5 dark:via-tat-charcoal dark:to-tat-charcoal ring-1 ring-tat-charcoal/8 dark:ring-white/10 p-5 md:p-6"
     >
       {bestFor && (
-        <p className="inline-flex items-center gap-1.5 mb-3 text-eyebrow uppercase font-semibold text-tat-burnt dark:text-tat-gold">
-          <span className="h-1.5 w-1.5 rounded-full bg-tat-burnt dark:bg-tat-gold" />
+        <p className="inline-flex items-center gap-1.5 mb-3 text-eyebrow uppercase font-semibold text-tat-gold dark:text-tat-gold">
+          <span className="h-1.5 w-1.5 rounded-full bg-tat-gold" />
           Best for {bestFor}
         </p>
       )}
@@ -47,7 +47,7 @@ export default function PackageWhyThis({ bullets, bestFor }: Props) {
               key={i}
               className="flex items-start gap-3"
             >
-              <span className="shrink-0 grid h-9 w-9 place-items-center rounded-full bg-tat-burnt/10 dark:bg-tat-gold/15 text-tat-burnt dark:text-tat-gold">
+              <span className="shrink-0 grid h-9 w-9 place-items-center rounded-full bg-tat-gold/10 dark:bg-tat-gold/15 text-tat-gold dark:text-tat-gold">
                 <Icon className="h-4 w-4" aria-hidden />
               </span>
               <p className="text-body-sm text-tat-charcoal/80 dark:text-tat-paper/80 leading-relaxed">

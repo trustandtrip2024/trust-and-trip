@@ -44,7 +44,7 @@ export default function HomeBrandReel({
             className="mt-2 font-display font-normal text-h2 text-tat-charcoal dark:text-tat-paper text-balance"
           >
             {title}{" "}
-            <em className="not-italic font-display italic text-tat-burnt dark:text-tat-gold">
+            <em className="not-italic font-display italic text-tat-gold dark:text-tat-gold">
               {italicTail}
             </em>
           </h2>
@@ -78,8 +78,8 @@ export default function HomeBrandReel({
               hasVideo ? "" : "opacity-80"
             }`}
           >
-            <span className="grid h-16 w-16 md:h-20 md:w-20 place-items-center rounded-full bg-white/95 text-tat-burnt shadow-card transition duration-200 group-hover:scale-105 motion-reduce:group-hover:scale-100">
-              <Play className="h-7 w-7 md:h-8 md:w-8 fill-tat-burnt translate-x-0.5" />
+            <span className="grid h-16 w-16 md:h-20 md:w-20 place-items-center rounded-full bg-white/95 text-tat-gold shadow-card transition duration-200 group-hover:scale-105 motion-reduce:group-hover:scale-100">
+              <Play className="h-7 w-7 md:h-8 md:w-8 fill-tat-gold translate-x-0.5" />
             </span>
           </span>
           <span className="absolute bottom-4 left-4 right-4 text-left text-white/85 text-meta">

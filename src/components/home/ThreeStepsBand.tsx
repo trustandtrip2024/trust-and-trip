@@ -42,7 +42,7 @@ export default function ThreeStepsBand({
         <ol className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
           {items.map((s) => (
             <li key={s.n} className="tt-card tt-card-p">
-              <p className="font-display text-h2 text-tat-burnt">{s.n}</p>
+              <p className="font-display text-h2 text-tat-gold">{s.n}</p>
               <h3 className="mt-2 font-display font-normal text-h3 text-tat-charcoal">{s.title}</h3>
               <p className="mt-2 text-body text-tat-charcoal/80">{s.body}</p>
             </li>

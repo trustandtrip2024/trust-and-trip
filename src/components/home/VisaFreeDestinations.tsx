@@ -77,7 +77,7 @@ export default function VisaFreeDestinations() {
             italicTail="pack and go."
             lede="Six destinations you can fly to without a consulate appointment. Visa-free or visa-on-arrival for Indian passport holders."
           />
-          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-pill bg-tat-burnt/10 border border-tat-burnt/30 text-tat-burnt text-[12px] font-medium uppercase tracking-[0.12em]">
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-pill bg-tat-gold/10 border border-tat-gold/30 text-tat-gold text-[12px] font-medium uppercase tracking-[0.12em]">
             <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
             For Indian passports
           </span>
@@ -91,7 +91,7 @@ export default function VisaFreeDestinations() {
             >
               <Link
                 href={d.href}
-                className="group relative block aspect-[4/5] rounded-card overflow-hidden bg-tat-charcoal shadow-card transition duration-200 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2"
+                className="group relative block aspect-[4/5] rounded-card overflow-hidden bg-tat-charcoal shadow-card transition duration-200 hover:shadow-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
               >
                 <Image
                   src={d.image}
@@ -103,7 +103,7 @@ export default function VisaFreeDestinations() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/85 via-tat-charcoal/30 to-transparent" />
 
-                <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-tat-burnt text-tat-paper text-[11px] font-medium uppercase tracking-[0.1em]">
+                <span className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-tat-orange text-tat-paper text-[11px] font-medium uppercase tracking-[0.1em]">
                   <Plane className="h-3 w-3" aria-hidden />
                   {d.rule}
                 </span>
@@ -116,7 +116,7 @@ export default function VisaFreeDestinations() {
                   <p className="mt-1.5 text-meta text-white/80 line-clamp-2">
                     {d.whisper}
                   </p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-meta text-white/85 group-hover:text-tat-burnt transition duration-120">
+                  <span className="mt-3 inline-flex items-center gap-1 text-meta text-white/85 group-hover:text-tat-gold transition duration-120">
                     Explore packages
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" />
                   </span>
@@ -132,7 +132,7 @@ export default function VisaFreeDestinations() {
           </p>
           <Link
             href="/packages"
-            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-tat-charcoal hover:text-tat-burnt transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-burnt focus-visible:ring-offset-2 rounded-sm"
+            className="inline-flex items-center gap-1.5 text-body-sm font-medium text-tat-charcoal hover:text-tat-gold transition duration-120 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 rounded-sm"
           >
             See all international packages
             <ArrowRight className="h-4 w-4" />

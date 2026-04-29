@@ -25,7 +25,7 @@ export default function ExperienceVectorGrid() {
             <p className="eyebrow-ember">How to travel</p>
             <h2 id="exp-grid-heading" className="heading-section mt-2 max-w-md text-balance">
               Travel the way
-              <span className="italic text-gradient-passion font-light"> you feel it.</span>
+              <span className="italic text-tat-gold font-light"> you feel it.</span>
             </h2>
             <p className="text-sm text-tat-charcoal/55 mt-3 max-w-sm leading-relaxed">
               Every journey is different. Pick the mood you&apos;re in.

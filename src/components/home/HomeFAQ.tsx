@@ -69,7 +69,7 @@ export default function HomeFAQ() {
                   <h3 className="font-display font-medium text-[18px] md:text-[20px] text-tat-charcoal dark:text-tat-paper text-balance">
                     {f.q}
                   </h3>
-                  <ChevronDown className="h-5 w-5 shrink-0 text-tat-burnt transition-transform duration-200 group-open:rotate-180" aria-hidden />
+                  <ChevronDown className="h-5 w-5 shrink-0 text-tat-gold transition-transform duration-200 group-open:rotate-180" aria-hidden />
                 </summary>
                 <p className="mt-3 pr-8 text-body text-tat-slate dark:text-tat-paper/75 leading-relaxed">
                   {f.a}
@@ -87,7 +87,7 @@ export default function HomeFAQ() {
             href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip%20%E2%80%94%20I%20have%20a%20question."
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-burnt dark:text-tat-gold hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
+            className="mt-2 inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-gold dark:text-tat-gold hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
           >
             Ask a planner on WhatsApp
             <ArrowRight className="h-4 w-4" />

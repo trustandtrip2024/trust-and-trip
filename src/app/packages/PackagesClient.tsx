@@ -725,7 +725,7 @@ function ActiveFilterChips({
         <button
           type="button"
           onClick={clearAll}
-          className="text-xs text-tat-burnt hover:text-tat-charcoal underline-offset-2 hover:underline transition-colors"
+          className="text-xs text-tat-gold hover:text-tat-charcoal underline-offset-2 hover:underline transition-colors"
         >
           Clear all
         </button>
@@ -742,22 +742,22 @@ function CustomTripCTACard() {
     <Link
       href="/customize-trip"
       onClick={() => captureIntent("customize_click", { note: "Packages grid · Custom-trip CTA card" })}
-      className="group flex flex-col justify-between rounded-3xl border-2 border-dashed border-tat-burnt/30 bg-gradient-to-br from-tat-burnt/5 via-transparent to-tat-gold/10 hover:border-tat-burnt hover:from-tat-burnt/10 transition-colors p-6 md:p-7 min-h-[420px]"
+      className="group flex flex-col justify-between rounded-3xl border-2 border-dashed border-tat-gold/30 bg-gradient-to-br from-tat-gold/5 via-transparent to-tat-gold/15 hover:border-tat-gold hover:from-tat-gold/15 transition-colors p-6 md:p-7 min-h-[420px]"
     >
       <div>
-        <span className="inline-flex items-center justify-center h-10 w-10 rounded-2xl bg-tat-burnt/15 text-tat-burnt mb-4">
+        <span className="inline-flex items-center justify-center h-10 w-10 rounded-2xl bg-tat-gold/15 text-tat-gold mb-4">
           <Sparkles className="h-5 w-5" />
         </span>
-        <p className="text-[10px] uppercase tracking-[0.22em] text-tat-burnt font-semibold">Don&apos;t see what you want?</p>
+        <p className="text-[10px] uppercase tracking-[0.22em] text-tat-gold font-semibold">Don&apos;t see what you want?</p>
         <h3 className="mt-2 font-display text-xl md:text-2xl font-medium text-tat-charcoal text-balance">
-          We craft custom itineraries in <em className="not-italic italic font-display text-tat-burnt">24 hours</em>.
+          We craft custom itineraries in <em className="not-italic italic font-display text-tat-gold">24 hours</em>.
         </h3>
         <p className="mt-3 text-sm text-tat-charcoal/65 leading-relaxed">
           Tell us where, when, and the kind of trip you want. A real planner
           builds your itinerary, free until you&apos;re sure.
         </p>
       </div>
-      <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-tat-burnt group-hover:gap-2 transition-all">
+      <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-tat-gold group-hover:gap-2 transition-all">
         Plan my custom trip
         <ArrowRight className="h-4 w-4" />
       </span>

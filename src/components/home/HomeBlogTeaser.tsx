@@ -55,7 +55,7 @@ export default function HomeBlogTeaser({ posts }: Props = {}) {
           />
           <Link
             href="/blog"
-            className="hidden md:inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-burnt dark:text-tat-gold hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
+            className="hidden md:inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-gold dark:text-tat-gold hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
           >
             All guides
             <ArrowRight className="h-4 w-4" />
@@ -83,7 +83,7 @@ export default function HomeBlogTeaser({ posts }: Props = {}) {
         <div className="md:hidden mt-8 text-center">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-burnt dark:text-tat-gold hover:underline underline-offset-4"
+            className="inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-gold dark:text-tat-gold hover:underline underline-offset-4"
           >
             All guides
             <ArrowRight className="h-4 w-4" />
@@ -119,10 +119,10 @@ function BlogCardStatic({ post }: { post: FallbackPost }) {
         </p>
         <div className="mt-4 flex items-center justify-between text-meta text-tat-slate/80">
           <span className="inline-flex items-center gap-1">
-            <Clock className="h-3 w-3 text-tat-burnt" />
+            <Clock className="h-3 w-3 text-tat-gold" />
             {post.readTime}
           </span>
-          <span className="inline-flex items-center gap-1 font-semibold text-tat-burnt dark:text-tat-gold">
+          <span className="inline-flex items-center gap-1 font-semibold text-tat-gold dark:text-tat-gold">
             Read
             <ArrowRight className="h-3.5 w-3.5" />
           </span>
@@ -164,11 +164,11 @@ function BlogCardSanity({ post }: { post: SanityBlogPost }) {
         <div className="mt-4 flex items-center justify-between text-meta text-tat-slate/80">
           {post.readTime && (
             <span className="inline-flex items-center gap-1">
-              <Clock className="h-3 w-3 text-tat-burnt" />
+              <Clock className="h-3 w-3 text-tat-gold" />
               {post.readTime}
             </span>
           )}
-          <span className="inline-flex items-center gap-1 font-semibold text-tat-burnt dark:text-tat-gold">
+          <span className="inline-flex items-center gap-1 font-semibold text-tat-gold dark:text-tat-gold">
             Read
             <ArrowRight className="h-3.5 w-3.5" />
           </span>

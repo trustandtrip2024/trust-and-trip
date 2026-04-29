@@ -76,7 +76,7 @@ export default function CancellationLadder({ price, departureDate }: Props) {
     <div className="rounded-3xl border border-tat-charcoal/8 dark:border-white/10 bg-white dark:bg-white/5 shadow-soft overflow-hidden">
       {/* Top: tour price + departure context */}
       <div className="px-5 md:px-7 py-5 md:py-6 border-b border-tat-charcoal/8 dark:border-white/10">
-        <p className="tt-eyebrow !text-tat-burnt dark:!text-tat-gold mb-1.5 inline-flex items-center gap-2">
+        <p className="tt-eyebrow !text-tat-gold dark:!text-tat-gold mb-1.5 inline-flex items-center gap-2">
           <CalendarClock className="h-3.5 w-3.5" />
           Cancellation policy &amp; payment terms
         </p>
@@ -92,7 +92,7 @@ export default function CancellationLadder({ price, departureDate }: Props) {
           — the closer to the date, the larger the slab.{" "}
           <Link
             href="/cancellation-policy"
-            className="text-tat-burnt dark:text-tat-gold underline underline-offset-2 hover:no-underline"
+            className="text-tat-gold dark:text-tat-gold underline underline-offset-2 hover:no-underline"
           >
             Read the full policy
           </Link>
@@ -111,14 +111,14 @@ export default function CancellationLadder({ price, departureDate }: Props) {
             <li
               key={t.pct}
               className={`relative flex items-center gap-4 px-5 md:px-7 py-3.5 md:py-4 ${
-                active ? "bg-tat-burnt/5 dark:bg-tat-gold/8" : ""
+                active ? "bg-tat-gold/5 dark:bg-tat-gold/8" : ""
               }`}
             >
               <span
                 aria-hidden
                 className={`absolute left-0 top-0 bottom-0 w-[3px] ${
                   active
-                    ? "bg-tat-burnt dark:bg-tat-gold"
+                    ? "bg-tat-gold"
                     : t.pct >= 75
                       ? "bg-red-500"
                       : t.pct >= 40
@@ -142,7 +142,7 @@ export default function CancellationLadder({ price, departureDate }: Props) {
                 </p>
               </div>
               {active && (
-                <span className="hidden sm:inline-flex shrink-0 items-center gap-1 px-2.5 py-1 rounded-full bg-tat-burnt text-white text-[11px] font-semibold">
+                <span className="hidden sm:inline-flex shrink-0 items-center gap-1 px-2.5 py-1 rounded-full bg-tat-gold text-white text-[11px] font-semibold">
                   Current window
                 </span>
               )}
@@ -155,7 +155,7 @@ export default function CancellationLadder({ price, departureDate }: Props) {
       <button
         type="button"
         onClick={() => setTiersOpen((v) => !v)}
-        className="w-full flex items-center justify-center gap-1.5 py-3 border-t border-tat-charcoal/8 dark:border-white/10 text-[13px] font-semibold text-tat-burnt dark:text-tat-gold hover:bg-tat-cream-warm/40 dark:hover:bg-white/5 transition-colors"
+        className="w-full flex items-center justify-center gap-1.5 py-3 border-t border-tat-charcoal/8 dark:border-white/10 text-[13px] font-semibold text-tat-gold dark:text-tat-gold hover:bg-tat-cream-warm/40 dark:hover:bg-white/5 transition-colors"
       >
         {tiersOpen ? "Show fewer slabs" : "View all cancellation slabs"}
         <ChevronDown className={`h-4 w-4 transition-transform ${tiersOpen ? "rotate-180" : ""}`} aria-hidden />
@@ -164,12 +164,12 @@ export default function CancellationLadder({ price, departureDate }: Props) {
       {/* Help footer */}
       <div className="px-5 md:px-7 py-4 bg-tat-cream-warm/40 dark:bg-white/5 border-t border-tat-charcoal/8 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <p className="text-[13px] text-tat-charcoal/70 dark:text-tat-paper/75 inline-flex items-center gap-2">
-          <Info className="h-4 w-4 text-tat-burnt dark:text-tat-gold" />
+          <Info className="h-4 w-4 text-tat-gold dark:text-tat-gold" />
           Need to change or cancel? We&apos;ll handle it.
         </p>
         <a
           href="tel:+918115999588"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-tat-charcoal text-tat-paper text-[13px] font-semibold hover:bg-tat-burnt transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-tat-charcoal text-tat-paper text-[13px] font-semibold hover:bg-tat-teal transition-colors"
         >
           <Phone className="h-4 w-4" />
           Call +91 8115 999 588

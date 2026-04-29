@@ -62,10 +62,6 @@ h1, h2, h3 {
     @apply inline-flex items-center gap-2 bg-tat-orange text-tat-paper px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-ember focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange/60;
   }
 
-  .btn-passion {
-    @apply inline-flex items-center gap-2 bg-gradient-passion text-tat-paper px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-crimson;
-  }
-
   .btn-outline {
     @apply inline-flex items-center gap-2 border border-tat-charcoal/20 text-tat-charcoal px-7 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal;
   }
@@ -84,22 +80,6 @@ h1, h2, h3 {
 
   .eyebrow-ember {
     @apply text-[11px] uppercase tracking-[0.28em] font-semibold text-tat-orange;
-  }
-
-  .text-gradient-passion {
-    background: linear-gradient(135deg, #F26B1F 0%, #C9183B 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  .text-gradient-aurora {
-    background: linear-gradient(135deg, #F2B340 0%, #F26B1F 55%, #C9183B 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
   }
 
   .heading-display {
@@ -166,7 +146,7 @@ h1, h2, h3 {
      clamps from tailwind.config.js drive every section header on the site. */
   .tt-eyebrow     { @apply text-eyebrow uppercase font-semibold text-tat-gold; }
   .tt-title       { @apply mt-2 font-display text-h2 text-tat-charcoal dark:text-tat-paper; }
-  .tt-title em    { @apply not-italic font-display italic text-tat-burnt; }
+  .tt-title em    { @apply not-italic font-display italic text-tat-gold; }
   .tt-lede        { @apply mt-3 text-lead text-tat-charcoal/80 dark:text-tat-paper/75 max-w-[68ch]; }
 
   /* Chip row */
@@ -299,8 +279,6 @@ html.dark {
 html.dark .bg-tat-paper,
 html.dark .bg-tat-cream,
 html.dark .bg-tat-cream-warm,
-html.dark .bg-cream,
-html.dark .bg-sand,
 html.dark .bg-white {
   background-color: #1B1B1B !important;
   color: #F2EAD9;
@@ -343,15 +321,6 @@ html.dark .text-tat-charcoal\/15,
 html.dark .text-tat-charcoal\/10,
 html.dark .text-tat-charcoal\/8,
 html.dark .text-tat-charcoal\/5 { color: rgba(242, 234, 217, 0.32) !important; }
-
-/* Same treatment for the legacy "ink" alias used by the older home
-   sections still on the cream/ink token pair. */
-html.dark .text-ink,
-html.dark .text-ink\/80,
-html.dark .text-ink\/70,
-html.dark .text-ink\/60 { color: #F2EAD9 !important; }
-html.dark .text-ink\/50,
-html.dark .text-ink\/40 { color: rgba(242, 234, 217, 0.7) !important; }
 
 /* Borders that use charcoal-with-opacity become invisible on the dark
    canvas — switch them to a paper-tinted line instead. */
@@ -459,73 +428,6 @@ html.pkg-detail-nav-active header.sticky {
     /* Typography system — Fraunces (display) + Inter (body) */
     --font-display: var(--font-display);
     --font-body: var(--font-sans);
-    --color-burnt: #C2541C;
-
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
-  }
-  .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
   }
   html {
     @apply font-sans;

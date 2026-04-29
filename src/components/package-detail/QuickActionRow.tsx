@@ -59,8 +59,8 @@ export default function QuickActionRow({
         download
         className="group/q flex flex-col items-center gap-1.5 py-3 md:py-4 rounded-xl hover:bg-white dark:hover:bg-white/10 transition-colors border-x border-tat-charcoal/8 dark:border-white/10"
       >
-        <span className="grid place-items-center h-9 w-9 rounded-full bg-tat-burnt/12 group-hover/q:bg-tat-burnt/20 transition-colors">
-          <Download className="h-4 w-4 text-tat-burnt dark:text-tat-gold" />
+        <span className="grid place-items-center h-9 w-9 rounded-full bg-tat-gold/12 group-hover/q:bg-tat-gold/20 transition-colors">
+          <Download className="h-4 w-4 text-tat-gold dark:text-tat-gold" />
         </span>
         <span className="text-[11px] md:text-[12px] font-semibold text-tat-charcoal dark:text-tat-paper">
           Download Brochure

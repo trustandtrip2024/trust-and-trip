@@ -23,7 +23,7 @@ export default function SectionHeader({
         {italicTail && (
           <>
             {" "}
-            <em className="not-italic font-display italic text-tat-burnt">{italicTail}</em>
+            <em className="not-italic font-display italic text-tat-gold">{italicTail}</em>
           </>
         )}
       </Heading>
