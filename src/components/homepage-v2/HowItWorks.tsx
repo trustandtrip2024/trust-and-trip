@@ -69,7 +69,7 @@ export default function HowItWorks() {
         <div className="mt-10 flex justify-center">
           <Link
             href="/plan"
-            className="inline-flex items-center gap-2 bg-tat-charcoal text-tat-paper hover:bg-tat-gold hover:text-tat-charcoal px-6 py-3 rounded-full text-sm font-semibold transition-all group"
+            className="inline-flex items-center gap-2 bg-tat-teal text-tat-paper hover:bg-tat-teal-deep px-6 py-3 rounded-full text-sm font-semibold transition-all group"
           >
             Start planning free
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

@@ -70,7 +70,7 @@ export default function BookingsPage() {
           <CalendarCheck className="h-10 w-10 text-tat-charcoal/20 mx-auto mb-3" />
           <p className="font-medium text-tat-charcoal">No bookings yet</p>
           <p className="text-sm text-tat-charcoal/45 mt-1 mb-5">Your confirmed bookings will appear here.</p>
-          <Link href="/packages" className="inline-flex items-center gap-2 bg-tat-charcoal text-tat-paper px-5 py-2.5 rounded-full text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all">
+          <Link href="/packages" className="inline-flex items-center gap-2 bg-tat-teal text-tat-paper px-5 py-2.5 rounded-full text-sm font-medium hover:bg-tat-teal-deep transition-all">
             Browse experiences <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

@@ -181,7 +181,7 @@ export default async function DestinationDetail({ params }: Props) {
             ))}
 
             <Link href={`/packages?destination=${destination.slug}`}
-              className="flex items-center justify-center gap-2 w-full bg-tat-charcoal text-tat-paper py-3 rounded-xl text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-colors mt-2">
+              className="flex items-center justify-center gap-2 w-full bg-tat-teal text-tat-paper py-3 rounded-xl text-sm font-medium hover:bg-tat-teal-deep transition-colors mt-2">
               View all experiences <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

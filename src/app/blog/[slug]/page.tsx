@@ -208,7 +208,7 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="bg-tat-gold/10 border border-tat-gold/20 rounded-2xl p-5">
               <p className="font-display text-base font-medium text-balance mb-2">Ready to plan your next trip?</p>
               <p className="text-xs text-tat-charcoal/60 mb-3">Talk to a planner — free consultation.</p>
-              <Link href="/customize-trip" className="block text-center bg-tat-charcoal text-tat-paper text-xs font-medium py-2.5 rounded-xl hover:bg-tat-gold hover:text-tat-charcoal transition-colors">
+              <Link href="/customize-trip" className="block text-center bg-tat-teal text-tat-paper text-xs font-medium py-2.5 rounded-xl hover:bg-tat-teal-deep transition-colors">
                 Get Free Itinerary
               </Link>
             </div>

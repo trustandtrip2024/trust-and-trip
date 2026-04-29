@@ -604,7 +604,7 @@ function StepDuration({
         </button>
         <button
           onClick={onNext}
-          className="inline-flex items-center gap-2 bg-tat-charcoal text-tat-paper px-6 py-2.5 rounded-full text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all duration-300"
+          className="inline-flex items-center gap-2 bg-tat-teal text-tat-paper px-6 py-2.5 rounded-full text-sm font-medium hover:bg-tat-teal-deep transition-all duration-300"
         >
           Next <ArrowRight className="h-4 w-4" />
         </button>
@@ -755,7 +755,7 @@ function StepResults({
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
             <button
               onClick={onViewAll}
-              className="flex-1 flex items-center justify-center gap-2 bg-tat-charcoal text-tat-paper py-3 rounded-full text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all duration-300"
+              className="flex-1 flex items-center justify-center gap-2 bg-tat-teal text-tat-paper py-3 rounded-full text-sm font-medium hover:bg-tat-teal-deep transition-all duration-300"
             >
               See all matching packages
               <ArrowRight className="h-4 w-4" />

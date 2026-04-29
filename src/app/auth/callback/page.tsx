@@ -91,7 +91,7 @@ function AuthCallbackInner() {
           </div>
           <p className="font-medium text-tat-charcoal mb-1">Sign-in link couldn't be used</p>
           <p className="text-xs text-tat-charcoal/60 mb-5 break-words">{error}</p>
-          <Link href="/login" className="inline-block px-4 py-2.5 bg-tat-charcoal text-tat-paper rounded-xl text-sm font-semibold hover:bg-tat-gold hover:text-tat-charcoal transition-colors">
+          <Link href="/login" className="inline-block px-4 py-2.5 bg-tat-teal text-tat-paper rounded-xl text-sm font-semibold hover:bg-tat-teal-deep transition-colors">
             Back to sign in
           </Link>
         </div>

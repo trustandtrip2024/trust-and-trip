@@ -78,7 +78,7 @@ export default function FloatingWhatsApp() {
                       note: "Floating contact call button (desktop)",
                     })
                   }
-                  className="flex items-center gap-2.5 bg-tat-charcoal text-tat-paper px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-colors"
+                  className="flex items-center gap-2.5 bg-tat-teal text-tat-paper px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-tat-teal-deep transition-colors"
                 >
                   <Phone className="h-4 w-4" />
                   Call Now

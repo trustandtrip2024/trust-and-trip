@@ -85,7 +85,7 @@ export default function CartPage() {
           <p className="font-medium text-tat-charcoal">Your cart is empty</p>
           <p className="text-sm text-tat-charcoal/45 mt-1 mb-5">Add experiences from Saved Trips or browse.</p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Link href="/dashboard/saved" className="inline-flex items-center gap-2 bg-tat-charcoal text-tat-paper px-5 py-2.5 rounded-full text-sm font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all">
+            <Link href="/dashboard/saved" className="inline-flex items-center gap-2 bg-tat-teal text-tat-paper px-5 py-2.5 rounded-full text-sm font-medium hover:bg-tat-teal-deep transition-all">
               Saved trips <ArrowRight className="h-4 w-4" />
             </Link>
             <Link href="/packages" className="inline-flex items-center gap-2 border border-tat-charcoal/20 text-tat-charcoal px-5 py-2.5 rounded-full text-sm font-medium hover:border-tat-charcoal/40 transition-all">

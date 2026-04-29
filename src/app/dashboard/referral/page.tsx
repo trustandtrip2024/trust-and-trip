@@ -122,7 +122,7 @@ export default function ReferralDashboardPage() {
             <p className="text-sm font-semibold text-tat-charcoal mb-4">Your Referral Link</p>
             <div className="flex items-center gap-2 bg-tat-paper rounded-xl border border-tat-charcoal/10 px-4 py-3 mb-4">
               <p className="text-sm text-tat-charcoal/70 flex-1 truncate">{referralUrl}</p>
-              <button onClick={copy} className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-tat-charcoal text-tat-paper text-xs font-medium hover:bg-tat-gold hover:text-tat-charcoal transition-all">
+              <button onClick={copy} className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-tat-teal text-tat-paper text-xs font-medium hover:bg-tat-teal-deep transition-all">
                 {copied ? <><Check className="h-3.5 w-3.5" />Copied</> : <><Copy className="h-3.5 w-3.5" />Copy</>}
               </button>
             </div>
