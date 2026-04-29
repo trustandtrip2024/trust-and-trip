@@ -50,6 +50,24 @@ export type Package = {
   trending?: boolean;
   featured?: boolean;
   limitedSlots?: boolean;
+
+  // ─── Package detail page · phase-1 ─────────────────────────────────────
+  whyThisPackage?: string[];
+  comparePrice?: number;
+  bestFor?: string;
+  bookedThisMonth?: number;
+
+  // ─── Phase-2 ready ──────────────────────────────────────────────────────
+  hotels?: {
+    city?: string;
+    nights?: number;
+    name: string;
+    stars?: number;
+    description?: string;
+    image?: string;
+  }[];
+  faqs?: { q: string; a: string }[];
+  youtubeUrl?: string;
 };
 
 export type Experience = {

@@ -133,7 +133,17 @@ const PACKAGE_FIELDS = `
   "tags": tags,
   "trending": coalesce(trending, false),
   "featured": coalesce(featured, false),
-  "limitedSlots": coalesce(limitedSlots, false)
+  "limitedSlots": coalesce(limitedSlots, false),
+  "whyThisPackage": whyThisPackage,
+  "comparePrice": comparePrice,
+  "bestFor": bestFor,
+  "bookedThisMonth": bookedThisMonth,
+  "hotels": hotels[]{
+    city, nights, name, stars, description,
+    "image": image.asset->url
+  },
+  "faqs": faqs[]{ q, a },
+  "youtubeUrl": youtubeUrl
 `;
 
 const PACKAGES_QUERY = `*[_type == "package"] | order(featured desc, rating desc) { ${PACKAGE_FIELDS} }`;
