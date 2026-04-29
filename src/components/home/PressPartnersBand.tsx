@@ -34,21 +34,26 @@ interface CorporateClient {
   icon?: LucideIcon;
   /** What kind of trip we ran for them (shown as eyebrow microcopy). */
   trip?: string;
+  /** Set to true ONLY when the engagement is real and the team has the
+   *  invoice / PO / signed-off case study on file. False entries do not
+   *  render. Public-sector and trademarked names (e.g. Indian Air Force)
+   *  carry extra legal risk if claimed without proof — default false. */
+  verified: boolean;
 }
 
 const CORPORATE_CLIENTS: CorporateClient[] = [
-  { name: "Swiggy",            domain: "swiggy.com",          trip: "Annual offsite", icon: Briefcase },
-  { name: "Panasonic",         domain: "panasonic.com",       trip: "Sales kickoff",  icon: Briefcase },
-  { name: "SBI Bank",          domain: "sbi.co.in",           trip: "Leadership AGM", icon: Banknote },
-  { name: "Indian Air Force",  icon: ShieldCheck,             trip: "Veterans retreat" },
-  { name: "Ericsson",          domain: "ericsson.com",        trip: "R&D offsite",    icon: Briefcase },
-  { name: "Symbiosis",         domain: "symbiosis.ac.in",     trip: "Faculty AGM",    icon: GraduationCap },
-  { name: "Delhi University",  domain: "du.ac.in",            trip: "Student tour",   icon: GraduationCap },
-  { name: "GD Goenka School",  domain: "gdgoenka.com",        trip: "Class educational", icon: GraduationCap },
-  { name: "TruChip",           domain: "truchip.com",         trip: "Engineering offsite", icon: Briefcase },
-  { name: "IndiGo",            domain: "goindigo.in",         trip: "Crew layover plan", icon: Plane },
-  { name: "Tata Consultancy",  domain: "tcs.com",             trip: "Quarter-end retreat", icon: Building2 },
-  { name: "HCL Technologies",  domain: "hcltech.com",         trip: "Manager offsite", icon: Building2 },
+  { name: "Swiggy",            domain: "swiggy.com",          trip: "Annual offsite", icon: Briefcase, verified: false },
+  { name: "Panasonic",         domain: "panasonic.com",       trip: "Sales kickoff",  icon: Briefcase, verified: false },
+  { name: "SBI Bank",          domain: "sbi.co.in",           trip: "Leadership AGM", icon: Banknote,  verified: false },
+  { name: "Indian Air Force",  icon: ShieldCheck,             trip: "Veterans retreat",                verified: false },
+  { name: "Ericsson",          domain: "ericsson.com",        trip: "R&D offsite",    icon: Briefcase, verified: false },
+  { name: "Symbiosis",         domain: "symbiosis.ac.in",     trip: "Faculty AGM",    icon: GraduationCap, verified: false },
+  { name: "Delhi University",  domain: "du.ac.in",            trip: "Student tour",   icon: GraduationCap, verified: false },
+  { name: "GD Goenka School",  domain: "gdgoenka.com",        trip: "Class educational", icon: GraduationCap, verified: false },
+  { name: "TruChip",           domain: "truchip.com",         trip: "Engineering offsite", icon: Briefcase, verified: false },
+  { name: "IndiGo",            domain: "goindigo.in",         trip: "Crew layover plan", icon: Plane, verified: false },
+  { name: "Tata Consultancy",  domain: "tcs.com",             trip: "Quarter-end retreat", icon: Building2, verified: false },
+  { name: "HCL Technologies",  domain: "hcltech.com",         trip: "Manager offsite", icon: Building2, verified: false },
 ];
 
 function CorporateLogo({ client }: { client: CorporateClient }) {
@@ -171,48 +176,53 @@ export default function PressPartnersBand({
 
       {/* ─── Corporate clients marquee ────────────────────────────────────
           A separate band below the press section showcasing the institutional
-          clients we've curated travel for: AGMs, leadership offsites, faculty
-          retreats, student educational trips. Renders as an infinite-scroll
-          strip with grayscale logos that colourise on hover.
+          clients we've curated travel for. Each entry needs verified=true on
+          the CORPORATE_CLIENTS list — set it only after confirming the
+          engagement (invoice / PO / signed case study on file). The band
+          short-circuits to nothing when no entries are verified, so we never
+          ship aspirational client lists.
           ──────────────────────────────────────────────────────────────── */}
-      <div className="mt-16 md:mt-20 pt-12 border-t border-tat-charcoal/10 dark:border-white/10">
-        <div className="container mx-auto px-5 md:px-8 max-w-6xl text-center">
-          <p className="tt-eyebrow">Corporate &amp; institutional travel</p>
-          <h3 className="mt-2 font-display text-h2 font-medium text-tat-charcoal dark:text-tat-paper text-balance">
-            AGMs, faculty retreats, school tours —{" "}
-            <em className="not-italic font-display italic text-tat-gold dark:text-tat-gold">
-              curated by us.
-            </em>
-          </h3>
-        </div>
+      {(() => {
+        const verifiedClients = CORPORATE_CLIENTS.filter((c) => c.verified);
+        if (verifiedClients.length === 0) return null;
+        return (
+          <div className="mt-16 md:mt-20 pt-12 border-t border-tat-charcoal/10 dark:border-white/10">
+            <div className="container mx-auto px-5 md:px-8 max-w-6xl text-center">
+              <p className="tt-eyebrow">Corporate &amp; institutional travel</p>
+              <h3 className="mt-2 font-display text-h2 font-medium text-tat-charcoal dark:text-tat-paper text-balance">
+                AGMs, faculty retreats, school tours —{" "}
+                <em className="not-italic font-display italic text-tat-gold dark:text-tat-gold">
+                  curated by us.
+                </em>
+              </h3>
+            </div>
 
-        {/* Edge-fade mask so logos enter and exit smoothly. */}
-        <div
-          className="relative mt-8 overflow-hidden"
-          style={{
-            maskImage:
-              "linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)",
-          }}
-        >
-          <div
-            className="flex animate-marquee hover:[animation-play-state:paused] py-4"
-            aria-label="Corporate clients we have curated travel for"
-          >
-            {/* Render the list twice so the translateX(-50%) marquee
-                produces a seamless loop. */}
-            {[...CORPORATE_CLIENTS, ...CORPORATE_CLIENTS].map((c, i) => (
-              <CorporateLogo key={`${c.name}-${i}`} client={c} />
-            ))}
+            <div
+              className="relative mt-8 overflow-hidden"
+              style={{
+                maskImage:
+                  "linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)",
+              }}
+            >
+              <div
+                className="flex animate-marquee hover:[animation-play-state:paused] py-4"
+                aria-label="Corporate clients we have curated travel for"
+              >
+                {[...verifiedClients, ...verifiedClients].map((c, i) => (
+                  <CorporateLogo key={`${c.name}-${i}`} client={c} />
+                ))}
+              </div>
+            </div>
+
+            <p className="mt-6 text-center text-[12px] text-tat-charcoal/45 dark:text-tat-paper/55 italic px-4">
+              Logos belong to their respective owners. Group references available
+              on request — <Link href="/contact" className="underline underline-offset-2 hover:text-tat-gold dark:hover:text-tat-gold">talk to us</Link>.
+            </p>
           </div>
-        </div>
-
-        <p className="mt-6 text-center text-[12px] text-tat-charcoal/45 dark:text-tat-paper/55 italic px-4">
-          Logos belong to their respective owners. Group references available
-          on request — <Link href="/contact" className="underline underline-offset-2 hover:text-tat-gold dark:hover:text-tat-gold">talk to us</Link>.
-        </p>
-      </div>
+        );
+      })()}
     </section>
   );
 }

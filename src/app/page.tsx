@@ -141,7 +141,11 @@ export default async function HomePage() {
           mobile re-engagement and the in-page subnav anchors are enough. */}
       <HomeStickySubnav />
 
-      <TrustBadgeStrip />
+      <TrustBadgeStrip
+        totalTravelers={siteStats.totalTravelers}
+        reviewCount={siteStats.googleReviewCount}
+        rating={siteStats.googleRating}
+      />
 
       <div id="destinations" className={ANCHOR_OFFSET}>
         <HomeTopDestChips destinations={destinations} />
