@@ -56,11 +56,25 @@ export const homepageContentType = defineType({
           description: 'Optional. External image (Unsplash etc.). Takes precedence only if no Sanity image is uploaded.',
         }),
         defineField({
-          name: 'videoUrl',
-          title: 'Hero video URL (YouTube / Vimeo)',
+          name: 'videoMp4Url',
+          title: 'Hero background video (direct .mp4 / .webm)',
           type: 'url',
           description:
-            'Optional. When set, the hero shows a play button over the image. Click swaps the still for an autoplay iframe (LCP stays the static image).',
+            'Recommended. When set, the hero plays this video as an autoplay-loop-muted background — no play button, no third-party branding. Use a CDN-served mp4/webm. Mobile/Safari needs a poster (videoPosterUrl) so initial paint is not blank.',
+          validation: (R) =>
+            R.uri({ scheme: ['http', 'https'] }).custom((v?: string) => {
+              if (!v) return true;
+              return /\.(mp4|webm|mov)(\?.*)?$/i.test(v)
+                ? true
+                : 'Must be a direct .mp4 / .webm / .mov URL.';
+            }),
+        }),
+        defineField({
+          name: 'videoUrl',
+          title: 'Hero video URL — legacy YouTube / Vimeo fallback',
+          type: 'url',
+          description:
+            'Optional. Used only when videoMp4Url is empty. Renders a click-to-play overlay over the still image (LCP stays the static image).',
           validation: (R) =>
             R.uri({ scheme: ['http', 'https'] })
               .custom((v?: string) => {
@@ -75,7 +89,7 @@ export const homepageContentType = defineType({
           title: 'Video poster image (override)',
           type: 'url',
           description:
-            'Optional. Custom thumbnail shown before play. Defaults to the hero image when empty.',
+            'Optional. Frame shown before video first paint. Defaults to the hero image when empty.',
         }),
       ],
     }),

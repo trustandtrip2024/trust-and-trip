@@ -368,9 +368,13 @@ export type HomepageContent = {
     /** Resolved hero background image URL — Sanity image takes precedence,
      *  then imageUrl override, otherwise undefined (caller falls back). */
     heroImage?: string;
-    /** YouTube / Vimeo URL. When set, the hero overlays a play button. */
+    /** Direct .mp4 / .webm URL. When set, the hero plays it as native
+     *  autoplay-loop-muted background — no play button, no third-party chrome. */
+    videoMp4Url?: string;
+    /** YouTube / Vimeo URL. Legacy click-to-play overlay; ignored when
+     *  videoMp4Url is set. */
     videoUrl?: string;
-    /** Optional poster URL for the video play state. */
+    /** Optional poster URL for the video pre-play state. */
     videoPosterUrl?: string;
   };
   recentlyCrafted?: SectionCopy;
@@ -410,6 +414,7 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
         ...,
         "image": image{ asset->{ url } },
         imageUrl,
+        videoMp4Url,
         videoUrl,
         videoPosterUrl
       }

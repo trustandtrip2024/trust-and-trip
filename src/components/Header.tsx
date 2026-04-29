@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
-  Menu, X, Phone, MapPin, Heart, Search, BookOpen, MoreVertical,
+  Menu, X, Phone, Heart, Search, BookOpen, MoreVertical,
   Info, User, LogOut, Sparkles, ChevronRight, ChevronDown, Mail, Instagram,
   MessageCircle, Mic,
 } from "lucide-react";
@@ -229,21 +229,20 @@ export default function Header() {
 
   return (
     <>
-      {/* Top strip */}
-      <div className="relative bg-tat-charcoal text-tat-paper text-xs py-2 md:py-2.5 overflow-hidden">
+      {/* Top strip — single rolling deal + phone. Earlier this row also
+          carried a "Curating journeys across 60+ destinations" tagline,
+          but that was passive chrome and added density without action. */}
+      <div className="relative bg-tat-charcoal text-tat-paper text-xs py-1.5 md:py-2 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-tat-charcoal via-tat-charcoal to-tat-charcoal opacity-95 pointer-events-none" />
         <div className="absolute inset-y-0 left-1/3 w-1/3 bg-gradient-to-r from-transparent via-tat-orange/15 to-transparent blur-2xl pointer-events-none" />
         <div className="relative container-custom flex items-center justify-between gap-4">
           <p className="lg:hidden text-center w-full text-[11px] font-semibold tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">
             <span className="text-tat-orange"><FlashDealRotator /></span>
           </p>
-          <div className="hidden lg:flex items-center gap-5 opacity-90">
-            <span className="flex items-center gap-1.5 whitespace-nowrap">
-              <MapPin className="h-3 w-3 text-tat-orange" />
-              Curating journeys across 60+ destinations
-            </span>
+          <div className="hidden lg:flex items-center gap-2 whitespace-nowrap">
+            <span className="font-semibold tracking-wide text-tat-orange"><FlashDealRotator /></span>
           </div>
-          <div className="hidden lg:flex items-center gap-5 whitespace-nowrap">
+          <div className="hidden lg:flex items-center gap-4 whitespace-nowrap">
             <a
               href="tel:+918115999588"
               onClick={() => captureIntent("call_click", { note: "Header top strip" })}
@@ -251,8 +250,6 @@ export default function Header() {
             >
               <Phone className="h-3 w-3" />+91 8115 999 588
             </a>
-            <span className="opacity-40">|</span>
-            <span className="font-semibold tracking-wide text-tat-orange"><FlashDealRotator /></span>
           </div>
         </div>
       </div>
@@ -324,13 +321,11 @@ export default function Header() {
             </span>
           </nav>
 
-          {/* Right cluster */}
+          {/* Right cluster — kept tight: theme + More + primary CTA on
+              desktop. Currency switcher used to live here as a visible
+              chip but is now reachable inside the More menu, freeing
+              ~80px of horizontal density. */}
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* Currency switcher — visible on desktop so non-Indian visitors
-                discover it without opening the More menu. */}
-            <span className="hidden lg:inline-flex">
-              <CurrencySwitcher variant="navbar" />
-            </span>
             {/* Single theme toggle; responsive Tailwind classes split the
                 paint between the dark mobile header and the light desktop
                 header without rendering the component twice in DOM. */}

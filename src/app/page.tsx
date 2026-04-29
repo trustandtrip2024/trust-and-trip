@@ -137,16 +137,9 @@ export default async function HomePage() {
       <HomeDealRibbon />
       <HeroSearchWizard
         eyebrow={c.hero?.eyebrow}
-        titleStart={c.hero?.titleStart}
-        titleItalic={c.hero?.titleItalic}
-        lede={c.hero?.lede}
         trustStrip={trustStripWithCity}
-        destinations={destinations.map((d) => ({
-          slug: d.slug,
-          name: d.name,
-          country: d.country,
-        }))}
         heroImage={c.hero?.heroImage}
+        videoMp4Url={c.hero?.videoMp4Url}
         videoUrl={c.hero?.videoUrl}
         videoPosterUrl={c.hero?.videoPosterUrl}
       />
