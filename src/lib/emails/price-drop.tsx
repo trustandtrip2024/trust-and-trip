@@ -23,15 +23,15 @@ export function PriceDropEmail({
 
   return (
     <html>
-      <body style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: "#FAF7F2", padding: "32px 16px", margin: 0 }}>
-        <div style={{ maxWidth: 560, margin: "0 auto", background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 20px rgba(11,28,44,0.08)" }}>
+      <body style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: "#FBF7F1", padding: "32px 16px", margin: 0 }}>
+        <div style={{ maxWidth: 560, margin: "0 auto", background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 20px rgba(42,42,42,0.08)" }}>
           {/* Banner */}
-          <div style={{ background: "#0B1C2C", padding: "28px 32px" }}>
-            <p style={{ color: "#E8A94C", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", margin: 0, fontWeight: 600 }}>
+          <div style={{ background: "#2A2A2A", padding: "28px 32px" }}>
+            <p style={{ color: "#C8932A", fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", margin: 0, fontWeight: 600 }}>
               Price Drop Alert
             </p>
-            <h1 style={{ color: "#FAF7F2", fontFamily: "Georgia, serif", fontSize: 24, margin: "8px 0 0", lineHeight: 1.2 }}>
-              Your saved trip just got <span style={{ color: "#E8A94C", fontStyle: "italic" }}>{percentOff}% cheaper.</span>
+            <h1 style={{ color: "#FBF7F1", fontFamily: "Georgia, serif", fontSize: 24, margin: "8px 0 0", lineHeight: 1.2 }}>
+              Your saved trip just got <span style={{ color: "#C8932A", fontStyle: "italic" }}>{percentOff}% cheaper.</span>
             </h1>
           </div>
 
@@ -58,7 +58,7 @@ export function PriceDropEmail({
                   {destinationName}
                 </p>
               )}
-              <h2 style={{ color: "#0B1C2C", fontFamily: "Georgia, serif", fontSize: 18, margin: "0 0 8px", lineHeight: 1.3 }}>
+              <h2 style={{ color: "#2A2A2A", fontFamily: "Georgia, serif", fontSize: 18, margin: "0 0 8px", lineHeight: 1.3 }}>
                 {packageTitle}
               </h2>
               {duration && (
@@ -69,7 +69,7 @@ export function PriceDropEmail({
                 <span style={{ color: "#9ca3af", fontSize: 14, textDecoration: "line-through" }}>
                   ₹{oldPrice.toLocaleString("en-IN")}
                 </span>
-                <span style={{ color: "#0B1C2C", fontFamily: "Georgia, serif", fontSize: 26, fontWeight: 500 }}>
+                <span style={{ color: "#2A2A2A", fontFamily: "Georgia, serif", fontSize: 26, fontWeight: 500 }}>
                   ₹{newPrice.toLocaleString("en-IN")}
                 </span>
               </div>
@@ -84,8 +84,8 @@ export function PriceDropEmail({
                 href={link}
                 style={{
                   display: "inline-block",
-                  background: "#0B1C2C",
-                  color: "#FAF7F2",
+                  background: "#2A2A2A",
+                  color: "#FBF7F1",
                   padding: "14px 28px",
                   borderRadius: 999,
                   fontSize: 14,
@@ -103,7 +103,7 @@ export function PriceDropEmail({
           </div>
 
           {/* Footer */}
-          <div style={{ background: "#FAF7F2", padding: "20px 32px", borderTop: "1px solid #f3f4f6" }}>
+          <div style={{ background: "#FBF7F1", padding: "20px 32px", borderTop: "1px solid #f3f4f6" }}>
             <p style={{ color: "#6b7280", fontSize: 12, lineHeight: 1.5, margin: "0 0 8px" }}>
               Not interested in price alerts? <a href={`${BASE_URL}/dashboard/saved`} style={{ color: "#6b7280" }}>Manage saved trips</a>.
             </p>
