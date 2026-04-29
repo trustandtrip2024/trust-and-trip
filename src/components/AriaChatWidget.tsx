@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Loader2, Sparkles } from "lucide-react";
+import { X, Send, Sparkles, ChevronDown, Check } from "lucide-react";
 import { submitLead } from "@/lib/submit-lead";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -178,6 +178,17 @@ export default function AriaChatWidget() {
   const [showLabel, setShowLabel] = useState(false);
   const [quizPreload, setQuizPreload] = useState<QuizPreload | null>(null);
   const [packagePreload, setPackagePreload] = useState<PackagePreload | null>(null);
+  // Lead-capture state. Form opens once the conversation has 1+ user message
+  // OR the assistant's last reply contains a hand-off cue ("name and phone").
+  // After successful submit, leadDone stays true for the rest of the session
+  // so the prompt doesn't re-appear and pester the user.
+  const [leadOpen, setLeadOpen] = useState(false);
+  const [leadDone, setLeadDone] = useState(false);
+  const [leadName, setLeadName] = useState("");
+  const [leadPhone, setLeadPhone] = useState("");
+  const [leadEmail, setLeadEmail] = useState("");
+  const [leadSubmitting, setLeadSubmitting] = useState(false);
+  const [leadError, setLeadError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -257,6 +268,76 @@ export default function AriaChatWidget() {
       setLoading(false);
     }
   };
+
+  // ── Lead capture ────────────────────────────────────────────────────────
+  // Format the running transcript as a readable bullet list so the planner
+  // sees the conversation context inside Bitrix24 instead of having to
+  // open the Aria thread separately. Trim each line to keep the message
+  // payload reasonable.
+  function formatTranscript(): string {
+    const lines: string[] = [];
+    if (packagePreload) {
+      lines.push(`Viewing package: ${packagePreload.title} (${packagePreload.destinationName} · ${packagePreload.duration} · ₹${packagePreload.price.toLocaleString("en-IN")})`);
+    }
+    if (quizPreload) {
+      lines.push(`Quiz: ${quizPreload.travelType} · ${quizPreload.vibe} · ${quizPreload.duration} · ${quizPreload.budget}${quizPreload.topMatchTitle ? ` · top match: ${quizPreload.topMatchTitle}` : ""}`);
+    }
+    lines.push("--- Aria conversation ---");
+    for (const m of messages) {
+      const who = m.role === "user" ? "User" : "Aria";
+      const text = m.content.replace(/\s+/g, " ").trim().slice(0, 400);
+      lines.push(`${who}: ${text}`);
+    }
+    return lines.join("\n");
+  }
+
+  const submitAriaLead = async () => {
+    setLeadError(null);
+    if (!leadName.trim() || !leadPhone.trim()) {
+      setLeadError("Name and phone are required.");
+      return;
+    }
+    if (!/^[+\d][\d\s-]{7,}$/.test(leadPhone.trim())) {
+      setLeadError("Enter a valid phone number.");
+      return;
+    }
+    setLeadSubmitting(true);
+    try {
+      const result = await submitLead({
+        name: leadName.trim(),
+        phone: leadPhone.trim(),
+        email: leadEmail.trim(),
+        source: "aria_chat",
+        message: formatTranscript(),
+        package_title: packagePreload?.title,
+        package_slug: packagePreload?.slug,
+        destination: packagePreload?.destinationName,
+        travel_type: packagePreload?.travelType ?? quizPreload?.travelType,
+      });
+      if (!result.ok) {
+        setLeadError(result.error ?? "Could not send. Try WhatsApp instead.");
+        return;
+      }
+      setLeadDone(true);
+      setLeadOpen(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: `Got it, ${leadName.trim().split(" ")[0]} 🎉 A planner will reach you on ${leadPhone.trim()} within 2 hours with a custom itinerary. Anything else you'd like me to note?`,
+        },
+      ]);
+    } catch {
+      setLeadError("Network error. Try WhatsApp instead.");
+    } finally {
+      setLeadSubmitting(false);
+    }
+  };
+
+  const userMsgCount = messages.filter((m) => m.role === "user").length;
+  // Surface the lead-capture pill once the user has sent at least one message
+  // or arrived via package/quiz preload (intent already implicit).
+  const showLeadPrompt = !leadDone && (userMsgCount >= 1 || !!packagePreload);
 
   if (onHidden) return null;
 
@@ -340,6 +421,84 @@ export default function AriaChatWidget() {
                     {q}
                   </button>
                 ))}
+              </div>
+            )}
+
+            {/* Lead capture — sticky pill that expands to a 3-field form once
+                the user has signaled real intent. Submitting posts the full
+                transcript + any package/quiz context to /api/leads, which
+                handles Supabase + Bitrix24 + Resend + CAPI in one go. */}
+            {showLeadPrompt && (
+              <div className="px-3 pt-2 pb-1 bg-white border-t border-tat-charcoal/6 shrink-0">
+                {!leadOpen ? (
+                  <button
+                    type="button"
+                    onClick={() => setLeadOpen(true)}
+                    className="w-full inline-flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-tat-gold/10 border border-tat-gold/40 text-tat-charcoal text-[13px] font-semibold hover:bg-tat-gold/15 transition-colors"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <Sparkles className="h-3.5 w-3.5 text-tat-gold" />
+                      Get a custom itinerary in 2 h
+                    </span>
+                    <ChevronDown className="h-3.5 w-3.5 text-tat-charcoal/50 -rotate-90" />
+                  </button>
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[12px] font-semibold text-tat-charcoal">
+                        Share details — planner replies in 2 h
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setLeadOpen(false)}
+                        className="text-[11px] text-tat-charcoal/50 hover:text-tat-charcoal"
+                      >
+                        Hide
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      value={leadName}
+                      onChange={(e) => setLeadName(e.target.value)}
+                      placeholder="Your name"
+                      autoComplete="name"
+                      className="w-full h-9 px-3 rounded-lg bg-gray-50 border border-tat-charcoal/10 text-sm text-tat-charcoal outline-none focus:border-tat-gold"
+                    />
+                    <input
+                      type="tel"
+                      value={leadPhone}
+                      onChange={(e) => setLeadPhone(e.target.value)}
+                      placeholder="Phone (with country code)"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      className="w-full h-9 px-3 rounded-lg bg-gray-50 border border-tat-charcoal/10 text-sm text-tat-charcoal outline-none focus:border-tat-gold"
+                    />
+                    <input
+                      type="email"
+                      value={leadEmail}
+                      onChange={(e) => setLeadEmail(e.target.value)}
+                      placeholder="Email (optional)"
+                      autoComplete="email"
+                      inputMode="email"
+                      className="w-full h-9 px-3 rounded-lg bg-gray-50 border border-tat-charcoal/10 text-sm text-tat-charcoal outline-none focus:border-tat-gold"
+                    />
+                    {leadError && (
+                      <p className="text-[11px] text-tat-danger-fg">{leadError}</p>
+                    )}
+                    <button
+                      type="button"
+                      onClick={submitAriaLead}
+                      disabled={leadSubmitting}
+                      className="w-full h-9 rounded-lg bg-tat-teal hover:bg-tat-teal-deep text-white text-[13px] font-semibold flex items-center justify-center gap-1.5 disabled:opacity-60 transition"
+                    >
+                      {leadSubmitting ? "Sending…" : "Send to a planner"}
+                      {!leadSubmitting && <Check className="h-3.5 w-3.5" />}
+                    </button>
+                    <p className="text-[10px] text-tat-charcoal/50">
+                      Free until you&apos;re sure · No card needed
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 

@@ -38,6 +38,7 @@ const SOURCE_MAP: Record<LeadSource, string> = {
   itinerary_generator: "WEB",
   whatsapp: "WEB",
   quiz: "WEB",
+  aria_chat: "WEB",
   // Click intents — map to WEB for now; if you've added "Website" / "WhatsApp" /
   // "Phone (Inbound)" as custom sources in Bitrix24 (see 08-setup-custom-fields.ps1),
   // switch these to the real STATUS_IDs.
@@ -59,6 +60,7 @@ const SOURCE_LABEL: Record<LeadSource, string> = {
   itinerary_generator: "Itinerary generator",
   whatsapp: "WhatsApp inbound message",
   quiz: "Trip-finder quiz",
+  aria_chat: "Aria AI chat",
   book_now_click: "Book Now button (click intent)",
   call_click: "Phone button (click intent)",
   whatsapp_click: "WhatsApp button (click intent)",

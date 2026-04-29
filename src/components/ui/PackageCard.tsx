@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Heart, Star, Clock, MapPin, Flame, Zap, ArrowRight, Sparkles,
-  Hotel, Utensils, Bus, Camera,
+  Hotel, Utensils, Bus, Camera, MessageCircle,
 } from "lucide-react";
 import { useState } from "react";
 import Price from "@/components/Price";
@@ -46,6 +46,32 @@ const INCLUSION_META = {
   transfers:   { icon: Bus,      label: "Transfers" },
   sightseeing: { icon: Camera,   label: "Sightseeing" },
 } as const;
+
+// Open Aria pre-primed with this card's package context. Mirrors the
+// PackageAriaPreload pattern used on /packages/{slug} so Aria's system
+// prompt picks up "user is viewing this package" from sessionStorage and
+// the welcome greeting names the package by title.
+function askAriaAboutPackage(p: PackageCardProps) {
+  if (typeof window === "undefined") return;
+  const slug = p.href.replace(/^\/packages\//, "").replace(/\/.*$/, "");
+  if (!slug) return;
+  const preload = {
+    slug,
+    title: p.title,
+    destinationName: p.destination ?? "",
+    price: p.price,
+    duration: p.duration ?? "",
+    travelType: p.travelStyle ?? "",
+  };
+  try {
+    window.sessionStorage.setItem("tt_aria_package_preload", JSON.stringify(preload));
+    window.dispatchEvent(new CustomEvent("tt:aria-open"));
+  } catch {
+    // sessionStorage can throw in private mode — silently fall back to
+    // the package detail page where Aria will pick up the same context.
+    window.location.href = p.href;
+  }
+}
 
 export default function PackageCardUI(p: PackageCardProps) {
   const [wished, setWished] = useState(false);
@@ -226,13 +252,23 @@ export default function PackageCardUI(p: PackageCardProps) {
             View details
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
-          <Link
-            href={p.customizeHref ?? `${p.href}?customize=1`}
-            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-8" : "h-9"} text-meta font-medium text-tat-charcoal/80 hover:text-tat-gold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 rounded-md`}
-          >
-            Customise this trip
-            <ArrowRight className="h-3 w-3" />
-          </Link>
+          <div className="grid grid-cols-2 gap-1.5">
+            <button
+              type="button"
+              onClick={(e) => { e.preventDefault(); askAriaAboutPackage(p); }}
+              className={`inline-flex items-center justify-center gap-1 ${compact ? "h-8" : "h-9"} px-2 rounded-md text-meta font-medium text-tat-charcoal/80 hover:text-tat-gold hover:bg-tat-gold/8 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
+            >
+              <MessageCircle className="h-3 w-3 text-tat-gold" />
+              Ask Aria
+            </button>
+            <Link
+              href={p.customizeHref ?? `${p.href}?customize=1`}
+              className={`inline-flex items-center justify-center gap-1 ${compact ? "h-8" : "h-9"} px-2 text-meta font-medium text-tat-charcoal/80 hover:text-tat-gold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 rounded-md`}
+            >
+              Customise
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
         </div>
       </div>
     </article>
