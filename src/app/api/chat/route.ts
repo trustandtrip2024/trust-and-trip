@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { messages, quizContext } = await req.json();
+    const { messages, quizContext, packageContext } = await req.json();
 
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json({ error: "AI not configured." }, { status: 503 });
@@ -69,6 +69,23 @@ export async function POST(req: NextRequest) {
         const dur = d === "10+" ? "10+ days" : `${d} days`;
         const bud = b === "lt50k" ? "under ₹50k" : b === "50-100k" ? "₹50k–₹1L" : "₹1L+";
         systemPrompt += `\n\nUSER QUIZ CONTEXT (already given — do NOT ask again):\n- Travelling: ${tt}\n- Vibe: ${v}\n- Duration: ${dur}\n- Budget: ${bud} per person\n${matchTitle ? `- Top match shown: ${matchTitle}${matchSlug ? ` (slug: ${matchSlug})` : ""}\n` : ""}\nReference these directly. Skip discovery questions about destination/budget/travel type/duration. Move straight to customisation, comparison, or qualification (name + phone).`;
+      }
+    }
+
+    // Append active-package context when the user opened Aria from a
+    // /packages/{slug} page. Same precedence as quiz: validate field by
+    // field; bad shapes silently fall through to the base prompt.
+    if (packageContext && typeof packageContext === "object") {
+      const p = packageContext as Record<string, unknown>;
+      const slug = typeof p.slug === "string" ? p.slug : null;
+      const pkgTitle = typeof p.title === "string" ? p.title : null;
+      const dest = typeof p.destinationName === "string" ? p.destinationName : null;
+      const price = typeof p.price === "number" ? p.price : null;
+      const dur = typeof p.duration === "string" ? p.duration : null;
+      const tt = typeof p.travelType === "string" ? p.travelType : null;
+      const best = typeof p.bestFor === "string" ? p.bestFor : null;
+      if (slug && pkgTitle && dest && price !== null && dur) {
+        systemPrompt += `\n\nUSER IS VIEWING THIS PACKAGE (do NOT re-suggest it):\n- Title: ${pkgTitle}\n- Destination: ${dest}\n- Duration: ${dur}\n- Price: ₹${price.toLocaleString("en-IN")} per person\n${tt ? `- Travel type: ${tt}\n` : ""}${best ? `- Best for: ${best}\n` : ""}- URL: https://trustandtrip.com/packages/${slug}\n\nWhen the user asks generic questions like "tell me about it" or "is it good for kids", they mean THIS package. Suggest customisations (dates, hotels, add-ons) before pitching alternative packages. Move to qualification (name + phone) once the user signals intent.`;
       }
     }
 

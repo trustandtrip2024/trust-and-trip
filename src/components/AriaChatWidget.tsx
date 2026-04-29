@@ -66,6 +66,56 @@ function quizPrompts(p: QuizPreload): string[] {
   return prompts;
 }
 
+// Package handoff — written by /packages/{slug} via PackageAriaPreload.
+const PACKAGE_PRELOAD_KEY = "tt_aria_package_preload";
+
+interface PackagePreload {
+  slug: string;
+  title: string;
+  destinationName: string;
+  price: number;
+  duration: string;
+  travelType: string;
+  bestFor?: string;
+}
+
+function isPackagePreload(x: unknown): x is PackagePreload {
+  if (!x || typeof x !== "object") return false;
+  const o = x as Record<string, unknown>;
+  return (
+    typeof o.slug === "string" &&
+    typeof o.title === "string" &&
+    typeof o.destinationName === "string" &&
+    typeof o.price === "number" &&
+    typeof o.duration === "string"
+  );
+}
+
+function readPackagePreload(): PackagePreload | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(PACKAGE_PRELOAD_KEY);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    return isPackagePreload(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function packageGreeting(p: PackagePreload): string {
+  return `Looking at the **${p.title}** package? 👋\n\nQuick recap: ${p.destinationName} · ${p.duration} · ₹${p.price.toLocaleString("en-IN")} per person · ${p.travelType.toLowerCase()} traveller.\n\nWhat would help — a custom itinerary draft, comparison vs another option, or talking through dates and slots?`;
+}
+
+function packagePrompts(p: PackagePreload): string[] {
+  return [
+    `Customise this trip for our dates`,
+    `Compare ${p.destinationName} packages`,
+    `What's the best month for this trip?`,
+    `Quote with flights from my city`,
+  ];
+}
+
 // Illustrated female face SVG avatar
 function AriaFace({ size = 40, className = "" }: { size?: number; className?: string }) {
   return (
@@ -127,6 +177,7 @@ export default function AriaChatWidget() {
   const [unread, setUnread] = useState(0);
   const [showLabel, setShowLabel] = useState(false);
   const [quizPreload, setQuizPreload] = useState<QuizPreload | null>(null);
+  const [packagePreload, setPackagePreload] = useState<PackagePreload | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -134,17 +185,24 @@ export default function AriaChatWidget() {
     if (open) { setUnread(0); setTimeout(() => inputRef.current?.focus(), 100); }
   }, [open]);
 
-  // Quiz handoff. Listen for `tt:aria-open` and rebuild the welcome message
-  // off the saved quiz answers. Only swap if the user hasn't already chatted
-  // (messages.length === 1 means we're still on the WELCOME stub).
+  // Quiz / package handoff. Quiz handoff fires `tt:aria-open` (so the
+  // widget pops open after quiz results). Package handoff is silent —
+  // sessionStorage is read on mount and any `send()` so chat is primed
+  // when the user taps the FAB. Package preload takes precedence over
+  // quiz preload when both exist (more recent intent).
   useEffect(() => {
     function applyPreload() {
-      const p = readQuizPreload();
-      if (!p) return;
-      setQuizPreload(p);
+      const pkg = readPackagePreload();
+      if (pkg) setPackagePreload(pkg);
+      const quiz = readQuizPreload();
+      if (quiz) setQuizPreload(quiz);
+
+      // Choose greeting: package wins if both, else quiz, else default.
       setMessages((prev) => {
         if (prev.length !== 1) return prev;
-        return [{ role: "assistant", content: quizGreeting(p) }];
+        if (pkg) return [{ role: "assistant", content: packageGreeting(pkg) }];
+        if (quiz) return [{ role: "assistant", content: quizGreeting(quiz) }];
+        return prev;
       });
     }
 
@@ -153,9 +211,6 @@ export default function AriaChatWidget() {
       setOpen(true);
     }
 
-    // Pick up preload silently on mount in case the user navigates back to
-    // a non-quiz page after completing the quiz — Aria should still be
-    // primed when they finally tap the FAB.
     applyPreload();
     window.addEventListener("tt:aria-open", onAriaOpen);
     return () => window.removeEventListener("tt:aria-open", onAriaOpen);
@@ -186,9 +241,10 @@ export default function AriaChatWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: updated.map((m) => ({ role: m.role, content: m.content })),
-          // Server uses this to skip discovery questions Aria already has
-          // answers for. Null when the user never took the quiz.
+          // Server uses these to skip discovery questions Aria already has
+          // answers for. Either may be null.
           quizContext: quizPreload,
+          packageContext: packagePreload,
         }),
       });
       const data = await res.json();
@@ -272,10 +328,13 @@ export default function AriaChatWidget() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Quick prompts — quiz-aware when handoff payload exists. */}
+            {/* Quick prompts — handoff-aware. Package wins over quiz wins
+                over default starter prompts. */}
             {messages.length === 1 && (
               <div className="px-3 pb-2 flex gap-1.5 flex-wrap bg-gray-50">
-                {(quizPreload ? quizPrompts(quizPreload) : QUICK_PROMPTS).map((q) => (
+                {(packagePreload ? packagePrompts(packagePreload)
+                  : quizPreload ? quizPrompts(quizPreload)
+                  : QUICK_PROMPTS).map((q) => (
                   <button key={q} onClick={() => send(q)}
                     className="text-[11px] px-2.5 py-1 rounded-full bg-white border border-tat-charcoal/10 text-tat-charcoal/60 hover:border-tat-gold hover:text-tat-charcoal transition-all whitespace-nowrap">
                     {q}

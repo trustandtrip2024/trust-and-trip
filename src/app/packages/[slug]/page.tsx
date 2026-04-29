@@ -41,6 +41,8 @@ import PackageQuickFacts from "@/components/package-detail/PackageQuickFacts";
 import PackingList from "@/components/package-detail/PackingList";
 import PackageGuestPhotos from "@/components/package-detail/PackageGuestPhotos";
 import PackageMap from "@/components/package-detail/PackageMap";
+import PackageAriaPreload from "@/components/package-detail/PackageAriaPreload";
+import HeroPhotoRail from "@/components/package-detail/HeroPhotoRail";
 
 interface Props { params: { slug: string } }
 
@@ -97,11 +99,26 @@ export default async function PackageDetail({ params }: Props) {
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
 
+  // Flatten itinerary day photos for the under-hero rail. Dedupe so a
+  // photo reused across days only appears once.
+  const heroRailPhotos = Array.from(
+    new Set(pkg.itinerary.flatMap((d) => d.images ?? [])),
+  );
+
   const waBook = `https://wa.me/${WA}?text=${encodeURIComponent(`Hi Trust and Trip! 🙏\n\nI'd like to book the *${pkg.title}* package (₹${pkg.price.toLocaleString("en-IN")}/person · ${pkg.duration}).\n\nPlease help me proceed.`)}`;
 
   return (
     <>
       <PackageViewTracker slug={pkg.slug} />
+      <PackageAriaPreload
+        slug={pkg.slug}
+        title={pkg.title}
+        destinationName={pkg.destinationName}
+        price={pkg.price}
+        duration={pkg.duration}
+        travelType={pkg.travelType}
+        bestFor={pkg.bestFor}
+      />
       <PackagePixelEvent
         title={pkg.title}
         price={pkg.price}
@@ -193,6 +210,11 @@ export default async function PackageDetail({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {/* Hero photo rail — flattened itinerary day photos. Returns null
+          when fewer than 3 photos so single-day or photo-less packages
+          aren't padded out. */}
+      <HeroPhotoRail images={heroRailPhotos} title={pkg.title} />
 
       {/* ── Section Nav ────────────────────────────────────────── */}
       <PackageSectionNav packageTitle={pkg.title} />
