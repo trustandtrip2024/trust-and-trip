@@ -16,6 +16,37 @@ function fmtINR(n: number): string {
   return n.toLocaleString("en-IN");
 }
 
+// Module-scoped font cache — survives across warm invocations on the same
+// edge instance so we only pay the Google Fonts fetch once per region.
+let _interSemibold: ArrayBuffer | null = null;
+let _interBold: ArrayBuffer | null = null;
+
+async function loadFont(weight: 600 | 700): Promise<ArrayBuffer | null> {
+  if (weight === 600 && _interSemibold) return _interSemibold;
+  if (weight === 700 && _interBold) return _interBold;
+
+  // Google Fonts CSS API → extract the .woff2 URL → fetch the binary.
+  // Edge runtime supports fetch; ImageResponse accepts ArrayBuffer.
+  try {
+    const cssRes = await fetch(
+      `https://fonts.googleapis.com/css2?family=Inter:wght@${weight}`,
+      { headers: { "User-Agent": "Mozilla/5.0" } },
+    );
+    if (!cssRes.ok) return null;
+    const css = await cssRes.text();
+    const match = css.match(/src:\s*url\((https:[^)]+)\)\s*format\('woff2'\)/);
+    if (!match) return null;
+    const fontRes = await fetch(match[1]);
+    if (!fontRes.ok) return null;
+    const buf = await fontRes.arrayBuffer();
+    if (weight === 600) _interSemibold = buf;
+    else _interBold = buf;
+    return buf;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
@@ -30,6 +61,19 @@ export async function GET(req: NextRequest) {
   const rating = ratingParam ? Number(ratingParam) : 4.9;
   const reviews = reviewsParam ? Number(reviewsParam) : 200;
 
+  const [interSemi, interBold] = await Promise.all([loadFont(600), loadFont(700)]);
+  const fonts: Array<{
+    name: string;
+    data: ArrayBuffer;
+    weight: 600 | 700;
+    style: "normal";
+  }> = [];
+  if (interSemi) fonts.push({ name: "Inter", data: interSemi, weight: 600, style: "normal" });
+  if (interBold) fonts.push({ name: "Inter", data: interBold, weight: 700, style: "normal" });
+  const fontFamily = fonts.length
+    ? "Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    : "system-ui, -apple-system, Segoe UI, Roboto, sans-serif";
+
   return new ImageResponse(
     (
       <div
@@ -40,7 +84,7 @@ export async function GET(req: NextRequest) {
           flexDirection: "column",
           background: BRAND.paper,
           padding: "72px 80px",
-          fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+          fontFamily,
           color: BRAND.charcoal,
           position: "relative",
         }}
@@ -163,6 +207,7 @@ export async function GET(req: NextRequest) {
     {
       width: 1200,
       height: 630,
+      fonts: fonts.length ? fonts : undefined,
       headers: {
         "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=2592000",
       },
