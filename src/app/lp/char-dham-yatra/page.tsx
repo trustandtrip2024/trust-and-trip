@@ -5,6 +5,40 @@ import { Star, Check, ShieldCheck, Mountain, MessageCircle, HeartHandshake } fro
 import Price from "@/components/Price";
 import LeadFormCompact from "../_components/LeadFormCompact";
 import StreamItineraryWidget from "../_components/StreamItineraryWidget";
+import LpFaq, { type LpFaqItem } from "../_components/LpFaq";
+import LpJsonLd from "../_components/LpJsonLd";
+
+const PAGE_URL = "https://trustandtrip.com/lp/char-dham-yatra";
+
+const FAQ_ITEMS: LpFaqItem[] = [
+  {
+    q: "When does the Char Dham Yatra open in 2026?",
+    a: "Yamunotri and Gangotri open on Akshay Tritiya (around 30 April 2026). Kedarnath opens around 2 May and Badrinath around 4 May. Gates close again from late October. The safest weather window is May–June and September–October; July–August see heavy monsoon and frequent helicopter delays.",
+  },
+  {
+    q: "Is the yatra safe for senior citizens?",
+    a: "Yes — we plan it that way. Helicopter shuttles cut walking to a minimum, palki / pony / pithoo services are pre-arranged at Kedarnath, hotels are booked within walking distance of every shrine, and a basic medical kit + oxygen is carried on the route. Share any health conditions and we adjust the pace.",
+  },
+  {
+    q: "Will the food be pure vegetarian?",
+    a: "Yes. Sattvik vegetarian (no onion, no garlic on request) is served throughout the yatra — at hotels, on transit halts, and at the dharamshalas near each Dham. Jain meals are arranged on prior notice.",
+  },
+  {
+    q: "Do we have to register separately for the yatra?",
+    a: "Uttarakhand mandates online registration + biometric capture for every yatri. We complete the registration on your behalf, send the QR pass, and brief you on the biometric kiosks at Haridwar / Sonprayag. No queue at the shrine end.",
+  },
+  {
+    q: "What happens if a helicopter shuttle is cancelled due to weather?",
+    a: "If a shuttle is grounded, we switch you to the next available slot (same day or next morning) at no extra cost. If the full route is shut for the day, you get a refund for the unused leg or a road alternative — whichever you prefer. This is in writing on your itinerary.",
+  },
+  {
+    q: "How early should we book the Char Dham Yatra?",
+    a: "Helicopter slots for May–June sell out by February. Road yatra is more flexible — 4–6 weeks ahead is usually fine. For Do Dham (Kedarnath + Badrinath) by helicopter, book at least 8 weeks before your preferred dates.",
+  },
+];
+
+const SERVICE_IMAGE =
+  "https://images.unsplash.com/photo-1561361058-c24cecae35ca?w=1200&q=75&auto=format&fit=crop";
 
 export const metadata: Metadata = {
   title: "Char Dham Yatra Package 2026 — By Helicopter & Road | Trust and Trip",
@@ -65,6 +99,21 @@ const PRICE_TIERS = [
 export default function CharDhamLanding() {
   return (
     <>
+      <LpJsonLd
+        pageUrl={PAGE_URL}
+        serviceName="Char Dham Yatra Packages 2026"
+        serviceDescription="Helicopter and road Char Dham Yatra packages for Indian families — VIP darshan, sattvik food, palki transfers, hotels close to every shrine."
+        serviceImage={SERVICE_IMAGE}
+        areaServed="Uttarakhand, India"
+        aggregateRating={{ value: 4.9, count: 184 }}
+        faqItems={FAQ_ITEMS}
+        offers={PRICE_TIERS.map((t) => ({
+          name: t.name,
+          description: t.resort,
+          priceInr: t.price,
+          nights: t.nights,
+        }))}
+      />
       {/* Hero */}
       <section className="relative min-h-[88vh] flex items-end overflow-hidden bg-tat-charcoal">
         <Image
@@ -280,6 +329,13 @@ export default function CharDhamLanding() {
           </div>
         </div>
       </section>
+
+      <LpFaq
+        eyebrow="Yatra questions"
+        titleStart="Char Dham 2026,"
+        titleItalic="answered."
+        items={FAQ_ITEMS}
+      />
 
       {/* Final CTA */}
       <section className="py-16 md:py-20 bg-tat-charcoal text-white">

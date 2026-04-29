@@ -5,6 +5,40 @@ import { Star, Check, ShieldCheck, Clock, MessageCircle } from "lucide-react";
 import Price from "@/components/Price";
 import LeadFormCompact from "../_components/LeadFormCompact";
 import StreamItineraryWidget from "../_components/StreamItineraryWidget";
+import LpFaq, { type LpFaqItem } from "../_components/LpFaq";
+import LpJsonLd from "../_components/LpJsonLd";
+
+const PAGE_URL = "https://trustandtrip.com/lp/bali-honeymoon";
+
+const FAQ_ITEMS: LpFaqItem[] = [
+  {
+    q: "When is the best time for a Bali honeymoon?",
+    a: "April to October is the dry season — clear skies, sunset beaches, and great visibility for snorkelling. December–March is greener and quieter (and cheaper) but expect short tropical showers most afternoons.",
+  },
+  {
+    q: "Do Indians need a visa for Bali?",
+    a: "Yes, but it is straightforward. Indian passport holders get a Visa on Arrival (VOA) at Denpasar airport for IDR 500,000 (~₹2,800), valid 30 days and extendable once. We send you the exact forms and what to print before flying.",
+  },
+  {
+    q: "Will we get Indian / vegetarian food?",
+    a: "Yes — Seminyak, Ubud and Kuta all have excellent Indian restaurants, and most villas can plate vegetarian breakfasts and Jain meals on request. We pre-confirm dietary needs with every property in your itinerary.",
+  },
+  {
+    q: "How early should we plan a Bali honeymoon?",
+    a: "Aim for 4–6 weeks before travel. Premium private-pool villas in Ubud and Uluwatu sell out 6–8 weeks ahead in peak honeymoon months (May, June, December). Last-minute trips are possible but options narrow.",
+  },
+  {
+    q: "What is included in the package price?",
+    a: "Stays in your chosen villa category, all return airport + inter-region transfers, daily breakfasts, the activities listed in your tier (sunrise trek, candlelit dinner, etc.), all taxes and GST. International flights are quoted separately so you can compare against your card-points fares.",
+  },
+  {
+    q: "Can we pay only a deposit to start?",
+    a: "Yes. Once you approve the itinerary, a 30% deposit (or ₹5,000 minimum) confirms everything. The balance is due 21 days before travel. Fully refundable until the deposit is taken.",
+  },
+];
+
+const SERVICE_IMAGE =
+  "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=1200&q=75&auto=format&fit=crop";
 
 export const metadata: Metadata = {
   title: "Bali Honeymoon Packages from India 2026 — Trust and Trip",
@@ -65,6 +99,21 @@ const PRICE_TIERS = [
 export default function BaliHoneymoonLanding() {
   return (
     <>
+      <LpJsonLd
+        pageUrl={PAGE_URL}
+        serviceName="Bali Honeymoon Packages"
+        serviceDescription="Private-pool villa Bali honeymoon packages from India — Seminyak, Ubud, Uluwatu. Planned by a real human; pay only when sure."
+        serviceImage={SERVICE_IMAGE}
+        areaServed="Bali, Indonesia"
+        aggregateRating={{ value: 4.9, count: 217 }}
+        faqItems={FAQ_ITEMS}
+        offers={PRICE_TIERS.map((t) => ({
+          name: t.name,
+          description: t.resort,
+          priceInr: t.price,
+          nights: t.nights,
+        }))}
+      />
       {/* Hero */}
       <section className="relative min-h-[88vh] flex items-end overflow-hidden bg-tat-charcoal">
         <Image
@@ -275,6 +324,12 @@ export default function BaliHoneymoonLanding() {
           </div>
         </div>
       </section>
+
+      <LpFaq
+        titleStart="Bali honeymoon questions,"
+        titleItalic="answered."
+        items={FAQ_ITEMS}
+      />
 
       {/* Final CTA */}
       <section className="py-16 md:py-20 bg-tat-charcoal text-white">

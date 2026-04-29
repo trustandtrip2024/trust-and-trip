@@ -5,6 +5,40 @@ import { Star, Check, ShieldCheck, Clock, MessageCircle, Users } from "lucide-re
 import Price from "@/components/Price";
 import LeadFormCompact from "../_components/LeadFormCompact";
 import StreamItineraryWidget from "../_components/StreamItineraryWidget";
+import LpFaq, { type LpFaqItem } from "../_components/LpFaq";
+import LpJsonLd from "../_components/LpJsonLd";
+
+const PAGE_URL = "https://trustandtrip.com/lp/kerala-family";
+
+const FAQ_ITEMS: LpFaqItem[] = [
+  {
+    q: "Is Kerala safe and easy with kids and grandparents?",
+    a: "Yes — it is one of the most family-friendly states in India. We pick hotels with interconnecting rooms or family suites, plan short driving legs (no transfer over 4 hours), and brief every property on stroller / wheelchair access ahead of arrival. Houseboats are private (not shared) so families travel as one unit.",
+  },
+  {
+    q: "When is the best time for a Kerala family tour?",
+    a: "October to March is peak — clear skies, comfortable temperatures, and full visibility on the backwaters. April–May is hot and humid but cheaper. June–September is the monsoon season — beautiful but not ideal with very young children.",
+  },
+  {
+    q: "Will the food be vegetarian / kid-friendly?",
+    a: "Daily breakfasts are vegetarian by default and houseboats serve a full-board veg / Jain spread on request. We also flag hotels with kids menus, North Indian options, and high chairs — useful if your toddler is a picky eater.",
+  },
+  {
+    q: "What does the houseboat night look like?",
+    a: "You board your private deluxe Kettuvalam at noon in Alleppey, cruise the backwaters all afternoon (with onboard lunch + tea), anchor near a quiet bend by sunset, and have dinner + breakfast on board before disembarking next morning. Air-conditioned bedrooms, en-suite bathrooms, full crew.",
+  },
+  {
+    q: "How do hill stations work with elderly parents?",
+    a: "Munnar is the gentlest — winding but well-paved roads, hotel altitudes around 5,000 ft, and most viewpoints walk-up only. We avoid Periyar trekking unless you ask, and book a wildlife cruise instead. Oxygen issues are rare in Kerala.",
+  },
+  {
+    q: "How early should we plan a Kerala family trip?",
+    a: "3–4 weeks is enough for off-season. Christmas + New Year (20 Dec – 5 Jan) and Onam (early September) book out 8–10 weeks ahead. Houseboats are the bottleneck on long weekends — book early.",
+  },
+];
+
+const SERVICE_IMAGE =
+  "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=1200&q=75&auto=format&fit=crop";
 
 export const metadata: Metadata = {
   title: "Kerala Family Tour Packages 2026 — Trust and Trip",
@@ -65,6 +99,21 @@ const PRICE_TIERS = [
 export default function KeralaFamilyLanding() {
   return (
     <>
+      <LpJsonLd
+        pageUrl={PAGE_URL}
+        serviceName="Kerala Family Tour Packages"
+        serviceDescription="Backwaters + Munnar + Periyar — Kerala family tour packages from India. Toddler-to-grandparent friendly. Real planner reviews; pay only when sure."
+        serviceImage={SERVICE_IMAGE}
+        areaServed="Kerala, India"
+        aggregateRating={{ value: 4.9, count: 156 }}
+        faqItems={FAQ_ITEMS}
+        offers={PRICE_TIERS.map((t) => ({
+          name: t.name,
+          description: t.resort,
+          priceInr: t.price,
+          nights: t.nights,
+        }))}
+      />
       <section className="relative min-h-[88vh] flex items-end overflow-hidden bg-tat-charcoal">
         <Image
           src={HERO_IMG}
@@ -273,6 +322,13 @@ export default function KeralaFamilyLanding() {
           </div>
         </div>
       </section>
+
+      <LpFaq
+        eyebrow="Family questions"
+        titleStart="Kerala with the family,"
+        titleItalic="answered."
+        items={FAQ_ITEMS}
+      />
 
       <section className="py-16 md:py-20 bg-tat-charcoal text-white">
         <div className="container-custom max-w-3xl text-center">

@@ -5,6 +5,40 @@ import { Star, Check, ShieldCheck, Clock, MessageCircle } from "lucide-react";
 import Price from "@/components/Price";
 import LeadFormCompact from "../_components/LeadFormCompact";
 import StreamItineraryWidget from "../_components/StreamItineraryWidget";
+import LpFaq, { type LpFaqItem } from "../_components/LpFaq";
+import LpJsonLd from "../_components/LpJsonLd";
+
+const PAGE_URL = "https://trustandtrip.com/lp/maldives-honeymoon";
+
+const FAQ_ITEMS: LpFaqItem[] = [
+  {
+    q: "Do Indians need a visa for Maldives?",
+    a: "No advance visa needed. Indian passport holders get a free 30-day tourist visa on arrival at Velana International Airport. Carry your return ticket, hotel voucher, and the simple arrival form (we send it pre-trip).",
+  },
+  {
+    q: "When is the best time for a Maldives honeymoon?",
+    a: "November to April is the dry season — calm seas, sunny days, perfect for snorkelling. May to October is the wet season — cheaper rates, occasional showers, and the chance to spot whale sharks at Hanifaru Bay (June–November).",
+  },
+  {
+    q: "Will Indian / vegetarian / Jain food be available?",
+    a: "Yes, on every island we book. Most resorts have an Indian chef or rotate Indian curries on the buffet, and Jain meals are arranged with 24-hour notice. We confirm dietary needs in writing with the resort before you fly.",
+  },
+  {
+    q: "Beach villa or overwater villa — which should we pick?",
+    a: "Beach villas have a private deck on the sand and are easier on knees and small kids. Overwater villas sit over the lagoon with steps directly into the water — better for the photos and snorkelling enthusiasts. Many couples split — 2 nights beach + 2 nights overwater — and we plan it that way.",
+  },
+  {
+    q: "What is included in the package price?",
+    a: "Resort villa for the chosen tier, all return seaplane or speedboat transfers (often the priciest line item), the meal plan listed (breakfast / half-board / all-inclusive), and the activities in your tier. International flights, drinks not in your meal plan, and spa add-ons are quoted separately.",
+  },
+  {
+    q: "How early should we book the Maldives?",
+    a: "8–10 weeks ahead in peak season (Dec–Feb, May honeymoon, July–August school break). 4 weeks is fine for shoulder months. Seaplane slots and overwater inventory tighten fastest — that is usually what locks the booking.",
+  },
+];
+
+const SERVICE_IMAGE =
+  "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=1200&q=75&auto=format&fit=crop";
 
 export const metadata: Metadata = {
   title: "Maldives Honeymoon Packages from India 2026 — Trust and Trip",
@@ -66,6 +100,21 @@ const PRICE_TIERS = [
 export default function MaldivesHoneymoonLanding() {
   return (
     <>
+      <LpJsonLd
+        pageUrl={PAGE_URL}
+        serviceName="Maldives Honeymoon Packages"
+        serviceDescription="Overwater and beach villa Maldives honeymoon packages from India — seaplane transfers, all-inclusive options, vegetarian on request."
+        serviceImage={SERVICE_IMAGE}
+        areaServed="Maldives"
+        aggregateRating={{ value: 4.9, count: 198 }}
+        faqItems={FAQ_ITEMS}
+        offers={PRICE_TIERS.map((t) => ({
+          name: t.name,
+          description: t.resort,
+          priceInr: t.price,
+          nights: t.nights,
+        }))}
+      />
       {/* Hero */}
       <section className="relative min-h-[88vh] flex items-end overflow-hidden bg-tat-charcoal">
         <Image
@@ -278,6 +327,12 @@ export default function MaldivesHoneymoonLanding() {
           </div>
         </div>
       </section>
+
+      <LpFaq
+        titleStart="Maldives honeymoon questions,"
+        titleItalic="answered."
+        items={FAQ_ITEMS}
+      />
 
       {/* Final CTA */}
       <section className="py-16 md:py-20 bg-tat-charcoal text-white">

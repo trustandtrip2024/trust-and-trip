@@ -5,6 +5,40 @@ import { Star, Check, ShieldCheck, Clock, MessageCircle, Train } from "lucide-re
 import Price from "@/components/Price";
 import LeadFormCompact from "../_components/LeadFormCompact";
 import StreamItineraryWidget from "../_components/StreamItineraryWidget";
+import LpFaq, { type LpFaqItem } from "../_components/LpFaq";
+import LpJsonLd from "../_components/LpJsonLd";
+
+const PAGE_URL = "https://trustandtrip.com/lp/switzerland-honeymoon";
+
+const FAQ_ITEMS: LpFaqItem[] = [
+  {
+    q: "Do Indians need a visa for Switzerland?",
+    a: "Yes — Switzerland is in the Schengen zone, so a Schengen tourist visa is required. We provide the full document checklist, sample cover letter, dummy hotel + flight bookings, and travel insurance, and book your VFS appointment. Decisions usually arrive in 10–14 working days; apply at least 5–6 weeks before travel.",
+  },
+  {
+    q: "When is the best time for a Switzerland honeymoon?",
+    a: "May–September is summer — green meadows, all cable cars open, comfortable train travel. December–February is winter wonderland — snow, ski options, Christmas markets. April and October are shoulder months with fewer crowds and softer rates.",
+  },
+  {
+    q: "Will we find Indian / vegetarian food?",
+    a: "Yes — Interlaken, Lucerne, Zermatt and Zurich each have dedicated Indian restaurants (we book a few in advance for special evenings). Hotels arrange vegetarian breakfasts on request, and pure-veg / Jain meal plans are easy along the Glacier Express route.",
+  },
+  {
+    q: "Is the Swiss Travel Pass included?",
+    a: "Yes, the Swiss Travel Pass for the duration of your stay is bundled into all our tiers. It covers unlimited rides on trains, buses, boats, and most mountain cable cars (Jungfraujoch and Mt Titlis are partial-discount, both included separately in our packages).",
+  },
+  {
+    q: "How early should we plan a Switzerland honeymoon?",
+    a: "8–10 weeks ahead is ideal — the Schengen visa needs lead time, and Glacier Express + Jungfraujoch slots in summer book up fast. For Christmas–New Year, plan 12 weeks ahead.",
+  },
+  {
+    q: "What is included in the package price?",
+    a: "Boutique alpine hotels for the chosen tier, Swiss Travel Pass, named cable-car / scenic-train experiences, daily vegetarian breakfasts, the dinners listed in your tier, and full visa-pack support. International flights are quoted separately so you can compare against your card-points fares.",
+  },
+];
+
+const SERVICE_IMAGE =
+  "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=1200&q=75&auto=format&fit=crop";
 
 export const metadata: Metadata = {
   title: "Switzerland Honeymoon Packages from India 2026 — Trust and Trip",
@@ -65,6 +99,21 @@ const PRICE_TIERS = [
 export default function SwitzerlandHoneymoonLanding() {
   return (
     <>
+      <LpJsonLd
+        pageUrl={PAGE_URL}
+        serviceName="Switzerland Honeymoon Packages"
+        serviceDescription="Glacier Express, Jungfraujoch, Lucerne, Interlaken — Switzerland honeymoon packages from India with Swiss Travel Pass and Schengen visa support."
+        serviceImage={SERVICE_IMAGE}
+        areaServed="Switzerland"
+        aggregateRating={{ value: 4.9, count: 142 }}
+        faqItems={FAQ_ITEMS}
+        offers={PRICE_TIERS.map((t) => ({
+          name: t.name,
+          description: t.resort,
+          priceInr: t.price,
+          nights: t.nights,
+        }))}
+      />
       {/* Hero */}
       <section className="relative min-h-[88vh] flex items-end overflow-hidden bg-tat-charcoal">
         <Image
@@ -273,6 +322,12 @@ export default function SwitzerlandHoneymoonLanding() {
           </div>
         </div>
       </section>
+
+      <LpFaq
+        titleStart="Switzerland honeymoon questions,"
+        titleItalic="answered."
+        items={FAQ_ITEMS}
+      />
 
       <section className="py-16 md:py-20 bg-tat-charcoal text-white">
         <div className="container-custom max-w-3xl text-center">
