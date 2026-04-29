@@ -43,6 +43,9 @@ export type Package = {
     day?: number;
     title: string;
     description: string;
+    meals?: { breakfast?: boolean; lunch?: boolean; dinner?: boolean };
+    stayName?: string;
+    transferLabel?: string;
   }[];
   activities: string[];
   categories?: string[];

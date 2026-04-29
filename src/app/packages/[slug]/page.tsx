@@ -15,7 +15,7 @@ import ReviewForm from "@/components/ReviewForm";
 import BookingAside from "@/components/BookingAside";
 import JsonLd from "@/components/JsonLd";
 import {
-  Clock, Star, MapPin, Check, X as XIcon, ChevronRight,
+  Clock, Star, MapPin, ChevronRight,
   Hotel, Sparkles, Zap, Users, Flame,
 } from "lucide-react";
 import SharePackage from "@/components/SharePackage";
@@ -30,6 +30,9 @@ import UpgradesTabs from "@/components/package-detail/UpgradesTabs";
 import NeedToKnowGrid from "@/components/package-detail/NeedToKnowGrid";
 import PackageWhyThis from "@/components/package-detail/PackageWhyThis";
 import PackageVsAggregator from "@/components/package-detail/PackageVsAggregator";
+import PackageInclusionsGrouped from "@/components/package-detail/PackageInclusionsGrouped";
+import PackageHotelsRail from "@/components/package-detail/PackageHotelsRail";
+import PackageFAQ from "@/components/package-detail/PackageFAQ";
 
 interface Props { params: { slug: string } }
 
@@ -243,75 +246,54 @@ export default async function PackageDetail({ params }: Props) {
                   day: day.day ?? idx + 1,
                   title: day.title,
                   description: day.description,
+                  meals: day.meals,
+                  stay: day.stayName ? { value: day.stayName } : undefined,
+                  transfer: day.transferLabel
+                    ? { label: "Transfer", value: day.transferLabel }
+                    : undefined,
                 }))}
               />
             </section>
 
-            {/* INCLUSIONS */}
+            {/* INCLUSIONS — grouped by category (flights, hotels, meals, …). */}
             <section id="inclusions" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <span className="eyebrow">Inclusions & Exclusions</span>
               <h2 className="heading-section mt-2 mb-6 text-balance">
                 What's in — and
                 <span className="italic text-tat-gold font-light"> what's not.</span>
               </h2>
-              <div className="grid md:grid-cols-2 gap-5">
-                <div className="bg-tat-paper rounded-2xl p-6 border border-tat-charcoal/5">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-7 w-7 rounded-full bg-tat-gold/15 flex items-center justify-center">
-                      <Check className="h-4 w-4 text-tat-gold" />
-                    </div>
-                    <h3 className="font-medium text-tat-charcoal">What's included</h3>
-                  </div>
-                  <ul className="space-y-2.5">
-                    {pkg.inclusions.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-sm text-tat-charcoal/70">
-                        <Check className="h-4 w-4 text-tat-gold shrink-0 mt-0.5" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="bg-tat-paper rounded-2xl p-6 border border-tat-charcoal/5">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-7 w-7 rounded-full bg-tat-charcoal/8 flex items-center justify-center">
-                      <XIcon className="h-4 w-4 text-tat-charcoal/50" />
-                    </div>
-                    <h3 className="font-medium text-tat-charcoal/60">Not included</h3>
-                  </div>
-                  <ul className="space-y-2.5">
-                    {pkg.exclusions.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-sm text-tat-charcoal/50">
-                        <XIcon className="h-4 w-4 text-tat-charcoal/30 shrink-0 mt-0.5" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+              <PackageInclusionsGrouped
+                inclusions={pkg.inclusions}
+                exclusions={pkg.exclusions}
+              />
             </section>
 
-            {/* HOTEL */}
+            {/* HOTEL — multi-city rail when pkg.hotels[] is set, else single hotel card. */}
             <section id="hotel" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <span className="eyebrow">Where you'll stay</span>
               <h2 className="heading-section mt-2 mb-6 text-balance">
                 Comfort you'll
                 <span className="italic text-tat-gold font-light"> remember.</span>
               </h2>
-              <div className="bg-tat-cream/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
-                <div className="h-14 w-14 rounded-2xl bg-tat-gold/15 flex items-center justify-center shrink-0">
-                  <Hotel className="h-7 w-7 text-tat-gold" />
-                </div>
-                <div>
-                  <h3 className="font-display text-2xl font-medium">{pkg.hotel.name}</h3>
-                  <div className="flex items-center gap-1 mt-1.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} />
-                    ))}
-                    <span className="text-xs text-tat-charcoal/50 ml-1">{hotelStars}-star accommodation</span>
+              {pkg.hotels && pkg.hotels.length > 0 ? (
+                <PackageHotelsRail hotels={pkg.hotels} />
+              ) : (
+                <div className="bg-tat-cream/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
+                  <div className="h-14 w-14 rounded-2xl bg-tat-gold/15 flex items-center justify-center shrink-0">
+                    <Hotel className="h-7 w-7 text-tat-gold" />
                   </div>
-                  <p className="mt-3 text-tat-charcoal/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
+                  <div>
+                    <h3 className="font-display text-2xl font-medium">{pkg.hotel.name}</h3>
+                    <div className="flex items-center gap-1 mt-1.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} />
+                      ))}
+                      <span className="text-xs text-tat-charcoal/50 ml-1">{hotelStars}-star accommodation</span>
+                    </div>
+                    <p className="mt-3 text-tat-charcoal/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Activities */}
               <div className="mt-6">
@@ -342,6 +324,13 @@ export default async function PackageDetail({ params }: Props) {
                 <ReviewForm packageSlug={pkg.slug} packageTitle={pkg.title} />
               </div>
             </section>
+
+            {/* FAQ — package-specific, renders FAQPage JSON-LD when pkg.faqs[] set. */}
+            {pkg.faqs && pkg.faqs.length > 0 && (
+              <section id="faq" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+                <PackageFAQ faqs={pkg.faqs} packageTitle={pkg.title} />
+              </section>
+            )}
 
             {/* CALLBACK FORM */}
             <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">

@@ -48,6 +48,26 @@ export const packageType = defineType({
           fields: [
             defineField({ name: 'title', type: 'string' }),
             defineField({ name: 'description', type: 'text', rows: 2 }),
+            // ─── Phase-2 day metadata (optional) ─────────────────────────
+            defineField({
+              name: 'meals',
+              type: 'object',
+              description: 'Meals included on this day. Renders as B/L/D pills.',
+              fields: [
+                defineField({ name: 'breakfast', type: 'boolean' }),
+                defineField({ name: 'lunch', type: 'boolean' }),
+                defineField({ name: 'dinner', type: 'boolean' }),
+              ],
+              options: { collapsible: true, collapsed: true },
+            }),
+            defineField({
+              name: 'stayName', title: 'Stay (this night)', type: 'string',
+              description: 'Hotel name guests sleep at this night. Optional.',
+            }),
+            defineField({
+              name: 'transferLabel', title: 'Transfer / mode', type: 'string',
+              description: 'e.g. "Speedboat to resort", "Flight Delhi → Male". Optional.',
+            }),
           ],
           preview: { select: { title: 'title' } },
         }),

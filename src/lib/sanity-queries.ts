@@ -127,7 +127,13 @@ const PACKAGE_FIELDS = `
   "inclusions": inclusions,
   "exclusions": exclusions,
   "hotel": hotel,
-  "itinerary": itinerary,
+  "itinerary": itinerary[]{
+    title,
+    description,
+    meals,
+    stayName,
+    transferLabel
+  },
   "activities": activities,
   "categories": categories,
   "tags": tags,

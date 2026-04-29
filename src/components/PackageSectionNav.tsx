@@ -10,6 +10,7 @@ const SECTIONS = [
   { id: "inclusions", label: "Inclusions" },
   { id: "hotel",      label: "Hotel" },
   { id: "reviews",    label: "Reviews" },
+  { id: "faq",        label: "FAQ" },
 ];
 
 interface Props {
@@ -33,7 +34,13 @@ export default function PackageSectionNav({ packageTitle }: Props = {}) {
   // Becomes true once the section nav has scrolled past its initial sticky
   // anchor — used to swap the bar into header-replacement mode.
   const [takeover, setTakeover] = useState(false);
+  // Only sections whose anchor exists on the page (e.g. FAQ may be absent).
+  const [visible, setVisible] = useState(SECTIONS);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setVisible(SECTIONS.filter(({ id }) => document.getElementById(id)));
+  }, []);
 
   // Track which section is currently in view, to underline the matching tab.
   useEffect(() => {
@@ -115,7 +122,7 @@ export default function PackageSectionNav({ packageTitle }: Props = {}) {
           )}
 
           <div className="flex gap-0 overflow-x-auto no-scrollbar">
-            {SECTIONS.map(({ id, label }) => (
+            {visible.map(({ id, label }) => (
               <button
                 key={id}
                 onClick={() => scrollTo(id)}
