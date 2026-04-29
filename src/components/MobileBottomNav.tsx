@@ -109,8 +109,8 @@ export default function MobileBottomNav() {
             }}
             className="flex flex-col items-center gap-1 flex-1 py-2 min-h-[56px] justify-center text-tat-charcoal/45 hover:text-tat-charcoal/70"
           >
-            <div className="flex items-center justify-center rounded-xl w-10 h-7 bg-[#25D366]/10">
-              <MessageCircle className="h-[18px] w-[18px] text-[#25D366]" />
+            <div className="flex items-center justify-center rounded-xl w-10 h-7 bg-whatsapp/10">
+              <MessageCircle className="h-[18px] w-[18px] text-whatsapp" />
             </div>
             <span className="text-[10px] uppercase tracking-[0.12em] font-medium leading-none">
               Chat

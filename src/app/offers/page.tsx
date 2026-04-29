@@ -155,7 +155,7 @@ export default async function OffersPage() {
             target="_blank" rel="noopener noreferrer"
             intent="whatsapp_click"
             metadata={{ note: "Offers page — Ask for unlisted deal" }}
-            className="shrink-0 flex items-center gap-2 bg-[#25D366] text-white px-6 py-3.5 rounded-xl font-semibold text-sm hover:bg-[#20ba5a] transition-colors"
+            className="shrink-0 flex items-center gap-2 bg-whatsapp text-white px-6 py-3.5 rounded-xl font-semibold text-sm hover:bg-whatsapp-hover transition-colors"
           >
             <MessageCircle className="h-4 w-4 fill-white" />
             Ask a planner

@@ -84,16 +84,16 @@ export default function FinalCTA() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => captureIntent("whatsapp_click", { note: "Homepage FinalCTA — Chat with a Planner" })}
-            className="group bg-tat-paper/8 hover:bg-tat-paper/12 border border-tat-paper/15 hover:border-[#25D366]/40 rounded-2xl p-6 transition-all"
+            className="group bg-tat-paper/8 hover:bg-tat-paper/12 border border-tat-paper/15 hover:border-whatsapp/40 rounded-2xl p-6 transition-all"
           >
-            <div className="h-12 w-12 rounded-xl bg-[#25D366]/15 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-              <MessageCircle className="h-5 w-5 text-[#25D366] fill-[#25D366]/40" />
+            <div className="h-12 w-12 rounded-xl bg-whatsapp/15 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+              <MessageCircle className="h-5 w-5 text-whatsapp fill-whatsapp/40" />
             </div>
             <h3 className="font-display text-lg font-medium mb-1.5">Chat with a Planner</h3>
             <p className="text-xs text-tat-paper/55 leading-relaxed mb-4">
               A real human replies in minutes. Weekdays 9am–9pm IST.
             </p>
-            <span className="inline-flex items-center gap-1.5 text-xs text-[#25D366] font-medium group-hover:gap-2 transition-all">
+            <span className="inline-flex items-center gap-1.5 text-xs text-whatsapp font-medium group-hover:gap-2 transition-all">
               Open WhatsApp <ArrowRight className="h-3.5 w-3.5" />
             </span>
           </a>

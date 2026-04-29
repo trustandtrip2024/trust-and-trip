@@ -76,7 +76,7 @@ export default function PackageEnquiryCTA({ packageTitle, price, duration }: Pro
                 note: `Book on WhatsApp · ₹${price.toLocaleString("en-IN")} · ${duration}`,
               });
             }}
-            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-[#25D366] text-white text-sm font-semibold"
+            className="flex-1 flex items-center justify-center gap-2 h-11 rounded-xl bg-whatsapp text-white text-sm font-semibold"
           >
             <MessageCircle className="h-4 w-4 fill-white" />
             Book on WhatsApp

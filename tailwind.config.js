@@ -43,6 +43,19 @@ module.exports = {
           'info-bg':    '#E8EFF4',          // cool gray-blue
           'info-fg':    '#1F3645',          // deep cool slate
         },
+        // ─── Third-party brand colors ────────────────────────────────
+        // Centralised so components reference `bg-whatsapp` / `bg-facebook`
+        // instead of `bg-[#25D366]` literals. Hex strings live in
+        // src/lib/brand-colors.ts as the canonical source for non-Tailwind
+        // contexts (inline styles, email templates, etc).
+        whatsapp:        '#25D366',
+        'whatsapp-hover':'#20ba5a',
+        'whatsapp-deep': '#1a9e4e',
+        facebook:        '#1877F2',
+        linkedin:        '#0A66C2',
+        'google-mint':   '#34E0A1',
+        'twitter-x':     '#000000',
+        'youtube-red':   '#FF0000',
       },
       fontFamily: {
         display: ['var(--font-display)', 'Fraunces', 'Georgia', 'serif'],

@@ -130,8 +130,8 @@ export default function ReferralDashboardPage() {
             <div className="flex items-center gap-2 flex-wrap">
               <p className="text-xs text-tat-charcoal/45 mr-1">Share via:</p>
               <a href={waShare} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#25D366]/10 text-[#1a9e4e] border border-[#25D366]/20 text-xs font-medium hover:bg-[#25D366]/20 transition-colors">
-                <MessageCircle className="h-3.5 w-3.5 fill-[#25D366] text-[#25D366]" />
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-whatsapp/10 text-whatsapp-deep border border-whatsapp/20 text-xs font-medium hover:bg-whatsapp/20 transition-colors">
+                <MessageCircle className="h-3.5 w-3.5 fill-whatsapp text-whatsapp" />
                 WhatsApp
               </a>
             </div>

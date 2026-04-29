@@ -193,7 +193,7 @@ export default function CompareBar() {
                                     note: `Clicked Book Now from Compare Bar · ₹${p.price.toLocaleString("en-IN")} · ${p.duration}`,
                                   })
                                 }
-                                className="flex items-center justify-center gap-1.5 w-full bg-[#25D366] text-white py-2.5 rounded-xl text-sm font-medium hover:bg-[#20ba5a] transition-colors"
+                                className="flex items-center justify-center gap-1.5 w-full bg-whatsapp text-white py-2.5 rounded-xl text-sm font-medium hover:bg-whatsapp-hover transition-colors"
                               >
                                 <MessageCircle className="h-3.5 w-3.5 fill-white" />
                                 Book Now

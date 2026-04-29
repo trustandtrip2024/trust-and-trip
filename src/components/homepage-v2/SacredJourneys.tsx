@@ -45,7 +45,7 @@ export default function SacredJourneys({ packages = FALLBACK }: Props) {
   if (yatras.length === 0) return null;
 
   return (
-    <section aria-label="Sacred Journeys" className="bg-[#fbf6ec] py-16 sm:py-24">
+    <section aria-label="Sacred Journeys" className="bg-tat-paper py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">

@@ -109,7 +109,7 @@ export default function VerifiedByTravelers() {
   return (
     <section
       aria-label="Verified by Travelers"
-      className="bg-[#fbf6ec] py-16 sm:py-24"
+      className="bg-tat-paper py-16 sm:py-24"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Heading */}

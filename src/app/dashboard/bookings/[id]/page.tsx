@@ -254,7 +254,7 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
                   package_title: booking.package_title,
                   note: `Dashboard booking detail — Need help (booking ${booking.id.slice(0, 8).toUpperCase()})`,
                 })}
-                className="flex items-center justify-center gap-2 w-full border border-[#25D366]/30 bg-[#25D366]/5 hover:bg-[#25D366]/15 text-[#1a9e4e] py-2.5 rounded-xl text-sm font-semibold transition-all"
+                className="flex items-center justify-center gap-2 w-full border border-whatsapp/30 bg-whatsapp/5 hover:bg-whatsapp/15 text-whatsapp-deep py-2.5 rounded-xl text-sm font-semibold transition-all"
               >
                 <MessageCircle className="h-4 w-4" /> Need help?
               </a>

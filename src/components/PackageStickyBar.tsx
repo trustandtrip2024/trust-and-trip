@@ -119,7 +119,7 @@ export default function PackageStickyBar({
                 note: "Sticky bar · WhatsApp",
               })
             }
-            className="shrink-0 grid place-items-center h-11 w-11 rounded-full bg-[#25D366] text-white shadow-[0_4px_12px_-4px_rgba(37,211,102,0.55)] active:scale-95 transition"
+            className="shrink-0 grid place-items-center h-11 w-11 rounded-full bg-whatsapp text-white shadow-[0_4px_12px_-4px_rgba(37,211,102,0.55)] active:scale-95 transition"
           >
             <MessageCircle className="h-4.5 w-4.5 fill-white text-white" />
           </a>

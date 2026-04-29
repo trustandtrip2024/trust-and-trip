@@ -43,8 +43,8 @@ export default function QuickActionRow({
         onClick={() => captureIntent("whatsapp_click", { note: "Pkg detail · send itinerary" })}
         className="group/q flex flex-col items-center gap-1.5 py-3 md:py-4 rounded-xl hover:bg-white dark:hover:bg-white/10 transition-colors"
       >
-        <span className="grid place-items-center h-9 w-9 rounded-full bg-[#25D366]/15 group-hover/q:bg-[#25D366]/25 transition-colors">
-          <MessageCircle className="h-4 w-4 fill-[#25D366] text-[#25D366]" />
+        <span className="grid place-items-center h-9 w-9 rounded-full bg-whatsapp/15 group-hover/q:bg-whatsapp/25 transition-colors">
+          <MessageCircle className="h-4 w-4 fill-whatsapp text-whatsapp" />
         </span>
         <span className="text-[11px] md:text-[12px] font-semibold text-tat-charcoal dark:text-tat-paper">
           Send Itinerary

@@ -14,7 +14,8 @@ function GoogleIcon({ size = 20 }: { size?: number }) {
   );
 }
 
-// TripAdvisor owl SVG (simplified)
+// TripAdvisor owl SVG (simplified). Brand-mint hex #34E0A1 is the
+// official TripAdvisor green — canonical constant in lib/brand-colors.ts.
 function TripAdvisorIcon({ size = 22 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Tripadvisor">
@@ -181,7 +182,7 @@ export default async function GoogleReviewsSection() {
               href="https://www.tripadvisor.in/Search?q=Trust+And+Trip+Experiences"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 border border-tat-charcoal/8 hover:border-[#34E0A1]/50 hover:shadow-soft transition-all duration-300 group"
+              className="flex items-center gap-3 bg-white rounded-2xl px-4 py-3 border border-tat-charcoal/8 hover:border-google-mint/50 hover:shadow-soft transition-all duration-300 group"
               aria-label="View Trust and Trip on Tripadvisor"
             >
               <TripAdvisorIcon size={28} />

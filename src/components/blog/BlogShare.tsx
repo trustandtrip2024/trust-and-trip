@@ -37,7 +37,7 @@ export default function BlogShare({ title, slug }: Props) {
       label: "WhatsApp",
       href: `https://wa.me/?text=${encodeURIComponent(`${title}\n${url}`)}`,
       Icon: MessageCircle,
-      bg: "hover:text-[#25D366]",
+      bg: "hover:text-whatsapp",
     },
     {
       label: "Twitter / X",
@@ -49,13 +49,13 @@ export default function BlogShare({ title, slug }: Props) {
       label: "Facebook",
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       Icon: Facebook,
-      bg: "hover:text-[#1877F2]",
+      bg: "hover:text-facebook",
     },
     {
       label: "LinkedIn",
       href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
       Icon: Linkedin,
-      bg: "hover:text-[#0A66C2]",
+      bg: "hover:text-linkedin",
     },
   ];
 

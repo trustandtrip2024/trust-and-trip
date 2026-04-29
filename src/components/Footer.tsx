@@ -70,10 +70,10 @@ const DESTINATIONS = [
 
 const SOCIALS = [
   { icon: Instagram, href: "https://instagram.com/trust_and_trip", label: "Instagram", color: "hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:border-transparent" },
-  { icon: Facebook, href: "https://facebook.com/trustandtrip/", label: "Facebook", color: "hover:bg-[#1877F2] hover:border-transparent" },
+  { icon: Facebook, href: "https://facebook.com/trustandtrip/", label: "Facebook", color: "hover:bg-facebook hover:border-transparent" },
   { icon: Twitter, href: "https://x.com/trust_and_trip", label: "Twitter / X", color: "hover:bg-black hover:border-transparent" },
   { icon: Youtube, href: "https://youtube.com/@trustandtrip", label: "YouTube", color: "hover:bg-red-600 hover:border-transparent" },
-  { icon: Linkedin, href: "https://linkedin.com/company/trust-and-trip/", label: "LinkedIn", color: "hover:bg-[#0A66C2] hover:border-transparent" },
+  { icon: Linkedin, href: "https://linkedin.com/company/trust-and-trip/", label: "LinkedIn", color: "hover:bg-linkedin hover:border-transparent" },
 ];
 
 export default function Footer() {

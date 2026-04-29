@@ -27,7 +27,7 @@ export default function SharePackage({ title, slug, price, destination }: Props)
     {
       label: "WhatsApp",
       icon: MessageCircle,
-      color: "bg-[#25D366] text-white hover:bg-[#20ba5a]",
+      color: "bg-whatsapp text-white hover:bg-whatsapp-hover",
       href: `https://wa.me/?text=${encodeURIComponent(text)}`,
     },
     {

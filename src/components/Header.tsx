@@ -553,9 +553,9 @@ export default function Header() {
                           setDrawerOpen(false);
                           captureIntent("whatsapp_click", { note: "Header drawer WhatsApp" });
                         }}
-                        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#25D366]/10 text-[#1a9e4e] font-semibold text-sm border border-[#25D366]/20"
+                        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-whatsapp/10 text-whatsapp-deep font-semibold text-sm border border-whatsapp/20"
                       >
-                        <MessageCircle className="h-4 w-4 fill-[#25D366] text-[#25D366]" />
+                        <MessageCircle className="h-4 w-4 fill-whatsapp text-whatsapp" />
                         Chat on WhatsApp
                       </a>
                     </div>
