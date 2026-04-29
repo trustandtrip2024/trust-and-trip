@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { Sparkles, Heart, Eye, Compass, ShieldCheck, Award, ArrowRight } from "lucide-react";
+import { Sparkles, Heart, Eye, Compass, ShieldCheck, Award, ArrowRight, TrendingDown } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 const ICONS: Record<string, LucideIcon> = {
-  Sparkles, Heart, Eye, Compass, ShieldCheck, Award,
+  Sparkles, Heart, Eye, Compass, ShieldCheck, Award, TrendingDown,
 };
 
 interface Pillar {
@@ -39,6 +39,13 @@ const DEFAULT_PILLARS: Pillar[] = [
     body: "Diabetic snacks pre-stocked. Aisle seats noted. Prayer-time itineraries respected. A vegetarian-only Bali dinner, reserved three weeks ahead.",
     proof: { value: "8,000+", label: "trips since 2019" },
   },
+  {
+    icon: "TrendingDown",
+    title: "Honest pricing",
+    headline: "Same hotels, less padding.",
+    body: "Aggregators stack 12-18% commission on every booking. We don't. Hotels quote us net rates and we pass the saving on, line-itemised in your quote — taxes, GST, TCS, all of it.",
+    proof: { value: "~12%", label: "saved vs. OTAs" },
+  },
 ];
 
 interface Props {
@@ -52,10 +59,10 @@ interface Props {
 
 export default function WhyTrustAndTripPillars({
   eyebrow = "Why Trust and Trip",
-  titleStart = "Three reasons travelers",
+  titleStart = "Four reasons travelers",
   titleItalic = "come back.",
   lede,
-  closingLine = "Originality. Trust. Human care. Detail.",
+  closingLine = "Originality. Human care. Detail. Honest pricing.",
   pillars,
 }: Props = {}) {
   const items = (pillars && pillars.length >= 2) ? pillars : DEFAULT_PILLARS;
@@ -68,7 +75,7 @@ export default function WhyTrustAndTripPillars({
       <div className="container-custom max-w-6xl">
         <SectionHeader eyebrow={eyebrow} title={titleStart} italicTail={titleItalic} lede={lede} align="center" />
 
-        <ul className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <ul className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-7">
           {items.map(({ icon, title, headline, body, proof }, idx) => {
             const Icon = ICONS[icon] ?? Sparkles;
 
