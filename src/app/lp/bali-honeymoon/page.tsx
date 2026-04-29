@@ -48,7 +48,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Bali Honeymoon — Free Draft in 60 Seconds",
     description: "Private villa Bali honeymoons, planned by a real human. Pay only when sure.",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    images: [
+      {
+        url: "/api/og?title=Bali+honeymoons%2C+the+slow+kind.&dest=Bali&eyebrow=Honeymoon&price=55000&rating=4.9&reviews=217",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

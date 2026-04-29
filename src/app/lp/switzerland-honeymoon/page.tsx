@@ -48,7 +48,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Switzerland Honeymoon — Free Draft in 60 Seconds",
     description: "Alps. Trains. Romance. Real planner builds your itinerary in 60s.",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    images: [
+      {
+        url: "/api/og?title=Swiss+honeymoons%2C+by+train+and+lake.&dest=Switzerland&eyebrow=Honeymoon&price=145000&rating=4.9&reviews=142",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

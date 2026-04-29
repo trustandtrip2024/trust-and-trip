@@ -48,7 +48,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kerala Family Tour — Free Draft in 60 Seconds",
     description: "Backwaters + Munnar + Periyar. Real planner builds your family draft in 60s.",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    images: [
+      {
+        url: "/api/og?title=Kerala+family+trips%2C+for+every+age.&dest=Kerala&eyebrow=Family&price=28000&rating=4.9&reviews=156",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

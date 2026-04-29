@@ -48,7 +48,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Char Dham Yatra — Walked With Quiet Care",
     description: "Helicopter or road Char Dham Yatra packages, planned by a real human.",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    images: [
+      {
+        url: "/api/og?title=Char+Dham+Yatra%2C+walked+with+quiet+care.&dest=Char+Dham&eyebrow=Yatra+2026&price=48000&rating=4.9&reviews=184",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

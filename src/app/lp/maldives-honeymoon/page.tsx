@@ -49,7 +49,13 @@ export const metadata: Metadata = {
     title: "Maldives Honeymoon — Free Draft in 60 Seconds",
     description:
       "Overwater villa honeymoons to the Maldives, planned by a real human. Pay only when sure.",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+    images: [
+      {
+        url: "/api/og?title=Maldives+honeymoons%2C+hand-built+for+two.&dest=Maldives&eyebrow=Honeymoon&price=68000&rating=4.9&reviews=198",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };
