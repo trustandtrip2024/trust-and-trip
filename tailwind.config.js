@@ -123,8 +123,8 @@ module.exports = {
         },
       },
       boxShadow: {
-        "soft":         "0 2px 20px -8px rgba(11, 28, 44, 0.08)",
-        "soft-lg":      "0 20px 60px -20px rgba(11, 28, 44, 0.15)",
+        "soft":         "0 2px 20px -8px rgba(42, 42, 42, 0.08)",
+        "soft-lg":      "0 20px 60px -20px rgba(42, 42, 42, 0.15)",
         "card":         "0 4px 16px rgba(45,30,15,0.04), 0 1px 2px rgba(45,30,15,0.04)",
         "rail":         "0 8px 32px rgba(45,30,15,0.08)",
         "hover":        "0 8px 24px rgba(45,30,15,0.10)",

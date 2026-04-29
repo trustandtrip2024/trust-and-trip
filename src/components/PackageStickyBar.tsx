@@ -134,7 +134,7 @@ export default function PackageStickyBar({
                 note: `Sticky bar · ₹${price.toLocaleString("en-IN")} · ${duration}`,
               })
             }
-            className="flex-[1.2] inline-flex items-center justify-center gap-1.5 h-11 px-3.5 rounded-full bg-tat-gold text-tat-charcoal font-semibold text-[13px] shadow-[0_4px_14px_-4px_rgba(232,169,76,0.65)] active:scale-[0.98] transition whitespace-nowrap"
+            className="flex-[1.2] inline-flex items-center justify-center gap-1.5 h-11 px-3.5 rounded-full bg-tat-gold text-tat-charcoal font-semibold text-[13px] shadow-[0_4px_14px_-4px_rgba(200,147,42,0.65)] active:scale-[0.98] transition whitespace-nowrap"
           >
             Book now
             <ArrowRight className="h-4 w-4" />

@@ -131,10 +131,10 @@ h1, h2, h3 {
     @apply w-full px-4 py-3.5 rounded-xl bg-tat-paper border border-tat-charcoal/10 text-tat-charcoal text-sm outline-none transition-all duration-200;
   }
   .input-travel:focus {
-    @apply border-tat-gold bg-white shadow-[0_0_0_3px_rgba(245,158,11,0.15)];
+    @apply border-tat-gold bg-white shadow-[0_0_0_3px_rgba(200,147,42,0.15)];
   }
   .input-travel::placeholder {
-    color: rgba(11, 28, 44, 0.4);
+    color: rgba(42, 42, 42, 0.4);
   }
 
   /* Shimmer effect for loading */

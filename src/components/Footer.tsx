@@ -95,7 +95,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#0b1c2c] text-tat-paper overflow-hidden relative">
+    <footer className="bg-tat-charcoal text-tat-paper overflow-hidden relative">
 
       {/* ── Newsletter strip ───────────────────────────────────── */}
       <div className="border-b border-tat-paper/8">

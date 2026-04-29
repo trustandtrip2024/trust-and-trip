@@ -285,7 +285,7 @@ export default function Header() {
               <div className="h-10 w-10 rounded-full bg-tat-teal flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-gold">
                 <span className="text-white text-lg font-display font-semibold tracking-tight">T</span>
               </div>
-              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-tat-gold shadow-[0_0_10px_rgba(242,179,64,0.85)] ring-1 ring-white" />
+              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-tat-gold shadow-[0_0_10px_rgba(200,147,42,0.85)] ring-1 ring-white" />
             </div>
             <div className="flex flex-col leading-none">
               <span className="font-display text-lg md:text-xl font-semibold tracking-tight whitespace-nowrap">
