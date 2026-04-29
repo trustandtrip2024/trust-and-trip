@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Gift, X } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 
 const DISMISS_KEY = "tt_deal_ribbon_dismissed_v1";
 
@@ -51,6 +52,7 @@ export default function HomeDealRibbon({
           type="button"
           onClick={() => {
             setOpen(false);
+            analytics.dealRibbonDismiss();
             try { localStorage.setItem(DISMISS_KEY, "1"); } catch { /* private mode */ }
           }}
           aria-label="Dismiss promotion"

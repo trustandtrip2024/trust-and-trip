@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 
 /**
  * Google-branded rating pill — links to /reviews. Renders an inline G
@@ -50,6 +53,7 @@ export default function GoogleReviewsPill({
   return (
     <Link
       href={href}
+      onClick={() => analytics.heroGoogleClick()}
       aria-label={`Rated ${rating} out of 5 by ${count.toLocaleString("en-IN")} travelers on Google. Read reviews.`}
       className={`inline-flex items-center gap-2 h-8 px-3 rounded-pill shadow-card text-meta font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 ${baseClass} ${className}`}
     >

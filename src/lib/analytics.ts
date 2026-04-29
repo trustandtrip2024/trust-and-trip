@@ -109,4 +109,20 @@ export const analytics = {
   /** GA4 `search` — fire on planner search submit. */
   search: (term: string) =>
     trackEvent({ action: "search", category: "search", search_term: term }),
+
+  // ── Homepage tier-1 polish events ──────────────────────────────────────
+  heroGoogleClick: () =>
+    trackEvent({ action: "hero_google_pill_click", category: "engagement" }),
+
+  brandReelPlay: () =>
+    trackEvent({ action: "brand_reel_play", category: "engagement" }),
+
+  faqQuestionOpen: (question: string) =>
+    trackEvent({ action: "faq_question_open", category: "engagement", label: question }),
+
+  dealRibbonDismiss: () =>
+    trackEvent({ action: "deal_ribbon_dismiss", category: "engagement" }),
+
+  howItWorksCta: () =>
+    trackEvent({ action: "how_it_works_cta_click", category: "engagement" }),
 };
