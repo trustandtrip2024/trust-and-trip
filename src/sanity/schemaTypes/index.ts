@@ -7,6 +7,7 @@ import { partnerLogoType } from './partnerLogoType'
 import { pressQuoteType } from './pressQuoteType'
 import { ugcPostType } from './ugcPostType'
 import { featuredItineraryType } from './featuredItineraryType'
+import { offerBannerType } from './offerBannerType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -18,5 +19,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     pressQuoteType,
     ugcPostType,
     featuredItineraryType,
+    offerBannerType,
   ],
 }

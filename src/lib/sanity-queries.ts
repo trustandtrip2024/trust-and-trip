@@ -493,6 +493,53 @@ export async function getUgcPosts(): Promise<UgcPost[]> {
   });
 }
 
+// ─── Offer banner queries ─────────────────────────────────────────────────
+
+export type OfferBanner = {
+  slug: string;
+  title: string;
+  eyebrow?: string;
+  sub?: string;
+  ctaLabel?: string;
+  href: string;
+  badge?: string;
+  gradient?: string;
+  image?: string;
+  expiresAt?: string;
+};
+
+/**
+ * Pull active, non-expired offer banners. Sorted by `order` then by
+ * `_createdAt`. Returns [] when nothing's set so HomepageStrip can fall
+ * back to its built-in seed banners and never render empty.
+ */
+export async function getOfferBanners(limit = 8): Promise<OfferBanner[]> {
+  return cached(`sanity:offerBanners:${limit}`, TTL.short, async () => {
+    const raw = await sanityClient.fetch<
+      Array<Omit<OfferBanner, "image"> & { image?: any; _id: string }>
+    >(
+      `*[_type == "offerBanner" && active == true
+         && (!defined(expiresAt) || expiresAt > now())]
+        | order(order asc, _createdAt desc) [0...$limit] {
+        _id, title, eyebrow, sub, ctaLabel, href, badge, gradient, image, expiresAt
+      }`,
+      { limit },
+    );
+    return raw.map((b) => ({
+      slug: b._id,
+      title: b.title,
+      eyebrow: b.eyebrow,
+      sub: b.sub,
+      ctaLabel: b.ctaLabel,
+      href: b.href,
+      badge: b.badge,
+      gradient: b.gradient,
+      image: b.image ? urlFor(b.image).width(800).height(500).quality(80).url() : undefined,
+      expiresAt: b.expiresAt,
+    }));
+  });
+}
+
 /**
  * Pull UGC posts for a specific package's destination. Case-insensitive
  * match against the destination string field on the UGC document. Used by

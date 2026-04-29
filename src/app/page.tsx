@@ -36,6 +36,7 @@ import {
   getFeaturedPressQuote,
   getUgcPosts,
   getBlogPosts,
+  getOfferBanners,
 } from "@/lib/sanity-queries";
 import { fetchGoogleReviews } from "@/lib/google-reviews";
 import { getSiteStats } from "@/lib/site-stats";
@@ -96,6 +97,7 @@ export default async function HomePage() {
     ugcPosts,
     blogPosts,
     siteStats,
+    offerBanners,
   ] = await Promise.all([
     getDestinations(),
     getPilgrimPackages(),
@@ -110,6 +112,7 @@ export default async function HomePage() {
     getUgcPosts(),
     getBlogPosts().catch(() => []),
     getSiteStats(),
+    getOfferBanners().catch(() => []),
   ]);
 
   const c = content ?? {};
@@ -165,7 +168,7 @@ export default async function HomePage() {
         <HomeTopDestChips destinations={destinations} />
       </div>
 
-      <OfferBannerStrip />
+      <OfferBannerStrip offers={offerBanners} />
 
       <RecentlyCraftedSection
         eyebrow={c.recentlyCrafted?.eyebrow}
