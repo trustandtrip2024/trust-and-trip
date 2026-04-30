@@ -11,6 +11,12 @@ import DestinationGallery from "@/components/DestinationGallery";
 import PackageSlider from "@/components/PackageSlider";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
+import {
+  destinationBreadcrumbLd,
+  destinationFaqLd,
+  destinationKeywords,
+} from "@/lib/seo-destination";
+import { speakableLd, founderPersonLd } from "@/lib/seo-package";
 import DestinationStickyNav from "@/components/destinations/DestinationStickyNav";
 import DestinationMonthBar from "@/components/destinations/DestinationMonthBar";
 import DestinationFAQ from "@/components/destinations/DestinationFAQ";
@@ -41,9 +47,13 @@ export async function generateMetadata({ params }: Props) {
   return {
     title: `${d.name} Tour Packages — ${d.tagline}`,
     description: `Explore ${d.name}, ${d.country}. ${d.overview?.slice(0, 155)}…`,
+    keywords: destinationKeywords(d),
+    authors: [{ name: "Akash Mishra", url: "https://trustandtrip.com/about" }],
     openGraph: {
       title: `${d.name} — ${d.tagline}`,
       description: d.overview?.slice(0, 200),
+      type: "website",
+      url: `https://trustandtrip.com/destinations/${d.slug}`,
       images: [{ url: d.heroImage, width: 1200, height: 630, alt: d.name }],
     },
     alternates: { canonical: `https://trustandtrip.com/destinations/${d.slug}` },
@@ -122,6 +132,10 @@ export default async function DestinationDetail({ params }: Props) {
         }),
       }} />
       {tripsListLd && <JsonLd data={tripsListLd} />}
+      <JsonLd data={destinationBreadcrumbLd(destination)} />
+      <JsonLd data={destinationFaqLd(destination)} />
+      <JsonLd data={speakableLd(["#destination-overview", "#destination-faqs"])} />
+      <JsonLd data={founderPersonLd()} />
 
       {/* Hero — slightly shorter on mobile so the page action is closer to
           the fold (60vh vs 75vh). Desktop unchanged. */}
@@ -202,7 +216,7 @@ export default async function DestinationDetail({ params }: Props) {
             <h2 className="heading-section mt-3 mb-5 text-balance">
               The soul of <span className="italic text-tat-gold font-light">{destination.name}.</span>
             </h2>
-            <p className="text-tat-charcoal/70 leading-relaxed mb-6">{destination.overview}</p>
+            <p id="destination-overview" className="text-tat-charcoal/70 leading-relaxed mb-6">{destination.overview}</p>
 
             <div className="flex flex-wrap gap-2">
               {(destination.highlights || []).map((h) => (
@@ -409,7 +423,7 @@ export default async function DestinationDetail({ params }: Props) {
       )}
 
       {/* FAQ */}
-      <section id="faq" className="py-14 md:py-16 bg-tat-cream-warm/30 scroll-mt-32">
+      <section id="destination-faqs" className="py-14 md:py-16 bg-tat-cream-warm/30 scroll-mt-32">
         <div className="container-custom max-w-3xl">
           <span className="eyebrow">Common questions</span>
           <h2 className="heading-section mt-2 mb-6 text-balance">

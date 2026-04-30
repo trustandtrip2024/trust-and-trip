@@ -4,7 +4,15 @@ export const dynamicParams = true;
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getPackageBySlug, getPriorityPackageSlugs, getRelatedPackages, getUgcPostsForDestination } from "@/lib/sanity-queries";
+import { getPackageBySlug, getPriorityPackageSlugs, getRelatedPackages, getUgcPostsForDestination, getDestinationBySlug } from "@/lib/sanity-queries";
+import {
+  fillPackageSeo,
+  packageBreadcrumbLd,
+  packageFaqLd,
+  packageTouristTripLd,
+  speakableLd,
+  founderPersonLd,
+} from "@/lib/seo-package";
 import { getPackageStats } from "@/lib/package-stats";
 import { getGalleryImages } from "@/lib/gallery-images";
 import PackageItinerary from "@/components/PackageItinerary";
@@ -62,11 +70,18 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props) {
   const p = await getPackageBySlug(params.slug);
   if (!p) return {};
+  const dest = await getDestinationBySlug(p.destinationSlug).catch(() => null);
+  const seo = fillPackageSeo(p, dest);
   return {
-    title: p.title,
+    title: `${p.title} — ${p.duration} · From ₹${p.price.toLocaleString("en-IN")}`,
     description: p.description,
+    keywords: seo.keywords,
+    authors: [{ name: "Akash Mishra", url: "https://trustandtrip.com/about" }],
     openGraph: {
-      title: p.title, description: p.description,
+      title: p.title,
+      description: p.description,
+      type: "website",
+      url: `https://trustandtrip.com/packages/${p.slug}`,
       images: [{ url: p.heroImage, width: 1200, height: 630, alt: p.title }],
     },
     twitter: { card: "summary_large_image", title: p.title, images: [p.heroImage] },
@@ -80,11 +95,17 @@ export default async function PackageDetail({ params }: Props) {
   const pkg = await getPackageBySlug(params.slug);
   if (!pkg) return notFound();
 
-  const [relatedPackages, stats, guestPhotos] = await Promise.all([
+  const [relatedPackages, stats, guestPhotos, dest] = await Promise.all([
     getRelatedPackages(pkg.destinationSlug, pkg.slug, pkg.travelType).catch(() => []),
     getPackageStats(pkg.slug),
     getUgcPostsForDestination(pkg.destinationName).catch(() => []),
+    getDestinationBySlug(pkg.destinationSlug).catch(() => null),
   ]);
+
+  // Server-side SEO/AEO/GEO fill — synthesises FAQs, whyThisPackage, and a
+  // bestFor line whenever the Sanity record leaves them blank, so every
+  // package page ships rich JSON-LD and crawlable answer copy.
+  const seo = fillPackageSeo(pkg, dest);
   const galleryImages = getGalleryImages(pkg.destinationSlug, pkg.heroImage);
 
   // Real "vs OTA" reference price comes from Sanity comparePrice — only set
@@ -150,6 +171,12 @@ export default async function PackageDetail({ params }: Props) {
           },
         }),
       }} />
+      <JsonLd data={packageTouristTripLd(pkg, dest)} />
+      <JsonLd data={packageBreadcrumbLd(pkg)} />
+      {/* FAQPage JSON-LD is emitted by <PackageFaqs/> below — single source
+          of truth, avoids duplicate schemas confusing some crawlers. */}
+      <JsonLd data={speakableLd(seo.speakableSelectors)} />
+      <JsonLd data={founderPersonLd()} />
 
       {/* ── Compact Hero ───────────────────────────────────────── */}
       <section className="relative h-[55vh] min-h-[380px] w-full overflow-hidden bg-tat-charcoal">
@@ -248,9 +275,11 @@ export default async function PackageDetail({ params }: Props) {
               <PackageGallery images={galleryImages} title={pkg.title} />
             </div>
 
-            {/* Why this package — 3-bullet elevator pitch + best-for tag */}
-            <div className="mb-8">
-              <PackageWhyThis bullets={pkg.whyThisPackage} bestFor={pkg.bestFor} />
+            {/* Why this package — 3-bullet elevator pitch + best-for tag.
+                seo.* fills in defaults when Sanity fields are blank so every
+                package ships crawlable summary copy + speakable answer block. */}
+            <div id="package-summary" className="mb-8">
+              <PackageWhyThis bullets={seo.whyThisPackage} bestFor={seo.bestFor} />
             </div>
 
             {/* Tour includes ribbon + tour highlights — replaces the legacy
@@ -513,11 +542,15 @@ export default async function PackageDetail({ params }: Props) {
               <CancellationLadder price={pkg.price} />
             </section>
 
-            {/* FAQS — Sanity-driven, FAQPage JSON-LD inside the component. */}
-            <PackageFaqs
-              faqs={pkg.faqs ?? []}
-              pageUrl={`https://trustandtrip.com/packages/${pkg.slug}`}
-            />
+            {/* FAQS — Sanity-driven when set, synthesised from package +
+                destination data otherwise. FAQPage JSON-LD already emitted
+                up top via packageFaqLd(seo.faqs). */}
+            <div id="package-faqs">
+              <PackageFaqs
+                faqs={seo.faqs}
+                pageUrl={`https://trustandtrip.com/packages/${pkg.slug}`}
+              />
+            </div>
 
             {/* BEST MONTHS — 12-tile climate strip. Null when not set. */}
             {pkg.bestMonths && pkg.bestMonths.length > 0 && (
