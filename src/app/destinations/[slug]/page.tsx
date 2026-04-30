@@ -4,7 +4,7 @@ export const dynamicParams = true;
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getDestinationBySlug, getAllDestinationSlugs, getPackagesByDestination } from "@/lib/sanity-queries";
+import { getDestinationBySlug, getPriorityDestinationSlugs, getPackagesByDestination } from "@/lib/sanity-queries";
 import type { Package } from "@/lib/data";
 import { DESTINATION_GALLERY } from "@/lib/gallery-images";
 import DestinationGallery from "@/components/DestinationGallery";
@@ -29,7 +29,9 @@ const VISA_FREE_SLUGS = new Set([
 ]);
 
 export async function generateStaticParams() {
-  const slugs = await getAllDestinationSlugs();
+  // Pre-render only the top 20 destinations at build time; ISR covers
+  // the long tail. `dynamicParams = true` keeps any other slug working.
+  const slugs = await getPriorityDestinationSlugs(20);
   return slugs.map((slug) => ({ slug }));
 }
 

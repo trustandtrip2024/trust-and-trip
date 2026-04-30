@@ -276,6 +276,29 @@ export const getAllPackageSlugs = cache(async (): Promise<string[]> => {
   );
 });
 
+// Return only trending/featured/highly-rated package slugs — used by
+// generateStaticParams to cap build-time pre-rendering. Anything not in
+// this list still works via ISR thanks to `dynamicParams = true`.
+export const getPriorityPackageSlugs = cache(async (limit = 30): Promise<string[]> => {
+  return cached(`sanity:package-slugs:priority:${limit}`, TTL.long, () =>
+    sanityClient.fetch<string[]>(
+      `*[_type == "package" && (trending == true || featured == true)] | order(rating desc, reviews desc) [0...$limit].slug.current`,
+      { limit },
+    )
+  );
+});
+
+// Same idea for destinations — pre-render the most popular ones, ISR
+// covers the long tail.
+export const getPriorityDestinationSlugs = cache(async (limit = 20): Promise<string[]> => {
+  return cached(`sanity:dest-slugs:priority:${limit}`, TTL.long, () =>
+    sanityClient.fetch<string[]>(
+      `*[_type == "destination"] | order(priceFrom asc) [0...$limit].slug.current`,
+      { limit },
+    )
+  );
+});
+
 export const getTrendingPackages = cache(async (): Promise<Package[]> => {
   return cached("sanity:packages:trending", TTL.medium, async () => {
     const raw = await sanityClient.fetch<SanityPackage[]>(TRENDING_PACKAGES_QUERY);

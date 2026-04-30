@@ -4,7 +4,7 @@ export const dynamicParams = true;
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getPackageBySlug, getAllPackageSlugs, getRelatedPackages, getUgcPostsForDestination } from "@/lib/sanity-queries";
+import { getPackageBySlug, getPriorityPackageSlugs, getRelatedPackages, getUgcPostsForDestination } from "@/lib/sanity-queries";
 import { getPackageStats } from "@/lib/package-stats";
 import { getGalleryImages } from "@/lib/gallery-images";
 import PackageItinerary from "@/components/PackageItinerary";
@@ -51,7 +51,11 @@ import PackageGuaranteeBanner from "@/components/package-detail/PackageGuarantee
 interface Props { params: { slug: string } }
 
 export async function generateStaticParams() {
-  const slugs = await getAllPackageSlugs();
+  // Cap build-time pre-rendering to top 30 priority slugs (trending +
+  // featured, sorted by rating). Long-tail packages still render via
+  // ISR on first hit thanks to `dynamicParams = true`. Keeps build
+  // worker memory + duration sane as the catalogue grows.
+  const slugs = await getPriorityPackageSlugs(30);
   return slugs.map((slug) => ({ slug }));
 }
 

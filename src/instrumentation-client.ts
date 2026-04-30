@@ -17,11 +17,15 @@ if (dsn) {
       process.env.NEXT_PUBLIC_SENTRY_RELEASE ??
       process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ??
       undefined,
-    // Sample 20% of normal sessions and 100% of sessions where an error occurs
-    replaysSessionSampleRate: 0.2,
+    // Sample 5% of normal sessions and 100% of sessions where an error occurs.
+    // Defaults are conservative — bump via NEXT_PUBLIC_SENTRY_REPLAY_RATE /
+    // NEXT_PUBLIC_SENTRY_TRACE_RATE without redeploying when extra signal
+    // is needed. Lowered from 20%/10% in 2026-04 to cut Replay upload size
+    // and trace volume on every page; 100% error sampling is preserved so
+    // every real bug still ships full context.
+    replaysSessionSampleRate: Number(process.env.NEXT_PUBLIC_SENTRY_REPLAY_RATE ?? 0.05),
     replaysOnErrorSampleRate: 1.0,
-    // 10% of transactions are traced — keeps quota usage sane
-    tracesSampleRate: 0.1,
+    tracesSampleRate: Number(process.env.NEXT_PUBLIC_SENTRY_TRACE_RATE ?? 0.05),
     // Send headers + IP so user-tied breadcrumbs are useful in Sentry.
     // We still strip cookies in beforeSend below.
     sendDefaultPii: true,

@@ -16,7 +16,7 @@ if (dsn) {
       process.env.SENTRY_RELEASE ??
       process.env.VERCEL_GIT_COMMIT_SHA ??
       undefined,
-    tracesSampleRate: 0.1,
+    tracesSampleRate: Number(process.env.SENTRY_TRACE_RATE ?? 0.05),
     sendDefaultPii: true,
     enableLogs: true,
   });
