@@ -40,6 +40,28 @@ const THEME_TAGS: Record<string, FilterId[]> = {
   vaishnodevi: ["pilgrim", "india"],
   tirupati:    ["pilgrim", "india"],
   varanasi:    ["pilgrim", "india"],
+  // 2026 catalogue refresh — keep filter chips populated for the new dests
+  lakshadweep:    ["beach", "india"],
+  pondicherry:    ["beach", "india"],
+  darjeeling:     ["mountain", "india"],
+  "mount-abu":    ["mountain", "india", "pilgrim"],
+  mahabaleshwar:  ["mountain", "india"],
+  lonavala:       ["mountain", "india"],
+  manali:         ["mountain", "india"],
+  "shimla-kasol": ["mountain", "india"],
+  sikkim:         ["mountain", "india"],
+  meghalaya:      ["mountain", "india"],
+  tawang:         ["mountain", "india"],
+  coorg:          ["mountain", "india"],
+  "ooty-coonoor": ["mountain", "india"],
+  pushkar:        ["pilgrim", "india"],
+  "rishikesh-mussoorie": ["pilgrim", "mountain", "india"],
+  cambodia:       ["pilgrim"],
+  "sri-lanka":    ["beach"],
+  mauritius:      ["beach"],
+  "hong-kong":    ["beach"],
+  "south-korea":  ["mountain"],
+  iceland:        ["mountain"],
 };
 
 const FEATURED_ORDER = [

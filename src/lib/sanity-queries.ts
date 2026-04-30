@@ -330,8 +330,13 @@ export async function getNewlyAddedPackages(): Promise<Package[]> {
 
 export async function getPilgrimPackages(): Promise<Package[]> {
   return cached("sanity:packages:pilgrim", TTL.medium, async () => {
+    // Match by category instead of a single destination slug. The catalogue
+    // grew past uttarakhand-only — Char Dham, Tirupati, Pushkar, Varanasi,
+    // Mount Abu, etc. all carry "Pilgrim" or "Spiritual" categories from the
+    // 2026 generator. Falls through any future pilgrim destination too,
+    // without code changes.
     const raw = await sanityClient.fetch<SanityPackage[]>(
-      `*[_type == "package" && destination->slug.current == "uttarakhand"] | order(price asc) [0...6] { ${PACKAGE_FIELDS} }`
+      `*[_type == "package" && ("Pilgrim" in categories || "Spiritual" in categories)] | order(rating desc, price asc) [0...12] { ${PACKAGE_FIELDS} }`
     );
     return raw.map(mapPackage);
   });
