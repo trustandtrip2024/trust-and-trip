@@ -2,21 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 
-interface Item { id: string; label: string }
-
-const DEFAULT_ITEMS: Item[] = [
-  { id: "destinations",  label: "Destinations" },
-  { id: "deals",         label: "Deals" },
-  { id: "browse",        label: "Browse" },
-  { id: "reviews",       label: "Reviews" },
-  { id: "guides",        label: "Travel guides" },
-  { id: "faq",           label: "FAQ" },
+const ITEMS = [
+  { id: "destinations", label: "Destinations" },
+  { id: "packages",     label: "Packages" },
+  { id: "browse",       label: "Browse" },
+  { id: "deals",        label: "Deals" },
+  { id: "reviews",      label: "Reviews" },
+  { id: "faq",          label: "FAQ" },
 ];
 
-interface Props { items?: Item[] }
-
-export default function HomeStickySubnav({ items = DEFAULT_ITEMS }: Props = {}) {
-  const [activeId, setActiveId] = useState<string>(items[0]?.id ?? "");
+export default function StickySubnav() {
+  const [activeId, setActiveId] = useState<string>(ITEMS[0].id);
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,29 +21,26 @@ export default function HomeStickySubnav({ items = DEFAULT_ITEMS }: Props = {}) 
       (entries) => {
         const visible = entries.filter((e) => e.isIntersecting);
         if (visible.length === 0) return;
-        // pick the first one that's intersecting (top-most)
-        const sorted = visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        const id = sorted[0].target.id;
-        if (id) setActiveId(id);
+        const top = visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (top.target.id) setActiveId(top.target.id);
       },
       { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
     );
-    items.forEach((it) => {
+    ITEMS.forEach((it) => {
       const el = document.getElementById(it.id);
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
-  }, [items]);
+  }, []);
 
-  // Keep active chip visible inside the scrollable track on small screens.
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
     const chip = track.querySelector<HTMLAnchorElement>(`a[data-id="${activeId}"]`);
     if (!chip) return;
-    const trackRect = track.getBoundingClientRect();
-    const chipRect = chip.getBoundingClientRect();
-    if (chipRect.left < trackRect.left || chipRect.right > trackRect.right) {
+    const tr = track.getBoundingClientRect();
+    const cr = chip.getBoundingClientRect();
+    if (cr.left < tr.left || cr.right > tr.right) {
       chip.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
   }, [activeId]);
@@ -62,7 +55,7 @@ export default function HomeStickySubnav({ items = DEFAULT_ITEMS }: Props = {}) 
           ref={trackRef}
           className="flex items-center gap-1 overflow-x-auto no-scrollbar -mx-2 px-2 py-2 scroll-smooth"
         >
-          {items.map((it) => {
+          {ITEMS.map((it) => {
             const active = activeId === it.id;
             return (
               <a
