@@ -1,4 +1,6 @@
 // Generic CAPI passthrough — client-triggered server-side event mirror.
+
+export const dynamic = "force-dynamic";
 //
 // Used to dedup browser Pixel events with server-side CAPI for events the
 // client must trigger (ViewContent, Search, etc). Browser fires Pixel with

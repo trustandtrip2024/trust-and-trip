@@ -1,4 +1,6 @@
 // WhatsApp click tracker.
+
+export const dynamic = "force-dynamic";
 //
 // Wraps wa.me deeplinks behind a server redirect so every click is captured:
 // • Inserts a "whatsapp_click" lead row with UTM + page_url

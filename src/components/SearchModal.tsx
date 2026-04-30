@@ -3,8 +3,32 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Search, X, MapPin, Package, BookOpen, ArrowRight, Loader2 } from "lucide-react";
+import { Search, X, MapPin, Package, BookOpen, ArrowRight, Loader2, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+const RECENT_KEY = "tt_recent_searches";
+const RECENT_CAP = 5;
+
+function loadRecents(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(RECENT_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr.filter((x) => typeof x === "string").slice(0, RECENT_CAP) : [];
+  } catch {
+    return [];
+  }
+}
+
+function pushRecent(q: string) {
+  if (typeof window === "undefined" || !q.trim()) return;
+  try {
+    const cur = loadRecents().filter((x) => x.toLowerCase() !== q.toLowerCase());
+    const next = [q, ...cur].slice(0, RECENT_CAP);
+    window.localStorage.setItem(RECENT_KEY, JSON.stringify(next));
+  } catch {}
+}
 
 type Result = {
   type: "package" | "destination" | "post";
@@ -39,11 +63,13 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
   const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeIdx, setActiveIdx] = useState(-1);
+  const [recents, setRecents] = useState<string[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Focus input on open
+  // Focus input on open + load recent searches
   useEffect(() => {
     setTimeout(() => inputRef.current?.focus(), 50);
+    setRecents(loadRecents());
   }, []);
 
   // Debounced search
@@ -68,6 +94,18 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
     router.push(href);
   }, [onClose, router]);
 
+  const submitFullSearch = useCallback(() => {
+    const q = query.trim();
+    if (!q) return;
+    pushRecent(q);
+    navigate(`/search?q=${encodeURIComponent(q)}`);
+  }, [query, navigate]);
+
+  function clearRecents() {
+    try { window.localStorage.removeItem(RECENT_KEY); } catch {}
+    setRecents([]);
+  }
+
   // Keyboard navigation
   useEffect(() => {
     const allItems = results.length > 0 ? results : [];
@@ -75,11 +113,20 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
       if (e.key === "Escape") return onClose();
       if (e.key === "ArrowDown") { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, allItems.length - 1)); }
       if (e.key === "ArrowUp")   { e.preventDefault(); setActiveIdx((i) => Math.max(i - 1, -1)); }
-      if (e.key === "Enter" && activeIdx >= 0 && allItems[activeIdx]) navigate(allItems[activeIdx].href);
+      if (e.key === "Enter") {
+        if (activeIdx >= 0 && allItems[activeIdx]) {
+          pushRecent(query);
+          navigate(allItems[activeIdx].href);
+        } else if (query.trim().length >= 2) {
+          // No row selected — submit a full /search query so the user gets
+          // every result instead of bouncing off an empty modal state.
+          submitFullSearch();
+        }
+      }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [results, activeIdx, navigate, onClose]);
+  }, [results, activeIdx, navigate, onClose, query, submitFullSearch]);
 
   return (
     <AnimatePresence>
@@ -142,6 +189,35 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
           <div className="max-h-[60vh] overflow-y-auto">
             {!query && (
               <div className="px-5 pb-5">
+                {recents.length > 0 && (
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[12px] uppercase tracking-wider text-tat-charcoal/55 font-semibold inline-flex items-center gap-1.5">
+                        <Clock className="h-3 w-3" />
+                        Recent searches
+                      </p>
+                      <button
+                        type="button"
+                        onClick={clearRecents}
+                        className="text-[11px] text-tat-charcoal/40 hover:text-tat-charcoal underline-offset-2 hover:underline"
+                      >
+                        Clear
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {recents.map((r) => (
+                        <button
+                          key={r}
+                          type="button"
+                          onClick={() => setQuery(r)}
+                          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-tat-cream-warm/50 border border-tat-charcoal/10 text-[13px] text-tat-charcoal/75 hover:border-tat-gold hover:bg-tat-gold/5"
+                        >
+                          {r}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <p className="text-[13px] text-tat-charcoal/65 mb-3">Or pick a popular one:</p>
                 <div className="flex flex-wrap gap-2">
                   {POPULAR_DESTINATIONS.map(({ emoji, label, href }) => (
@@ -162,9 +238,21 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
               <div className="py-12 text-center text-tat-charcoal/50">
                 <Search className="h-8 w-8 mx-auto mb-3 opacity-30" />
                 <p className="text-sm">No results for &ldquo;{query}&rdquo;</p>
-                <button onClick={() => navigate(`/packages`)} className="mt-3 text-xs text-tat-gold hover:underline">
-                  Browse all packages →
-                </button>
+                <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
+                  <button
+                    onClick={submitFullSearch}
+                    className="inline-flex items-center gap-1 h-9 px-4 rounded-full bg-tat-charcoal text-white text-[12px] font-semibold"
+                  >
+                    Search the full site
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    onClick={() => navigate(`/packages`)}
+                    className="text-xs text-tat-gold hover:underline"
+                  >
+                    Browse all packages →
+                  </button>
+                </div>
               </div>
             )}
 
@@ -174,7 +262,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                   const meta = TYPE_META[r.type];
                   const Icon = meta.icon;
                   return (
-                    <button key={`${r.type}-${r.slug}`} onClick={() => navigate(r.href)}
+                    <button key={`${r.type}-${r.slug}`} onClick={() => { pushRecent(query); navigate(r.href); }}
                       className={`w-full flex items-center gap-4 px-5 py-3 hover:bg-tat-charcoal/4 transition-colors text-left ${
                         activeIdx === i ? "bg-tat-gold/8" : ""
                       }`}
@@ -205,6 +293,20 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
                     </button>
                   );
                 })}
+                {/* Overflow CTA — top-result list is capped at 12 in the
+                    modal; full results live on /search for filtering by
+                    type and seeing every match. */}
+                {query.length >= 2 && (
+                  <button
+                    onClick={submitFullSearch}
+                    className="w-full flex items-center justify-between px-5 py-3 mt-1 border-t border-tat-charcoal/6 text-tat-gold hover:bg-tat-gold/5 transition-colors"
+                  >
+                    <span className="text-[13px] font-semibold">
+                      View all results for &ldquo;{query}&rdquo;
+                    </span>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                )}
               </div>
             )}
           </div>

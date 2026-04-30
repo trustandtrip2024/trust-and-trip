@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import type { Lead } from "@/lib/supabase";

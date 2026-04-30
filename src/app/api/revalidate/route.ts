@@ -1,4 +1,6 @@
 // Sanity → Next.js cache revalidator.
+
+export const dynamic = "force-dynamic";
 //
 // Wire as a Sanity webhook (Sanity dashboard → API → Webhooks):
 //   URL:     https://trustandtrip.com/api/revalidate
