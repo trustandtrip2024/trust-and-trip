@@ -51,7 +51,6 @@ export default function LoveFromTheGramStrip({
   tightTop = false,
 }: Props = {}) {
   const items = (posts && posts.length > 0 ? posts : FALLBACK_POSTS).slice(0, 12);
-  const usingFallback = !posts || posts.length === 0;
 
   return (
     <section
@@ -91,8 +90,7 @@ export default function LoveFromTheGramStrip({
           </ul>
         </div>
 
-        {/* Footer: instagram CTA + soft empty-state hint when fallback active */}
-        <div className="mt-8 md:mt-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="mt-8 md:mt-12 flex justify-center">
           <Link
             href="https://instagram.com/trust_and_trip"
             target="_blank"
@@ -104,11 +102,6 @@ export default function LoveFromTheGramStrip({
             </span>
             Share yours — tag @trust_and_trip on Instagram
           </Link>
-          {usingFallback && (
-            <p className="text-[12px] text-tat-charcoal/45 dark:text-tat-paper/55 italic">
-              Replace these with real traveler photos via Sanity Studio.
-            </p>
-          )}
         </div>
       </div>
     </section>

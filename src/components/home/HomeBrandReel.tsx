@@ -35,6 +35,8 @@ export default function HomeBrandReel({
   const [open, setOpen] = useState(false);
   const hasVideo = Boolean(videoUrl);
 
+  if (!hasVideo) return null;
+
   return (
     <section
       aria-labelledby="reel-title"

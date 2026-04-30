@@ -222,8 +222,8 @@ function DealCard({ deal }: { deal: Deal }) {
               per person
             </p>
           </div>
-          <span className="inline-flex items-center gap-1 h-9 px-4 rounded-full bg-tat-charcoal text-white text-[12px] font-semibold whitespace-nowrap group-hover:bg-tat-orange transition-colors">
-            Grab deal
+          <span className="inline-flex items-center gap-1 h-9 px-4 rounded-full bg-tat-teal text-white text-[12px] font-semibold whitespace-nowrap group-hover:bg-tat-teal-deep transition-colors">
+            Plan this trip
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </span>
         </div>

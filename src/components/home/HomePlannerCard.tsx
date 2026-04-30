@@ -7,7 +7,7 @@ const WHATSAPP_HREF =
   encodeURIComponent("Hi Akash — I'd like help planning my trip.");
 const PHONE_HREF = "tel:+918115999588";
 
-const FOUNDER_PHOTO_DEFAULT = "/akash-mishra.jpg";
+const FOUNDER_PHOTO_DEFAULT = "";
 
 interface Props {
   name?: string;
@@ -38,9 +38,7 @@ export default function HomePlannerCard({
   tightTop = false,
 }: Props = {}) {
   const initials = name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
-  // /akash-mishra.jpg is the production photo path. If the asset hasn't
-  // been uploaded yet, the gradient initials block stands in.
-  const usePhoto = !!photo && photo !== "";
+  const usePhoto = !!photo && photo.length > 0;
 
   const personJsonLd = {
     "@context": "https://schema.org",

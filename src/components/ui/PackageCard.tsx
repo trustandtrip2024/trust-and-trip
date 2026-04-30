@@ -249,7 +249,7 @@ export default function PackageCardUI(p: PackageCardProps) {
             href={p.href}
             className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-10" : "h-11"} px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
           >
-            View details
+            Plan this trip
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
           <div className="grid grid-cols-2 gap-1.5">
