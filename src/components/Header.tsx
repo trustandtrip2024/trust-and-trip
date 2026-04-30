@@ -117,6 +117,14 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Auto-close drawer on route change so internal Link navigations don't
+  // leave it open behind the new page. Belt-and-suspenders: each Link inside
+  // the drawer also calls onNavigate, but pathname-based reset covers
+  // browser back/forward and any future link that forgets to wire it up.
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
+
   const isActive = (href: string) =>
     pathname === href || (href !== "/" && pathname?.startsWith(href + "/"));
 
@@ -262,14 +270,40 @@ export default function Header() {
         )}
       >
         <div className="container-custom flex flex-nowrap items-center justify-between h-16 md:h-20 gap-3 overflow-hidden">
-          {/* Mobile hamburger — placed first so it sits at far left */}
+          {/* Mobile hamburger — placed first so it sits at far left.
+              Morphs Menu ↔ X based on drawerOpen so the trigger doubles as
+              an in-flow close affordance (the in-drawer X still works too).
+              A small orange dot appears when the user has wishlist items
+              they haven't acted on, nudging them to revisit the menu. */}
           <button
             type="button"
-            aria-label="Open menu"
-            onClick={() => setDrawerOpen(true)}
+            aria-label={drawerOpen ? "Close menu" : "Open menu"}
+            aria-expanded={drawerOpen}
+            onClick={() => setDrawerOpen((v) => !v)}
             className="lg:hidden p-2 rounded-md hover:bg-white/10 transition-colors -ml-1"
           >
-            <Menu className="h-5 w-5 text-tat-paper" />
+            <span className="relative inline-block h-5 w-5">
+              <Menu
+                className={clsx(
+                  "absolute inset-0 h-5 w-5 text-tat-paper transition-all duration-200",
+                  drawerOpen ? "opacity-0 rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"
+                )}
+                aria-hidden
+              />
+              <X
+                className={clsx(
+                  "absolute inset-0 h-5 w-5 text-tat-paper transition-all duration-200",
+                  drawerOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-75"
+                )}
+                aria-hidden
+              />
+              {wishlistCount > 0 && !drawerOpen && (
+                <span
+                  className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-tat-orange ring-2 ring-tat-charcoal"
+                  aria-hidden
+                />
+              )}
+            </span>
           </button>
 
           {/* Logo — desktop / tablet (≥md) */}
@@ -454,16 +488,32 @@ export default function Header() {
               <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-[60] bg-tat-charcoal/70 backdrop-blur-sm data-[state=open]:animate-fade-in" />
                 <Dialog.Content
-                  className="fixed right-0 top-0 bottom-0 z-[70] w-[88vw] max-w-sm bg-tat-paper flex flex-col overflow-hidden focus:outline-none data-[state=open]:animate-slide-up"
+                  className="fixed right-0 top-0 bottom-0 z-[70] w-[88vw] max-w-sm bg-tat-paper flex flex-col overflow-hidden focus:outline-none data-[state=open]:animate-slide-in-right data-[state=closed]:animate-slide-out-right"
                 >
                   <div className="flex items-center justify-between px-6 py-5 border-b border-tat-charcoal/8">
-                    <Dialog.Title className="font-display text-xl font-semibold tracking-tight">
-                      <span className="text-tat-charcoal">Trust</span>
-                      <span className="text-tat-gold italic">&amp;</span>
-                      <span className="text-tat-teal">Trip</span>
-                    </Dialog.Title>
+                    {user ? (
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="h-9 w-9 shrink-0 rounded-full bg-tat-teal text-tat-paper grid place-items-center font-display font-semibold text-sm">
+                          {(user.email?.[0] ?? "T").toUpperCase()}
+                        </span>
+                        <div className="min-w-0">
+                          <Dialog.Title className="text-[11px] uppercase tracking-[0.2em] text-tat-charcoal/55 font-semibold">
+                            Welcome back
+                          </Dialog.Title>
+                          <p className="text-sm font-medium text-tat-charcoal truncate">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <Dialog.Title className="font-display text-xl font-semibold tracking-tight">
+                        <span className="text-tat-charcoal">Trust</span>
+                        <span className="text-tat-gold italic">&amp;</span>
+                        <span className="text-tat-teal">Trip</span>
+                      </Dialog.Title>
+                    )}
                     <Dialog.Close asChild>
-                      <button aria-label="Close menu" className="h-9 w-9 rounded-full bg-tat-charcoal/6 flex items-center justify-center">
+                      <button aria-label="Close menu" className="h-9 w-9 shrink-0 rounded-full bg-tat-charcoal/6 flex items-center justify-center">
                         <X className="h-4 w-4 text-tat-charcoal" />
                       </button>
                     </Dialog.Close>

@@ -108,6 +108,8 @@ module.exports = {
         "marquee": "marquee 40s linear infinite",
         "shimmer": "shimmer 2s infinite",
         "slide-up": "slideUp 0.25s ease-out",
+        "slide-in-right": "slideInRight 0.28s cubic-bezier(0.22, 1, 0.36, 1)",
+        "slide-out-right": "slideOutRight 0.2s cubic-bezier(0.4, 0, 1, 1)",
       },
       keyframes: {
         fadeIn: {
@@ -133,6 +135,14 @@ module.exports = {
         slideUp: {
           "0%": { transform: "translateY(100%)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        slideInRight: {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        slideOutRight: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(100%)" },
         },
       },
       boxShadow: {
