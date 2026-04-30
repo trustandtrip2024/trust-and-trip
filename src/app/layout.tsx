@@ -47,6 +47,7 @@ const TripPlannerModal = dynamic(() => import("@/components/TripPlannerModal"), 
 const ExitIntentPopup = dynamic(() => import("@/components/ExitIntentPopup"), { ssr: false });
 const CompareBar = dynamic(() => import("@/components/CompareBar"), { ssr: false });
 const AriaChatWidget = dynamic(() => import("@/components/AriaChatWidget"), { ssr: false });
+const DesktopPlannerCTA = dynamic(() => import("@/components/DesktopPlannerCTA"), { ssr: false });
 const CookieBanner = dynamic(() => import("@/components/CookieBanner"), { ssr: false });
 const FloatingWhatsApp = dynamic(() => import("@/components/FloatingWhatsApp"), { ssr: false });
 const PWAInstallPrompt = dynamic(() => import("@/components/PWAInstallPrompt"), { ssr: false });
@@ -244,6 +245,7 @@ export default function RootLayout({
           <CompareBar />
           <SearchProvider />
           <AriaChatWidget />
+          <DesktopPlannerCTA />
           <ScrollToTop />
           <GoogleAnalytics nonce={nonce} />
           <GoogleTagManager nonce={nonce} />

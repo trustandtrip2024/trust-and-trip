@@ -15,7 +15,34 @@ export default function PersonalRails({ packagesBySlug }: Props) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => setHydrated(true), []);
-  if (!hydrated) return null;
+
+  // Until Zustand finishes rehydrating from localStorage we don't yet know
+  // whether the user has saved/recent items. On a return visit they almost
+  // always do — returning null causes a visible content jump as the rail
+  // pops in below the fold. A short skeleton holds the slot.
+  if (!hydrated) {
+    const seen = typeof window !== "undefined" && localStorage.getItem("ttp-wishlist");
+    if (!seen) return null;
+    return (
+      <section
+        aria-hidden
+        className="py-10 md:py-14 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95"
+      >
+        <div className="container-custom">
+          <div className="h-3 w-32 bg-tat-charcoal/8 rounded animate-pulse" />
+          <div className="mt-3 h-6 w-72 bg-tat-charcoal/8 rounded animate-pulse" />
+          <div className="mt-7 flex gap-4 lg:gap-5 overflow-hidden">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="shrink-0 w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%] aspect-[4/3] rounded-2xl bg-tat-charcoal/8 animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const savedItems = wishlist
     .map((slug) => packagesBySlug[slug])

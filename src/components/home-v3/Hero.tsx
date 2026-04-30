@@ -96,10 +96,28 @@ export default function Hero({
           </p>
         </div>
 
-        {/* ─── Search form ───────────────────────────────────────── */}
+        {/* ─── Mobile: 1-tap pseudo-search that opens the planner sheet ──
+            Five stacked fields cost ~280px above the fold on mobile. The
+            sheet has the same fields and is more thumb-friendly anyway. */}
+        <button
+          type="button"
+          onClick={() => openPlanner()}
+          className="md:hidden mt-5 w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-white/95 backdrop-blur-md shadow-[0_18px_40px_-18px_rgba(0,0,0,0.5)] ring-1 ring-white/10 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
+        >
+          <Search className="h-5 w-5 text-tat-gold shrink-0" aria-hidden />
+          <span className="flex-1 text-[14px] text-tat-charcoal/70">
+            Where to? Tap to plan in 2 mins
+          </span>
+          <span className="inline-flex items-center justify-center h-9 px-3 rounded-pill bg-tat-teal text-white text-[12px] font-semibold">
+            Plan
+            <ArrowRight className="ml-1 h-3.5 w-3.5" />
+          </span>
+        </button>
+
+        {/* ─── Desktop: full search form ─────────────────────────── */}
         <form
           onSubmit={submit}
-          className="mt-5 md:mt-8 bg-white/95 dark:bg-tat-charcoal/95 backdrop-blur-md rounded-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
+          className="hidden md:block mt-8 bg-white/95 dark:bg-tat-charcoal/95 backdrop-blur-md rounded-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
         >
           <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_0.8fr_1fr_auto] divide-y md:divide-y-0 md:divide-x divide-tat-charcoal/10 dark:divide-white/10">
             <Field label="Destination" icon={Search}>
