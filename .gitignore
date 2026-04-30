@@ -33,8 +33,11 @@ yarn-error.log*
 # Vercel
 .vercel
 
-# Claude Code local settings (per-machine)
-.claude/settings.local.json
+# Claude Code local state (per-machine)
+.claude/
+
+# Sanity local runtime cache
+.sanity/
 
 # TypeScript
 *.tsbuildinfo

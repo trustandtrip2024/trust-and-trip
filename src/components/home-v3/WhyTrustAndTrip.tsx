@@ -1,13 +1,11 @@
 import { PenTool, HeartHandshake, ScrollText, BadgeIndianRupee } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import LottieIcon from "@/components/ui/LottieIcon";
 
 interface Pillar {
   icon: LucideIcon;
   title: string;
   body: string;
   proof: string;
-  lottie?: string;
 }
 
 const PILLARS: Pillar[] = [
@@ -16,21 +14,18 @@ const PILLARS: Pillar[] = [
     title: "Original, never templated",
     body: "Every itinerary is built from a blank page for your group, your pace, your budget. No copy-paste tours.",
     proof: "8,000+ unique trips since 2019",
-    lottie: "/lottie/sparkle.json",
   },
   {
     icon: HeartHandshake,
     title: "A real human, all trip long",
     body: "One planner stays with you from first call to homecoming. WhatsApp answered in minutes, not days.",
     proof: "Avg. response under 9 minutes",
-    lottie: "/lottie/heart.json",
   },
   {
     icon: ScrollText,
     title: "The detail you'd miss yourself",
     body: "Visa nudges. SIM at airport. Connecting rooms for kids. The 100 small things that decide a trip.",
     proof: "47-point pre-flight checklist",
-    lottie: "/lottie/pulse.json",
   },
   {
     icon: BadgeIndianRupee,
@@ -80,11 +75,7 @@ function PillarTile({ pillar, index }: { pillar: Pillar; index: number }) {
     <article className="group relative flex flex-col gap-3 rounded-2xl p-5 md:p-6 bg-tat-cream-warm/40 dark:bg-white/[0.03] ring-1 ring-tat-charcoal/8 dark:ring-white/10 hover:ring-tat-gold/40 transition-colors duration-300">
       <div className="flex items-center justify-between">
         <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-tat-gold/15 text-tat-gold">
-          {pillar.lottie ? (
-            <LottieIcon src={pillar.lottie} size={28} />
-          ) : (
-            <Icon className="h-5 w-5" />
-          )}
+          <Icon className="h-5 w-5" />
         </span>
         <span className="font-display text-[34px] leading-none text-tat-charcoal/15 dark:text-white/15 select-none">
           {String(index + 1).padStart(2, "0")}

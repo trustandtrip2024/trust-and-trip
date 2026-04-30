@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
-  Menu, X, Phone, Heart, Search, BookOpen, MoreVertical,
+  Menu, X, Phone, Heart, BookOpen, MoreVertical,
   Info, User, LogOut, Sparkles, ChevronRight, ChevronDown, Mail, Instagram,
-  MessageCircle, Mic,
+  MessageCircle,
 } from "lucide-react";
 import clsx from "clsx";
 import { useTripPlanner } from "@/context/TripPlannerContext";
@@ -16,11 +16,9 @@ import { useWishlistStore } from "@/store/useWishlistStore";
 import { useUserStore } from "@/store/useUserStore";
 import { captureIntent } from "@/lib/capture-intent";
 import { supabase } from "@/lib/supabase";
-import dynamic from "next/dynamic";
 import ThemeToggle from "./ThemeToggle";
 import CurrencySwitcher from "./CurrencySwitcher";
 
-const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
 // FlashDealRotator is SSR-safe (renders DEALS[0] server-side; setInterval
 // only spins up in useEffect on client), so we render it normally to avoid
 // a blank-text gap on every reload.
@@ -107,7 +105,6 @@ export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
 
   const { open: openPlanner } = useTripPlanner();
   const wishlistCount = useWishlistStore((s) => s.wishlist.length);
@@ -127,7 +124,6 @@ export default function Header() {
     { href: "/journal",  label: "Journal",  icon: BookOpen },
     { href: "/about",    label: "About",    icon: Info },
     { href: "/wishlist", label: `Wishlist${wishlistCount > 0 ? ` (${wishlistCount})` : ""}`, icon: Heart },
-    { onClick: () => setSearchOpen(true), label: "Search", icon: Search },
     { render: "currency", label: "Currency", icon: Sparkles },
   ];
 
@@ -506,14 +502,6 @@ export default function Header() {
                           </Link>
                       ))}
 
-                      <button
-                        onClick={() => { setDrawerOpen(false); setSearchOpen(true); }}
-                        className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium text-tat-charcoal/80 hover:bg-tat-charcoal/5 hover:text-tat-charcoal"
-                      >
-                        Search
-                        <Search className="h-4 w-4 opacity-50" />
-                      </button>
-
                       {!user ? (
                         <Link
                           href="/login"
@@ -595,24 +583,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile search row — sits below header row, scrolls with sticky */}
-        <div className="lg:hidden bg-tat-charcoal pb-3 px-4">
-          <button
-            type="button"
-            onClick={() => setSearchOpen(true)}
-            className="w-full flex items-center gap-3 h-11 px-4 rounded-full bg-white/10 border border-white/15 text-white/80 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold"
-            aria-label="Open search"
-          >
-            <Search className="h-4 w-4 text-white/70" aria-hidden />
-            <span className="flex-1 text-left">Search &ldquo;Bali&rdquo;</span>
-            <span className="grid place-items-center h-7 w-7 rounded-full bg-white/10">
-              <Mic className="h-3.5 w-3.5 text-white/80" aria-hidden />
-            </span>
-          </button>
-        </div>
       </header>
-
-      {searchOpen && <SearchModal onClose={() => setSearchOpen(false)} />}
     </>
   );
 }
