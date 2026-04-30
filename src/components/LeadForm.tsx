@@ -257,7 +257,14 @@ export default function LeadForm({
             )}
           </button>
 
-          <p className="text-[11px] text-tat-charcoal/40 text-center mt-3">
+          <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-tat-charcoal/55">
+            <span className="relative inline-flex h-1.5 w-1.5">
+              <span className="absolute inset-0 rounded-full bg-tat-success-fg animate-ping opacity-60" />
+              <span className="relative h-1.5 w-1.5 rounded-full bg-tat-success-fg" />
+            </span>
+            <span>A planner is online · Avg. reply under 9 min</span>
+          </div>
+          <p className="text-[11px] text-tat-charcoal/40 text-center mt-1.5">
             By submitting, you agree to our privacy policy. We'll never share your data.
           </p>
         </form>

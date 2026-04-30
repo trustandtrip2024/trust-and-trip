@@ -50,11 +50,17 @@ export default function FloatingWhatsApp() {
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
               className="bg-white rounded-2xl p-5 shadow-soft-lg max-w-[280px] border border-tat-charcoal/5"
             >
-              <p className="font-display text-lg leading-tight mb-1">
-                Talk to a planner
-              </p>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="relative inline-flex h-2 w-2 shrink-0">
+                  <span className="absolute inset-0 rounded-full bg-tat-success-fg animate-ping opacity-60" />
+                  <span className="relative h-2 w-2 rounded-full bg-tat-success-fg" />
+                </span>
+                <p className="font-display text-lg leading-tight">
+                  Talk to a planner
+                </p>
+              </div>
               <p className="text-xs text-tat-charcoal/60 mb-4">
-                Real people, instant replies, 24/7.
+                Online now · Avg. reply under 9 min · Free to start.
               </p>
               <div className="flex flex-col gap-2">
                 <a
