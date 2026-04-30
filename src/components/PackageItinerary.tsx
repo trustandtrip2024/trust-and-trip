@@ -50,6 +50,44 @@ function mealCount(m?: ItineraryDay["meals"]) {
   return (m.breakfast ? 1 : 0) + (m.lunch ? 1 : 0) + (m.dinner ? 1 : 0);
 }
 
+type Pace = "arrival" | "travel" | "light" | "moderate" | "packed";
+
+// Derive a per-day intensity badge from whatever Sanity ships back. The
+// goal is a single honest signal: "is this day busy or breathing?". The
+// classifier prefers explicit signals (transfers, highlights, meal density,
+// description size) before falling back to "moderate" so opinionated days
+// always over-ride the default. Title heuristics catch arrival/departure
+// days the data sometimes mislabels as activity-light.
+function classifyPace(d: ItineraryDay, idx: number, total: number): Pace {
+  const titleLc = d.title.toLowerCase();
+  const isFirst = idx === 0;
+  const isLast = idx === total - 1;
+
+  if (isFirst && /(arrival|arrive|welcome|check[- ]?in)/.test(titleLc)) return "arrival";
+  if (isLast && /(depart|farewell|check[- ]?out|return)/.test(titleLc)) return "travel";
+
+  const meals = mealCount(d.meals);
+  const hasHighlights = !!d.highlights;
+  const hasTransfer = !!d.transfer;
+  const hasStay = !!d.stay;
+  const descLen = d.description?.length ?? 0;
+
+  if (hasTransfer && !hasHighlights) return "travel";
+  if (hasHighlights && (meals >= 3 || descLen > 900)) return "packed";
+  if (!hasHighlights && !hasStay && meals <= 1 && descLen < 350) return "light";
+  if (hasHighlights || meals >= 2 || descLen >= 600) return "moderate";
+
+  return "moderate";
+}
+
+const PACE_META: Record<Pace, { label: string; tooltip: string; cls: string }> = {
+  arrival:  { label: "Arrival",  tooltip: "Land, settle in, gentle start.",         cls: "bg-tat-cream-warm/70 text-tat-charcoal/70" },
+  travel:   { label: "Travel",   tooltip: "Mostly on the move between cities.",     cls: "bg-tat-cream-warm/70 text-tat-charcoal/70" },
+  light:    { label: "Light",    tooltip: "Easy day — room to breathe.",            cls: "bg-tat-success-fg/12 text-tat-success-fg" },
+  moderate: { label: "Moderate", tooltip: "Balanced pace — sights and downtime.",   cls: "bg-tat-gold/15 text-tat-gold" },
+  packed:   { label: "Packed",   tooltip: "Full day — wear comfortable shoes.",     cls: "bg-tat-orange/15 text-tat-orange" },
+};
+
 export default function PackageItinerary({
   days,
   endLabel = "End of trip",
@@ -304,7 +342,10 @@ export default function PackageItinerary({
 
       {/* Timeline — tighter padding on mobile */}
       <ol className="mt-6 md:mt-8 relative pl-5 md:pl-8 border-l border-dashed border-tat-orange/40 space-y-3 md:space-y-4">
-        {filtered.map((d, idx) => (
+        {filtered.map((d, idx) => {
+          const pace = classifyPace(d, idx, filtered.length);
+          const paceMeta = PACE_META[pace];
+          return (
           <li
             key={d.day}
             data-day={d.day}
@@ -322,7 +363,16 @@ export default function PackageItinerary({
             <details open={idx === 0} className="tt-subcard group !p-3 md:!p-5">
               <summary className="flex items-start justify-between gap-3 cursor-pointer list-none">
                 <div className="min-w-0">
-                  <span className="tt-day-pill">DAY {d.day}</span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="tt-day-pill">DAY {d.day}</span>
+                    <span
+                      title={paceMeta.tooltip}
+                      aria-label={`Pace: ${paceMeta.label}. ${paceMeta.tooltip}`}
+                      className={`inline-flex items-center h-5 px-2 rounded-pill text-[10px] font-semibold uppercase tracking-wide ${paceMeta.cls}`}
+                    >
+                      {paceMeta.label}
+                    </span>
+                  </div>
                   <h3 className="mt-2 font-serif text-[16px] md:text-[20px] text-tat-charcoal leading-snug text-balance">
                     {d.title}
                   </h3>
@@ -429,7 +479,8 @@ export default function PackageItinerary({
               )}
             </details>
           </li>
-        ))}
+          );
+        })}
       </ol>
 
       {/* End-of-trip flourish */}
