@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Heart, History } from "lucide-react";
+import { ArrowRight, Heart, History, Sparkles } from "lucide-react";
 import PackageCard, { type PackageCardProps } from "@/components/ui/PackageCard";
 import { useWishlistStore } from "@/store/useWishlistStore";
 
@@ -56,6 +56,7 @@ export default function PersonalRails({ packagesBySlug }: Props) {
             ctaHref="/packages"
             ctaLabel="Browse more"
             items={recentItems}
+            tail={savedItems.length === 0 ? <SaveHintCard /> : null}
           />
         )}
       </div>
@@ -63,8 +64,35 @@ export default function PersonalRails({ packagesBySlug }: Props) {
   );
 }
 
+function SaveHintCard() {
+  return (
+    <div className="flex h-full flex-col gap-3 rounded-2xl bg-gradient-to-br from-tat-gold/15 to-tat-orange/10 ring-1 ring-tat-gold/30 p-5 md:p-6 justify-between">
+      <div>
+        <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-tat-orange shadow-sm">
+          <Heart className="h-5 w-5 fill-tat-orange" />
+        </span>
+        <h4 className="mt-3 font-display font-medium text-[17px] md:text-[19px] leading-tight text-tat-charcoal">
+          Save trips you love
+        </h4>
+        <p className="mt-2 text-[13px] text-tat-charcoal/70 leading-snug">
+          Tap the heart on any trip and they&apos;ll show up here next time — perfect for narrowing down with the family.
+        </p>
+      </div>
+      <Link
+        href="/packages"
+        prefetch={false}
+        className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-tat-orange hover:underline underline-offset-4"
+      >
+        <Sparkles className="h-3.5 w-3.5" />
+        Browse trips to save
+        <ArrowRight className="h-3.5 w-3.5" />
+      </Link>
+    </div>
+  );
+}
+
 function Rail({
-  icon, eyebrow, title, ctaHref, ctaLabel, items,
+  icon, eyebrow, title, ctaHref, ctaLabel, items, tail,
 }: {
   icon: "heart" | "history";
   eyebrow: string;
@@ -72,6 +100,7 @@ function Rail({
   ctaHref: string;
   ctaLabel: string;
   items: PackageCardProps[];
+  tail?: React.ReactNode;
 }) {
   const Icon = icon === "heart" ? Heart : History;
   return (
@@ -106,6 +135,11 @@ function Rail({
               <PackageCard {...p} density="compact" />
             </li>
           ))}
+          {tail && (
+            <li className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]">
+              {tail}
+            </li>
+          )}
         </ul>
       </div>
     </div>

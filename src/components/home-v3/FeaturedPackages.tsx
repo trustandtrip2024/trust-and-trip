@@ -1,10 +1,26 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Award, Flame, Sparkles } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import PackageCard, { type PackageCardProps } from "@/components/ui/PackageCard";
 
 interface Props {
   packages: PackageCardProps[];
 }
+
+interface EditorialBadge {
+  label: string;
+  icon: LucideIcon;
+  tone: string;
+}
+
+// First three featured cards get a curatorial label so the rail reads as
+// editorial picks rather than a flat list. Beyond three the cards stand on
+// their own price + rating cues.
+const BADGES: (EditorialBadge | null)[] = [
+  { label: "Editor's pick",   icon: Award,    tone: "bg-tat-gold text-tat-charcoal" },
+  { label: "Most asked",      icon: Flame,    tone: "bg-tat-orange text-white" },
+  { label: "Hand-tuned trip", icon: Sparkles, tone: "bg-tat-teal text-white" },
+];
 
 export default function FeaturedPackages({ packages }: Props) {
   if (!packages.length) return null;
@@ -44,14 +60,27 @@ export default function FeaturedPackages({ packages }: Props) {
 
         <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
           <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
-            {items.map((p) => (
-              <li
-                key={p.href}
-                className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
-              >
-                <PackageCard {...p} density="compact" />
-              </li>
-            ))}
+            {items.map((p, i) => {
+              const badge = BADGES[i] ?? null;
+              return (
+                <li
+                  key={p.href}
+                  className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
+                >
+                  <div className="relative w-full">
+                    {badge && (
+                      <span
+                        className={`absolute z-10 top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm ${badge.tone}`}
+                      >
+                        <badge.icon className="h-3 w-3" aria-hidden />
+                        {badge.label}
+                      </span>
+                    )}
+                    <PackageCard {...p} density="compact" />
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
