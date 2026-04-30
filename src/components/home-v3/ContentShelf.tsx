@@ -65,12 +65,12 @@ export default function ContentShelf({
           </Link>
         </div>
 
-        <div className="mt-6 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
+        <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
           <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
             {items.map((p) => (
               <li
                 key={p.href}
-                className="shrink-0 snap-start flex w-[80%] sm:w-[55%] md:w-[40%] lg:w-[28%] xl:w-[22%]"
+                className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
               >
                 <PackageCard {...p} density="compact" />
               </li>

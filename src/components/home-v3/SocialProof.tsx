@@ -103,7 +103,7 @@ export default async function SocialProof() {
             {reviews.map((r, i) => (
               <li
                 key={i}
-                className="shrink-0 snap-start flex w-[85%] sm:w-[55%] md:w-[42%] lg:w-[32%] xl:w-[31%]"
+                className="shrink-0 snap-start flex w-[85%] sm:w-[65%] md:w-[48%] lg:w-[38%] xl:w-[32%]"
               >
                 <ReviewCard review={r} />
               </li>

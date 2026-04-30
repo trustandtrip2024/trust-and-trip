@@ -185,7 +185,7 @@ export default function LiveDeals() {
             {DEALS.map((d) => (
               <li
                 key={d.slug}
-                className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[30%]"
+                className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
               >
                 <DealCard deal={d} />
               </li>
