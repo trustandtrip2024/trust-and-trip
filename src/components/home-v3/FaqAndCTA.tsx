@@ -95,7 +95,7 @@ export default function FaqAndCTA() {
                   <ArrowRight className="h-4 w-4" />
                 </button>
                 <a
-                  href="https://wa.me/918115999588?text=Hi%20Akash%20%E2%80%94%20I%27d%20like%20help%20planning%20my%20trip."
+                  href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip%20%E2%80%94%20I%27d%20like%20help%20planning%20my%20trip."
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-1.5 h-11 px-5 rounded-full bg-white dark:bg-tat-charcoal text-tat-charcoal dark:text-tat-paper text-[14px] font-semibold ring-1 ring-tat-charcoal/15 dark:ring-white/15 hover:ring-tat-charcoal/30"

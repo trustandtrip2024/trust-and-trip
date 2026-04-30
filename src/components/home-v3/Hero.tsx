@@ -10,10 +10,9 @@ import { useTripPlanner } from "@/context/TripPlannerContext";
 
 const HERO_BG =
   "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=70";
-const FOUNDER_NAME = "Akash Mishra";
 const WHATSAPP_HREF =
   "https://wa.me/918115999588?text=" +
-  encodeURIComponent("Hi Akash — I'd like help planning my trip.");
+  encodeURIComponent("Hi Trust and Trip — I'd like help planning my trip.");
 
 const MONTHS = [
   "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",
@@ -76,31 +75,31 @@ export default function Hero({
         }}
       />
 
-      <div className="container-custom pt-14 pb-10 md:pt-24 md:pb-20">
+      <div className="container-custom pt-8 pb-7 md:pt-20 md:pb-16">
         <div className="max-w-3xl">
-          <p className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-white/10 backdrop-blur-sm text-tat-orange-soft text-[11px] font-semibold uppercase tracking-[0.18em] border border-white/15">
+          <p className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-white/10 backdrop-blur-sm text-tat-orange-soft text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.18em] border border-white/15">
             <Star className="h-3 w-3 fill-tat-orange-soft text-tat-orange-soft" />
             Trust and Trip · Crafted travel since 2019
           </p>
           <h1
             id="hero-h1"
-            className="mt-4 font-display font-normal text-[34px] sm:text-[44px] md:text-[60px] lg:text-[68px] leading-[1.05] text-white text-balance"
+            className="mt-3 md:mt-4 font-display font-normal text-[28px] sm:text-[40px] md:text-[54px] lg:text-[62px] leading-[1.05] text-white text-balance"
           >
             Trips planned by a real human{" "}
             <em className="not-italic font-display italic text-tat-gold">
               in 24 hours.
             </em>
           </h1>
-          <p className="mt-4 md:mt-5 text-[15px] md:text-lead text-white/85 max-w-2xl">
-            Tell us your dates and what you love. {FOUNDER_NAME} drafts your
-            itinerary himself — free until you&apos;re sure. No card, no commitment.
+          <p className="mt-3 md:mt-5 text-[14px] md:text-lead text-white/85 max-w-2xl hidden sm:block">
+            Tell us your dates and what you love. A real travel planner drafts
+            your itinerary — free until you&apos;re sure. No card, no commitment.
           </p>
         </div>
 
         {/* ─── Search form ───────────────────────────────────────── */}
         <form
           onSubmit={submit}
-          className="mt-7 md:mt-9 bg-white/95 dark:bg-tat-charcoal/95 backdrop-blur-md rounded-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
+          className="mt-5 md:mt-8 bg-white/95 dark:bg-tat-charcoal/95 backdrop-blur-md rounded-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
         >
           <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_0.8fr_1fr_auto] divide-y md:divide-y-0 md:divide-x divide-tat-charcoal/10 dark:divide-white/10">
             <Field label="Destination" icon={Search}>
@@ -161,7 +160,7 @@ export default function Hero({
         </form>
 
         {/* Below-form trust line + WhatsApp escape */}
-        <div className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-white/85">
+        <div className="mt-4 md:mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:gap-3 text-white/85">
           <p className="inline-flex flex-wrap items-center gap-x-2 text-meta">
             <Star className="h-3.5 w-3.5 fill-tat-gold text-tat-gold" aria-hidden />
             <span className="font-semibold text-white">{trustStrip}</span>
@@ -173,7 +172,7 @@ export default function Hero({
             className="inline-flex items-center gap-1.5 text-meta font-semibold text-white/85 hover:text-tat-orange-soft underline-offset-4 hover:underline transition"
           >
             <MessageCircle className="h-4 w-4 text-whatsapp" />
-            or chat on WhatsApp · {FOUNDER_NAME}
+            or chat with a planner on WhatsApp
           </Link>
         </div>
       </div>
