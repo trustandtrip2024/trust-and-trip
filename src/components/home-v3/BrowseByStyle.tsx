@@ -67,7 +67,7 @@ export default function BrowseByStyle({ packagesByStyle = {} }: Props) {
           </Link>
         </div>
 
-        <div className="mt-7 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-5">
+        <div className="mt-7 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-5">
           {STYLES.map((meta) => {
             const trips = packagesByStyle[meta.id] ?? [];
             const heroImage = trips[0]?.image || meta.fallbackImage;

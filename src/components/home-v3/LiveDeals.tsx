@@ -228,7 +228,7 @@ export default function LiveDeals() {
         </div>
 
         {/* Mobile: 2-col grid (no rail, no gap drift). md+: horizontal rail. */}
-        <ul className="mt-6 grid grid-cols-2 gap-3 md:hidden">
+        <ul className="mt-6 grid grid-cols-2 gap-4 md:hidden">
           {DEALS.map((d) => (
             <li key={d.slug} className="flex">
               <DealTile deal={d} />

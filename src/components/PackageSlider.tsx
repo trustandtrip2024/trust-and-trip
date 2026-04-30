@@ -112,7 +112,7 @@ export default function PackageSlider({
         aria-label={eyebrow}
         className="overflow-hidden -mx-5 px-5 md:mx-0 md:px-0"
       >
-        <div className="flex gap-4 pb-2">
+        <div className="flex gap-4 lg:gap-5 pb-2">
           {packages.map((p, i) => (
             <div
               key={p.slug}

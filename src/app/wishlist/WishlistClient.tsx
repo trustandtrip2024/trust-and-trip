@@ -71,7 +71,7 @@ export default function WishlistClient({
                       See all <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
                     {trendingPicks.map((p, i) => (
                       <PackageCard
                         key={p.slug}
@@ -97,7 +97,7 @@ export default function WishlistClient({
             </>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                 {saved.map((p, i) => (
                   <PackageCard
                     key={p.slug}

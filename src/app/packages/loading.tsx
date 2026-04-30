@@ -15,7 +15,7 @@ export default function PackagesLoading() {
       {/* Grid skeleton */}
       <section className="py-12 md:py-16">
         <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
             {Array.from({ length: 9 }).map((_, i) => (
               <PackageCardSkeleton key={i} />
             ))}

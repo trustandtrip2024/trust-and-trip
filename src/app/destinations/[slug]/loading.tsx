@@ -30,7 +30,7 @@ export default function DestinationDetailLoading() {
       <section className="py-16 md:py-20 bg-tat-cream/30">
         <div className="container-custom">
           <div className="h-8 w-64 bg-tat-charcoal/8 rounded animate-pulse mb-10" />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
               <PackageCardSkeleton key={i} />
             ))}

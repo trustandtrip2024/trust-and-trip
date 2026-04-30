@@ -291,7 +291,7 @@ export default async function DestinationsPage() {
             </div>
 
             {/* 3-col wider grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
               {international.map((d, i) => (
                 <IntlCard key={d.slug} d={d} priority={i < 3} packageCount={packageCountBySlug.get(d.slug)} />
               ))}
@@ -313,7 +313,7 @@ export default async function DestinationsPage() {
       {india.length === 0 && international.length === 0 && (
         <section className="py-16 md:py-20 bg-tat-paper">
           <div className="container-custom">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
               {destinations.map((d, i) => (
                 <IntlCard key={d.slug} d={d} priority={i < 3} packageCount={packageCountBySlug.get(d.slug)} />
               ))}
