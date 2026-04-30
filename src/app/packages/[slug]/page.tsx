@@ -12,6 +12,8 @@ import {
   packageTouristTripLd,
   speakableLd,
   founderPersonLd,
+  synthesiseBestMonths,
+  synthesiseVisaInfo,
 } from "@/lib/seo-package";
 import { getPackageStats } from "@/lib/package-stats";
 import { getGalleryImages } from "@/lib/gallery-images";
@@ -106,6 +108,8 @@ export default async function PackageDetail({ params }: Props) {
   // bestFor line whenever the Sanity record leaves them blank, so every
   // package page ships rich JSON-LD and crawlable answer copy.
   const seo = fillPackageSeo(pkg, dest);
+  const bestMonths = synthesiseBestMonths(pkg, dest);
+  const visaInfo = synthesiseVisaInfo(pkg, dest);
   const galleryImages = getGalleryImages(pkg.destinationSlug, pkg.heroImage);
 
   // Real "vs OTA" reference price comes from Sanity comparePrice — only set
@@ -294,7 +298,7 @@ export default async function PackageDetail({ params }: Props) {
               <PackageQuickFacts
                 groupSize={pkg.groupSize}
                 difficulty={pkg.difficulty}
-                visaInfo={pkg.visaInfo}
+                visaInfo={visaInfo}
                 destinationName={pkg.destinationName}
                 isInternational={pkg.categories?.includes("International")}
               />
@@ -376,7 +380,7 @@ export default async function PackageDetail({ params }: Props) {
               destinationName={pkg.destinationName}
               packageTitle={pkg.title}
               travelType={pkg.travelType}
-              bestMonthHint={(pkg.bestMonths ?? [])
+              bestMonthHint={bestMonths
                 .filter((m) => m.tag === "peak" || !m.tag)
                 .map((m) => ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m.month - 1])
                 .filter(Boolean)[0]}
@@ -552,9 +556,11 @@ export default async function PackageDetail({ params }: Props) {
               />
             </div>
 
-            {/* BEST MONTHS — 12-tile climate strip. Null when not set. */}
-            {pkg.bestMonths && pkg.bestMonths.length > 0 && (
-              <BestMonthsStrip months={pkg.bestMonths} destinationName={pkg.destinationName} />
+            {/* BEST MONTHS — 12-tile climate strip. Falls back to a strip
+                synthesised from the destination's bestTimeToVisit string
+                when Sanity package leaves bestMonths blank. */}
+            {bestMonths.length > 0 && (
+              <BestMonthsStrip months={bestMonths} destinationName={pkg.destinationName} />
             )}
 
             {/* PACKING LIST — collapsible categories. Null when not set. */}

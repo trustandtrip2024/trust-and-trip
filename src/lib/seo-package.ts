@@ -198,6 +198,89 @@ export function speakableLd(selectors: string[]) {
   };
 }
 
+// Derive a 12-month tag strip from a destination's free-form
+// bestTimeToVisit string. We classify each month into peak / shoulder /
+// off / avoid using simple substring matches. Falls back to "shoulder"
+// when the string is empty so the strip still renders.
+const MONTH_NAMES = [
+  "january", "february", "march", "april", "may", "june",
+  "july", "august", "september", "october", "november", "december",
+];
+
+export function synthesiseBestMonths(
+  pkg: Package,
+  dest?: Destination | null,
+): NonNullable<Package["bestMonths"]> {
+  if (pkg.bestMonths && pkg.bestMonths.length > 0) return pkg.bestMonths;
+  const src = (dest?.bestTimeToVisit || "").toLowerCase();
+  if (!src) return [];
+  const peak = new Set<number>();
+  for (let i = 0; i < 12; i++) {
+    if (src.includes(MONTH_NAMES[i].slice(0, 3))) peak.add(i + 1);
+  }
+  // Range expansion — "April to October" mentions april + october; fill in
+  // the months between when both anchors are present.
+  const peakArr = [...peak].sort((a, b) => a - b);
+  if (peakArr.length >= 2) {
+    const lo = peakArr[0];
+    const hi = peakArr[peakArr.length - 1];
+    if (hi - lo <= 8) {
+      for (let m = lo; m <= hi; m++) peak.add(m);
+    }
+  }
+  if (peak.size === 0) return [];
+  return Array.from({ length: 12 }, (_, i) => {
+    const month = i + 1;
+    if (peak.has(month)) return { month, tag: "peak" as const, note: "Best window" };
+    // Two months immediately around the peak window are shoulder.
+    const adjacent = peak.has(((month - 2 + 12) % 12) + 1) || peak.has((month % 12) + 1);
+    return adjacent
+      ? { month, tag: "shoulder" as const, note: "Pricing softens" }
+      : { month, tag: "off" as const };
+  });
+}
+
+const VISA_FREE = new Set([
+  "bali", "thailand", "sri-lanka", "maldives", "nepal", "bhutan",
+  "vietnam", "mauritius", "kenya", "indonesia", "fiji",
+]);
+const VISA_ON_ARRIVAL = new Set([
+  "thailand", "cambodia", "kenya", "mauritius", "vietnam", "indonesia", "bali",
+]);
+const VISA_TYPE: Record<string, string> = {
+  france: "Schengen short-stay (Type C)",
+  italy: "Schengen short-stay (Type C)",
+  uk: "UK Standard Visitor visa",
+  russia: "e-Visa (most cities)",
+  "south-korea": "K-ETA (online authorisation)",
+  "hong-kong": "Visa-free for 14 days",
+  cambodia: "e-Visa or visa on arrival",
+};
+
+export function synthesiseVisaInfo(
+  pkg: Package,
+  dest?: Destination | null,
+): NonNullable<Package["visaInfo"]> | undefined {
+  if (pkg.visaInfo) return pkg.visaInfo;
+  if (!dest) return undefined;
+  const slug = dest.slug;
+  const isInternational = dest.country.toLowerCase() !== "india";
+  if (!isInternational) return undefined;
+  const visaType =
+    VISA_TYPE[slug] ||
+    (VISA_FREE.has(slug)
+      ? "Visa-free for Indian passports"
+      : VISA_ON_ARRIVAL.has(slug)
+        ? "Visa on arrival or e-Visa"
+        : "Pre-arrival visa required");
+  return {
+    required: !VISA_FREE.has(slug),
+    visaType,
+    processingDays: VISA_FREE.has(slug) ? 0 : VISA_ON_ARRIVAL.has(slug) ? 3 : 14,
+    notes: `Trust and Trip handles visa documentation, courier, and tracking for ${dest.name}. Final processing time depends on consulate workload and travel season.`,
+  };
+}
+
 export function founderPersonLd() {
   return {
     "@context": "https://schema.org",
