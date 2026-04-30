@@ -1,6 +1,5 @@
 import { Clock, Star, Users, ShieldCheck, BadgeIndianRupee } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import CountUp from "@/components/ui/CountUp";
 
 interface Props {
   totalTravelers?: number;
@@ -38,7 +37,7 @@ export default function TrustRibbon({
       </span>
       <div className="min-w-0">
         <p className="text-[13px] md:text-[14px] font-semibold text-tat-charcoal dark:text-tat-paper leading-tight tabular-nums whitespace-nowrap">
-          <CountUp value={value} />
+          {value}
         </p>
         <p className="text-[10px] md:text-[11px] text-tat-charcoal/60 dark:text-tat-paper/60 leading-tight truncate">
           {label}
