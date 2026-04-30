@@ -3,12 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { X, Send, Sparkles, ChevronDown, Check } from "lucide-react";
 import { submitLead } from "@/lib/submit-lead";
-
-const ARIA_PORTRAIT =
-  "https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2.5&w=240&h=240&q=80";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -120,25 +116,80 @@ function packagePrompts(p: PackagePreload): string[] {
   ];
 }
 
-// Photo-based avatar — face-cropped Unsplash portrait. The "AI" pill in
-// the chat header makes the AI nature explicit so this isn't deceptive.
-function AriaFace({ size = 40, className = "" }: { size?: number; className?: string }) {
+// Stylised assistant avatar — illustrated, not a real face. Soft gradients,
+// closed-eye smile, headset detail to read clearly as "AI travel assistant"
+// rather than a real staffer. Brand-aligned palette (teal headset, gold
+// background ring, warm skin).
+export function AriaFace({ size = 40, className = "" }: { size?: number; className?: string }) {
   return (
-    <span
-      className={`relative inline-block overflow-hidden rounded-full bg-tat-cream-warm ${className}`}
-      style={{ width: size, height: size }}
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 80 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Aria, AI travel assistant"
+      className={className}
     >
-      <Image
-        src={ARIA_PORTRAIT}
-        alt=""
-        width={size}
-        height={size}
-        sizes={`${size}px`}
-        quality={80}
-        className="h-full w-full object-cover"
-        priority={size >= 50}
+      <defs>
+        <radialGradient id="ariaBg" cx="50%" cy="40%" r="65%">
+          <stop offset="0%" stopColor="#FBE7C2" />
+          <stop offset="100%" stopColor="#E8B86F" />
+        </radialGradient>
+        <linearGradient id="ariaSkin" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#F5D3A8" />
+          <stop offset="100%" stopColor="#E5B589" />
+        </linearGradient>
+        <linearGradient id="ariaHair" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#3A2417" />
+          <stop offset="100%" stopColor="#1F1208" />
+        </linearGradient>
+      </defs>
+
+      {/* Background disc */}
+      <circle cx="40" cy="40" r="40" fill="url(#ariaBg)" />
+
+      {/* Hair back silhouette */}
+      <path
+        d="M40 16c-13 0-22 10-22 22 0 8 3 14 7 18v6h30v-6c4-4 7-10 7-18 0-12-9-22-22-22z"
+        fill="url(#ariaHair)"
       />
-    </span>
+
+      {/* Face */}
+      <ellipse cx="40" cy="42" rx="14" ry="16.5" fill="url(#ariaSkin)" />
+
+      {/* Subtle blush */}
+      <ellipse cx="29" cy="48" rx="3.5" ry="2.2" fill="#F4A0A0" opacity="0.45" />
+      <ellipse cx="51" cy="48" rx="3.5" ry="2.2" fill="#F4A0A0" opacity="0.45" />
+
+      {/* Closed-arc smiling eyes */}
+      <path d="M30 39 Q33 36 36 39" stroke="#2A1B0E" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M44 39 Q47 36 50 39" stroke="#2A1B0E" strokeWidth="2" strokeLinecap="round" fill="none" />
+
+      {/* Small mouth — soft warm smile */}
+      <path d="M36 51 Q40 54 44 51" stroke="#B36A52" strokeWidth="2" strokeLinecap="round" fill="none" />
+
+      {/* Headset arc */}
+      <path
+        d="M22 36 Q22 16 40 16 Q58 16 58 36"
+        stroke="#0E7C7B"
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Headset earpieces */}
+      <rect x="19" y="34" width="6" height="9" rx="2" fill="#0E7C7B" />
+      <rect x="55" y="34" width="6" height="9" rx="2" fill="#0E7C7B" />
+      {/* Mic boom */}
+      <path d="M55 41 Q49 44 47 50" stroke="#0E7C7B" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <circle cx="46.5" cy="50.5" r="1.6" fill="#0E7C7B" />
+
+      {/* Sparkle accent (signals AI) */}
+      <g transform="translate(58 18)">
+        <path d="M0 -5 L1 -1 L5 0 L1 1 L0 5 L-1 1 L-5 0 L-1 -1 Z" fill="#E5B547" />
+      </g>
+    </svg>
   );
 }
 
