@@ -164,7 +164,8 @@ const PACKAGE_FIELDS = `
   "visaInfo": visaInfo,
   "packingList": packingList[]{ category, items },
   "mapCoords": mapCoords,
-  "mapImage": mapImage.asset->url
+  "mapImage": mapImage.asset->url,
+  "brochureFile": brochureFile.asset->url
 `;
 
 const PACKAGES_QUERY = `*[_type == "package"] | order(featured desc, rating desc) { ${PACKAGE_FIELDS} }`;

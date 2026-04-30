@@ -310,6 +310,15 @@ export const packageType = defineType({
     }),
 
     defineField({
+      name: 'brochureFile',
+      title: 'Brochure (PDF upload)',
+      type: 'file',
+      description:
+        'Optional. Upload an authored PDF brochure here to override the auto-generated one served from /api/brochure/[slug]. The Download Brochure button on the detail page will serve this file when present.',
+      options: { accept: 'application/pdf' },
+    }),
+
+    defineField({
       name: 'packingList',
       title: 'What to pack',
       type: 'array',

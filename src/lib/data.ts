@@ -101,6 +101,7 @@ export type Package = {
   packingList?: { category?: string; items: string[] }[];
   mapCoords?: { lat?: number; lng?: number; zoom?: number; label?: string };
   mapImage?: string;
+  brochureFile?: string;
 };
 
 export type Experience = {

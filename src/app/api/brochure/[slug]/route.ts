@@ -29,6 +29,15 @@ export async function GET(_req: NextRequest, { params }: Params) {
     return NextResponse.json({ error: "Package not found" }, { status: 404 });
   }
 
+  // If an authored PDF was uploaded in Sanity (`brochureFile`), prefer it
+  // over the live-rendered version. Sanity's CDN respects `?dl=name` to
+  // force an attachment download with the given filename.
+  if (pkg.brochureFile) {
+    const filename = `${pkg.slug}-trust-and-trip.pdf`.replace(/[^a-z0-9.\-]+/gi, "-");
+    const target = `${pkg.brochureFile}?dl=${encodeURIComponent(filename)}`;
+    return NextResponse.redirect(target, { status: 302 });
+  }
+
   let nodeStream: NodeJS.ReadableStream;
   try {
     nodeStream = await renderToStream(BrochurePDF({ pkg }));
