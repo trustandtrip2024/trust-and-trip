@@ -31,34 +31,50 @@ export default function TrustRibbon({
     { icon: ShieldCheck,      value: "Free changes",                   label: "within 48 h of itinerary" },
   ];
 
+  const Tile = ({ icon: Icon, value, label }: Stat) => (
+    <li className="flex items-center gap-3 rounded-xl px-3 py-2.5 md:py-3 bg-tat-cream-warm/50 dark:bg-white/5 border border-tat-charcoal/5 dark:border-white/10 shrink-0 sm:shrink basis-[68%] xs:basis-[60%] sm:basis-auto">
+      <span className="shrink-0 h-9 w-9 rounded-full bg-tat-gold/15 text-tat-gold flex items-center justify-center">
+        <Icon className="h-4 w-4" aria-hidden />
+      </span>
+      <div className="min-w-0">
+        <p className="text-[13px] md:text-[14px] font-semibold text-tat-charcoal dark:text-tat-paper leading-tight tabular-nums whitespace-nowrap">
+          <CountUp value={value} />
+        </p>
+        <p className="text-[10px] md:text-[11px] text-tat-charcoal/60 dark:text-tat-paper/60 leading-tight truncate">
+          {label}
+        </p>
+      </div>
+    </li>
+  );
+
   return (
     <section
       aria-label="Why travelers trust us"
-      className="bg-tat-paper dark:bg-tat-charcoal/95 border-b border-tat-charcoal/8 dark:border-white/10"
+      className="bg-tat-paper dark:bg-tat-charcoal/95 border-b border-tat-charcoal/8 dark:border-white/10 overflow-hidden"
     >
-      <div className="container-custom py-5 md:py-7">
+      {/* Mobile: auto-marquee. The stat list is duplicated so the
+          translateX(-50%) keyframe loops seamlessly. Pauses on touch /
+          hover and respects prefers-reduced-motion. */}
+      <div className="sm:hidden py-5 group">
         <ul
           role="list"
-          className="flex sm:grid sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-5 overflow-x-auto sm:overflow-visible no-scrollbar snap-x snap-mandatory sm:snap-none -mx-5 px-5 sm:mx-0 sm:px-0 pb-1 sm:pb-0"
+          aria-hidden
+          className="flex gap-3 w-max animate-marquee group-hover:[animation-play-state:paused] group-active:[animation-play-state:paused] motion-reduce:animate-none"
+          style={{ animationDuration: "28s" }}
         >
-          {stats.map(({ icon: Icon, value, label }) => (
-            <li
-              key={label}
-              className="flex items-center gap-3 rounded-xl px-3 py-2.5 md:py-3 bg-tat-cream-warm/50 dark:bg-white/5 border border-tat-charcoal/5 dark:border-white/10 shrink-0 snap-start basis-[68%] xs:basis-[60%] sm:basis-auto sm:shrink-0"
-            >
-              <span className="shrink-0 h-9 w-9 rounded-full bg-tat-gold/15 text-tat-gold flex items-center justify-center">
-                <Icon className="h-4 w-4" aria-hidden />
-              </span>
-              <div className="min-w-0">
-                <p className="text-[13px] md:text-[14px] font-semibold text-tat-charcoal dark:text-tat-paper leading-tight tabular-nums">
-                  <CountUp value={value} />
-                </p>
-                <p className="text-[10px] md:text-[11px] text-tat-charcoal/60 dark:text-tat-paper/60 leading-tight truncate">
-                  {label}
-                </p>
-              </div>
-            </li>
-          ))}
+          {stats.map((s) => <Tile key={`a-${s.label}`} {...s} />)}
+          {stats.map((s) => <Tile key={`b-${s.label}`} {...s} />)}
+        </ul>
+        {/* Screen-reader copy — single set, not animated. */}
+        <ul role="list" className="sr-only">
+          {stats.map((s) => <li key={s.label}>{s.value} — {s.label}</li>)}
+        </ul>
+      </div>
+
+      {/* sm+: static grid */}
+      <div className="hidden sm:block container-custom py-5 md:py-7">
+        <ul role="list" className="grid sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-5">
+          {stats.map((s) => <Tile key={s.label} {...s} />)}
         </ul>
       </div>
     </section>
