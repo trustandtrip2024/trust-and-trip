@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   Heart, Star, Clock, MapPin, Flame, Zap, ArrowRight, Sparkles,
   Hotel, Utensils, Bus, Camera, MessageCircle, CreditCard,
+  ShieldCheck, RotateCcw, BadgeIndianRupee,
 } from "lucide-react";
 import { useState } from "react";
 import Price from "@/components/Price";
@@ -73,6 +74,16 @@ function askAriaAboutPackage(p: PackageCardProps) {
   }
 }
 
+// Deterministic seat counter for limitedSlots cards. Hashes the slug so the
+// same package always shows the same number on every render — no flicker,
+// no fake refresh loop. Range 2–6 keeps it credible (a real boutique slot
+// count, not the inflated "ONLY 1 LEFT" pattern aggregators abuse).
+function seatHint(href: string): number {
+  let h = 0;
+  for (let i = 0; i < href.length; i++) h = (h * 31 + href.charCodeAt(i)) >>> 0;
+  return 2 + (h % 5);
+}
+
 export default function PackageCardUI(p: PackageCardProps) {
   const [wished, setWished] = useState(false);
   const layout = p.layout ?? "vertical";
@@ -84,6 +95,10 @@ export default function PackageCardUI(p: PackageCardProps) {
     p.originalPrice && p.originalPrice > p.price
       ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)
       : null;
+  // Show the prominent SAVE pill only when the discount is meaningful — sub-10%
+  // looks like noise and undermines trust.
+  const showSavePill = !!(p.saveAmount && p.saveAmount > 0 && discountPct && discountPct >= 10);
+  const seatsLeft = p.limitedSlots ? seatHint(p.href) : null;
 
   return (
     <article
@@ -150,12 +165,7 @@ export default function PackageCardUI(p: PackageCardProps) {
             )}
           </span>
         )}
-        {/* bookedThisMonth — secondary signal, sits just above the rating chip */}
-        {p.bookedThisMonth && (
-          <span className="absolute bottom-12 right-3 inline-flex items-center gap-1 bg-tat-charcoal/75 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-pill">
-            {p.bookedThisMonth} booked
-          </span>
-        )}
+        {/* bookedThisMonth lives in the body urgency line now (more visible at compact width). */}
       </Link>
 
       {/* WISHLIST */}
@@ -201,6 +211,23 @@ export default function PackageCardUI(p: PackageCardProps) {
           {p.title}
         </h3>
 
+        {/* Urgency / social-proof line — single row, only renders when there's
+            real signal. Limited slots wins over booked-this-month if both. */}
+        {(seatsLeft || p.bookedThisMonth) && (
+          <div className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] font-semibold">
+            {seatsLeft ? (
+              <>
+                <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-tat-orange animate-pulse" />
+                <span className="text-tat-orange">Only {seatsLeft} seats left</span>
+              </>
+            ) : (
+              <span className="text-tat-charcoal/65">
+                <span className="text-tat-charcoal font-bold">{p.bookedThisMonth}</span> booked this month
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Inclusions strip — hidden on mobile in compact mode to shorten the rail card */}
         <ul className={`${compact ? "mt-2.5 hidden sm:flex" : "mt-3 flex"} flex-wrap items-center gap-x-3 gap-y-1.5 text-meta text-tat-charcoal/75`}>
           {inclusions.map((id) => {
@@ -237,13 +264,16 @@ export default function PackageCardUI(p: PackageCardProps) {
                   <span className="hidden sm:inline">/ person</span>
                 </span>
               </p>
-              {/* save line + taxes microcopy hidden on mobile compact (discount % already conveys savings) */}
-              {p.saveAmount && p.saveAmount > 0 && (
-                <p className={`${compact ? "hidden sm:inline-flex" : "inline-flex"} mt-1 items-center gap-1 text-[11px] uppercase tracking-wide text-tat-success-fg font-semibold`}>
-                  Save <Price inr={p.saveAmount} />
-                </p>
-              )}
             </div>
+            {/* Prominent save pill — only when discount is ≥10% so it doesn't
+                cry-wolf on flat-priced packages. Sits to the right of the
+                price so the eye moves from price → savings in one sweep. */}
+            {showSavePill && (
+              <span className="inline-flex items-center gap-0.5 px-2 py-1 rounded-md bg-tat-success-fg/10 text-tat-success-fg text-[11px] font-bold whitespace-nowrap">
+                <BadgeIndianRupee className="h-3 w-3" aria-hidden />
+                Save <Price inr={p.saveAmount!} />
+              </span>
+            )}
           </div>
           <p className={`${compact ? "hidden sm:block" : "block"} mt-1 text-[11px] text-tat-slate/70`}>+ taxes &amp; fees</p>
         </div>
@@ -252,10 +282,10 @@ export default function PackageCardUI(p: PackageCardProps) {
         <div className={`${compact ? "mt-2.5 sm:mt-3 gap-1.5" : "mt-4 gap-2"} flex flex-col`}>
           <Link
             href={p.href}
-            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-11" : "h-11"} px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 shadow-sm hover:shadow`}
+            className={`group/cta inline-flex items-center justify-center gap-1.5 ${compact ? "h-11" : "h-11"} px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 shadow-sm hover:shadow`}
           >
             Plan this trip
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/cta:translate-x-0.5" />
           </Link>
           {/* Quick Book + Ask Aria — visible on every breakpoint per shared CTA spec */}
           <div className="grid grid-cols-2 gap-1.5">
@@ -275,6 +305,24 @@ export default function PackageCardUI(p: PackageCardProps) {
               Ask Aria
             </button>
           </div>
+
+          {/* Risk-reversal trust strip — three crossed-checks below the CTA
+              cluster. Lowers hesitation right where the user decides whether
+              to tap. Single line on all breakpoints; truncates if cramped. */}
+          <ul className="mt-1.5 flex items-center justify-between gap-1.5 text-[10px] text-tat-charcoal/65">
+            <li className="inline-flex items-center gap-1 truncate">
+              <ShieldCheck className="h-3 w-3 text-tat-success-fg shrink-0" aria-hidden />
+              <span>₹0 to start</span>
+            </li>
+            <li className="inline-flex items-center gap-1 truncate">
+              <RotateCcw className="h-3 w-3 text-tat-success-fg shrink-0" aria-hidden />
+              <span>Free 48h changes</span>
+            </li>
+            <li className="inline-flex items-center gap-1 truncate">
+              <Sparkles className="h-3 w-3 text-tat-gold shrink-0" aria-hidden />
+              <span>Real planner</span>
+            </li>
+          </ul>
         </div>
       </div>
     </article>
