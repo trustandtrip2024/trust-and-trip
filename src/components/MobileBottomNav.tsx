@@ -1,15 +1,17 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MapPin, MessageCircle, Heart, Sparkles } from "lucide-react";
+import { Home, MapPin, MessageCircle, Heart } from "lucide-react";
 import clsx from "clsx";
 import { analytics } from "@/lib/analytics";
 import { captureIntent } from "@/lib/capture-intent";
-// analytics.tripPlannerOpen reserved for future telemetry hook
 
 import { useWishlistStore } from "@/store/useWishlistStore";
-import { useTripPlanner } from "@/context/TripPlannerContext";
+
+const ARIA_PORTRAIT =
+  "https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2.5&w=160&h=160&q=80";
 
 const WHATSAPP = "https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I'd%20love%20help%20planning%20my%20next%20trip.";
 
@@ -63,8 +65,14 @@ const HIDDEN_ON = [
 export default function MobileBottomNav() {
   const path = usePathname();
   const wishlistCount = useWishlistStore((s) => s.wishlist.length);
-  const { open: openPlanner } = useTripPlanner();
   const isActive = (href: string) => path === href || (href !== "/" && path.startsWith(href));
+
+  const openAria = () => {
+    captureIntent("enquire_click", { note: "Mobile bottom nav — Aria FAB" });
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("tt:aria-open"));
+    }
+  };
 
   if (HIDDEN_ON.some((p) => path.startsWith(p))) return null;
 
@@ -79,21 +87,27 @@ export default function MobileBottomNav() {
             <Tab key={t.href} {...t} active={isActive(t.href)} />
           ))}
 
-          {/* Center: Plan Trip primary CTA */}
+          {/* Center: Aria primary CTA */}
           <button
             type="button"
-            onClick={() => {
-              captureIntent("enquire_click", { note: "Mobile bottom nav — Plan Trip FAB" });
-              openPlanner();
-            }}
-            aria-label="Plan my trip"
+            onClick={openAria}
+            aria-label="Chat with Aria, your AI travel assistant"
             className="flex flex-col items-center gap-1 flex-1 -mt-6 pb-0.5"
           >
-            <div className="relative h-16 w-16 rounded-full bg-tat-gold shadow-[0_6px_24px_rgba(200,147,42,0.55)] ring-4 ring-white flex items-center justify-center transition-transform active:scale-95">
-              <Sparkles className="h-6 w-6 text-tat-charcoal" />
+            <div className="relative h-16 w-16 rounded-full bg-tat-cream-warm shadow-[0_6px_24px_rgba(200,147,42,0.45)] ring-4 ring-white overflow-hidden transition-transform active:scale-95">
+              <Image
+                src={ARIA_PORTRAIT}
+                alt=""
+                width={64}
+                height={64}
+                sizes="64px"
+                quality={80}
+                className="h-full w-full object-cover"
+              />
+              <span className="absolute bottom-0.5 right-0.5 h-3 w-3 rounded-full bg-tat-success-fg ring-2 ring-white" />
             </div>
             <span className="text-[10px] uppercase tracking-[0.14em] font-semibold text-tat-charcoal leading-none mt-0.5">
-              Plan Trip
+              Aria
             </span>
           </button>
 

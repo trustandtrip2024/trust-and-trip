@@ -3,8 +3,12 @@
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { X, Send, Sparkles, ChevronDown, Check } from "lucide-react";
 import { submitLead } from "@/lib/submit-lead";
+
+const ARIA_PORTRAIT =
+  "https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=facearea&facepad=2.5&w=240&h=240&q=80";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -116,47 +120,25 @@ function packagePrompts(p: PackagePreload): string[] {
   ];
 }
 
-// Illustrated female face SVG avatar
+// Photo-based avatar — face-cropped Unsplash portrait. The "AI" pill in
+// the chat header makes the AI nature explicit so this isn't deceptive.
 function AriaFace({ size = 40, className = "" }: { size?: number; className?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" className={className}>
-      {/* Hair back */}
-      <ellipse cx="32" cy="22" rx="20" ry="21" fill="#1a0a00" />
-      {/* Neck */}
-      <rect x="26" y="46" width="12" height="10" rx="4" fill="#EFD9BD" />
-      {/* Face */}
-      <ellipse cx="32" cy="34" rx="17" ry="19" fill="#EFD9BD" />
-      {/* Hair top + sides */}
-      <ellipse cx="32" cy="16" rx="18" ry="10" fill="#1a0a00" />
-      <ellipse cx="13" cy="30" rx="5" ry="12" fill="#1a0a00" />
-      <ellipse cx="51" cy="30" rx="5" ry="12" fill="#1a0a00" />
-      {/* Hair highlight */}
-      <ellipse cx="24" cy="14" rx="6" ry="3" fill="#3d1f00" opacity="0.6" />
-      {/* Eyebrows */}
-      <path d="M22 27 Q25.5 24.5 29 26" stroke="#5c2e00" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-      <path d="M35 26 Q38.5 24.5 42 27" stroke="#5c2e00" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-      {/* Eyes white */}
-      <ellipse cx="26" cy="31" rx="4.5" ry="4" fill="white" />
-      <ellipse cx="38" cy="31" rx="4.5" ry="4" fill="white" />
-      {/* Iris */}
-      <circle cx="26.5" cy="31.5" r="2.8" fill="#3d1f00" />
-      <circle cx="38.5" cy="31.5" r="2.8" fill="#3d1f00" />
-      {/* Pupil shine */}
-      <circle cx="27.5" cy="30.5" r="1" fill="white" />
-      <circle cx="39.5" cy="30.5" r="1" fill="white" />
-      {/* Nose */}
-      <path d="M32 33 Q30 37 29 38 Q32 39.5 35 38 Q34 37 32 33Z" fill="#e8a882" opacity="0.7" />
-      {/* Smile */}
-      <path d="M25 42 Q32 47 39 42" stroke="#c4775a" strokeWidth="1.8" strokeLinecap="round" fill="none" />
-      {/* Lips */}
-      <path d="M26 42.5 Q32 45.5 38 42.5" stroke="#d4826a" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-      {/* Cheeks */}
-      <ellipse cx="20" cy="39" rx="5" ry="3.5" fill="#f4a0a0" opacity="0.35" />
-      <ellipse cx="44" cy="39" rx="5" ry="3.5" fill="#f4a0a0" opacity="0.35" />
-      {/* Earrings */}
-      <circle cx="14.5" cy="35" r="2" fill="#F59E0B" opacity="0.9" />
-      <circle cx="49.5" cy="35" r="2" fill="#F59E0B" opacity="0.9" />
-    </svg>
+    <span
+      className={`relative inline-block overflow-hidden rounded-full bg-tat-cream-warm ${className}`}
+      style={{ width: size, height: size }}
+    >
+      <Image
+        src={ARIA_PORTRAIT}
+        alt=""
+        width={size}
+        height={size}
+        sizes={`${size}px`}
+        quality={80}
+        className="h-full w-full object-cover"
+        priority={size >= 50}
+      />
+    </span>
   );
 }
 
