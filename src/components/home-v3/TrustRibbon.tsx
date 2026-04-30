@@ -39,12 +39,12 @@ export default function TrustRibbon({
       <div className="container-custom py-5 md:py-7">
         <ul
           role="list"
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-5"
+          className="flex sm:grid sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-5 overflow-x-auto sm:overflow-visible no-scrollbar snap-x snap-mandatory sm:snap-none -mx-5 px-5 sm:mx-0 sm:px-0 pb-1 sm:pb-0"
         >
           {stats.map(({ icon: Icon, value, label }) => (
             <li
               key={label}
-              className="flex items-center gap-3 rounded-xl px-3 py-2.5 md:py-3 bg-tat-cream-warm/50 dark:bg-white/5 border border-tat-charcoal/5 dark:border-white/10"
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 md:py-3 bg-tat-cream-warm/50 dark:bg-white/5 border border-tat-charcoal/5 dark:border-white/10 shrink-0 snap-start basis-[68%] xs:basis-[60%] sm:basis-auto sm:shrink-0"
             >
               <span className="shrink-0 h-9 w-9 rounded-full bg-tat-gold/15 text-tat-gold flex items-center justify-center">
                 <Icon className="h-4 w-4" aria-hidden />
