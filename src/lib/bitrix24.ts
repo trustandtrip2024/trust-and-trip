@@ -305,6 +305,13 @@ async function findOrCreateContact(
 export async function pushLead(lead: Bitrix24LeadPayload): Promise<number | null> {
   if (!webhookBase()) return null;
 
+  // Audit log: every push prints a single-line summary so Vercel logs
+  // make it grep-able when a planner reports a missing field. Avoids
+  // dumping the full transcript (PII + log noise).
+  console.log(
+    `[bitrix24] pushLead source=${lead.source} name=${JSON.stringify(lead.name ?? "")} phone=${JSON.stringify(lead.phone ?? "")} dest=${JSON.stringify(lead.destination ?? "")} pkg=${JSON.stringify(lead.package_slug ?? "")}`
+  );
+
   const res = await callBitrix("crm.lead.add", {
     fields: buildLeadFields(lead),
     params: { REGISTER_SONET_EVENT: "Y" },

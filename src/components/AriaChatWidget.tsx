@@ -122,6 +122,130 @@ function packagePrompts(p: PackagePreload): string[] {
 // stream-AI widget + WA pill, dashboard has its own chat path.
 const HIDDEN_ON = ["/lp/", "/invoice/", "/cart/resume", "/login", "/register", "/admin"];
 
+// Known destinations (canonical labels) used to extract a destination
+// signal from the chat transcript when the user opened Aria from a
+// surface without an explicit package or quiz preload (e.g. bottom-nav
+// FAB on the homepage). Order matters slightly — multi-word names should
+// come before substrings of themselves to avoid early bailouts.
+const KNOWN_DESTINATIONS: { label: string; pattern: RegExp }[] = [
+  { label: "Sri Lanka",     pattern: /\bsri[\s-]*lanka\b/i },
+  { label: "Char Dham",     pattern: /\bchar[\s-]*dham\b/i },
+  { label: "Vaishno Devi",  pattern: /\bvaishno\s*devi\b/i },
+  { label: "Bali",          pattern: /\bbali\b/i },
+  { label: "Maldives",      pattern: /\bmaldives?\b/i },
+  { label: "Switzerland",   pattern: /\bswitzerland\b|\bswiss\b/i },
+  { label: "Santorini",     pattern: /\bsantorini\b/i },
+  { label: "Dubai",         pattern: /\bdubai\b/i },
+  { label: "Kerala",        pattern: /\bkerala\b/i },
+  { label: "Goa",           pattern: /\bgoa\b/i },
+  { label: "Thailand",      pattern: /\bthailand\b|\bphuket\b|\bbangkok\b|\bkrabi\b/i },
+  { label: "Singapore",     pattern: /\bsingapore\b/i },
+  { label: "Japan",         pattern: /\bjapan\b|\btokyo\b|\bkyoto\b/i },
+  { label: "Vietnam",       pattern: /\bvietnam\b|\bhanoi\b|\bda\s*nang\b/i },
+  { label: "Nepal",         pattern: /\bnepal\b|\bkathmandu\b|\bpokhara\b/i },
+  { label: "Bhutan",        pattern: /\bbhutan\b|\bparo\b|\bthimphu\b/i },
+  { label: "Mauritius",     pattern: /\bmauritius\b/i },
+  { label: "Turkey",        pattern: /\bturkey\b|\bistanbul\b|\bcappadocia\b/i },
+  { label: "Australia",     pattern: /\baustralia\b|\bsydney\b/i },
+  { label: "Malaysia",      pattern: /\bmalaysia\b|\bkuala\s*lumpur\b/i },
+  { label: "Italy",         pattern: /\bitaly\b|\brome\b|\bvenice\b/i },
+  { label: "France",        pattern: /\bfrance\b|\bparis\b/i },
+  { label: "Greece",        pattern: /\bgreece\b|\bathens\b/i },
+  { label: "Iceland",       pattern: /\biceland\b/i },
+  { label: "Norway",        pattern: /\bnorway\b/i },
+  { label: "Manali",        pattern: /\bmanali\b/i },
+  { label: "Shimla",        pattern: /\bshimla\b/i },
+  { label: "Coorg",         pattern: /\bcoorg\b/i },
+  { label: "Rajasthan",     pattern: /\brajasthan\b|\bjaipur\b|\budaipur\b|\bjodhpur\b/i },
+  { label: "Ladakh",        pattern: /\bladakh\b|\bleh\b/i },
+  { label: "Andaman",       pattern: /\bandaman\b|\bport\s*blair\b/i },
+  { label: "Varanasi",      pattern: /\bvaranasi\b|\bbanaras\b/i },
+  { label: "Agra",          pattern: /\bagra\b|\btaj\s*mahal\b/i },
+  { label: "Kashmir",       pattern: /\bkashmir\b|\bsrinagar\b/i },
+  { label: "Spiti",         pattern: /\bspiti\b/i },
+  { label: "Himachal",      pattern: /\bhimachal\b/i },
+];
+
+// Travel-type vocabulary mirrors Package.travelType + common synonyms.
+const TRAVEL_TYPE_HINTS: { label: string; pattern: RegExp }[] = [
+  { label: "Couple", pattern: /\bhoneymoon\b|\bcouple\b|\bromantic\b|\banniversary\b/i },
+  { label: "Family", pattern: /\bfamily\b|\bkids?\b|\bchildren\b|\bparents?\b/i },
+  { label: "Solo",   pattern: /\bsolo\b|\balone\b|\bmyself\b|\bjust\s+me\b/i },
+  { label: "Group",  pattern: /\bgroup\b|\bfriends\b|\b\d{1,2}\s*pax\b|\b\d{1,2}\s*people\b/i },
+];
+
+// Loose budget extractor — returns a numeric INR figure when the user
+// drops a phrase like "₹50000", "50k", "1 lakh", "1.5L". Used to enrich
+// the lead `budget` field so the Bitrix UF_CRM_BUDGET column isn't empty.
+function extractBudget(text: string): string | undefined {
+  const t = text.toLowerCase();
+  const lakh = t.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lac|l\b)/);
+  if (lakh) return String(Math.round(parseFloat(lakh[1]) * 100_000));
+  const k = t.match(/(?:rs\.?\s*|₹\s*)?(\d{2,3})\s*k\b/);
+  if (k) return String(parseInt(k[1], 10) * 1_000);
+  const rupee = t.match(/(?:rs\.?\s*|₹\s*)(\d[\d,]{3,})/);
+  if (rupee) return rupee[1].replace(/,/g, "");
+  return undefined;
+}
+
+// Extract the most recently mentioned destination from the chat transcript.
+// Walks user messages newest → oldest so a later "actually let's do Goa"
+// wins over an earlier "tell me about Bali".
+function extractDestinationFromMessages(messages: Message[]): string | undefined {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m.role !== "user") continue;
+    for (const d of KNOWN_DESTINATIONS) {
+      if (d.pattern.test(m.content)) return d.label;
+    }
+  }
+  return undefined;
+}
+
+function extractTravelTypeFromMessages(messages: Message[]): string | undefined {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m.role !== "user") continue;
+    for (const tt of TRAVEL_TYPE_HINTS) {
+      if (tt.pattern.test(m.content)) return tt.label;
+    }
+  }
+  return undefined;
+}
+
+function extractBudgetFromMessages(messages: Message[]): string | undefined {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m.role !== "user") continue;
+    const b = extractBudget(m.content);
+    if (b) return b;
+  }
+  return undefined;
+}
+
+// Convert the current pathname (e.g. /destinations/bali, /packages/bali-honeymoon)
+// into a destination label by matching the first segment against KNOWN_DESTINATIONS.
+function extractDestinationFromPath(pathname: string | null): string | undefined {
+  if (!pathname) return undefined;
+  for (const d of KNOWN_DESTINATIONS) {
+    if (d.pattern.test(pathname)) return d.label;
+  }
+  return undefined;
+}
+
+// Detect a likely Indian/intl phone number in the user's message so we
+// can auto-open the lead form with the phone prefilled. Avoids the
+// scenario where the user types "call me on 98765 43210" but never
+// notices the lead-capture pill.
+function extractPhoneFromText(text: string): string | undefined {
+  const m = text.match(/(\+?\d[\d\s-]{8,14}\d)/);
+  if (!m) return undefined;
+  // Strip spaces/hyphens for cleanliness, keep leading +.
+  const cleaned = m[1].replace(/[\s-]/g, "");
+  // Must have at least 10 digits to be a real phone — drops dates/years.
+  return cleaned.replace(/\D/g, "").length >= 10 ? cleaned : undefined;
+}
+
 export default function AriaChatWidget() {
   const pathname = usePathname();
   const onHidden = !!pathname && HIDDEN_ON.some((p) => pathname.startsWith(p));
@@ -196,6 +320,17 @@ export default function AriaChatWidget() {
     setInput("");
     setLoading(true);
 
+    // Surface the lead form proactively if the user just dropped a phone
+    // number in chat — keeps Bitrix from missing high-intent moments where
+    // the user types "call me on X" but never notices the sticky pill.
+    if (!leadDone) {
+      const detectedPhone = extractPhoneFromText(userMsg.content);
+      if (detectedPhone) {
+        setLeadPhone((prev) => prev || detectedPhone);
+        setLeadOpen(true);
+      }
+    }
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -251,6 +386,19 @@ export default function AriaChatWidget() {
       setLeadError("Enter a valid phone number.");
       return;
     }
+    // Pull as much structured context out of the chat as we can so the
+    // Bitrix lead lands with destination/travel_type/budget filled in even
+    // when the user opened Aria from the bottom-nav FAB (no preload).
+    const inferredDestination =
+      packagePreload?.destinationName
+      || extractDestinationFromMessages(messages)
+      || extractDestinationFromPath(pathname);
+    const inferredTravelType =
+      packagePreload?.travelType
+      || quizPreload?.travelType
+      || extractTravelTypeFromMessages(messages);
+    const inferredBudget = extractBudgetFromMessages(messages);
+
     setLeadSubmitting(true);
     try {
       const result = await submitLead({
@@ -261,8 +409,9 @@ export default function AriaChatWidget() {
         message: formatTranscript(),
         package_title: packagePreload?.title,
         package_slug: packagePreload?.slug,
-        destination: packagePreload?.destinationName,
-        travel_type: packagePreload?.travelType ?? quizPreload?.travelType,
+        destination: inferredDestination,
+        travel_type: inferredTravelType,
+        budget: inferredBudget,
       });
       if (!result.ok) {
         setLeadError(result.error ?? "Could not send. Try WhatsApp instead.");

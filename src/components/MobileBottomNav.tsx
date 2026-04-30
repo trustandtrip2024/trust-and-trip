@@ -93,8 +93,11 @@ export default function MobileBottomNav() {
     return () => { clearTimeout(t1); clearInterval(interval); };
   }, [ariaOpened]);
 
+  // Opening the chat is NOT an enquiry — it's just a UI affordance. The
+  // real lead is created by AriaChatWidget when the user fills the
+  // name + phone form. Firing captureIntent here pollutes Bitrix with
+  // empty "Website Visitor" rows (one per FAB tap) and breaks dedup.
   const openAria = () => {
-    captureIntent("enquire_click", { note: "Mobile bottom nav — Aria FAB" });
     setAriaOpened(true);
     setTipShow(false);
     if (typeof window !== "undefined") {
