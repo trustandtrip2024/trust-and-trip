@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import {
   ChevronDown, Mountain, Bed, Plane, Coffee, MapPin,
+  Maximize2, Minimize2, Sparkles, MessageCircle, Image as ImageIcon,
 } from "lucide-react";
 
 type Filter = "all" | "activities" | "stay" | "transfers" | "meals";
@@ -22,6 +23,9 @@ export interface ItineraryDay {
 interface Props {
   days: ItineraryDay[];
   endLabel?: string;
+  /** When set, enables the per-day "Ask Aria" handoff button. */
+  packageTitle?: string;
+  destinationName?: string;
 }
 
 const CHIPS: { id: Filter; label: string; icon: React.ComponentType<{ className?: string }> | null }[] = [
@@ -41,12 +45,37 @@ function mealsLine(m: NonNullable<ItineraryDay["meals"]>) {
   return inc.length ? `${inc.join(" · ")} included${trail}` : "Meals on own";
 }
 
-export default function PackageItinerary({ days, endLabel = "End of trip" }: Props) {
+function mealCount(m?: ItineraryDay["meals"]) {
+  if (!m) return 0;
+  return (m.breakfast ? 1 : 0) + (m.lunch ? 1 : 0) + (m.dinner ? 1 : 0);
+}
+
+export default function PackageItinerary({
+  days,
+  endLabel = "End of trip",
+  packageTitle,
+  destinationName,
+}: Props) {
   const [view, setView] = useState<View>("detailed");
   const [filter, setFilter] = useState<Filter>("all");
   const [activeDay, setActiveDay] = useState<number | null>(null);
+  const [allOpen, setAllOpen] = useState<boolean | null>(null);
   const dayRefs = useRef<Map<number, HTMLLIElement>>(new Map());
   const trackRef = useRef<HTMLDivElement>(null);
+
+  // Aggregate trip stats — surface counts before the day-by-day list so
+  // skim-readers see the shape of the trip without expanding any card.
+  const totals = useMemo(() => {
+    let stays = 0, transfers = 0, activities = 0, mealsCt = 0, photos = 0;
+    days.forEach((d) => {
+      if (d.stay) stays++;
+      if (d.transfer) transfers++;
+      if (d.highlights) activities++;
+      mealsCt += mealCount(d.meals);
+      photos += d.highlights?.images?.length ?? 0;
+    });
+    return { stays, transfers, activities, meals: mealsCt, photos };
+  }, [days]);
 
   const filtered = useMemo(() => {
     if (filter === "all") return days;
@@ -104,6 +133,32 @@ export default function PackageItinerary({ days, endLabel = "End of trip" }: Pro
     if (details) details.open = true;
   }
 
+  // Bulk expand/collapse — flips every <details> element inside the day refs.
+  // Tracks the last action via allOpen so the toggle button label can swap.
+  function toggleAll() {
+    const next = !(allOpen ?? false);
+    dayRefs.current.forEach((li) => {
+      const details = li.querySelector<HTMLDetailsElement>("details");
+      if (details) details.open = next;
+    });
+    setAllOpen(next);
+  }
+
+  // Hand a specific day's question to Aria via sessionStorage preload.
+  // The chat widget reads "tt_aria_text_preload" on the next "tt:aria-open"
+  // event and stuffs it into the input box.
+  function askAriaAboutDay(d: ItineraryDay) {
+    if (typeof window === "undefined") return;
+    const ctx = packageTitle
+      ? `the "${packageTitle}" trip${destinationName ? ` to ${destinationName}` : ""}`
+      : destinationName
+        ? `the trip to ${destinationName}`
+        : "this trip";
+    const msg = `Tell me more about Day ${d.day} — "${d.title}" — on ${ctx}. What's the pace like, how much walking, and is there room to swap activities?`;
+    try { window.sessionStorage.setItem("tt_aria_text_preload", msg); } catch {}
+    window.dispatchEvent(new CustomEvent("tt:aria-open"));
+  }
+
   return (
     <section className="tt-card tt-card-p" aria-labelledby="itinerary-title">
       {/* Header */}
@@ -112,26 +167,84 @@ export default function PackageItinerary({ days, endLabel = "End of trip" }: Pro
         Your journey, <em>unfolded.</em>
       </h2>
 
+      {/* Trip totals — shape of the trip in one glance. Each pill only renders
+          when its underlying count is non-zero so short trips don't show
+          empty noise. */}
+      <div className="mt-4 flex flex-wrap items-center gap-1.5 md:gap-2">
+        <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-gold/15 text-tat-gold text-[11px] font-semibold">
+          <Sparkles className="h-3 w-3" />
+          {days.length} {days.length === 1 ? "day" : "days"}
+        </span>
+        {totals.stays > 0 && (
+          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
+            <Bed className="h-3 w-3" />
+            {totals.stays} {totals.stays === 1 ? "stay" : "stays"}
+          </span>
+        )}
+        {totals.transfers > 0 && (
+          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
+            <Plane className="h-3 w-3" />
+            {totals.transfers} {totals.transfers === 1 ? "transfer" : "transfers"}
+          </span>
+        )}
+        {totals.activities > 0 && (
+          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
+            <Mountain className="h-3 w-3" />
+            {totals.activities} sightseeing {totals.activities === 1 ? "block" : "blocks"}
+          </span>
+        )}
+        {totals.meals > 0 && (
+          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
+            <Coffee className="h-3 w-3" />
+            {totals.meals} {totals.meals === 1 ? "meal" : "meals"} included
+          </span>
+        )}
+        {totals.photos > 0 && (
+          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
+            <ImageIcon className="h-3 w-3" />
+            {totals.photos} {totals.photos === 1 ? "photo" : "photos"}
+          </span>
+        )}
+      </div>
+
       {/* Controls — stacked on mobile, side-by-side on desktop, both as scroll rails */}
       <div className="mt-5 space-y-3 md:space-y-0 md:flex md:items-center md:justify-between md:gap-3">
-        {/* View toggle */}
-        <div className="inline-flex p-1 rounded-pill bg-tat-cream-warm/40 text-[13px] font-medium" role="tablist" aria-label="Itinerary view">
-          <button
-            onClick={() => setView("detailed")}
-            role="tab"
-            aria-selected={view === "detailed"}
-            className={`px-4 h-9 rounded-pill transition duration-120 ${view === "detailed" ? "bg-white shadow-sm text-tat-charcoal" : "text-tat-slate"}`}
-          >
-            Detailed
-          </button>
-          <button
-            onClick={() => setView("summarised")}
-            role="tab"
-            aria-selected={view === "summarised"}
-            className={`px-4 h-9 rounded-pill transition duration-120 ${view === "summarised" ? "bg-white shadow-sm text-tat-charcoal" : "text-tat-slate"}`}
-          >
-            Summarised
-          </button>
+        <div className="flex items-center gap-2">
+          {/* View toggle */}
+          <div className="inline-flex p-1 rounded-pill bg-tat-cream-warm/40 text-[13px] font-medium" role="tablist" aria-label="Itinerary view">
+            <button
+              onClick={() => setView("detailed")}
+              role="tab"
+              aria-selected={view === "detailed"}
+              className={`px-4 h-9 rounded-pill transition duration-120 ${view === "detailed" ? "bg-white shadow-sm text-tat-charcoal" : "text-tat-slate"}`}
+            >
+              Detailed
+            </button>
+            <button
+              onClick={() => setView("summarised")}
+              role="tab"
+              aria-selected={view === "summarised"}
+              className={`px-4 h-9 rounded-pill transition duration-120 ${view === "summarised" ? "bg-white shadow-sm text-tat-charcoal" : "text-tat-slate"}`}
+            >
+              Summarised
+            </button>
+          </div>
+
+          {/* Expand/collapse all — only useful in detailed view */}
+          {view === "detailed" && days.length > 1 && (
+            <button
+              type="button"
+              onClick={toggleAll}
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-pill bg-tat-cream-warm/40 text-tat-slate hover:text-tat-charcoal hover:bg-tat-cream-warm/70 text-[12px] font-medium transition-colors"
+              aria-pressed={allOpen ?? false}
+            >
+              {allOpen ? (
+                <><Minimize2 className="h-3.5 w-3.5" /> Collapse all</>
+              ) : (
+                <><Maximize2 className="h-3.5 w-3.5" /> Expand all</>
+              )}
+            </button>
+          )}
         </div>
 
         {/* Filter chips — horizontal scroll on mobile */}
@@ -164,7 +277,7 @@ export default function PackageItinerary({ days, endLabel = "End of trip" }: Pro
           ref={trackRef}
           role="navigation"
           aria-label="Jump to day"
-          className="mt-5 -mx-5 md:mx-0 px-5 md:px-0 pt-1 pb-2 flex gap-1.5 overflow-x-auto no-scrollbar sticky top-[120px] md:top-[140px] z-10 bg-white/85 backdrop-blur-sm border-b border-tat-charcoal/8"
+          className="mt-5 -mx-5 md:mx-0 px-5 md:px-0 pt-2 pb-2 flex gap-1.5 overflow-x-auto no-scrollbar sticky top-16 lg:top-20 z-10 bg-white/90 backdrop-blur-md border-b border-tat-charcoal/8"
         >
           {filtered.map((d) => {
             const active = activeDay === d.day;
@@ -295,6 +408,23 @@ export default function PackageItinerary({ days, endLabel = "End of trip" }: Pro
                       )}
                     </div>
                   )}
+
+                  {/* Per-day Aria handoff — surfaces the most common
+                      objection ("can I tweak Day X?") right where it
+                      forms instead of pushing it to the end of the page. */}
+                  <div className="mt-3 flex flex-wrap items-center gap-2 pt-3 border-t border-tat-charcoal/6">
+                    <button
+                      type="button"
+                      onClick={() => askAriaAboutDay(d)}
+                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-pill bg-tat-gold/15 hover:bg-tat-gold/25 text-tat-gold text-[12px] font-semibold transition-colors"
+                    >
+                      <MessageCircle className="h-3.5 w-3.5" />
+                      Ask Aria about Day {d.day}
+                    </button>
+                    <span className="text-[11px] text-tat-charcoal/45">
+                      Want to swap, slow down, or add something? Tell us.
+                    </span>
+                  </div>
                 </>
               )}
             </details>

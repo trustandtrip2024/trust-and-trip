@@ -313,6 +313,8 @@ export default async function PackageDetail({ params }: Props) {
             {/* ITINERARY */}
             <section id="itinerary" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <PackageItinerary
+                packageTitle={pkg.title}
+                destinationName={pkg.destinationName}
                 days={pkg.itinerary.map((day, idx) => ({
                   day: day.day ?? idx + 1,
                   title: day.title,
