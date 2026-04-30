@@ -3,10 +3,12 @@ import Link from "next/link";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
 import FounderNote from "@/components/homepage-v2/FounderNote";
-import { stats, whyChooseUs } from "@/lib/data";
+import AboutSectionNav from "@/components/about/AboutSectionNav";
+import { stats } from "@/lib/data";
 import {
   Compass, Handshake, HeartHandshake, Sparkles,
-  Phone, Mail, MapPin, Clock, CreditCard,
+  Phone, Mail, MapPin, Clock,
+  Star, ShieldCheck, MessageCircle, Flag, Award, Globe,
 } from "lucide-react";
 
 export const metadata = {
@@ -55,6 +57,39 @@ const services = [
 ];
 
 const paymentMethods = ["Visa", "Mastercard", "UPI", "Google Pay", "PhonePe"];
+
+const MILESTONES: { year: string; title: string; body: string; icon: typeof Flag }[] = [
+  {
+    year: "2019",
+    icon: Flag,
+    title: "Trust and Trip Experiences founded in Noida",
+    body: "Akash Mishra starts the company with a single conviction — travel agencies should be transparent, reliable and trustworthy. First trip lands the same year.",
+  },
+  {
+    year: "2021",
+    icon: Globe,
+    title: "First international trips delivered",
+    body: "Bali, Maldives, Thailand. Custom itineraries hit double digits per month. WhatsApp becomes the default planner channel.",
+  },
+  {
+    year: "2023",
+    icon: Award,
+    title: "60+ destinations on the planner roster",
+    body: "India and abroad. Char Dham yatra, Switzerland honeymoons, Vietnam group tours. 4.9★ rating across hundreds of Google reviews.",
+  },
+  {
+    year: "2024",
+    icon: HeartHandshake,
+    title: "8,000+ travelers planned",
+    body: "Eight thousand trips and counting — couples, families, groups, solo. Every itinerary still touched by a real planner from first call to homecoming.",
+  },
+  {
+    year: "2026",
+    icon: Sparkles,
+    title: "Aria — your AI co-pilot, alongside the planner",
+    body: "Ask Aria for ideas, climate, visa rules and budgets in seconds. Then a real planner takes the handoff and shapes the trip.",
+  },
+];
 
 export default function AboutPage() {
   return (
@@ -150,8 +185,8 @@ export default function AboutPage() {
       }} />
 
       {/* Hero */}
-      <section className="relative pt-28 md:pt-36 pb-16 md:pb-24 bg-tat-paper">
-        <div className="container-custom grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <section id="story" className="relative pt-24 md:pt-32 pb-12 md:pb-20 bg-tat-paper scroll-mt-32">
+        <div className="container-custom grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           <div>
             <span className="eyebrow">About us</span>
             <h1 className="mt-3 font-display text-display-lg font-medium leading-[1.02] text-balance">
@@ -201,11 +236,37 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <AboutSectionNav />
+
+      {/* Trust ribbon — quick proof beneath hero */}
+      <section aria-label="Trust ribbon" className="border-y border-tat-charcoal/8 bg-tat-paper">
+        <div className="container-custom py-4 md:py-5">
+          <ul role="list" className="flex gap-4 md:gap-8 overflow-x-auto no-scrollbar -mx-5 px-5 sm:mx-0 sm:px-0 text-[12px] md:text-[13px]">
+            <li className="shrink-0 inline-flex items-center gap-2 text-tat-charcoal/70">
+              <Star className="h-4 w-4 fill-tat-gold text-tat-gold" />
+              <span><strong className="font-semibold text-tat-charcoal">4.9</strong> on Google · 200+ reviews</span>
+            </li>
+            <li className="shrink-0 inline-flex items-center gap-2 text-tat-charcoal/70">
+              <Globe className="h-4 w-4 text-tat-gold" />
+              <span><strong className="font-semibold text-tat-charcoal">60+</strong> destinations</span>
+            </li>
+            <li className="shrink-0 inline-flex items-center gap-2 text-tat-charcoal/70">
+              <HeartHandshake className="h-4 w-4 text-tat-gold" />
+              <span><strong className="font-semibold text-tat-charcoal">8,000+</strong> travelers since 2019</span>
+            </li>
+            <li className="shrink-0 inline-flex items-center gap-2 text-tat-charcoal/70">
+              <ShieldCheck className="h-4 w-4 text-tat-gold" />
+              <span><strong className="font-semibold text-tat-charcoal">₹0</strong> to start · pay only when sure</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
       {/* Founder note */}
       <FounderNote />
 
       {/* Stats */}
-      <section className="bg-tat-charcoal text-tat-paper py-14">
+      <section id="stats" className="bg-tat-charcoal text-tat-paper py-14 scroll-mt-32">
         <div className="container-custom grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s) => (
             <div key={s.label} className="text-center">
@@ -216,8 +277,47 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Timeline / milestones */}
+      <section id="timeline" className="py-16 md:py-20 bg-tat-cream-warm/30 scroll-mt-32">
+        <div className="container-custom">
+          <div className="max-w-2xl mb-10 md:mb-12">
+            <span className="eyebrow">Our journey</span>
+            <h2 className="heading-section mt-3 text-balance">
+              Five milestones,{" "}
+              <span className="italic text-tat-gold font-light">one belief.</span>
+            </h2>
+            <p className="mt-3 text-tat-charcoal/65 text-sm md:text-base max-w-xl leading-relaxed">
+              Founded in Noida with a single conviction — travel agencies should be
+              transparent, reliable and trustworthy. Every milestone since has been
+              about staying that way at scale.
+            </p>
+          </div>
+          <ol className="relative border-l-2 border-tat-gold/30 pl-6 md:pl-10 space-y-8 md:space-y-10">
+            {MILESTONES.map((m, i) => {
+              const Icon = m.icon;
+              return (
+                <li key={i} className="relative">
+                  <span className="absolute -left-[33px] md:-left-[49px] top-0.5 inline-flex h-7 w-7 md:h-9 md:w-9 items-center justify-center rounded-full bg-tat-gold text-white ring-4 ring-tat-cream-warm/30">
+                    <Icon className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                  </span>
+                  <p className="text-[11px] uppercase tracking-[0.22em] font-semibold text-tat-gold">
+                    {m.year}
+                  </p>
+                  <h3 className="mt-1 font-display text-[18px] md:text-[22px] font-medium text-tat-charcoal leading-tight">
+                    {m.title}
+                  </h3>
+                  <p className="mt-2 text-[13px] md:text-[14px] text-tat-charcoal/70 leading-relaxed max-w-2xl">
+                    {m.body}
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      </section>
+
       {/* Services */}
-      <section className="py-20 md:py-24 bg-tat-cream/30">
+      <section id="services" className="py-20 md:py-24 bg-tat-cream/30 scroll-mt-32">
         <div className="container-custom">
           <div className="max-w-2xl mb-12">
             <span className="eyebrow">What we offer</span>
@@ -238,7 +338,7 @@ export default function AboutPage() {
       </section>
 
       {/* Values */}
-      <section className="py-20 md:py-28">
+      <section id="values" className="py-20 md:py-28 scroll-mt-32">
         <div className="container-custom">
           <div className="max-w-2xl mb-12 md:mb-16">
             <span className="eyebrow">What we stand for</span>
@@ -279,7 +379,7 @@ export default function AboutPage() {
       </section>
 
       {/* Contact & Payment */}
-      <section className="py-20 md:py-24">
+      <section id="contact" className="py-20 md:py-24 scroll-mt-32">
         <div className="container-custom grid lg:grid-cols-2 gap-12 lg:gap-20">
           {/* Contact details */}
           <div>
