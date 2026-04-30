@@ -119,7 +119,7 @@ export default function StickySubnav({ destinations = [] }: Props) {
   return (
     <nav
       aria-label="Homepage navigation"
-      className="sticky top-[120px] lg:top-20 z-30 bg-tat-paper/95 dark:bg-tat-charcoal/95 backdrop-blur-md border-b border-tat-charcoal/10 dark:border-white/10"
+      className="sticky top-16 lg:top-20 z-30 bg-tat-paper/95 dark:bg-tat-charcoal/95 backdrop-blur-md border-b border-tat-charcoal/10 dark:border-white/10"
     >
       <div className="container-custom">
         <div className="flex items-center gap-2 md:gap-3 py-2">

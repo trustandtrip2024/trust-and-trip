@@ -16,7 +16,7 @@ export default function FaqAndCTA() {
     <section
       id="faq"
       aria-labelledby="faq-title"
-      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-44 lg:scroll-mt-32"
+      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-10 md:gap-14">

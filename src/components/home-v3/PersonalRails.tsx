@@ -57,7 +57,7 @@ export default function PersonalRails({ packagesBySlug }: Props) {
   return (
     <section
       aria-labelledby="personal-rails-title"
-      className="py-10 md:py-14 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95 scroll-mt-44 lg:scroll-mt-32"
+      className="py-10 md:py-14 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95 scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom flex flex-col gap-10">
         <h2 id="personal-rails-title" className="sr-only">

@@ -30,7 +30,7 @@ export default function VisaFreeShelf({ packages }: Props) {
     <section
       id="visa-free"
       aria-labelledby="visa-free-title"
-      className="relative py-12 md:py-16 bg-tat-paper dark:bg-tat-charcoal scroll-mt-44 lg:scroll-mt-32 overflow-hidden"
+      className="relative py-12 md:py-16 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32 overflow-hidden"
     >
       {/* Subtle passport-stamp watermark */}
       <Stamp

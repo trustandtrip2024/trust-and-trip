@@ -11,7 +11,7 @@ export default function EditorialBand() {
     <section
       id="journal"
       aria-labelledby="journal-title"
-      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-44 lg:scroll-mt-32"
+      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom">
         <div className="flex items-end justify-between gap-4 flex-wrap">

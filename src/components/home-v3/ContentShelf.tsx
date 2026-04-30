@@ -31,7 +31,7 @@ export default function ContentShelf({
     <section
       id={id}
       aria-labelledby={`shelf-${id ?? eyebrow}-title`}
-      className={`py-12 md:py-16 ${BG_CLASS[bg]} scroll-mt-44 lg:scroll-mt-32`}
+      className={`py-12 md:py-16 ${BG_CLASS[bg]} scroll-mt-28 lg:scroll-mt-32`}
     >
       <div className="container-custom">
         <div className="flex items-end justify-between gap-4 flex-wrap">

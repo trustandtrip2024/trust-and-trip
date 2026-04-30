@@ -40,7 +40,7 @@ export default function MayMixedChipShelf({ packages }: Props) {
     <section
       id="may-trending"
       aria-labelledby="may-trending-title"
-      className="py-12 md:py-16 bg-tat-cream-warm/30 dark:bg-tat-charcoal/95 scroll-mt-44 lg:scroll-mt-32"
+      className="py-12 md:py-16 bg-tat-cream-warm/30 dark:bg-tat-charcoal/95 scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom">
         <div className="flex items-end justify-between gap-4 flex-wrap">

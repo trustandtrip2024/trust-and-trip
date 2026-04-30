@@ -39,7 +39,7 @@ export default function BrowseByStyle({ packagesByStyle = {} }: Props) {
     <section
       id="browse"
       aria-labelledby="browse-style-title"
-      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-44 lg:scroll-mt-32"
+      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom">
         <div className="flex items-end justify-between gap-4 flex-wrap">

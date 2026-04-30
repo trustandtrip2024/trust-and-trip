@@ -40,7 +40,7 @@ export default function WhyTrustAndTrip() {
     <section
       id="why"
       aria-labelledby="why-title"
-      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-44 lg:scroll-mt-32"
+      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom">
         <div className="max-w-3xl">

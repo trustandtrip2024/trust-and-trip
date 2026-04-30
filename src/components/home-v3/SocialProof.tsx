@@ -56,7 +56,7 @@ export default async function SocialProof() {
     <section
       id="reviews"
       aria-labelledby="reviews-title"
-      className="py-14 md:py-20 bg-tat-cream-warm/30 dark:bg-tat-charcoal/95 scroll-mt-44 lg:scroll-mt-32"
+      className="py-14 md:py-20 bg-tat-cream-warm/30 dark:bg-tat-charcoal/95 scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom">
         <div className="flex items-end justify-between gap-4 flex-wrap">
