@@ -50,7 +50,13 @@ export async function GET(req: NextRequest) {
       })),
       ...data.posts.map((r: any) => ({ ...r, href: `/blog/${r.slug}` })),
     ];
-    return NextResponse.json({ results });
+    // CDN-cache by full URL (including ?q=). Hot queries land at the edge;
+    // long-tail queries refresh in 5 minutes. swr=1d keeps a stale answer
+    // alive while a background refresh runs.
+    return NextResponse.json(
+      { results },
+      { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400" } },
+    );
   } catch (err) {
     console.error("Search error:", err);
     return NextResponse.json({ results: [] });

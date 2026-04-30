@@ -1,4 +1,4 @@
-export const revalidate = 30;
+export const revalidate = 300;
 
 import Link from "next/link";
 import IntentAnchor from "@/components/IntentAnchor";

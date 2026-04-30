@@ -1,4 +1,4 @@
-export const revalidate = 30;
+export const revalidate = 300;
 
 import { getPackages, getDestinations } from "@/lib/sanity-queries";
 import PackagesClient from "./PackagesClient";

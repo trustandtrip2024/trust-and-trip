@@ -1,4 +1,4 @@
-export const revalidate = 30;
+export const revalidate = 300;
 
 import Image from "next/image";
 import CTASection from "@/components/CTASection";
