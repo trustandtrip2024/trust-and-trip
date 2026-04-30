@@ -4,46 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 import { useTripPlanner } from "@/context/TripPlannerContext";
+import { HOME_FAQS, type HomeFaq } from "@/lib/home-faqs";
 
-interface FaqItem {
-  q: string;
-  a: string;
-}
-
-const FAQS: FaqItem[] = [
-  {
-    q: "Is the itinerary really free until I book?",
-    a: "Yes. A real planner builds your full itinerary — destinations, hotels, activities, day-by-day flow, line-item pricing — and sends it within 24 hours. You pay only when you say yes. If our plan doesn't fit, walk away with zero charge.",
-  },
-  {
-    q: "How much do I pay upfront, and when?",
-    a: "30% deposit (minimum ₹5,000) holds your booking and locks hotel rates. The balance is due 21 days before departure for international trips, 7 days for domestic. Razorpay handles all payments — UPI, cards, net banking, EMI options available.",
-  },
-  {
-    q: "Can I change dates or cancel after booking?",
-    a: "Date changes are free up to 30 days before departure (subject to airline/hotel availability). Cancellations are governed by supplier terms — typically 100% refund up to 45 days, sliding scale closer in. Full policy is shared in writing before you pay anything.",
-  },
-  {
-    q: "Do you handle visas, insurance, and forex?",
-    a: "Visa: yes — full document checklist, application support, embassy appointments where needed. Insurance: bundled by default with every international trip. Forex: we partner with BookMyForex for the best rates, delivered home.",
-  },
-  {
-    q: "Who's actually planning my trip?",
-    a: "One named planner from our team — not a chatbot, not a call-center rotation. Same person from quote to homecoming. You'll have their direct WhatsApp.",
-  },
-  {
-    q: "What if something goes wrong on the trip?",
-    a: "24/7 emergency line manned by a real human. Local on-ground partners in 60+ destinations. We've handled flight cancellations, hospital admissions, lost passports — usually with the traveler hardly noticing.",
-  },
-  {
-    q: "Do you do pilgrim trips with elderly parents?",
-    a: "Yes — Char Dham, Vaishno Devi, Tirupati, Amarnath, and more. We arrange VIP darshan slots, helicopter transfers, doctor-on-call, and hotels within walking distance of temples. Senior-friendly pace built into every yatra.",
-  },
-  {
-    q: "Can you match a quote I got from another agent?",
-    a: "If the inclusions are genuinely the same — yes, we'll match or beat. We'll also show you in writing where the other quote may be hiding costs (room category, flight class, exclusions). Honest pricing means no surprises.",
-  },
-];
+const FAQS: HomeFaq[] = HOME_FAQS;
 
 export default function FaqAndCTA() {
   const [open, setOpen] = useState<number>(0);
@@ -133,7 +96,7 @@ export default function FaqAndCTA() {
 function FaqRow({
   item, isOpen, onToggle,
 }: {
-  item: FaqItem; isOpen: boolean; onToggle: () => void;
+  item: HomeFaq; isOpen: boolean; onToggle: () => void;
 }) {
   return (
     <li className="rounded-xl bg-white dark:bg-white/[0.03] ring-1 ring-tat-charcoal/10 dark:ring-white/10 overflow-hidden">

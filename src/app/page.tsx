@@ -22,6 +22,8 @@ import FaqAndCTA from "@/components/home-v3/FaqAndCTA";
 import ContentShelf from "@/components/home-v3/ContentShelf";
 import EditorialBand from "@/components/home-v3/EditorialBand";
 import PersonalRails from "@/components/home-v3/PersonalRails";
+import HomepageSchema from "@/components/home-v3/HomepageSchema";
+import SeoContent from "@/components/home-v3/SeoContent";
 import type { PackageCardProps } from "@/components/ui/PackageCard";
 import type { Package } from "@/lib/data";
 import {
@@ -119,6 +121,11 @@ export default async function HomePage() {
 
   return (
     <>
+      <HomepageSchema
+        rating={siteStats.googleRating}
+        reviewCount={siteStats.googleReviewCount}
+        totalTravelers={siteStats.totalTravelers}
+      />
       <HomeDealRibbon />
       <Hero trustStrip={siteStats.trustStripLine} />
       <StickySubnav destinations={destinations} />
@@ -167,6 +174,7 @@ export default async function HomePage() {
       <WhyTrustAndTrip />
       <SocialProof />
       <FaqAndCTA />
+      <SeoContent destinations={destinations} />
     </>
   );
 }
