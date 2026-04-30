@@ -7,6 +7,7 @@ interface Props {
   eyebrow: string;
   title: string;
   italicTail?: string;
+  /** Deprecated — section descriptions removed for cleaner mobile rhythm. Kept optional so Sanity-fetched shelves don't error. */
   lede?: string;
   ctaHref: string;
   ctaLabel?: string;
@@ -20,7 +21,7 @@ const BG_CLASS = {
 } as const;
 
 export default function ContentShelf({
-  id, eyebrow, title, italicTail, lede,
+  id, eyebrow, title, italicTail,
   ctaHref, ctaLabel = "See all", packages, bg = "paper",
 }: Props) {
   if (!packages.length) return null;
@@ -50,11 +51,6 @@ export default function ContentShelf({
                 </>
               )}
             </h2>
-            {lede && (
-              <p className="mt-2 text-body-sm text-tat-charcoal/70 dark:text-tat-paper/70 max-w-2xl">
-                {lede}
-              </p>
-            )}
           </div>
           <Link
             href={ctaHref}

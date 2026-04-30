@@ -62,24 +62,26 @@ function CountdownPill({ deadlineMs }: { deadlineMs: number }) {
   const t = timeLeft(deadlineMs - now);
   if (t.over) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-tat-charcoal/80 backdrop-blur-sm text-[10px] font-semibold uppercase tracking-wider text-white/80">
-        <Clock className="h-3 w-3" /> Ended
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tat-charcoal/80 backdrop-blur-sm text-[10px] font-semibold uppercase tracking-wider text-white/80">
+        <Clock className="h-2.5 w-2.5" /> Ended
       </span>
     );
   }
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full backdrop-blur-sm text-[11px] font-semibold tabular-nums shadow-sm ${
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full backdrop-blur-sm text-[10px] sm:text-[11px] font-semibold tabular-nums shadow-sm ${
         t.urgent ? "bg-tat-orange text-white" : "bg-white/95 text-tat-charcoal"
       }`}
     >
-      <Clock className="h-3 w-3" />
+      <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
       {t.primary}
     </span>
   );
 }
 
-function DealCard({ deal }: { deal: Deal }) {
+// Compact image-led tile. Image dominates (4:3), price + meta sit on a thin
+// strip below. Works equally well in 2-col mobile grid and md+ horizontal rail.
+function DealTile({ deal }: { deal: Deal }) {
   const [deadlineMs] = useState<number>(() => Date.now() + deal.endsInHours * 3600 * 1000);
   const meta = KIND_META[deal.kind];
   const Icon = meta.icon;
@@ -93,53 +95,49 @@ function DealCard({ deal }: { deal: Deal }) {
       className="group relative flex h-full flex-col rounded-2xl overflow-hidden ring-1 ring-tat-charcoal/10 dark:ring-white/10 bg-white dark:bg-tat-charcoal shadow-soft hover:shadow-soft-lg transition-shadow duration-300"
       aria-label={`${deal.title} — save ${savingsPct}% with this ${meta.label.toLowerCase()}`}
     >
-      <div className="relative aspect-[4/5]">
+      <div className="relative aspect-[4/3]">
         <Image
           src={deal.image}
           alt=""
           fill
-          sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 30vw"
+          sizes="(max-width: 640px) 46vw, (max-width: 1024px) 45vw, 30vw"
           quality={60}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/55" />
-        <div className="absolute top-3 left-3 right-3 flex items-start justify-between gap-2">
-          <span className={`inline-flex items-center justify-center h-7 w-7 rounded-full shadow-sm ${meta.tone}`} aria-label={meta.label}>
-            <Icon className="h-3.5 w-3.5" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+        <div className="absolute top-2 left-2 right-2 flex items-start justify-between gap-1.5">
+          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm ${meta.tone}`}>
+            <Icon className="h-3 w-3" />
+            <span className="hidden sm:inline">{meta.label}</span>
           </span>
           <CountdownPill deadlineMs={deadlineMs} />
         </div>
-        <div className="absolute bottom-3 left-3">
-          <span className="inline-flex items-baseline gap-1 px-2.5 py-1 rounded-md bg-tat-gold text-tat-charcoal font-display font-semibold text-[15px] shadow-sm">
+        <div className="absolute bottom-2 left-2 right-2">
+          <span className="inline-flex items-baseline gap-1 px-2 py-0.5 rounded-md bg-tat-gold text-tat-charcoal font-display font-semibold text-[13px] shadow-sm">
             Save {savingsPct}%
           </span>
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 p-4 sm:p-5">
-        <div>
-          <h3 className="font-display font-medium text-[18px] md:text-[20px] text-tat-charcoal dark:text-tat-paper leading-tight line-clamp-2">
-            {deal.title}
-          </h3>
-          <p className="mt-0.5 text-meta text-tat-slate dark:text-tat-paper/70 line-clamp-1">
-            {deal.destination} · {deal.duration}
-          </p>
-        </div>
-        <div className="mt-1 flex items-end justify-between gap-3">
-          <div>
-            <p className="text-[11px] text-tat-charcoal/45 dark:text-tat-paper/45 line-through leading-none">
+      <div className="flex flex-col gap-1.5 p-3 sm:p-4">
+        <h3 className="font-display font-medium text-[14px] sm:text-[16px] md:text-[18px] text-tat-charcoal dark:text-tat-paper leading-tight line-clamp-2">
+          {deal.title}
+        </h3>
+        <p className="text-[11px] sm:text-meta text-tat-slate dark:text-tat-paper/70 line-clamp-1">
+          {deal.destination.split("·")[0].trim()} · {deal.duration}
+        </p>
+        <div className="flex items-end justify-between gap-2 mt-1">
+          <div className="min-w-0">
+            <p className="text-[10px] sm:text-[11px] text-tat-charcoal/45 dark:text-tat-paper/45 line-through leading-none">
               {inr(deal.originalPrice)}
             </p>
-            <p className="font-display text-[22px] sm:text-[24px] font-semibold text-tat-charcoal dark:text-tat-paper leading-none mt-1">
+            <p className="font-display text-[16px] sm:text-[20px] md:text-[22px] font-semibold text-tat-charcoal dark:text-tat-paper leading-none mt-0.5">
               {inr(deal.dealPrice)}
             </p>
-            <p className="text-[10px] uppercase tracking-wider text-tat-charcoal/45 dark:text-tat-paper/45 mt-1">
-              per person
-            </p>
           </div>
-          <span className="inline-flex items-center gap-1 h-9 px-4 rounded-full bg-tat-teal text-white text-[12px] font-semibold whitespace-nowrap group-hover:bg-tat-teal-deep transition-colors">
-            Plan this trip
-            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+          <span className="hidden sm:inline-flex items-center gap-1 h-8 px-3 rounded-full bg-tat-teal text-white text-[11px] font-semibold whitespace-nowrap group-hover:bg-tat-teal-deep transition-colors">
+            Plan
+            <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
           </span>
         </div>
       </div>
@@ -167,9 +165,6 @@ export default function LiveDeals() {
               Hand-picked deals,{" "}
               <em className="not-italic font-display italic text-tat-gold">ticking down.</em>
             </h2>
-            <p className="mt-3 text-body-sm text-tat-charcoal/70 dark:text-tat-paper/70 max-w-2xl">
-              Six time-bound offers — real countdowns, verified savings, no inflated MRPs.
-            </p>
           </div>
           <Link
             href="/offers"
@@ -180,14 +175,23 @@ export default function LiveDeals() {
           </Link>
         </div>
 
-        <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
+        {/* Mobile: 2-col grid (no rail, no gap drift). md+: horizontal rail. */}
+        <ul className="mt-6 grid grid-cols-2 gap-3 md:hidden">
+          {DEALS.map((d) => (
+            <li key={d.slug} className="flex">
+              <DealTile deal={d} />
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden md:block mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
           <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
             {DEALS.map((d) => (
               <li
                 key={d.slug}
-                className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
+                className="shrink-0 snap-start flex w-[44%] lg:w-[31%] xl:w-[24%]"
               >
-                <DealCard deal={d} />
+                <DealTile deal={d} />
               </li>
             ))}
           </ul>

@@ -1,10 +1,18 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Award, Flame, Sparkles } from "lucide-react";
+import { ArrowRight, Award, Flame, Sparkles, Heart, Users, User, Globe2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import PackageCard, { type PackageCardProps } from "@/components/ui/PackageCard";
 
 interface Props {
-  packages: PackageCardProps[];
+  packagesByType: {
+    Couple: PackageCardProps[];
+    Family: PackageCardProps[];
+    Solo:   PackageCardProps[];
+    Group:  PackageCardProps[];
+  };
 }
 
 interface EditorialBadge {
@@ -13,18 +21,38 @@ interface EditorialBadge {
   tone: string;
 }
 
-// First three featured cards get a curatorial label so the rail reads as
-// editorial picks rather than a flat list. Beyond three the cards stand on
-// their own price + rating cues.
 const BADGES: (EditorialBadge | null)[] = [
   { label: "Editor's pick",   icon: Award,    tone: "bg-tat-gold text-tat-charcoal" },
   { label: "Most asked",      icon: Flame,    tone: "bg-tat-orange text-white" },
   { label: "Hand-tuned trip", icon: Sparkles, tone: "bg-tat-teal text-white" },
 ];
 
-export default function FeaturedPackages({ packages }: Props) {
-  if (!packages.length) return null;
-  const items = packages.slice(0, 8);
+type ChipId = "all" | "Couple" | "Family" | "Solo" | "Group";
+
+const CHIPS: { id: ChipId; label: string; icon: LucideIcon }[] = [
+  { id: "all",    label: "All",       icon: Sparkles },
+  { id: "Couple", label: "Honeymoon", icon: Heart },
+  { id: "Family", label: "Family",    icon: Users },
+  { id: "Solo",   label: "Solo",      icon: User },
+  { id: "Group",  label: "Group",     icon: Globe2 },
+];
+
+export default function FeaturedPackages({ packagesByType }: Props) {
+  const [active, setActive] = useState<ChipId>("all");
+
+  const items = useMemo(() => {
+    if (active === "all") {
+      return [
+        ...packagesByType.Couple.slice(0, 2),
+        ...packagesByType.Family.slice(0, 2),
+        ...packagesByType.Solo.slice(0, 2),
+        ...packagesByType.Group.slice(0, 2),
+      ];
+    }
+    return packagesByType[active].slice(0, 8);
+  }, [active, packagesByType]);
+
+  if (!items.length) return null;
 
   return (
     <section
@@ -45,9 +73,6 @@ export default function FeaturedPackages({ packages }: Props) {
               Itineraries we&apos;d send{" "}
               <em className="not-italic font-display italic text-tat-gold">our own family on.</em>
             </h2>
-            <p className="mt-3 text-body-sm text-tat-charcoal/70 dark:text-tat-paper/70 max-w-2xl">
-              Eight trips with full pricing, hotels, and inclusions — every one ready to customise.
-            </p>
           </div>
           <Link
             href="/packages"
@@ -58,13 +83,43 @@ export default function FeaturedPackages({ packages }: Props) {
           </Link>
         </div>
 
-        <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
+        {/* Filter chips */}
+        <div
+          role="tablist"
+          aria-label="Filter featured trips by traveler type"
+          className="mt-5 -mx-5 px-5 lg:mx-0 lg:px-0 flex gap-2 overflow-x-auto no-scrollbar pb-1"
+        >
+          {CHIPS.map(({ id, label, icon: Icon }) => {
+            const isActive = id === active;
+            return (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActive(id)}
+                className={[
+                  "shrink-0 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-pill text-[12px] font-semibold transition",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2",
+                  isActive
+                    ? "bg-tat-charcoal text-tat-paper border border-tat-charcoal"
+                    : "bg-white text-tat-charcoal/80 border border-tat-charcoal/15 hover:border-tat-gold/60 hover:text-tat-gold",
+                ].join(" ")}
+              >
+                <Icon className="h-3.5 w-3.5" aria-hidden />
+                {label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-5 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
           <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
             {items.map((p, i) => {
-              const badge = BADGES[i] ?? null;
+              const badge = active === "all" ? BADGES[i] ?? null : null;
               return (
                 <li
-                  key={p.href}
+                  key={`${active}-${p.href}`}
                   className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
                 >
                   <div className="relative w-full">

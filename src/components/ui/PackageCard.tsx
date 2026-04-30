@@ -201,8 +201,8 @@ export default function PackageCardUI(p: PackageCardProps) {
           </div>
         )}
 
-        {/* Inclusions strip */}
-        <ul className={`${compact ? "mt-2.5" : "mt-3"} flex flex-wrap items-center gap-x-3 gap-y-1.5 text-meta text-tat-charcoal/75`}>
+        {/* Inclusions strip — hidden on mobile in compact mode to shorten the rail card */}
+        <ul className={`${compact ? "mt-2.5 hidden sm:flex" : "mt-3 flex"} flex-wrap items-center gap-x-3 gap-y-1.5 text-meta text-tat-charcoal/75`}>
           {inclusions.map((id) => {
             const meta = INCLUSION_META[id];
             const Icon = meta.icon;
@@ -252,7 +252,8 @@ export default function PackageCardUI(p: PackageCardProps) {
             Plan this trip
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
-          <div className="grid grid-cols-2 gap-1.5">
+          {/* Secondary CTAs — hidden on mobile in compact mode to keep rail cards short */}
+          <div className={`${compact ? "hidden sm:grid" : "grid"} grid-cols-2 gap-1.5`}>
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); askAriaAboutPackage(p); }}

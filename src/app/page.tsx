@@ -24,6 +24,9 @@ import EditorialBand from "@/components/home-v3/EditorialBand";
 import PersonalRails from "@/components/home-v3/PersonalRails";
 import HomepageSchema from "@/components/home-v3/HomepageSchema";
 import SeoContent from "@/components/home-v3/SeoContent";
+import BudgetChipShelf from "@/components/home-v3/BudgetChipShelf";
+import VisaFreeShelf from "@/components/home-v3/VisaFreeShelf";
+import MayMixedChipShelf from "@/components/home-v3/MayMixedChipShelf";
 import type { PackageCardProps } from "@/components/ui/PackageCard";
 import type { Package } from "@/lib/data";
 import {
@@ -34,10 +37,7 @@ import {
   type HomeShelf,
 } from "@/lib/sanity-queries";
 import { getSiteStats } from "@/lib/site-stats";
-import {
-  FALLBACK_HOME_SHELVES,
-  resolveShelfPackages,
-} from "@/lib/home-shelves";
+import { resolveShelfPackages } from "@/lib/home-shelves";
 
 function toCardProps(p: Package): PackageCardProps {
   return {
@@ -57,6 +57,20 @@ function toCardProps(p: Package): PackageCardProps {
     limitedSlots: p.limitedSlots,
   };
 }
+
+// Slugs treated as visa-free for Indian passports — drives the dedicated
+// VisaFreeShelf chip filter.
+const VISA_FREE_SLUGS = new Set([
+  "bali", "thailand", "sri-lanka", "maldives", "nepal", "bhutan",
+  "vietnam", "mauritius", "kenya", "jordan", "indonesia", "fiji",
+]);
+
+// Slugs that work well in May (pre-monsoon shoulder season).
+const MAY_FRIENDLY_SLUGS = new Set([
+  "switzerland", "iceland", "uk", "england", "scotland", "greece",
+  "kashmir", "ladakh", "spiti", "himachal", "bali", "vietnam",
+  "japan", "europe", "italy", "france", "norway",
+]);
 
 export default async function HomePage() {
   const [siteStats, destinations, couple, family, solo, group, pilgrimPackages, sanityShelves] = await Promise.all([
@@ -78,12 +92,12 @@ export default async function HomePage() {
     Pilgrim:   pilgrimPackages.map(toCardProps),
   };
 
-  const featured: PackageCardProps[] = [
-    ...couple.slice(0, 2),
-    ...family.slice(0, 2),
-    ...solo.slice(0, 2),
-    ...group.slice(0, 2),
-  ].map(toCardProps);
+  const featuredByType = {
+    Couple: couple.map(toCardProps),
+    Family: family.map(toCardProps),
+    Solo:   solo.map(toCardProps),
+    Group:  group.map(toCardProps),
+  };
 
   const allPackages: Package[] = [...couple, ...family, ...solo, ...group, ...pilgrimPackages];
 
@@ -92,7 +106,23 @@ export default async function HomePage() {
     if (!packagesBySlug[p.slug]) packagesBySlug[p.slug] = toCardProps(p);
   }
 
-  const shelves: HomeShelf[] = sanityShelves.length ? sanityShelves : FALLBACK_HOME_SHELVES;
+  // Pre-filter package pools for chip-driven shelves so the client
+  // components stay deduped and small.
+  const allCardPropsDeduped = Object.values(packagesBySlug);
+  const visaFreePool = allCardPropsDeduped.filter((p) => {
+    const slug = p.href.replace(/^\/packages\//, "").split("/")[0];
+    const dest = (p.destination ?? "").toLowerCase();
+    return [...VISA_FREE_SLUGS].some((s) => slug.includes(s) || dest.includes(s));
+  });
+  const mayPool = allCardPropsDeduped.filter((p) => {
+    const slug = p.href.replace(/^\/packages\//, "").split("/")[0];
+    const dest = (p.destination ?? "").toLowerCase();
+    return [...MAY_FRIENDLY_SLUGS].some((s) => slug.includes(s) || dest.includes(s));
+  });
+
+  // Sanity-driven shelves still take precedence when present. Otherwise we
+  // render the three new chip-driven sections inline below.
+  const shelves: HomeShelf[] = sanityShelves;
   const renderedShelves = shelves.map((shelf) => ({
     shelf,
     packages: resolveShelfPackages(shelf, allPackages).map(toCardProps),
@@ -107,7 +137,6 @@ export default async function HomePage() {
         eyebrow={shelf.eyebrow}
         title={shelf.title}
         italicTail={shelf.italicTail}
-        lede={shelf.lede}
         ctaHref={shelf.ctaHref}
         ctaLabel={shelf.ctaLabel}
         packages={packages}
@@ -135,12 +164,12 @@ export default async function HomePage() {
 
       <PersonalRails packagesBySlug={packagesBySlug} />
       <TrendingDestinations destinations={destinations} />
-      <FeaturedPackages packages={featured} />
-      {renderShelfAt(0)}
+      <FeaturedPackages packagesByType={featuredByType} />
+      {sanityShelves.length ? renderShelfAt(0) : <BudgetChipShelf packages={allCardPropsDeduped} />}
       <BrowseByStyle packagesByStyle={packagesByStyle} />
-      {renderShelfAt(1)}
+      {sanityShelves.length ? renderShelfAt(1) : <VisaFreeShelf packages={visaFreePool} />}
       <LiveDeals />
-      {renderShelfAt(2)}
+      {sanityShelves.length ? renderShelfAt(2) : <MayMixedChipShelf packages={mayPool} />}
       <PilgrimSpotlight />
       {overflowShelves.map(({ shelf, packages }) =>
         packages.length ? (
@@ -149,7 +178,6 @@ export default async function HomePage() {
             eyebrow={shelf.eyebrow}
             title={shelf.title}
             italicTail={shelf.italicTail}
-            lede={shelf.lede}
             ctaHref={shelf.ctaHref}
             ctaLabel={shelf.ctaLabel}
             packages={packages}
