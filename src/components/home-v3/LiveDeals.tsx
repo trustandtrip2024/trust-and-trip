@@ -89,6 +89,7 @@ function DealCard({ deal }: { deal: Deal }) {
   return (
     <Link
       href={deal.href}
+      prefetch={false}
       className="group relative flex h-full flex-col rounded-2xl overflow-hidden ring-1 ring-tat-charcoal/10 dark:ring-white/10 bg-white dark:bg-tat-charcoal shadow-soft hover:shadow-soft-lg transition-shadow duration-300"
       aria-label={`${deal.title} — save ${savingsPct}% with this ${meta.label.toLowerCase()}`}
     >
@@ -98,7 +99,7 @@ function DealCard({ deal }: { deal: Deal }) {
           alt=""
           fill
           sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 30vw"
-          quality={70}
+          quality={60}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/55" />

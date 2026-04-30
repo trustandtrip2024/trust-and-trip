@@ -118,6 +118,7 @@ function PilgrimCard({ route }: { route: PilgrimRoute }) {
   return (
     <Link
       href={route.href}
+      prefetch={false}
       className="group relative flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-tat-charcoal ring-1 ring-tat-charcoal/10 dark:ring-white/10 shadow-soft hover:shadow-soft-lg transition-shadow duration-300"
       aria-label={`${route.title} — from ${inr(route.priceFrom)} per person`}
     >
@@ -127,7 +128,7 @@ function PilgrimCard({ route }: { route: PilgrimRoute }) {
           alt=""
           fill
           sizes="(max-width: 1024px) 100vw, 33vw"
-          quality={70}
+          quality={60}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/80 via-tat-charcoal/30 to-transparent" />

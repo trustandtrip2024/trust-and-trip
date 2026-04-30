@@ -67,6 +67,7 @@ function FeaturePost({ post }: { post: Post }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
+      prefetch={false}
       className="group relative flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-white/[0.03] ring-1 ring-tat-charcoal/10 dark:ring-white/10 shadow-soft hover:shadow-soft-lg transition-shadow duration-300"
     >
       <div className="relative aspect-[16/10] lg:aspect-[16/11]">
@@ -75,7 +76,7 @@ function FeaturePost({ post }: { post: Post }) {
           alt=""
           fill
           sizes="(max-width: 1024px) 100vw, 45vw"
-          quality={70}
+          quality={65}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/70 via-tat-charcoal/10 to-transparent" />
@@ -108,6 +109,7 @@ function SecondaryPost({ post }: { post: Post }) {
   return (
     <Link
       href={`/blog/${post.slug}`}
+      prefetch={false}
       className="group flex flex-col overflow-hidden rounded-2xl bg-tat-cream-warm/40 dark:bg-white/[0.03] ring-1 ring-tat-charcoal/8 dark:ring-white/10 hover:ring-tat-gold/30 transition-all"
     >
       <div className="relative aspect-[16/10]">
@@ -116,7 +118,7 @@ function SecondaryPost({ post }: { post: Post }) {
           alt=""
           fill
           sizes="(max-width: 1024px) 100vw, 28vw"
-          quality={70}
+          quality={55}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] motion-reduce:group-hover:scale-100"
         />
         <span className="absolute top-2.5 left-2.5 inline-flex items-center px-2 py-0.5 rounded-full bg-white/95 text-tat-charcoal text-[10px] font-bold uppercase tracking-wider">

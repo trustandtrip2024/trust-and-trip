@@ -149,6 +149,7 @@ export default function TrendingDestinations({ destinations }: Props) {
               <li key={d.slug}>
                 <Link
                   href={`/destinations/${d.slug}`}
+                  prefetch={false}
                   className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-2xl"
                 >
                   <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-tat-charcoal/15">
@@ -157,7 +158,7 @@ export default function TrendingDestinations({ destinations }: Props) {
                       alt={d.name}
                       fill
                       sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 17vw"
-                      quality={70}
+                      quality={55}
                       className="object-cover transition-transform duration-300 group-hover:scale-[1.06] motion-reduce:group-hover:scale-100"
                     />
                     <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/75 to-transparent pointer-events-none" />

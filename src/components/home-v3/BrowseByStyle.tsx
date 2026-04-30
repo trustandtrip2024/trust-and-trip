@@ -88,6 +88,7 @@ function StyleTile({
   return (
     <Link
       href={`/packages?style=${encodeURIComponent(meta.id)}`}
+      prefetch={false}
       aria-label={`Browse ${meta.label} trips`}
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl bg-tat-charcoal ring-1 ring-tat-charcoal/10 shadow-soft hover:shadow-soft-lg transition-shadow duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2"
     >
@@ -97,7 +98,7 @@ function StyleTile({
           alt=""
           fill
           sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 23vw"
-          quality={70}
+          quality={55}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05] motion-reduce:group-hover:scale-100"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal via-tat-charcoal/55 to-tat-charcoal/15" />
