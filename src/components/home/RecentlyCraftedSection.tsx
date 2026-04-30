@@ -96,7 +96,7 @@ export default function RecentlyCraftedSection({
           </p>
         ) : (
           <div className="mt-8 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
-            <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
+            <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
               {items.map((it) => (
                 <li
                   key={it.id}

@@ -127,7 +127,7 @@ export default function OfferBannerStrip({ offers }: Props) {
             home rails (78/48/32/24 widths, fixed aspect-[4/5]) so columns
             line up vertically down the page. */}
         <div className="-mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
-        <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
+        <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0">
           {visible.map((o, idx) => {
             const gradient = o.gradient ?? DEFAULT_GRADIENT;
             return (

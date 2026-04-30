@@ -259,7 +259,7 @@ export default function HomeOfferDealsRail() {
 
         {/* Rail rhythm 78/48/32/24 to match every other home rail. */}
         <div className="mt-7 md:mt-9 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
-          <ul className="flex w-max gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
+          <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
             {DEALS.map((d) => (
               <li
                 key={d.slug}
