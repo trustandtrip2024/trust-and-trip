@@ -43,6 +43,8 @@ import PackageGuestPhotos from "@/components/package-detail/PackageGuestPhotos";
 import PackageMap from "@/components/package-detail/PackageMap";
 import PackageAriaPreload from "@/components/package-detail/PackageAriaPreload";
 import HeroPhotoRail from "@/components/package-detail/HeroPhotoRail";
+import PackageHeroTrustRibbon from "@/components/package-detail/PackageHeroTrustRibbon";
+import PackagePlannerCard from "@/components/package-detail/PackagePlannerCard";
 
 interface Props { params: { slug: string } }
 
@@ -216,6 +218,15 @@ export default async function PackageDetail({ params }: Props) {
           aren't padded out. */}
       <HeroPhotoRail images={heroRailPhotos} title={pkg.title} />
 
+      {/* Trust ribbon beneath hero — rating · views · enquiries · ₹0 to
+          start · 48 h free changes. Same pattern as destination detail. */}
+      <PackageHeroTrustRibbon
+        rating={pkg.rating}
+        reviews={pkg.reviews}
+        viewedCount={viewedCount}
+        enquiredCount={enquiredCount}
+      />
+
       {/* ── Section Nav ────────────────────────────────────────── */}
       <PackageSectionNav packageTitle={pkg.title} />
 
@@ -311,6 +322,15 @@ export default async function PackageDetail({ params }: Props) {
                 }))}
               />
             </section>
+
+            {/* PLANNER CARD — humanization between "the plan" and "the
+                fine print". Builds trust right before pricing-heavy
+                sections (inclusions, departures, price breakdown). */}
+            <PackagePlannerCard
+              destinationName={pkg.destinationName}
+              packageTitle={pkg.title}
+              waNumber={WA}
+            />
 
             {/* INCLUSIONS */}
             <section id="inclusions" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
