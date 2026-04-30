@@ -135,7 +135,13 @@ export type BlogPost = {
   category: string;
 };
 
-export const destinations: Destination[] = [
+// Extras (30 destinations + 150 packages + 3 experiences) live in
+// `data-extra.ts` and are merged below. Keeping the originals in this
+// file untouched protects existing slugs and the order Sanity-less
+// pages depend on.
+import { extraDestinations, extraPackages, extraExperiences } from "./data-extra";
+
+const baseDestinations: Destination[] = [
   {
     name: "Bali",
     slug: "bali",
@@ -282,7 +288,9 @@ export const destinations: Destination[] = [
   },
 ];
 
-export const packages: Package[] = [
+export const destinations: Destination[] = [...baseDestinations, ...extraDestinations];
+
+const basePackages: Package[] = [
   {
     title: "Bali 4N/5D Honeymoon Escape",
     slug: "bali-4n5d-honeymoon",
@@ -665,7 +673,9 @@ export const packages: Package[] = [
   },
 ];
 
-export const experiences: Experience[] = [
+export const packages: Package[] = [...basePackages, ...extraPackages];
+
+const baseExperiences: Experience[] = [
   {
     title: "Honeymoon Escapes",
     slug: "honeymoon",
@@ -767,6 +777,8 @@ export const experiences: Experience[] = [
     highlights: ["10–500 person groups", "Customised team activities", "Bulk pricing", "Dedicated group manager", "End-to-end logistics"],
   },
 ];
+
+export const experiences: Experience[] = [...baseExperiences, ...extraExperiences];
 
 export const testimonials: Testimonial[] = [
   {

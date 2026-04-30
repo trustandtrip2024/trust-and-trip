@@ -46,7 +46,7 @@ const sortOptions = [
   { label: "Newest first", value: "newest" },
 ];
 
-const INDIA_SLUGS = new Set(["kerala","goa","manali","rajasthan","ladakh","andaman","shimla","coorg","varanasi","agra"]);
+const INDIA_SLUGS = new Set(["kerala","goa","manali","rajasthan","ladakh","andaman","shimla","coorg","varanasi","agra","shimla-kasol","rishikesh-mussoorie","sikkim","meghalaya","tawang","kashmir","spiti","ooty-coonoor","hampi"]);
 
 interface Props {
   packages: Package[];

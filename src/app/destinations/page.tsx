@@ -22,7 +22,9 @@ const INDIA_SLUGS = [
   "kerala", "goa", "kashmir", "ladakh", "rajasthan", "andaman",
   "manali", "shimla", "himachal-pradesh", "coorg", "varanasi",
   "agra", "rishikesh", "uttarakhand", "spiti-valley",
-  "andaman-and-nicobar", "munnar", "ooty",
+  "andaman-and-nicobar", "munnar", "ooty", "shimla-kasol",
+  "rishikesh-mussoorie", "sikkim", "meghalaya", "tawang",
+  "spiti", "ooty-coonoor", "hampi",
 ];
 
 // Visa-free for Indian passports — drives the "Visa-free" filter chip
