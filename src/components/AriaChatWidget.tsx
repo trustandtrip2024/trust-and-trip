@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Sparkles, ChevronDown, Check } from "lucide-react";
 import { submitLead } from "@/lib/submit-lead";
+import AriaFace from "@/components/AriaFace";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -116,82 +117,6 @@ function packagePrompts(p: PackagePreload): string[] {
   ];
 }
 
-// Stylised assistant avatar — illustrated, not a real face. Soft gradients,
-// closed-eye smile, headset detail to read clearly as "AI travel assistant"
-// rather than a real staffer. Brand-aligned palette (teal headset, gold
-// background ring, warm skin).
-export function AriaFace({ size = 40, className = "" }: { size?: number; className?: string }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 80 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="Aria, AI travel assistant"
-      className={className}
-    >
-      <defs>
-        <radialGradient id="ariaBg" cx="50%" cy="40%" r="65%">
-          <stop offset="0%" stopColor="#FBE7C2" />
-          <stop offset="100%" stopColor="#E8B86F" />
-        </radialGradient>
-        <linearGradient id="ariaSkin" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#F5D3A8" />
-          <stop offset="100%" stopColor="#E5B589" />
-        </linearGradient>
-        <linearGradient id="ariaHair" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#3A2417" />
-          <stop offset="100%" stopColor="#1F1208" />
-        </linearGradient>
-      </defs>
-
-      {/* Background disc */}
-      <circle cx="40" cy="40" r="40" fill="url(#ariaBg)" />
-
-      {/* Hair back silhouette */}
-      <path
-        d="M40 16c-13 0-22 10-22 22 0 8 3 14 7 18v6h30v-6c4-4 7-10 7-18 0-12-9-22-22-22z"
-        fill="url(#ariaHair)"
-      />
-
-      {/* Face */}
-      <ellipse cx="40" cy="42" rx="14" ry="16.5" fill="url(#ariaSkin)" />
-
-      {/* Subtle blush */}
-      <ellipse cx="29" cy="48" rx="3.5" ry="2.2" fill="#F4A0A0" opacity="0.45" />
-      <ellipse cx="51" cy="48" rx="3.5" ry="2.2" fill="#F4A0A0" opacity="0.45" />
-
-      {/* Closed-arc smiling eyes */}
-      <path d="M30 39 Q33 36 36 39" stroke="#2A1B0E" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <path d="M44 39 Q47 36 50 39" stroke="#2A1B0E" strokeWidth="2" strokeLinecap="round" fill="none" />
-
-      {/* Small mouth — soft warm smile */}
-      <path d="M36 51 Q40 54 44 51" stroke="#B36A52" strokeWidth="2" strokeLinecap="round" fill="none" />
-
-      {/* Headset arc */}
-      <path
-        d="M22 36 Q22 16 40 16 Q58 16 58 36"
-        stroke="#0E7C7B"
-        strokeWidth="3"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* Headset earpieces */}
-      <rect x="19" y="34" width="6" height="9" rx="2" fill="#0E7C7B" />
-      <rect x="55" y="34" width="6" height="9" rx="2" fill="#0E7C7B" />
-      {/* Mic boom */}
-      <path d="M55 41 Q49 44 47 50" stroke="#0E7C7B" strokeWidth="2" strokeLinecap="round" fill="none" />
-      <circle cx="46.5" cy="50.5" r="1.6" fill="#0E7C7B" />
-
-      {/* Sparkle accent (signals AI) */}
-      <g transform="translate(58 18)">
-        <path d="M0 -5 L1 -1 L5 0 L1 1 L0 5 L-1 1 L-5 0 L-1 -1 Z" fill="#E5B547" />
-      </g>
-    </svg>
-  );
-}
 
 // Don't show Aria on conversion-critical surfaces — LPs already have a
 // stream-AI widget + WA pill, dashboard has its own chat path.
@@ -208,7 +133,6 @@ export default function AriaChatWidget() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [unread, setUnread] = useState(0);
-  const [showLabel, setShowLabel] = useState(false);
   const [quizPreload, setQuizPreload] = useState<QuizPreload | null>(null);
   const [packagePreload, setPackagePreload] = useState<PackagePreload | null>(null);
   // Lead-capture state. Form opens once the conversation has 1+ user message
@@ -263,13 +187,6 @@ export default function AriaChatWidget() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  // Show label bubble after 3s if chat not opened
-  useEffect(() => {
-    const t = setTimeout(() => { if (!open) setShowLabel(true); }, 3000);
-    const t2 = setTimeout(() => setShowLabel(false), 9000);
-    return () => { clearTimeout(t); clearTimeout(t2); };
-  }, [open]);
 
   const send = async (text: string) => {
     if (!text.trim() || loading) return;
@@ -557,86 +474,6 @@ export default function AriaChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* FAB */}
-      <div data-aria-widget className="fixed bottom-[4.5rem] md:bottom-6 left-4 md:left-6 z-50 flex items-center gap-2">
-
-        {/* "Ask Aria" floating label */}
-        <AnimatePresence>
-          {showLabel && !open && (
-            <motion.div
-              initial={{ opacity: 0, x: -10, scale: 0.9 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: -10, scale: 0.9 }}
-              transition={{ duration: 0.25 }}
-              className="bg-tat-charcoal text-tat-paper text-xs font-medium px-3 py-2 rounded-xl shadow-lg flex items-center gap-1.5 whitespace-nowrap pointer-events-none"
-            >
-              <Sparkles className="h-3 w-3 text-tat-gold" />
-              Ask Aria ✨
-              {/* Arrow */}
-              <span className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-l-[6px] border-transparent border-l-ink" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Avatar button */}
-        <motion.button
-          onClick={() => { setOpen((o) => !o); setShowLabel(false); }}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 2, type: "spring", stiffness: 200, damping: 15 }}
-          className="relative flex items-center justify-center"
-          style={{ height: 58, width: 58 }}
-          aria-label="Chat with Aria"
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.93 }}
-        >
-          {/* Pulse rings */}
-          {!open && (
-            <>
-              <span className="absolute inset-0 rounded-full bg-tat-gold/20 animate-ping" style={{ animationDuration: "2.5s" }} />
-              <span className="absolute inset-[-4px] rounded-full border border-tat-gold/25" />
-            </>
-          )}
-
-          <AnimatePresence mode="wait">
-            {open ? (
-              <motion.div key="close"
-                initial={{ scale: 0.7, opacity: 0, rotate: -90 }}
-                animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                exit={{ scale: 0.7, opacity: 0, rotate: 90 }}
-                className="h-[58px] w-[58px] rounded-full bg-tat-charcoal flex items-center justify-center shadow-lg"
-              >
-                <X className="h-5 w-5 text-tat-paper" />
-              </motion.div>
-            ) : (
-              <motion.div key="face"
-                initial={{ scale: 0.7, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.7, opacity: 0 }}
-                className="h-[58px] w-[58px] rounded-full bg-tat-cream-warm overflow-hidden flex items-end justify-center shadow-[0_4px_20px_rgba(245,158,11,0.35)] border-2 border-tat-gold/60"
-              >
-                <AriaFace size={56} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Online dot */}
-          {!open && (
-            <span className="absolute bottom-0.5 right-0.5 h-3.5 w-3.5 rounded-full bg-tat-success-fg border-2 border-white shadow-sm" />
-          )}
-
-          {/* Unread badge */}
-          {unread > 0 && !open && (
-            <motion.span
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-tat-orange text-white text-[10px] font-semibold flex items-center justify-center shadow"
-            >
-              {unread}
-            </motion.span>
-          )}
-        </motion.button>
-      </div>
     </>
   );
 }

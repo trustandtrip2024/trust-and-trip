@@ -2,13 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, MapPin, MessageCircle, Heart } from "lucide-react";
+import { Home, MapPin, MessageCircle, Heart, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 import { analytics } from "@/lib/analytics";
 import { captureIntent } from "@/lib/capture-intent";
 
 import { useWishlistStore } from "@/store/useWishlistStore";
-import { AriaFace } from "@/components/AriaChatWidget";
+import AriaFace from "@/components/AriaFace";
+
+const TIPS = [
+  "Hi! I'm Aria — tap to chat ✨",
+  "Need a quick honeymoon idea?",
+  "Got 5 days off? I've got a list.",
+  "Free itinerary in 24 h. Try me.",
+];
 
 const WHATSAPP = "https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I'd%20love%20help%20planning%20my%20next%20trip.";
 
@@ -64,8 +73,30 @@ export default function MobileBottomNav() {
   const wishlistCount = useWishlistStore((s) => s.wishlist.length);
   const isActive = (href: string) => path === href || (href !== "/" && path.startsWith(href));
 
+  const [tipIndex, setTipIndex] = useState(0);
+  const [tipShow, setTipShow] = useState(false);
+  const [ariaOpened, setAriaOpened] = useState(false);
+
+  // Cycle through Aria tips: appears 3.5 s after load, hides after 6 s,
+  // re-appears every 25 s with the next tip until user opens Aria once.
+  useEffect(() => {
+    if (ariaOpened) return;
+    const show = () => {
+      setTipShow(true);
+      setTimeout(() => setTipShow(false), 6000);
+    };
+    const t1 = setTimeout(show, 3500);
+    const interval = setInterval(() => {
+      setTipIndex((i) => (i + 1) % TIPS.length);
+      show();
+    }, 25000);
+    return () => { clearTimeout(t1); clearInterval(interval); };
+  }, [ariaOpened]);
+
   const openAria = () => {
     captureIntent("enquire_click", { note: "Mobile bottom nav — Aria FAB" });
+    setAriaOpened(true);
+    setTipShow(false);
     if (typeof window !== "undefined") {
       window.dispatchEvent(new Event("tt:aria-open"));
     }
@@ -89,12 +120,52 @@ export default function MobileBottomNav() {
             type="button"
             onClick={openAria}
             aria-label="Chat with Aria, your AI travel assistant"
-            className="flex flex-col items-center gap-1 flex-1 -mt-6 pb-0.5"
+            className="relative flex flex-col items-center gap-1 flex-1 -mt-6 pb-0.5"
           >
-            <div className="relative h-16 w-16 rounded-full bg-tat-cream-warm shadow-[0_6px_24px_rgba(200,147,42,0.45)] ring-4 ring-white overflow-hidden transition-transform active:scale-95">
-              <AriaFace size={64} className="h-full w-full" />
+            {/* Tooltip bubble */}
+            <AnimatePresence>
+              {tipShow && (
+                <motion.span
+                  initial={{ opacity: 0, y: 8, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 22 }}
+                  className="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-tat-charcoal text-white text-[11px] font-medium whitespace-nowrap shadow-lg"
+                >
+                  <Sparkles className="h-3 w-3 text-tat-gold" aria-hidden />
+                  {TIPS[tipIndex]}
+                  <span
+                    aria-hidden
+                    className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 bg-tat-charcoal rotate-45"
+                  />
+                </motion.span>
+              )}
+            </AnimatePresence>
+
+            <motion.div
+              animate={
+                ariaOpened
+                  ? { y: 0, rotate: 0 }
+                  : { y: [0, -3, 0, -2, 0], rotate: [0, -2, 0, 2, 0] }
+              }
+              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+              className="relative h-16 w-16 rounded-full bg-tat-cream-warm shadow-[0_6px_24px_rgba(200,147,42,0.45)] ring-4 ring-white overflow-hidden"
+              whileTap={{ scale: 0.92 }}
+              whileHover={{ scale: 1.05 }}
+            >
+              {/* Pulsing gold halo */}
+              {!ariaOpened && (
+                <span
+                  aria-hidden
+                  className="absolute inset-[-6px] rounded-full bg-tat-gold/30 animate-ping"
+                  style={{ animationDuration: "2.4s" }}
+                />
+              )}
+              <span className="relative block h-full w-full">
+                <AriaFace size={64} className="h-full w-full" />
+              </span>
               <span className="absolute bottom-0.5 right-0.5 h-3 w-3 rounded-full bg-tat-success-fg ring-2 ring-white" />
-            </div>
+            </motion.div>
             <span className="text-[10px] uppercase tracking-[0.14em] font-semibold text-tat-charcoal leading-none mt-0.5">
               Aria
             </span>
