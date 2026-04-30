@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useTripPlanner } from "@/context/TripPlannerContext";
 
-const HERO_BG =
+const HERO_BG_FALLBACK =
   "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=70";
 const WHATSAPP_HREF =
   "https://wa.me/918115999588?text=" +
@@ -28,11 +28,23 @@ const BUDGET_OPTIONS = [
 
 interface Props {
   trustStrip?: string;
+  /** Sanity-resolved background image URL. Falls back to Unsplash. */
+  heroImage?: string;
+  /** Direct .mp4/.webm URL. When set, renders an autoplay-loop-muted video
+   *  layer over the still image. Image still LCPs first paint. */
+  videoMp4Url?: string;
+  /** Optional poster shown before video first frame. Defaults to heroImage. */
+  videoPosterUrl?: string;
 }
 
 export default function Hero({
   trustStrip = "4.9★ on Google · 8,000+ travelers · 60+ destinations · Crafted since 2019",
+  heroImage,
+  videoMp4Url,
+  videoPosterUrl,
 }: Props = {}) {
+  const bgImage = heroImage || HERO_BG_FALLBACK;
+  const videoPoster = videoPosterUrl || bgImage;
   const { open: openPlanner } = useTripPlanner();
   const [destination, setDestination] = useState("");
   const [month, setMonth] = useState("");
@@ -54,9 +66,10 @@ export default function Hero({
       aria-labelledby="hero-h1"
       className="relative isolate overflow-hidden bg-tat-charcoal"
     >
-      {/* Background image */}
+      {/* Background image — always rendered so LCP stays fast even when
+          video is also configured. */}
       <Image
-        src={HERO_BG}
+        src={bgImage}
         alt=""
         fill
         priority
@@ -65,6 +78,22 @@ export default function Hero({
         quality={70}
         className="object-cover -z-10"
       />
+      {/* Background video — overlays the still image when configured. The
+          image stays the LCP element; video fades in once it can play. */}
+      {videoMp4Url && (
+        <video
+          aria-hidden
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster={videoPoster}
+          className="absolute inset-0 h-full w-full object-cover -z-10"
+        >
+          <source src={videoMp4Url} />
+        </video>
+      )}
       {/* Bottom-weighted gradient — keeps form legible */}
       <div
         aria-hidden

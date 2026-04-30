@@ -32,6 +32,7 @@ import type { Package } from "@/lib/data";
 import {
   getDestinations,
   getHomeShelves,
+  getHomepageContent,
   getPackagesByType,
   getPilgrimPackages,
   type HomeShelf,
@@ -73,7 +74,7 @@ const MAY_FRIENDLY_SLUGS = new Set([
 ]);
 
 export default async function HomePage() {
-  const [siteStats, destinations, couple, family, solo, group, pilgrimPackages, sanityShelves] = await Promise.all([
+  const [siteStats, destinations, couple, family, solo, group, pilgrimPackages, sanityShelves, homepageContent] = await Promise.all([
     getSiteStats(),
     getDestinations(),
     getPackagesByType("Couple"),
@@ -82,6 +83,7 @@ export default async function HomePage() {
     getPackagesByType("Group"),
     getPilgrimPackages(),
     getHomeShelves().catch(() => [] as HomeShelf[]),
+    getHomepageContent().catch(() => null),
   ]);
 
   const packagesByStyle: Partial<Record<StyleId, PackageCardProps[]>> = {
@@ -154,7 +156,12 @@ export default async function HomePage() {
         totalTravelers={siteStats.totalTravelers}
       />
       <HomeDealRibbon />
-      <Hero trustStrip={siteStats.trustStripLine} />
+      <Hero
+        trustStrip={siteStats.trustStripLine}
+        heroImage={homepageContent?.hero?.heroImage}
+        videoMp4Url={homepageContent?.hero?.videoMp4Url}
+        videoPosterUrl={homepageContent?.hero?.videoPosterUrl}
+      />
       <StickySubnav destinations={destinations} />
       <TrustRibbon
         totalTravelers={siteStats.totalTravelers}
