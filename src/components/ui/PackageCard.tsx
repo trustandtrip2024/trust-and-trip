@@ -88,7 +88,7 @@ export default function PackageCardUI(p: PackageCardProps) {
   return (
     <article
       className={[
-        "tt-card group relative h-full flex overflow-hidden transition duration-200 hover:shadow-hover",
+        "tt-card group relative h-full flex overflow-hidden transition duration-200 hover:shadow-hover hover:-translate-y-0.5 motion-reduce:hover:translate-y-0",
         horizontal ? "flex-col md:flex-row" : "flex-col",
       ].join(" ")}
     >
@@ -138,8 +138,21 @@ export default function PackageCardUI(p: PackageCardProps) {
             {p.duration}
           </span>
         )}
+        {/* Rating chip bottom-right — moved out of card body to save vertical space */}
+        {typeof p.rating === "number" && (
+          <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 bg-tat-teal text-white text-[11px] font-semibold px-2 py-1 rounded-pill shadow-card">
+            <Star className="h-3 w-3 fill-white" />
+            {p.rating.toFixed(1)}
+            {p.ratingCount && (
+              <span className="font-normal text-white/80 hidden sm:inline">
+                · {p.ratingCount.toLocaleString("en-IN")}
+              </span>
+            )}
+          </span>
+        )}
+        {/* bookedThisMonth — secondary signal, sits just above the rating chip */}
         {p.bookedThisMonth && (
-          <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 bg-tat-charcoal/75 backdrop-blur-sm text-white text-[10px] font-medium px-2.5 py-1 rounded-pill">
+          <span className="absolute bottom-12 right-3 inline-flex items-center gap-1 bg-tat-charcoal/75 backdrop-blur-sm text-white text-[10px] font-medium px-2 py-0.5 rounded-pill">
             {p.bookedThisMonth} booked
           </span>
         )}
@@ -161,14 +174,14 @@ export default function PackageCardUI(p: PackageCardProps) {
       </button>
 
       {/* BODY */}
-      <div className={`flex-1 flex flex-col ${compact ? "p-4" : "p-3 md:p-5"}`}>
+      <div className={`flex-1 flex flex-col ${compact ? "p-3.5 sm:p-4" : "p-3 md:p-5"}`}>
         {/* Destination + travel style */}
         {(p.destination || p.travelStyle) && (
           <div className="flex items-center gap-2 text-tag uppercase text-tat-slate/80">
             {p.destination && (
-              <span className="inline-flex items-center gap-1">
-                <MapPin className="h-3 w-3 text-tat-gold" />
-                {p.destination}
+              <span className="inline-flex items-center gap-1 truncate">
+                <MapPin className="h-3 w-3 text-tat-gold shrink-0" />
+                <span className="truncate">{p.destination}</span>
               </span>
             )}
             {p.destination && p.travelStyle && <span aria-hidden className="text-tat-charcoal/30">·</span>}
@@ -183,23 +196,10 @@ export default function PackageCardUI(p: PackageCardProps) {
         {/* Title */}
         <h3
           title={p.title}
-          className={`mt-2 font-display font-normal ${compact ? "text-h4" : "text-h3"} text-tat-charcoal leading-snug text-balance line-clamp-2`}
+          className={`mt-1.5 font-display font-normal ${compact ? "text-[15px] sm:text-h4" : "text-h3"} text-tat-charcoal leading-snug text-balance line-clamp-2`}
         >
           {p.title}
         </h3>
-
-        {/* Rating */}
-        {typeof p.rating === "number" && (
-          <div className="mt-2 inline-flex items-center gap-1.5 text-meta">
-            <span className="inline-flex items-center gap-1 bg-tat-teal text-white px-1.5 py-0.5 rounded text-[11px] font-semibold">
-              <Star className="h-3 w-3 fill-white" />
-              {p.rating.toFixed(1)}
-            </span>
-            {p.ratingCount && (
-              <span className="text-tat-slate">({p.ratingCount.toLocaleString("en-IN")} reviews)</span>
-            )}
-          </div>
-        )}
 
         {/* Inclusions strip — hidden on mobile in compact mode to shorten the rail card */}
         <ul className={`${compact ? "mt-2.5 hidden sm:flex" : "mt-3 flex"} flex-wrap items-center gap-x-3 gap-y-1.5 text-meta text-tat-charcoal/75`}>
@@ -215,12 +215,12 @@ export default function PackageCardUI(p: PackageCardProps) {
           })}
         </ul>
 
-        {/* Price block */}
-        <div className={`${compact ? "mt-3 pt-2.5" : "mt-4 pt-3"} border-t border-tat-charcoal/10`}>
+        {/* Price block — borderless on mobile compact for tighter card */}
+        <div className={`${compact ? "mt-2.5 sm:mt-3 sm:pt-2.5 sm:border-t sm:border-tat-charcoal/10" : "mt-4 pt-3 border-t border-tat-charcoal/10"}`}>
           <div className="flex items-end justify-between gap-3">
             <div className="min-w-0">
               {p.originalPrice && p.originalPrice > p.price && (
-                <p className="text-[12px] text-tat-slate/70 leading-none">
+                <p className="text-[11px] sm:text-[12px] text-tat-slate/70 leading-none">
                   <Price inr={p.originalPrice} className="line-through" />
                   {discountPct !== null && (
                     <span className="ml-1.5 text-tat-success-fg font-semibold">
@@ -229,25 +229,30 @@ export default function PackageCardUI(p: PackageCardProps) {
                   )}
                 </p>
               )}
-              <p className={`mt-1 font-display ${compact ? "text-h3" : "text-h2"} text-tat-charcoal leading-none`}>
+              <p className={`mt-1 font-display ${compact ? "text-[20px] sm:text-h3" : "text-h2"} text-tat-charcoal leading-none`}>
+                <span className="text-[11px] font-sans text-tat-slate font-normal mr-0.5 align-baseline">from</span>
                 <Price inr={p.price} />
-                <span className="text-meta font-sans text-tat-slate font-normal ml-1">/ person</span>
+                <span className="text-[11px] font-sans text-tat-slate font-normal ml-1">
+                  <span className="sm:hidden">/pp</span>
+                  <span className="hidden sm:inline">/ person</span>
+                </span>
               </p>
+              {/* save line + taxes microcopy hidden on mobile compact (discount % already conveys savings) */}
               {p.saveAmount && p.saveAmount > 0 && (
-                <p className="mt-1 inline-flex items-center gap-1 text-[11px] uppercase tracking-wide text-tat-success-fg font-semibold">
+                <p className={`${compact ? "hidden sm:inline-flex" : "inline-flex"} mt-1 items-center gap-1 text-[11px] uppercase tracking-wide text-tat-success-fg font-semibold`}>
                   Save <Price inr={p.saveAmount} />
                 </p>
               )}
             </div>
           </div>
-          <p className="mt-1 text-[11px] text-tat-slate/70">+ taxes &amp; fees</p>
+          <p className={`${compact ? "hidden sm:block" : "block"} mt-1 text-[11px] text-tat-slate/70`}>+ taxes &amp; fees</p>
         </div>
 
         {/* CTAs */}
-        <div className={`${compact ? "mt-3 gap-1.5" : "mt-4 gap-2"} flex flex-col`}>
+        <div className={`${compact ? "mt-2.5 sm:mt-3 gap-1.5" : "mt-4 gap-2"} flex flex-col`}>
           <Link
             href={p.href}
-            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-10" : "h-11"} px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
+            className={`inline-flex items-center justify-center gap-1.5 ${compact ? "h-11" : "h-11"} px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 shadow-sm hover:shadow`}
           >
             Plan this trip
             <ArrowRight className="h-3.5 w-3.5" />

@@ -100,10 +100,10 @@ export default function VisaFreeShelf({ packages }: Props) {
                   className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
                 >
                   <div className="relative w-full">
-                    {/* VISA-FREE corner stamp — diagonal, passport-style */}
+                    {/* VISA-FREE corner stamp — passport-style, sits below the wishlist heart so they don't collide */}
                     <span
                       aria-label="Visa-free for Indian passports"
-                      className="absolute z-10 top-3 right-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-tat-success-fg/95 text-white text-[10px] font-bold uppercase tracking-wider shadow-md ring-2 ring-white/40 -rotate-6"
+                      className="absolute z-10 top-14 right-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-tat-success-fg/95 text-white text-[10px] font-bold uppercase tracking-wider shadow-md ring-2 ring-white/40 -rotate-6"
                     >
                       <Stamp className="h-3 w-3" aria-hidden />
                       Visa-free

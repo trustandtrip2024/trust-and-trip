@@ -126,20 +126,18 @@ function DealTile({ deal }: { deal: Deal }) {
         <p className="text-[11px] sm:text-meta text-tat-slate dark:text-tat-paper/70 line-clamp-1">
           {deal.destination.split("·")[0].trim()} · {deal.duration}
         </p>
-        <div className="flex items-end justify-between gap-2 mt-1">
-          <div className="min-w-0">
-            <p className="text-[10px] sm:text-[11px] text-tat-charcoal/45 dark:text-tat-paper/45 line-through leading-none">
-              {inr(deal.originalPrice)}
-            </p>
-            <p className="font-display text-[16px] sm:text-[20px] md:text-[22px] font-semibold text-tat-charcoal dark:text-tat-paper leading-none mt-0.5">
-              {inr(deal.dealPrice)}
-            </p>
-          </div>
-          <span className="hidden sm:inline-flex items-center gap-1 h-8 px-3 rounded-full bg-tat-teal text-white text-[11px] font-semibold whitespace-nowrap group-hover:bg-tat-teal-deep transition-colors">
-            Plan
-            <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" />
-          </span>
+        <div className="flex items-baseline gap-2 mt-1">
+          <p className="font-display text-[18px] sm:text-[20px] md:text-[22px] font-semibold text-tat-charcoal dark:text-tat-paper leading-none">
+            {inr(deal.dealPrice)}
+          </p>
+          <p className="text-[10px] sm:text-[11px] text-tat-charcoal/45 dark:text-tat-paper/45 line-through leading-none">
+            {inr(deal.originalPrice)}
+          </p>
         </div>
+        <span className="mt-2 inline-flex items-center justify-center gap-1 h-9 sm:h-10 px-3 rounded-full bg-tat-teal text-white text-[12px] font-semibold whitespace-nowrap group-hover:bg-tat-teal-deep transition-colors shadow-sm">
+          Plan this trip
+          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+        </span>
       </div>
     </Link>
   );
