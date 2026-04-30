@@ -11,9 +11,22 @@ import DestinationGallery from "@/components/DestinationGallery";
 import PackageSlider from "@/components/PackageSlider";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
-import { Calendar, Clock, MapPin, ChevronRight, ArrowRight, Sun, IndianRupee, Users, Check, Heart, Star } from "lucide-react";
+import DestinationStickyNav from "@/components/destinations/DestinationStickyNav";
+import DestinationMonthBar from "@/components/destinations/DestinationMonthBar";
+import DestinationFAQ from "@/components/destinations/DestinationFAQ";
+import DestinationMobileCTA from "@/components/destinations/DestinationMobileCTA";
+import {
+  Calendar, Clock, MapPin, ChevronRight, ArrowRight, Sun, IndianRupee, Users, Check, Heart, Star, Plane, ShieldCheck,
+} from "lucide-react";
 
 interface Props { params: { slug: string } }
+
+// Visa-free for Indian passports — single source of truth could later move
+// to Sanity. Kept here so /destinations and /destinations/[slug] stay in sync.
+const VISA_FREE_SLUGS = new Set([
+  "bali", "thailand", "sri-lanka", "maldives", "nepal", "bhutan",
+  "vietnam", "mauritius", "kenya", "jordan", "indonesia", "fiji",
+]);
 
 export async function generateStaticParams() {
   const slugs = await getAllDestinationSlugs();
@@ -41,6 +54,7 @@ export default async function DestinationDetail({ params }: Props) {
 
   const packages = await getPackagesByDestination(destination.slug);
   const gallery = DESTINATION_GALLERY[destination.slug] ?? [];
+  const isVisaFree = VISA_FREE_SLUGS.has(destination.slug);
 
   // Aggregate the package list into per-travel-type buckets so we can render
   // entry-style chips ("12 honeymoon trips · from ₹X"). Driven entirely by
@@ -58,16 +72,21 @@ export default async function DestinationDetail({ params }: Props) {
     return { type: t, count: list.length, minPrice };
   }).filter((x) => x.count > 0);
 
-  // Aggregate review/rating across this destination's packages — synthesised
-  // from package metadata, no extra round trip.
+  // Aggregate review/rating across this destination's packages.
   const totalReviews = packages.reduce((s, p) => s + (p.reviews ?? 0), 0);
   const ratedCount = packages.filter((p) => p.rating).length;
   const avgRating = ratedCount
     ? packages.reduce((s, p) => s + (p.rating ?? 0), 0) / ratedCount
     : 0;
 
-  // Schema.org ItemList of bookable trips for this destination — search
-  // engines pick this up alongside the TouristDestination block.
+  // Editorial featured trip — pick the highest-rated, then highest-reviewed.
+  // Falls back to first package when no ratings exist.
+  const featuredTrip = [...packages].sort((a, b) => {
+    const r = (b.rating ?? 0) - (a.rating ?? 0);
+    if (r !== 0) return r;
+    return (b.reviews ?? 0) - (a.reviews ?? 0);
+  })[0];
+
   const tripsListLd = packages.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -102,12 +121,13 @@ export default async function DestinationDetail({ params }: Props) {
       }} />
       {tripsListLd && <JsonLd data={tripsListLd} />}
 
-      {/* Hero */}
-      <section className="relative h-[75vh] min-h-[500px] w-full overflow-hidden bg-tat-charcoal">
+      {/* Hero — slightly shorter on mobile so the page action is closer to
+          the fold (60vh vs 75vh). Desktop unchanged. */}
+      <section className="relative h-[60vh] min-h-[420px] md:h-[75vh] md:min-h-[500px] w-full overflow-hidden bg-tat-charcoal">
         <Image src={destination.heroImage} alt={destination.name} fill priority className="object-cover animate-slow-zoom" sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/92 via-tat-charcoal/30 to-tat-charcoal/40" />
 
-        <div className="absolute top-24 inset-x-0 z-10 container-custom flex items-center gap-2 text-xs text-tat-paper/60">
+        <div className="absolute top-20 md:top-24 inset-x-0 z-10 container-custom flex items-center gap-2 text-xs text-tat-paper/60">
           <Link href="/" className="hover:text-tat-gold">Home</Link>
           <ChevronRight className="h-3 w-3" />
           <Link href="/destinations" className="hover:text-tat-gold">Destinations</Link>
@@ -115,7 +135,7 @@ export default async function DestinationDetail({ params }: Props) {
           <span className="text-tat-gold">{destination.name}</span>
         </div>
 
-        <div className="relative h-full flex items-end pb-12 md:pb-16 container-custom text-tat-paper z-10">
+        <div className="relative h-full flex items-end pb-10 md:pb-16 container-custom text-tat-paper z-10">
           <div className="max-w-3xl">
             <span className="eyebrow text-tat-gold mb-3 block">{destination.country} · {destination.region}</span>
             <h1 className="font-display text-display-xl font-medium leading-[0.95] text-balance">
@@ -123,14 +143,47 @@ export default async function DestinationDetail({ params }: Props) {
             </h1>
             <p className="mt-3 text-xl italic font-display text-tat-gold font-light">{destination.tagline}</p>
 
-            {/* Quick stats */}
-            <div className="flex flex-wrap gap-3 mt-6">
+            <div className="flex flex-wrap gap-2 md:gap-3 mt-5 md:mt-6">
               <Pill icon={IndianRupee} label={`From ₹${destination.priceFrom.toLocaleString("en-IN")}`} />
               <Pill icon={Calendar} label={destination.bestTimeToVisit || "Year-round"} />
               <Pill icon={Clock} label={destination.idealDuration || "5–7 days"} />
-              <Pill icon={Users} label="Couples · Families · Groups" />
+              {isVisaFree && (
+                <span className="inline-flex items-center gap-1.5 bg-tat-success-bg/95 text-tat-success-fg text-[11px] font-semibold px-3 py-1.5 rounded-full">
+                  <Plane className="h-3 w-3" />
+                  Visa-free for Indian passports
+                </span>
+              )}
             </div>
           </div>
+        </div>
+      </section>
+
+      <DestinationStickyNav />
+
+      {/* Trust ribbon — aggregated proof beneath the hero. Counts, rating,
+          visa hint, planner promise. */}
+      <section aria-label="Why book this with us" className="border-b border-tat-charcoal/8 dark:border-white/10 bg-tat-paper dark:bg-tat-charcoal">
+        <div className="container-custom py-4 md:py-5">
+          <ul role="list" className="flex gap-4 md:gap-8 overflow-x-auto no-scrollbar -mx-5 px-5 sm:mx-0 sm:px-0 text-[12px] md:text-[13px]">
+            {avgRating > 0 && totalReviews > 0 && (
+              <li className="shrink-0 inline-flex items-center gap-2 text-tat-charcoal/70 dark:text-tat-paper/70">
+                <Star className="h-4 w-4 fill-tat-gold text-tat-gold" />
+                <span><strong className="font-semibold text-tat-charcoal dark:text-tat-paper">{avgRating.toFixed(1)}</strong> · {totalReviews.toLocaleString("en-IN")} reviews</span>
+              </li>
+            )}
+            <li className="shrink-0 inline-flex items-center gap-2 text-tat-charcoal/70 dark:text-tat-paper/70">
+              <MapPin className="h-4 w-4 text-tat-gold" />
+              <span><strong className="font-semibold text-tat-charcoal dark:text-tat-paper">{packages.length}</strong> trips ready</span>
+            </li>
+            <li className="shrink-0 inline-flex items-center gap-2 text-tat-charcoal/70 dark:text-tat-paper/70">
+              <ShieldCheck className="h-4 w-4 text-tat-gold" />
+              <span><strong className="font-semibold text-tat-charcoal dark:text-tat-paper">₹0</strong> to start · pay only when sure</span>
+            </li>
+            <li className="shrink-0 inline-flex items-center gap-2 text-tat-charcoal/70 dark:text-tat-paper/70">
+              <Sun className="h-4 w-4 text-tat-gold" />
+              <span>Free changes within <strong className="font-semibold text-tat-charcoal dark:text-tat-paper">48 h</strong> of itinerary</span>
+            </li>
+          </ul>
         </div>
       </section>
 
@@ -140,7 +193,7 @@ export default async function DestinationDetail({ params }: Props) {
       )}
 
       {/* Overview + quick facts */}
-      <section className="py-14 md:py-18">
+      <section id="overview" className="py-14 md:py-18 scroll-mt-32">
         <div className="container-custom grid lg:grid-cols-[1fr_320px] gap-10 lg:gap-16 items-start">
           <div>
             <span className="eyebrow">About {destination.name}</span>
@@ -149,7 +202,6 @@ export default async function DestinationDetail({ params }: Props) {
             </h2>
             <p className="text-tat-charcoal/70 leading-relaxed mb-6">{destination.overview}</p>
 
-            {/* Highlight tags */}
             <div className="flex flex-wrap gap-2">
               {(destination.highlights || []).map((h) => (
                 <span key={h} className="inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-tat-gold/10 border border-tat-gold/20 text-tat-charcoal/80">
@@ -159,8 +211,8 @@ export default async function DestinationDetail({ params }: Props) {
             </div>
           </div>
 
-          {/* Quick facts card */}
-          <div className="bg-tat-paper rounded-2xl border border-tat-charcoal/8 p-6 space-y-4">
+          {/* Quick facts card — sticky on desktop so it follows the page. */}
+          <aside className="lg:sticky lg:top-32 bg-tat-paper rounded-2xl border border-tat-charcoal/8 p-6 space-y-4">
             <h3 className="font-display text-lg font-medium">Quick facts</h3>
             {[
               { icon: IndianRupee, label: "Starting price", value: `₹${destination.priceFrom.toLocaleString("en-IN")} / person` },
@@ -184,13 +236,27 @@ export default async function DestinationDetail({ params }: Props) {
               className="flex items-center justify-center gap-2 w-full bg-tat-teal text-tat-paper py-3 rounded-xl text-sm font-medium hover:bg-tat-teal-deep transition-colors mt-2">
               View all experiences <ArrowRight className="h-4 w-4" />
             </Link>
+          </aside>
+        </div>
+      </section>
+
+      {/* Best time — 12-month visualization */}
+      <section id="best-time" className="py-12 md:py-14 bg-tat-cream-warm/40 scroll-mt-32">
+        <div className="container-custom">
+          <div className="max-w-3xl mb-6">
+            <span className="eyebrow">Seasonality</span>
+            <h2 className="heading-section mt-2 text-balance">
+              When {destination.name}{" "}
+              <span className="italic text-tat-gold font-light">shines.</span>
+            </h2>
           </div>
+          <DestinationMonthBar bestTimeToVisit={destination.bestTimeToVisit} />
         </div>
       </section>
 
       {/* Things to do */}
       {(destination.thingsToDo || []).length > 0 && (
-        <section className="py-14 bg-tat-cream/40">
+        <section id="experiences" className="py-14 bg-tat-paper scroll-mt-32">
           <div className="container-custom">
             <span className="eyebrow">Experiences</span>
             <h2 className="heading-section mt-2 mb-8 text-balance">
@@ -211,12 +277,9 @@ export default async function DestinationDetail({ params }: Props) {
         </section>
       )}
 
-      {/* Trip styles — link chips per travel-type with count + min price.
-          Each chip drops the user into the packages list pre-filtered to this
-          destination + travel-type. Synthesises rating aggregate across the
-          destination so the strip doubles as social proof. */}
+      {/* Trip styles */}
       {byType.length > 0 && (
-        <section className="py-12 md:py-14">
+        <section id="trips" className="py-12 md:py-14 scroll-mt-32">
           <div className="container-custom">
             <div className="flex items-end justify-between gap-4 flex-wrap mb-6">
               <div>
@@ -269,9 +332,67 @@ export default async function DestinationDetail({ params }: Props) {
         </section>
       )}
 
+      {/* Editorial featured trip — top-rated as the hero pick before the
+          full slider. Drives one-click confidence for indecisive shoppers. */}
+      {featuredTrip && (
+        <section className="py-12 md:py-14 bg-tat-cream-warm/40">
+          <div className="container-custom">
+            <div className="rounded-3xl overflow-hidden bg-white ring-1 ring-tat-charcoal/8 shadow-soft grid md:grid-cols-2">
+              <div className="relative aspect-[16/10] md:aspect-auto md:min-h-[320px]">
+                <Image
+                  src={featuredTrip.image}
+                  alt={featuredTrip.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                />
+                <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 bg-tat-gold text-white text-[10px] uppercase tracking-[0.18em] font-semibold px-2.5 py-1 rounded-full">
+                  <Star className="h-3 w-3 fill-white" />
+                  Editor&rsquo;s pick
+                </span>
+              </div>
+              <div className="p-6 md:p-8 flex flex-col justify-center gap-3">
+                <span className="text-[11px] uppercase tracking-[0.22em] font-semibold text-tat-gold">
+                  If you only book one trip in {destination.name}
+                </span>
+                <h3 className="font-display text-[22px] md:text-[28px] font-medium text-tat-charcoal leading-tight">
+                  {featuredTrip.title}
+                </h3>
+                <div className="flex items-center gap-3 text-[13px] text-tat-charcoal/65">
+                  <span>{featuredTrip.duration}</span>
+                  <span>·</span>
+                  <span>{featuredTrip.travelType}</span>
+                  {featuredTrip.rating ? (
+                    <>
+                      <span>·</span>
+                      <span className="inline-flex items-center gap-1">
+                        <Star className="h-3.5 w-3.5 fill-tat-gold text-tat-gold" />
+                        {featuredTrip.rating.toFixed(1)}
+                      </span>
+                    </>
+                  ) : null}
+                </div>
+                <div className="mt-2 flex items-center justify-between gap-3 flex-wrap">
+                  <p className="font-display text-2xl text-tat-charcoal">
+                    ₹{featuredTrip.price.toLocaleString("en-IN")}
+                    <span className="text-[11px] text-tat-charcoal/55 ml-1 font-sans">/ person</span>
+                  </p>
+                  <Link
+                    href={`/packages/${featuredTrip.slug}`}
+                    className="inline-flex items-center gap-1.5 h-10 px-4 rounded-full bg-tat-teal hover:bg-tat-teal-deep text-white text-[13px] font-semibold"
+                  >
+                    See itinerary <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Packages slider */}
       {packages.length > 0 && (
-        <section className="py-14 md:py-16">
+        <section id="packages" className="py-14 md:py-16 scroll-mt-32">
           <div className="container-custom">
             <PackageSlider
               id={`dest-${destination.slug}`}
@@ -285,10 +406,39 @@ export default async function DestinationDetail({ params }: Props) {
         </section>
       )}
 
+      {/* FAQ */}
+      <section id="faq" className="py-14 md:py-16 bg-tat-cream-warm/30 scroll-mt-32">
+        <div className="container-custom max-w-3xl">
+          <span className="eyebrow">Common questions</span>
+          <h2 className="heading-section mt-2 mb-6 text-balance">
+            Anything you&rsquo;d ask{" "}
+            <span className="italic text-tat-gold font-light">a planner.</span>
+          </h2>
+          <DestinationFAQ
+            destinationName={destination.name}
+            bestTimeToVisit={destination.bestTimeToVisit}
+            idealDuration={destination.idealDuration}
+            priceFrom={destination.priceFrom}
+            visaFree={isVisaFree}
+            packageCount={packages.length}
+          />
+        </div>
+      </section>
+
       <CTASection
         title={`Dreaming of ${destination.name}?`}
         subtitle="Talk to a planner who knows this destination inside-out. We'll craft it just for you."
       />
+
+      {/* Bottom-fixed CTA bar — mobile only. Always-visible action so the
+          page never feels stranded mid-scroll. */}
+      <DestinationMobileCTA
+        destinationName={destination.name}
+        destinationSlug={destination.slug}
+        priceFrom={destination.priceFrom}
+      />
+      {/* Spacer so fixed CTA never overlaps page bottom on mobile. */}
+      <div className="h-20 lg:hidden" aria-hidden />
     </>
   );
 }
