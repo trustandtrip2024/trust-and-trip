@@ -1,11 +1,11 @@
 import Image from "next/image";
-import Link from "next/link";
-import { Star, ArrowRight, Instagram, Quote } from "lucide-react";
+import { ArrowRight, Instagram } from "lucide-react";
 import { testimonials, type Testimonial } from "@/lib/data";
 import {
   fetchGoogleReviews,
   type GoogleReview,
 } from "@/lib/google-reviews";
+import ReviewsCarousel, { type NormalizedReview } from "./ReviewsCarousel";
 
 const INSTAGRAM_HANDLE = "@trustandtrip";
 const INSTAGRAM_URL = "https://www.instagram.com/trustandtrip/";
@@ -20,16 +20,6 @@ const POLAROIDS = [
   { src: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=70", caption: "Thailand · Krabi" },
   { src: "https://images.unsplash.com/photo-1561361058-c24cecae35ca?auto=format&fit=crop&w=600&q=70", caption: "Char Dham · Kedarnath" },
 ];
-
-interface NormalizedReview {
-  name: string;
-  location?: string;
-  trip?: string;
-  rating: number;
-  text: string;
-  image?: string;
-  source: "google" | "site";
-}
 
 function normalizeGoogle(r: GoogleReview): NormalizedReview {
   return {
@@ -98,18 +88,7 @@ export default async function SocialProof() {
           </a>
         </div>
 
-        <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
-          <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
-            {reviews.map((r, i) => (
-              <li
-                key={i}
-                className="shrink-0 snap-start flex w-[85%] sm:w-[65%] md:w-[48%] lg:w-[38%] xl:w-[32%]"
-              >
-                <ReviewCard review={r} />
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ReviewsCarousel reviews={reviews} />
 
         <div className="mt-12 md:mt-14 flex items-end justify-between gap-4 flex-wrap">
           <div>
@@ -175,60 +154,3 @@ export default async function SocialProof() {
   );
 }
 
-function ReviewCard({ review }: { review: NormalizedReview }) {
-  return (
-    <article className="flex h-full flex-col gap-4 rounded-2xl bg-white dark:bg-tat-charcoal p-5 md:p-6 ring-1 ring-tat-charcoal/10 dark:ring-white/10 shadow-soft">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          {review.image ? (
-            <div className="relative h-10 w-10 shrink-0 rounded-full overflow-hidden ring-1 ring-tat-charcoal/10">
-              <Image
-                src={review.image}
-                alt=""
-                fill
-                sizes="40px"
-                className="object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-          ) : (
-            <div className="h-10 w-10 shrink-0 rounded-full bg-tat-gold/20 grid place-items-center font-display font-semibold text-tat-gold">
-              {review.name.slice(0, 1)}
-            </div>
-          )}
-          <div className="min-w-0">
-            <p className="font-display font-medium text-[15px] text-tat-charcoal dark:text-tat-paper truncate">
-              {review.name}
-            </p>
-            <p className="text-[11px] text-tat-charcoal/55 dark:text-tat-paper/55 truncate">
-              {review.trip ?? review.location}
-            </p>
-          </div>
-        </div>
-        <Quote className="h-5 w-5 text-tat-gold/40 shrink-0" aria-hidden />
-      </div>
-      <div className="flex items-center gap-0.5" aria-label={`${review.rating} out of 5`}>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star
-            key={i}
-            className={`h-3.5 w-3.5 ${i < review.rating ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`}
-          />
-        ))}
-      </div>
-      <p className="text-[14px] leading-relaxed text-tat-charcoal/80 dark:text-tat-paper/80 line-clamp-6">
-        &ldquo;{review.text}&rdquo;
-      </p>
-      <div className="mt-auto pt-3 border-t border-tat-charcoal/10 dark:border-white/10 flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-wider text-tat-charcoal/45 dark:text-tat-paper/45">
-          {review.source === "google" ? "Verified · Google" : "Customer story"}
-        </span>
-        <Link
-          href="/reviews"
-          className="text-[11px] font-semibold text-tat-gold hover:underline underline-offset-4"
-        >
-          More like this
-        </Link>
-      </div>
-    </article>
-  );
-}
