@@ -28,21 +28,16 @@ import type { PackageCardProps } from "@/components/ui/PackageCard";
 import type { Package } from "@/lib/data";
 import {
   getDestinations,
+  getHomeShelves,
   getPackagesByType,
   getPilgrimPackages,
+  type HomeShelf,
 } from "@/lib/sanity-queries";
 import { getSiteStats } from "@/lib/site-stats";
-
-const VISA_FREE_SLUGS = new Set([
-  "bali", "thailand", "sri-lanka", "maldives", "nepal", "bhutan",
-  "vietnam", "mauritius", "kenya", "jordan", "indonesia", "fiji",
-]);
-
-const MAY_FRIENDLY_SLUGS = new Set([
-  "switzerland", "iceland", "uk", "england", "scotland", "greece",
-  "kashmir", "ladakh", "spiti", "himachal", "bali", "vietnam",
-  "japan", "europe", "italy", "france", "norway",
-]);
+import {
+  FALLBACK_HOME_SHELVES,
+  resolveShelfPackages,
+} from "@/lib/home-shelves";
 
 function toCardProps(p: Package): PackageCardProps {
   return {
@@ -64,7 +59,7 @@ function toCardProps(p: Package): PackageCardProps {
 }
 
 export default async function HomePage() {
-  const [siteStats, destinations, couple, family, solo, group, pilgrimPackages] = await Promise.all([
+  const [siteStats, destinations, couple, family, solo, group, pilgrimPackages, sanityShelves] = await Promise.all([
     getSiteStats(),
     getDestinations(),
     getPackagesByType("Couple"),
@@ -72,6 +67,7 @@ export default async function HomePage() {
     getPackagesByType("Solo"),
     getPackagesByType("Group"),
     getPilgrimPackages(),
+    getHomeShelves().catch(() => [] as HomeShelf[]),
   ]);
 
   const packagesByStyle: Partial<Record<StyleId, PackageCardProps[]>> = {
@@ -96,28 +92,30 @@ export default async function HomePage() {
     if (!packagesBySlug[p.slug]) packagesBySlug[p.slug] = toCardProps(p);
   }
 
-  const seenSlugs = new Set<string>();
-  const dedupe = (list: Package[]) =>
-    list.filter((p) => {
-      if (seenSlugs.has(p.slug)) return false;
-      seenSlugs.add(p.slug);
-      return true;
-    });
-
-  const under50k = allPackages
-    .filter((p) => p.price < 50000)
-    .sort((a, b) => a.price - b.price)
-    .slice(0, 10)
-    .map(toCardProps);
-  const visaFree = allPackages
-    .filter((p) => VISA_FREE_SLUGS.has(p.destinationSlug))
-    .slice(0, 10)
-    .map(toCardProps);
-  const mayPicks = dedupe(
-    allPackages.filter((p) => MAY_FRIENDLY_SLUGS.has(p.destinationSlug))
-  )
-    .slice(0, 10)
-    .map(toCardProps);
+  const shelves: HomeShelf[] = sanityShelves.length ? sanityShelves : FALLBACK_HOME_SHELVES;
+  const renderedShelves = shelves.map((shelf) => ({
+    shelf,
+    packages: resolveShelfPackages(shelf, allPackages).map(toCardProps),
+  }));
+  const renderShelfAt = (i: number) => {
+    const slot = renderedShelves[i];
+    if (!slot || !slot.packages.length) return null;
+    const { shelf, packages } = slot;
+    return (
+      <ContentShelf
+        key={shelf._id}
+        eyebrow={shelf.eyebrow}
+        title={shelf.title}
+        italicTail={shelf.italicTail}
+        lede={shelf.lede}
+        ctaHref={shelf.ctaHref}
+        ctaLabel={shelf.ctaLabel}
+        packages={packages}
+        bg={shelf.bg}
+      />
+    );
+  };
+  const overflowShelves = renderedShelves.slice(3);
 
   return (
     <>
@@ -138,38 +136,27 @@ export default async function HomePage() {
       <PersonalRails packagesBySlug={packagesBySlug} />
       <TrendingDestinations destinations={destinations} />
       <FeaturedPackages packages={featured} />
-      <ContentShelf
-        eyebrow="Easy on the wallet"
-        title="Trips under"
-        italicTail="₹50,000."
-        lede="Real itineraries, real hotels — the full experience without the upgrade."
-        ctaHref="/packages?budget=under-50k"
-        ctaLabel="All budget trips"
-        packages={under50k}
-        bg="cream"
-      />
+      {renderShelfAt(0)}
       <BrowseByStyle packagesByStyle={packagesByStyle} />
-      <ContentShelf
-        eyebrow="Skip the visa queue"
-        title="Visa-free escapes"
-        italicTail="for Indian passports."
-        lede="Land, smile, get stamped. No embassy appointment, no paperwork in advance."
-        ctaHref="/packages?theme=visa-free"
-        ctaLabel="All visa-free trips"
-        packages={visaFree}
-      />
+      {renderShelfAt(1)}
       <LiveDeals />
-      <ContentShelf
-        eyebrow="Perfect for next month"
-        title="Trending in"
-        italicTail="May."
-        lede="Pre-monsoon clear skies, post-winter peaks, shoulder-season prices. The window we love most."
-        ctaHref="/packages?month=may"
-        ctaLabel="All May trips"
-        packages={mayPicks}
-        bg="cream"
-      />
+      {renderShelfAt(2)}
       <PilgrimSpotlight />
+      {overflowShelves.map(({ shelf, packages }) =>
+        packages.length ? (
+          <ContentShelf
+            key={shelf._id}
+            eyebrow={shelf.eyebrow}
+            title={shelf.title}
+            italicTail={shelf.italicTail}
+            lede={shelf.lede}
+            ctaHref={shelf.ctaHref}
+            ctaLabel={shelf.ctaLabel}
+            packages={packages}
+            bg={shelf.bg}
+          />
+        ) : null
+      )}
       <EditorialBand />
       <WhyTrustAndTrip />
       <SocialProof />

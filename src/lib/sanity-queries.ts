@@ -526,6 +526,41 @@ export type OfferBanner = {
  * `_createdAt`. Returns [] when nothing's set so HomepageStrip can fall
  * back to its built-in seed banners and never render empty.
  */
+// ─── Home shelf queries ────────────────────────────────────────────────────
+
+export type HomeShelf = {
+  _id: string;
+  eyebrow: string;
+  title: string;
+  italicTail?: string;
+  lede?: string;
+  ctaHref: string;
+  ctaLabel: string;
+  bg: "paper" | "cream";
+  filterType: "priceRange" | "destinationSlugs" | "travelType" | "manual";
+  priceMin?: number;
+  priceMax?: number;
+  destinationSlugs?: string[];
+  travelType?: string;
+  manualSlugs?: string[];
+  maxItems: number;
+  order: number;
+};
+
+export async function getHomeShelves(): Promise<HomeShelf[]> {
+  return cached("sanity:homeShelves", TTL.medium, async () => {
+    const raw = await sanityClient.fetch<HomeShelf[]>(
+      `*[_type == "homeShelf" && active == true] | order(order asc, _createdAt desc) {
+         _id, eyebrow, title, italicTail, lede, ctaHref, ctaLabel, bg,
+         filterType, priceMin, priceMax, destinationSlugs, travelType,
+         "manualSlugs": manualPackages[]->slug.current,
+         maxItems, order
+       }`,
+    );
+    return raw ?? [];
+  });
+}
+
 export async function getOfferBanners(limit = 8): Promise<OfferBanner[]> {
   return cached(`sanity:offerBanners:${limit}`, TTL.short, async () => {
     const raw = await sanityClient.fetch<
