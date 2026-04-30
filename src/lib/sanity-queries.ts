@@ -1,7 +1,15 @@
+import { cache } from "react";
 import { sanityClient, urlFor } from "./sanity";
 import type { Destination, Package } from "./data";
 import { DESTINATION_GALLERY } from "./gallery-images";
 import { cacheGet, cacheSet } from "./redis";
+
+// React.cache memoizes the wrapped async function within a single server
+// render — when the same getter is called twice in one request (e.g. by the
+// page and a child component), the Sanity round-trip happens once. Layered
+// on top of the existing Redis cache, which spans multiple requests. Safe
+// for API-route callers too: outside a render context, cache() simply runs
+// the function as-is without memoization.
 
 const TTL = {
   short: 2 * 60,    // 2 min — individual pages
@@ -75,7 +83,7 @@ type SanityDestination = Omit<Destination, "image" | "heroImage"> & {
   heroImage: any;
 };
 
-export async function getDestinations(): Promise<Destination[]> {
+export const getDestinations = cache(async (): Promise<Destination[]> => {
   return cached("sanity:destinations", TTL.long, async () => {
     const raw = await sanityClient.fetch<SanityDestination[]>(DESTINATIONS_QUERY);
     return raw.map((d) => {
@@ -87,9 +95,9 @@ export async function getDestinations(): Promise<Destination[]> {
       };
     });
   });
-}
+});
 
-export async function getDestinationBySlug(slug: string): Promise<Destination | null> {
+export const getDestinationBySlug = cache(async (slug: string): Promise<Destination | null> => {
   return cached(`sanity:destination:${slug}`, TTL.medium, async () => {
     const raw = await sanityClient.fetch<SanityDestination | null>(DESTINATION_BY_SLUG_QUERY, { slug });
     if (!raw) return null;
@@ -100,11 +108,11 @@ export async function getDestinationBySlug(slug: string): Promise<Destination | 
       heroImage: raw.heroImage ? urlFor(raw.heroImage).width(2400).quality(85).url() : fallback,
     };
   });
-}
+});
 
-export async function getAllDestinationSlugs(): Promise<string[]> {
+export const getAllDestinationSlugs = cache(async (): Promise<string[]> => {
   return sanityClient.fetch<string[]>(`*[_type == "destination"].slug.current`);
-}
+});
 
 // ─── Package queries ───────────────────────────────────────────────────────
 
@@ -247,40 +255,40 @@ function mapPackage(p: SanityPackage): Package {
   };
 }
 
-export async function getPackages(): Promise<Package[]> {
+export const getPackages = cache(async (): Promise<Package[]> => {
   return cached("sanity:packages", TTL.medium, async () => {
     const raw = await sanityClient.fetch<SanityPackage[]>(PACKAGES_QUERY);
     return raw.map(mapPackage);
   });
-}
+});
 
-export async function getPackageBySlug(slug: string): Promise<Package | null> {
+export const getPackageBySlug = cache(async (slug: string): Promise<Package | null> => {
   return cached(`sanity:package:${slug}`, TTL.short, async () => {
     const raw = await sanityClient.fetch<SanityPackage | null>(PACKAGE_BY_SLUG_QUERY, { slug });
     if (!raw) return null;
     return mapPackage(raw);
   });
-}
+});
 
-export async function getAllPackageSlugs(): Promise<string[]> {
+export const getAllPackageSlugs = cache(async (): Promise<string[]> => {
   return cached("sanity:package-slugs", TTL.long, () =>
     sanityClient.fetch<string[]>(`*[_type == "package"].slug.current`)
   );
-}
+});
 
-export async function getTrendingPackages(): Promise<Package[]> {
+export const getTrendingPackages = cache(async (): Promise<Package[]> => {
   return cached("sanity:packages:trending", TTL.medium, async () => {
     const raw = await sanityClient.fetch<SanityPackage[]>(TRENDING_PACKAGES_QUERY);
     return raw.map(mapPackage);
   });
-}
+});
 
-export async function getFeaturedPackages(): Promise<Package[]> {
+export const getFeaturedPackages = cache(async (): Promise<Package[]> => {
   return cached("sanity:packages:featured", TTL.medium, async () => {
     const raw = await sanityClient.fetch<SanityPackage[]>(FEATURED_PACKAGES_QUERY);
     return raw.map(mapPackage);
   });
-}
+});
 
 export async function getBudgetPackages(): Promise<Package[]> {
   const raw = await sanityClient.fetch<SanityPackage[]>(
@@ -397,7 +405,7 @@ export type HomepageContent = {
   newsletter?: SectionCopy & { placeholder?: string; buttonLabel?: string; footerMicrocopy?: string };
 };
 
-export async function getHomepageContent(): Promise<HomepageContent | null> {
+export const getHomepageContent = cache(async (): Promise<HomepageContent | null> => {
   return cached("sanity:homepageContent", TTL.medium, async () => {
     // Project the hero block explicitly so we can resolve the Sanity image
     // asset URL server-side. Everything else flows through unchanged.
@@ -436,7 +444,7 @@ export async function getHomepageContent(): Promise<HomepageContent | null> {
     }
     return raw as HomepageContent;
   });
-}
+});
 
 // ─── Partner logos / press / UGC ──────────────────────────────────────────
 
@@ -663,11 +671,11 @@ export async function getFeaturedBlogPost(): Promise<SanityBlogPost | null> {
   );
 }
 
-export async function getRelatedPackages(
+export const getRelatedPackages = cache(async (
   destinationSlug: string,
   excludeSlug: string,
-  travelType: string
-): Promise<Package[]> {
+  travelType: string,
+): Promise<Package[]> => {
   // First try: same destination, different package
   const sameDest = await sanityClient.fetch<SanityPackage[]>(
     `*[_type == "package" && destination->slug.current == $dest && slug.current != $excl] | order(rating desc) [0...4] { ${PACKAGE_FIELDS} }`,
@@ -681,4 +689,4 @@ export async function getRelatedPackages(
     { type: travelType, excl: excludeSlug }
   );
   return [...sameDest, ...sameType].slice(0, 4).map(mapPackage);
-}
+});
