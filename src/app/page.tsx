@@ -21,6 +21,7 @@ import SocialProof from "@/components/home-v3/SocialProof";
 import FaqAndCTA from "@/components/home-v3/FaqAndCTA";
 import ContentShelf from "@/components/home-v3/ContentShelf";
 import EditorialBand from "@/components/home-v3/EditorialBand";
+import PersonalRails from "@/components/home-v3/PersonalRails";
 import type { PackageCardProps } from "@/components/ui/PackageCard";
 import type { Package } from "@/lib/data";
 import {
@@ -86,7 +87,12 @@ export default async function HomePage() {
     ...group.slice(0, 2),
   ].map(toCardProps);
 
-  const allPackages: Package[] = [...couple, ...family, ...solo, ...group];
+  const allPackages: Package[] = [...couple, ...family, ...solo, ...group, ...pilgrimPackages];
+
+  const packagesBySlug: Record<string, PackageCardProps> = {};
+  for (const p of allPackages) {
+    if (!packagesBySlug[p.slug]) packagesBySlug[p.slug] = toCardProps(p);
+  }
 
   const seenSlugs = new Set<string>();
   const dedupe = (list: Package[]) =>
@@ -122,6 +128,7 @@ export default async function HomePage() {
         rating={siteStats.googleRating}
       />
 
+      <PersonalRails packagesBySlug={packagesBySlug} />
       <TrendingDestinations destinations={destinations} />
       <FeaturedPackages packages={featured} />
       <ContentShelf

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useWishlistStore } from "@/store/useWishlistStore";
 
 function getSessionId(): string {
   const KEY = "tt_session_id";
@@ -20,10 +21,16 @@ interface Props {
   slug: string;
 }
 
-// Fire-and-forget view tracker. Records once per (slug, session) per minute.
+// Fire-and-forget view tracker. Records once per (slug, session) per minute,
+// and always pushes the slug onto the persisted recently-viewed list so the
+// homepage can resurface it.
 export default function PackageViewTracker({ slug }: Props) {
+  const pushRecent = useWishlistStore((s) => s.pushRecent);
+
   useEffect(() => {
     if (!slug) return;
+    pushRecent(slug);
+
     const sessionId = getSessionId();
     const dedupeKey = `tt_view:${slug}`;
     const last = sessionStorage.getItem(dedupeKey);
@@ -36,7 +43,7 @@ export default function PackageViewTracker({ slug }: Props) {
       body: JSON.stringify({ slug, sessionId }),
       keepalive: true,
     }).catch(() => {});
-  }, [slug]);
+  }, [slug, pushRecent]);
 
   return null;
 }

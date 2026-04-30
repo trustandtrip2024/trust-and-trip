@@ -27,7 +27,13 @@ interface WishlistStore {
   removeFromCompare: (slug: string) => void;
   isInCompare: (slug: string) => boolean;
   clearCompare: () => void;
+
+  // Recently viewed — most-recent-first slug list, capped at 12
+  recentlyViewed: string[];
+  pushRecent: (slug: string) => void;
 }
+
+const RECENT_CAP = 12;
 
 export const useWishlistStore = create<WishlistStore>()(
   persist(
@@ -54,10 +60,20 @@ export const useWishlistStore = create<WishlistStore>()(
         set((s) => ({ compareList: s.compareList.filter((p) => p.slug !== slug) })),
       isInCompare: (slug) => get().compareList.some((p) => p.slug === slug),
       clearCompare: () => set({ compareList: [] }),
+
+      recentlyViewed: [],
+      pushRecent: (slug) =>
+        set((s) => {
+          const next = [slug, ...s.recentlyViewed.filter((x) => x !== slug)].slice(0, RECENT_CAP);
+          return { recentlyViewed: next };
+        }),
     }),
     {
       name: "ttp-wishlist",
-      partialize: (s) => ({ wishlist: s.wishlist }), // only persist wishlist, not compare
+      partialize: (s) => ({
+        wishlist: s.wishlist,
+        recentlyViewed: s.recentlyViewed,
+      }),
     }
   )
 );
