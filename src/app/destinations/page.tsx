@@ -1,12 +1,10 @@
 export const revalidate = 30;
 
-import Link from "next/link";
 import Image from "next/image";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
 import { getDestinations, getPackages } from "@/lib/sanity-queries";
-import type { Destination } from "@/lib/data";
-import { ArrowUpRight, MapPin, IndianRupee, Compass } from "lucide-react";
+import DestinationsBrowser from "@/components/destinations/DestinationsBrowser";
 
 export const metadata = {
   title: "Destinations — Explore Incredible India & the World",
@@ -20,133 +18,20 @@ export const metadata = {
 };
 
 // Known India slugs as safety net when Sanity country field is missing
-const INDIA_SLUGS = new Set([
+const INDIA_SLUGS = [
   "kerala", "goa", "kashmir", "ladakh", "rajasthan", "andaman",
   "manali", "shimla", "himachal-pradesh", "coorg", "varanasi",
   "agra", "rishikesh", "uttarakhand", "spiti-valley",
   "andaman-and-nicobar", "munnar", "ooty",
-]);
+];
 
-function isIndia(d: Destination) {
-  return d.country === "India" || INDIA_SLUGS.has(d.slug);
-}
-
-// Compact card for India destinations
-function IndiaCard({ d, priority, packageCount }: { d: Destination; priority?: boolean; packageCount?: number }) {
-  return (
-    <Link
-      href={`/destinations/${d.slug}`}
-      className="group block bg-white rounded-2xl overflow-hidden border border-tat-charcoal/8 hover:border-tat-charcoal/20 hover:shadow-lg transition-all duration-300"
-    >
-      {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-tat-cream">
-        <Image
-          src={d.image}
-          alt={d.name}
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          priority={priority}
-        />
-        {/* Region pill */}
-        <div className="absolute top-3 left-3">
-          <span className="text-[10px] uppercase tracking-widest font-medium px-2 py-1 rounded-full bg-white/90 backdrop-blur-sm text-tat-charcoal/70">
-            {d.region}
-          </span>
-        </div>
-      </div>
-
-      {/* Details */}
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <h3 className="font-display text-lg font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors leading-tight">
-              {d.name}
-            </h3>
-            {d.tagline && (
-              <p className="text-xs text-tat-charcoal/50 mt-0.5 leading-snug">{d.tagline}</p>
-            )}
-          </div>
-          <div className="h-7 w-7 rounded-full border border-tat-charcoal/12 flex items-center justify-center shrink-0 group-hover:bg-tat-gold group-hover:border-tat-gold transition-all duration-300 mt-0.5">
-            <ArrowUpRight className="h-3.5 w-3.5 text-tat-charcoal/50 group-hover:text-tat-charcoal transition-colors" />
-          </div>
-        </div>
-        <div className="mt-3 flex items-center justify-between gap-2 text-xs text-tat-charcoal/40">
-          {d.priceFrom > 0 ? (
-            <p className="flex items-center gap-1">
-              <IndianRupee className="h-3 w-3" />
-              from <span className="font-semibold text-tat-charcoal/70 ml-0.5">₹{d.priceFrom.toLocaleString("en-IN")}</span>
-            </p>
-          ) : <span />}
-          {typeof packageCount === "number" && packageCount > 0 && (
-            <p className="inline-flex items-center gap-1 text-[11px] font-medium text-tat-charcoal/55">
-              <Compass className="h-3 w-3" />
-              {packageCount} {packageCount === 1 ? "trip" : "trips"}
-            </p>
-          )}
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-// Wider card for International destinations
-function IntlCard({ d, priority, packageCount }: { d: Destination; priority?: boolean; packageCount?: number }) {
-  return (
-    <Link
-      href={`/destinations/${d.slug}`}
-      className="group block bg-white rounded-2xl overflow-hidden border border-tat-charcoal/8 hover:border-tat-charcoal/20 hover:shadow-xl transition-all duration-300"
-    >
-      {/* Image */}
-      <div className="relative aspect-[16/10] overflow-hidden bg-tat-cream">
-        <Image
-          src={d.image}
-          alt={d.name}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-          priority={priority}
-        />
-        {/* Country badge */}
-        <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1">
-          <MapPin className="h-3 w-3 text-tat-gold" />
-          <span className="text-[10px] font-medium text-tat-charcoal uppercase tracking-wider">{d.country}</span>
-        </div>
-        {/* Arrow overlay on hover */}
-        <div className="absolute top-3 right-3 h-8 w-8 rounded-full bg-white/0 group-hover:bg-white/90 flex items-center justify-center transition-all duration-300">
-          <ArrowUpRight className="h-4 w-4 text-tat-charcoal opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        </div>
-      </div>
-
-      {/* Details */}
-      <div className="px-5 py-4 flex items-center justify-between gap-4">
-        <div className="min-w-0">
-          <h3 className="font-display text-xl font-medium text-tat-charcoal group-hover:text-tat-gold transition-colors leading-tight truncate">
-            {d.name}
-          </h3>
-          <div className="flex items-center gap-2 mt-0.5">
-            {d.tagline && (
-              <p className="text-xs text-tat-charcoal/50 truncate">{d.tagline}</p>
-            )}
-            {typeof packageCount === "number" && packageCount > 0 && (
-              <span className="inline-flex items-center gap-1 text-[11px] font-medium text-tat-charcoal/55 shrink-0">
-                <Compass className="h-3 w-3" />
-                {packageCount} {packageCount === 1 ? "trip" : "trips"}
-              </span>
-            )}
-          </div>
-        </div>
-        {d.priceFrom > 0 && (
-          <div className="text-right shrink-0">
-            <p className="text-[10px] text-tat-charcoal/35 uppercase tracking-wider">From</p>
-            <p className="text-sm font-semibold text-tat-charcoal">₹{d.priceFrom.toLocaleString("en-IN")}</p>
-            <p className="text-[10px] text-tat-charcoal/35">/person</p>
-          </div>
-        )}
-      </div>
-    </Link>
-  );
-}
+// Visa-free for Indian passports — drives the "Visa-free" filter chip
+// and the badge on each card. Mirrors the home page list so both stay
+// in sync; can move to Sanity later.
+const VISA_FREE_SLUGS = [
+  "bali", "thailand", "sri-lanka", "maldives", "nepal", "bhutan",
+  "vietnam", "mauritius", "kenya", "jordan", "indonesia", "fiji",
+];
 
 export default async function DestinationsPage() {
   const [destinations, packages] = await Promise.all([
@@ -156,13 +41,15 @@ export default async function DestinationsPage() {
 
   // Pre-compute package count per destination slug so cards can show "12 trips"
   // without each card refetching.
-  const packageCountBySlug = new Map<string, number>();
+  const packageCountBySlug: Record<string, number> = {};
   for (const p of packages) {
-    packageCountBySlug.set(p.destinationSlug, (packageCountBySlug.get(p.destinationSlug) ?? 0) + 1);
+    packageCountBySlug[p.destinationSlug] = (packageCountBySlug[p.destinationSlug] ?? 0) + 1;
   }
 
-  const india = destinations.filter(isIndia);
-  const international = destinations.filter((d) => !isIndia(d));
+  const indiaSet = new Set(INDIA_SLUGS);
+  const isIndia = (slug: string, country: string) => country === "India" || indiaSet.has(slug);
+  const indiaCount = destinations.filter((d) => isIndia(d.slug, d.country)).length;
+  const intlCount = destinations.length - indiaCount;
 
   // ItemList JSON-LD seeds search engines with the canonical destination
   // catalog regardless of how the page is split into India / International.
@@ -183,7 +70,7 @@ export default async function DestinationsPage() {
     <>
       <JsonLd data={listLd} />
       {/* Hero */}
-      <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 bg-tat-charcoal overflow-hidden">
+      <section className="relative pt-20 pb-12 md:pt-28 md:pb-16 bg-tat-charcoal overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="https://images.unsplash.com/photo-1488085061387-422e29b40080?w=2400&q=80&auto=format&fit=crop"
@@ -197,19 +84,18 @@ export default async function DestinationsPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-tat-charcoal/60 via-tat-charcoal/80 to-tat-charcoal" />
         <div className="container-custom relative text-center">
           <span className="eyebrow text-tat-gold">Explore</span>
-          <h1 className="mt-4 font-display text-display-lg text-tat-paper font-medium max-w-3xl mx-auto text-balance leading-[1.02]">
+          <h1 className="mt-3 font-display text-display-lg text-tat-paper font-medium max-w-3xl mx-auto text-balance leading-[1.02]">
             Every coordinate,
             <span className="italic text-tat-gold font-light"> considered.</span>
           </h1>
-          <p className="mt-5 text-tat-paper/60 max-w-md mx-auto text-sm leading-relaxed">
+          <p className="mt-4 text-tat-paper/60 max-w-md mx-auto text-sm leading-relaxed">
             From Himalayan peaks to Maldivian reefs — destinations our planners know by heart.
           </p>
-          {/* Stats strip */}
-          <div className="mt-10 flex items-center justify-center gap-8 md:gap-12">
+          <div className="mt-8 flex items-center justify-center gap-8 md:gap-12">
             {[
-              { n: india.length || "15+", label: "India destinations" },
-              { n: international.length || "20+", label: "International" },
-              { n: "130+", label: "Experiences" },
+              { n: indiaCount || "15+", label: "India destinations" },
+              { n: intlCount || "20+", label: "International" },
+              { n: packages.length || "130+", label: "Trips ready" },
             ].map(({ n, label }) => (
               <div key={label} className="text-center">
                 <p className="font-display text-2xl md:text-3xl text-tat-gold font-medium">{n}</p>
@@ -220,107 +106,12 @@ export default async function DestinationsPage() {
         </div>
       </section>
 
-      {/* ── Incredible India ───────────────────────────────────────── */}
-      {india.length > 0 && (
-        <section className="py-14 md:py-20 bg-tat-paper">
-          <div className="container-custom">
-            {/* Section header */}
-            <div className="flex items-end justify-between mb-8 md:mb-10">
-              <div>
-                <span className="eyebrow">Domestic</span>
-                <h2 className="heading-section mt-2">
-                  Incredible
-                  <span className="italic text-tat-gold font-light"> India</span>
-                </h2>
-                <p className="mt-2 text-tat-charcoal/50 text-sm max-w-sm">
-                  {india.length} destinations across mountains, backwaters, deserts and coastlines.
-                </p>
-              </div>
-              <Link
-                href="/packages?region=india"
-                className="hidden md:flex items-center gap-1.5 text-sm text-tat-charcoal/50 hover:text-tat-gold transition-colors shrink-0"
-              >
-                View India experiences <ArrowUpRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            {/* 4-col compact grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-              {india.map((d, i) => (
-                <IndiaCard key={d.slug} d={d} priority={i < 4} packageCount={packageCountBySlug.get(d.slug)} />
-              ))}
-            </div>
-
-            <div className="mt-6 md:hidden">
-              <Link
-                href="/packages?region=india"
-                className="flex items-center gap-1.5 text-sm text-tat-charcoal/50 hover:text-tat-gold transition-colors"
-              >
-                View India experiences <ArrowUpRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Divider */}
-      <div className="bg-tat-cream h-px mx-8 md:mx-16" />
-
-      {/* ── International ─────────────────────────────────────────── */}
-      {international.length > 0 && (
-        <section className="py-14 md:py-20 bg-tat-paper">
-          <div className="container-custom">
-            {/* Section header */}
-            <div className="flex items-end justify-between mb-8 md:mb-10">
-              <div>
-                <span className="eyebrow">International</span>
-                <h2 className="heading-section mt-2">
-                  Around
-                  <span className="italic text-tat-gold font-light"> the World</span>
-                </h2>
-                <p className="mt-2 text-tat-charcoal/50 text-sm max-w-sm">
-                  {international.length} destinations across Asia, Europe, the Middle East and beyond.
-                </p>
-              </div>
-              <Link
-                href="/packages?region=international"
-                className="hidden md:flex items-center gap-1.5 text-sm text-tat-charcoal/50 hover:text-tat-gold transition-colors shrink-0"
-              >
-                View international experiences <ArrowUpRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            {/* 3-col wider grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-              {international.map((d, i) => (
-                <IntlCard key={d.slug} d={d} priority={i < 3} packageCount={packageCountBySlug.get(d.slug)} />
-              ))}
-            </div>
-
-            <div className="mt-6 md:hidden">
-              <Link
-                href="/packages?region=international"
-                className="flex items-center gap-1.5 text-sm text-tat-charcoal/50 hover:text-tat-gold transition-colors"
-              >
-                View international experiences <ArrowUpRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Fallback — if Sanity has no split data yet */}
-      {india.length === 0 && international.length === 0 && (
-        <section className="py-16 md:py-20 bg-tat-paper">
-          <div className="container-custom">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-              {destinations.map((d, i) => (
-                <IntlCard key={d.slug} d={d} priority={i < 3} packageCount={packageCountBySlug.get(d.slug)} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      <DestinationsBrowser
+        destinations={destinations}
+        packageCountBySlug={packageCountBySlug}
+        indiaSlugs={INDIA_SLUGS}
+        visaFreeSlugs={VISA_FREE_SLUGS}
+      />
 
       <CTASection />
     </>

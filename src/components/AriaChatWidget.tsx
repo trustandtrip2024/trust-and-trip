@@ -300,6 +300,16 @@ export default function AriaChatWidget() {
 
     function onAriaOpen() {
       applyPreload();
+      // Optional one-shot text preload — any caller (destination card,
+      // package card, etc.) can drop a question into sessionStorage and
+      // dispatch tt:aria-open; the widget pre-fills the input with it.
+      try {
+        const text = window.sessionStorage.getItem("tt_aria_text_preload");
+        if (text) {
+          setInput(text);
+          window.sessionStorage.removeItem("tt_aria_text_preload");
+        }
+      } catch {}
       setOpen(true);
     }
 
