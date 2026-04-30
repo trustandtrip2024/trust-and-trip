@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Shield, CreditCard, CheckCircle2, Loader2, X, IndianRupee, Tag } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Shield, CreditCard, CheckCircle2, Loader2, X, IndianRupee, Tag, Calendar, Users } from "lucide-react";
 import { pixel } from "@/components/MetaPixel";
 import { analytics } from "@/lib/analytics";
 
@@ -15,9 +15,14 @@ declare global {
   interface Window { Razorpay: any; }
 }
 
+// Earliest selectable travel date — tomorrow (YYYY-MM-DD).
+function tomorrowIso() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
 export default function BookingDeposit({ packageSlug, packageTitle, packagePrice }: Props) {
-  const depositAmount = Math.max(5000, Math.round((packagePrice * 0.30) / 100) * 100);
-  const depositDisplay = `₹${depositAmount.toLocaleString("en-IN")}`;
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -33,6 +38,19 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
   });
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; amount_off: number } | null>(null);
 
+  // Deposit = 30% of (per-person price × travellers), floored at ₹5,000,
+  // rounded to the nearest ₹100. Reactive to the traveller count so the
+  // modal headline always matches the amount that gets charged.
+  const numTravellers = Math.max(1, Math.min(20, Number(form.num_travellers) || 1));
+  const tripTotal = packagePrice * numTravellers;
+  const depositAmount = useMemo(
+    () => Math.max(5000, Math.round((tripTotal * 0.30) / 100) * 100),
+    [tripTotal],
+  );
+  const depositDisplay = `₹${depositAmount.toLocaleString("en-IN")}`;
+  const tripTotalDisplay = `₹${tripTotal.toLocaleString("en-IN")}`;
+  const minDate = useMemo(() => tomorrowIso(), []);
+
   // Auto-open when the package detail page is loaded with ?book=1.
   // Powers the "Quick Book" affordance on every PackageCard across the site
   // (cards link to /packages/{slug}?book=1 so deposit modal pops on landing).
@@ -47,6 +65,20 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
       window.history.replaceState(null, "", next);
     }
   }, []);
+
+  // Lock body scroll while modal is open so the package detail page
+  // underneath doesn't bleed through on touch devices, and bind ESC.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   const loadRazorpay = () => new Promise<boolean>((resolve) => {
     if (window.Razorpay) return resolve(true);
@@ -147,11 +179,20 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
       </button>
       <p className="text-center text-[11px] text-tat-charcoal/40 mt-1.5">100% refundable · No hidden charges</p>
 
-      {/* Modal */}
+      {/* Modal — z-[200] sits above every floating widget on the detail
+          page (FloatingWhatsApp, AriaChat, MobileBottomNav, sticky bars).
+          Body scroll is locked via the effect above; max-h ensures the
+          form is scrollable on small viewports without the page bleeding
+          underneath. */}
       {open && (
-        <div className="fixed inset-0 z-[90] bg-tat-charcoal/70 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setOpen(false)}>
-          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Quick book this package"
+          className="fixed inset-0 z-[200] bg-tat-charcoal/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+          onClick={() => setOpen(false)}
+        >
+          <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl my-auto max-h-[calc(100vh-2rem)] flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
             {/* Header */}
             <div className="flex items-center justify-between p-5 border-b border-tat-charcoal/8">
               <div>
@@ -163,7 +204,8 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
               </button>
             </div>
 
-            {/* Package summary */}
+            {/* Package summary — recalculates trip total + 30% deposit
+                whenever the traveller count changes. */}
             <div className="px-5 py-4 bg-tat-gold/8 border-b border-tat-gold/15">
               <p className="text-xs text-tat-charcoal/50 uppercase tracking-wider">Booking for</p>
               <p className="font-medium text-tat-charcoal mt-0.5">{packageTitle}</p>
@@ -172,12 +214,16 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
                 <span className="text-sm font-medium">₹{packagePrice.toLocaleString("en-IN")}/person</span>
               </div>
               <div className="flex items-center justify-between mt-1">
-                <span className="text-xs text-tat-gold font-medium">Deposit now</span>
+                <span className="text-xs text-tat-charcoal/50">{numTravellers} traveller{numTravellers === 1 ? "" : "s"}</span>
+                <span className="text-sm font-medium">{tripTotalDisplay} trip total</span>
+              </div>
+              <div className="flex items-center justify-between mt-1 pt-2 border-t border-tat-gold/20">
+                <span className="text-xs text-tat-gold font-medium">30% deposit now</span>
                 <span className="text-sm font-semibold text-tat-gold">{depositDisplay}</span>
               </div>
             </div>
 
-            <form onSubmit={handlePay} className="p-5 space-y-3">
+            <form onSubmit={handlePay} className="p-5 space-y-3 overflow-y-auto">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Full Name *</label>
@@ -186,8 +232,17 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
                 </div>
                 <div>
                   <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Phone *</label>
-                  <input required type="tel" value={form.customer_phone} onChange={(e) => setForm({ ...form, customer_phone: e.target.value })}
-                    placeholder="+91 98765 43210" className="input-travel text-sm" />
+                  <input
+                    required
+                    type="tel"
+                    inputMode="tel"
+                    pattern="[0-9+\-\s]{10,15}"
+                    title="Enter a valid phone number (10–15 digits, may include + and spaces)."
+                    value={form.customer_phone}
+                    onChange={(e) => setForm({ ...form, customer_phone: e.target.value })}
+                    placeholder="+91 98765 43210"
+                    className="input-travel text-sm"
+                  />
                 </div>
               </div>
               <div>
@@ -197,15 +252,44 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Travel Date</label>
-                  <input value={form.travel_date} onChange={(e) => setForm({ ...form, travel_date: e.target.value })}
-                    placeholder="e.g. June 2026" className="input-travel text-sm" />
+                  <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 mb-1 flex items-center gap-1">
+                    <Calendar className="h-3 w-3" /> Travel Date *
+                  </label>
+                  <input
+                    required
+                    type="date"
+                    min={minDate}
+                    value={form.travel_date}
+                    onChange={(e) => setForm({ ...form, travel_date: e.target.value })}
+                    className="input-travel text-sm"
+                  />
                 </div>
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Travellers</label>
-                  <input type="number" min="1" max="20" value={form.num_travellers}
-                    onChange={(e) => setForm({ ...form, num_travellers: e.target.value })} className="input-travel text-sm" />
+                  <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 mb-1 flex items-center gap-1">
+                    <Users className="h-3 w-3" /> Travellers *
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    min={1}
+                    max={20}
+                    step={1}
+                    value={form.num_travellers}
+                    onChange={(e) => setForm({ ...form, num_travellers: e.target.value })}
+                    className="input-travel text-sm"
+                  />
                 </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase tracking-wider text-tat-charcoal/50 block mb-1">Special requests (optional)</label>
+                <textarea
+                  rows={2}
+                  value={form.special_requests}
+                  onChange={(e) => setForm({ ...form, special_requests: e.target.value })}
+                  placeholder="Anything we should know? Diet, mobility, anniversary, etc."
+                  className="input-travel text-sm resize-none"
+                />
               </div>
 
               <div>

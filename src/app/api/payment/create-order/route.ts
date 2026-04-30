@@ -49,7 +49,11 @@ export async function POST(req: NextRequest) {
       if (new Date(coupon.expires_at).getTime() < Date.now()) {
         return NextResponse.json({ error: "This coupon has expired." }, { status: 400 });
       }
-      if (package_price < coupon.min_order_value) {
+      // Compare against the full trip total (price × travellers), not the
+      // per-person price, so couples on big trips don't trip the floor.
+      const couponTravellers = Math.max(1, Math.min(20, Number.parseInt(String(num_travellers ?? "1"), 10) || 1));
+      const couponTripTotal = Math.max(0, Number(package_price) || 0) * couponTravellers;
+      if (couponTripTotal < coupon.min_order_value) {
         return NextResponse.json({
           error: `Coupon needs a minimum trip value of ₹${coupon.min_order_value.toLocaleString("en-IN")}.`,
         }, { status: 400 });
@@ -58,9 +62,13 @@ export async function POST(req: NextRequest) {
       validatedCoupon = coupon.code;
     }
 
-    const finalPrice = Math.max(0, package_price - discountAmount);
+    // Trip total = per-person price × travellers, capped to a sane integer
+    // range so a malformed num_travellers can't blow up the deposit math.
+    const travellerCount = Math.max(1, Math.min(20, Number.parseInt(String(num_travellers ?? "1"), 10) || 1));
+    const tripTotal = Math.max(0, Number(package_price) || 0) * travellerCount;
+    const finalPrice = Math.max(0, tripTotal - discountAmount);
 
-    // 30% of post-discount package price, minimum ₹5,000, rounded to nearest ₹100
+    // 30% of post-discount trip total, minimum ₹5,000, rounded to nearest ₹100
     const depositRupees = Math.max(5000, Math.round((finalPrice * 0.30) / 100) * 100);
     const DEPOSIT_AMOUNT = depositRupees * 100; // convert to paise
 
