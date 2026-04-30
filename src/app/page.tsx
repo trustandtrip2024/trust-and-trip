@@ -121,7 +121,7 @@ export default async function HomePage() {
     <>
       <HomeDealRibbon />
       <Hero trustStrip={siteStats.trustStripLine} />
-      <StickySubnav />
+      <StickySubnav destinations={destinations} />
       <TrustRibbon
         totalTravelers={siteStats.totalTravelers}
         reviewCount={siteStats.googleReviewCount}
