@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Shield, CreditCard, CheckCircle2, Loader2, X, IndianRupee, Tag } from "lucide-react";
 import { pixel } from "@/components/MetaPixel";
 import { analytics } from "@/lib/analytics";
@@ -32,6 +32,21 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
     coupon_code: "",
   });
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; amount_off: number } | null>(null);
+
+  // Auto-open when the package detail page is loaded with ?book=1.
+  // Powers the "Quick Book" affordance on every PackageCard across the site
+  // (cards link to /packages/{slug}?book=1 so deposit modal pops on landing).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("book") === "1") {
+      setOpen(true);
+      // Strip the param so a refresh doesn't re-open and back-nav stays clean.
+      params.delete("book");
+      const next = `${window.location.pathname}${params.toString() ? `?${params}` : ""}${window.location.hash}`;
+      window.history.replaceState(null, "", next);
+    }
+  }, []);
 
   const loadRazorpay = () => new Promise<boolean>((resolve) => {
     if (window.Razorpay) return resolve(true);

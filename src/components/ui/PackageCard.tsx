@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Heart, Star, Clock, MapPin, Flame, Zap, ArrowRight, Sparkles,
-  Hotel, Utensils, Bus, Camera, MessageCircle,
+  Hotel, Utensils, Bus, Camera, MessageCircle, CreditCard,
 } from "lucide-react";
 import { useState } from "react";
 import Price from "@/components/Price";
@@ -257,23 +257,23 @@ export default function PackageCardUI(p: PackageCardProps) {
             Plan this trip
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
-          {/* Secondary CTAs — hidden on mobile in compact mode to keep rail cards short */}
-          <div className={`${compact ? "hidden sm:grid" : "grid"} grid-cols-2 gap-1.5`}>
+          {/* Quick Book + Ask Aria — visible on every breakpoint per shared CTA spec */}
+          <div className="grid grid-cols-2 gap-1.5">
+            <Link
+              href={`${p.href}?book=1`}
+              className={`inline-flex items-center justify-center gap-1 ${compact ? "h-9" : "h-10"} px-2 rounded-pill border border-tat-gold/40 bg-tat-gold/8 text-[12px] font-semibold text-tat-charcoal hover:bg-tat-gold hover:border-tat-gold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
+            >
+              <CreditCard className="h-3.5 w-3.5 text-tat-gold" />
+              Quick Book
+            </Link>
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); askAriaAboutPackage(p); }}
-              className={`inline-flex items-center justify-center gap-1 ${compact ? "h-8" : "h-9"} px-2 rounded-md text-meta font-medium text-tat-charcoal/80 hover:text-tat-gold hover:bg-tat-gold/8 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
+              className={`inline-flex items-center justify-center gap-1 ${compact ? "h-9" : "h-10"} px-2 rounded-pill border border-tat-charcoal/15 bg-white text-[12px] font-semibold text-tat-charcoal hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
             >
-              <MessageCircle className="h-3 w-3 text-tat-gold" />
+              <MessageCircle className="h-3.5 w-3.5" />
               Ask Aria
             </button>
-            <Link
-              href={p.customizeHref ?? `${p.href}?customize=1`}
-              className={`inline-flex items-center justify-center gap-1 ${compact ? "h-8" : "h-9"} px-2 text-meta font-medium text-tat-charcoal/80 hover:text-tat-gold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 rounded-md`}
-            >
-              Customise
-              <ArrowRight className="h-3 w-3" />
-            </Link>
           </div>
         </div>
       </div>

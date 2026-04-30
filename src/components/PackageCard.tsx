@@ -4,14 +4,36 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp, Heart, Sliders, PhoneCall, ShoppingCart, Check } from "lucide-react";
+import { Star, Clock, MapPin, ArrowRight, Flame, TrendingUp, Heart, ShoppingCart, Check, CreditCard, MessageCircle } from "lucide-react";
 import { useWishlistStore } from "@/store/useWishlistStore";
 import { useUserStore } from "@/store/useUserStore";
 import { supabase } from "@/lib/supabase";
 import { getDynamicPrice } from "@/lib/dynamic-pricing";
 import Price from "./Price";
-import CustomizeModal from "./CustomizeModal";
-import ScheduleCallModal from "./ScheduleCallModal";
+
+// Pre-prime Aria with this card's package context — mirrors the
+// PackageAriaPreload flow on /packages/{slug} so Aria's welcome greeting
+// names the package and can answer specific questions immediately.
+function askAriaAboutPackage(args: {
+  slug: string; title: string; price: number; duration: string;
+  destinationName?: string; travelType?: string;
+}) {
+  if (typeof window === "undefined") return;
+  const preload = {
+    slug: args.slug,
+    title: args.title,
+    destinationName: args.destinationName ?? "",
+    price: args.price,
+    duration: args.duration,
+    travelType: args.travelType ?? "",
+  };
+  try {
+    window.sessionStorage.setItem("tt_aria_package_preload", JSON.stringify(preload));
+    window.dispatchEvent(new CustomEvent("tt:aria-open"));
+  } catch {
+    window.location.href = `/packages/${args.slug}`;
+  }
+}
 
 const BOOKED_COUNTS = [14, 8, 22, 6, 17, 11, 29, 5, 19, 9];
 
@@ -76,8 +98,6 @@ export default function PackageCard({
     }
   };
   const { price: dynPrice, originalPrice, tier, savings } = getDynamicPrice(price, slug);
-  const [showCustomize, setShowCustomize] = useState(false);
-  const [showSchedule, setShowSchedule] = useState(false);
   const [inCart, setInCart] = useState(false);
   const [addingCart, setAddingCart] = useState(false);
 
@@ -265,44 +285,30 @@ export default function PackageCard({
             </button>
           )}
 
-          {/* Action buttons */}
+          {/* Quick Book + Ask Aria — shared CTA pair on every PackageCard across the site */}
           <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={(e) => { e.preventDefault(); setShowCustomize(true); }}
-              className="flex items-center justify-center gap-1.5 py-2 rounded-xl border border-tat-charcoal/12 text-[11px] font-medium text-tat-charcoal/65 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal transition-all duration-200"
+            <Link
+              href={`/packages/${slug}?book=1`}
+              className="flex items-center justify-center gap-1.5 py-2 rounded-xl border border-tat-gold/40 bg-tat-gold/8 text-[11px] font-semibold text-tat-charcoal hover:bg-tat-gold hover:text-tat-charcoal hover:border-tat-gold transition-all duration-200"
             >
-              <Sliders className="h-3.5 w-3.5 shrink-0" />
-              Customize
-            </button>
+              <CreditCard className="h-3.5 w-3.5 shrink-0 text-tat-gold" />
+              Quick Book
+            </Link>
             <button
-              onClick={(e) => { e.preventDefault(); setShowSchedule(true); }}
-              className="flex items-center justify-center gap-1.5 py-2 rounded-xl border border-tat-gold/40 bg-tat-gold/8 text-[11px] font-medium text-tat-charcoal/70 hover:bg-tat-gold hover:text-tat-charcoal hover:border-tat-gold transition-all duration-200"
+              onClick={(e) => {
+                e.preventDefault();
+                askAriaAboutPackage({ slug, title, price: dynPrice, duration, destinationName, travelType });
+              }}
+              className="flex items-center justify-center gap-1.5 py-2 rounded-xl border border-tat-charcoal/12 text-[11px] font-semibold text-tat-charcoal/80 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal transition-all duration-200"
             >
-              <PhoneCall className="h-3.5 w-3.5 shrink-0" />
-              Schedule Call
+              <MessageCircle className="h-3.5 w-3.5 shrink-0" />
+              Ask Aria
             </button>
           </div>
         </div>
 
       </div>
     </motion.article>
-
-    {showCustomize && (
-      <CustomizeModal
-        packageTitle={title}
-        packageSlug={slug}
-        destinationName={destinationName}
-        onClose={() => setShowCustomize(false)}
-      />
-    )}
-    {showSchedule && (
-      <ScheduleCallModal
-        packageTitle={title}
-        packageSlug={slug}
-        destinationName={destinationName}
-        onClose={() => setShowSchedule(false)}
-      />
-    )}
     </>
   );
 }

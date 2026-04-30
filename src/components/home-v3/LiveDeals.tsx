@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Flame, Clock, ArrowRight, Sparkles, Sun, Hourglass } from "lucide-react";
+import { Flame, Clock, ArrowRight, Sparkles, Sun, Hourglass, MessageCircle, CreditCard } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type DealKind = "flash" | "early-bird" | "last-minute" | "honeymoon" | "yatra";
@@ -39,6 +39,31 @@ const DEALS: Deal[] = [
 ];
 
 function inr(n: number) { return `₹${n.toLocaleString("en-IN")}`; }
+
+const WA_NUMBER = "918115999588";
+
+function quickBookWhatsApp(deal: Deal): string {
+  const text = `Hi Trust and Trip! 🙏\n\nI'd like to Quick Book the *${deal.title}* deal (${inr(deal.dealPrice)}/person · ${deal.duration}). Please confirm availability and next steps.`;
+  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
+function askAriaAboutDeal(deal: Deal) {
+  if (typeof window === "undefined") return;
+  const preload = {
+    slug: deal.slug,
+    title: deal.title,
+    destinationName: deal.destination,
+    price: deal.dealPrice,
+    duration: deal.duration,
+    travelType: "",
+  };
+  try {
+    window.sessionStorage.setItem("tt_aria_package_preload", JSON.stringify(preload));
+    window.dispatchEvent(new CustomEvent("tt:aria-open"));
+  } catch {
+    window.location.href = deal.href;
+  }
+}
 function pad(n: number) { return n.toString().padStart(2, "0"); }
 
 function timeLeft(ms: number): { primary: string; urgent: boolean; over: boolean } {
@@ -89,13 +114,15 @@ function DealTile({ deal }: { deal: Deal }) {
   const savingsPct = Math.round((savings / deal.originalPrice) * 100);
 
   return (
-    <Link
-      href={deal.href}
-      prefetch={false}
-      className="group relative flex h-full flex-col rounded-2xl overflow-hidden ring-1 ring-tat-charcoal/10 dark:ring-white/10 bg-white dark:bg-tat-charcoal shadow-soft hover:shadow-soft-lg transition-shadow duration-300"
-      aria-label={`${deal.title} — save ${savingsPct}% with this ${meta.label.toLowerCase()}`}
+    <article
+      className="group relative flex h-full flex-col rounded-2xl overflow-hidden ring-1 ring-tat-charcoal/10 dark:ring-white/10 bg-white dark:bg-tat-charcoal shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0"
     >
-      <div className="relative aspect-[4/3]">
+      <Link
+        href={deal.href}
+        prefetch={false}
+        aria-label={`${deal.title} — save ${savingsPct}% with this ${meta.label.toLowerCase()}`}
+        className="relative aspect-[4/3] block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold"
+      >
         <Image
           src={deal.image}
           alt=""
@@ -117,12 +144,14 @@ function DealTile({ deal }: { deal: Deal }) {
             Save {savingsPct}%
           </span>
         </div>
-      </div>
+      </Link>
 
       <div className="flex flex-col gap-1.5 p-3 sm:p-4">
-        <h3 className="font-display font-medium text-[14px] sm:text-[16px] md:text-[18px] text-tat-charcoal dark:text-tat-paper leading-tight line-clamp-2">
-          {deal.title}
-        </h3>
+        <Link href={deal.href} prefetch={false} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold rounded">
+          <h3 className="font-display font-medium text-[14px] sm:text-[16px] md:text-[18px] text-tat-charcoal dark:text-tat-paper leading-tight line-clamp-2 group-hover:text-tat-gold transition-colors">
+            {deal.title}
+          </h3>
+        </Link>
         <p className="text-[11px] sm:text-meta text-tat-slate dark:text-tat-paper/70 line-clamp-1">
           {deal.destination.split("·")[0].trim()} · {deal.duration}
         </p>
@@ -134,12 +163,37 @@ function DealTile({ deal }: { deal: Deal }) {
             {inr(deal.originalPrice)}
           </p>
         </div>
-        <span className="mt-2 inline-flex items-center justify-center gap-1 h-9 sm:h-10 px-3 rounded-full bg-tat-teal text-white text-[12px] font-semibold whitespace-nowrap group-hover:bg-tat-teal-deep transition-colors shadow-sm">
-          Plan this trip
+        {/* Shared CTA pair: Quick Book opens WhatsApp with the deal context;
+            Ask Aria preloads chat with the same deal so it answers in-context. */}
+        <div className="mt-2 grid grid-cols-2 gap-1.5">
+          <a
+            href={quickBookWhatsApp(deal)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-1 h-9 px-2 rounded-pill border border-tat-gold/40 bg-tat-gold/10 text-[12px] font-semibold text-tat-charcoal hover:bg-tat-gold hover:border-tat-gold transition-colors"
+          >
+            <CreditCard className="h-3.5 w-3.5 text-tat-gold" />
+            Quick Book
+          </a>
+          <button
+            type="button"
+            onClick={(e) => { e.preventDefault(); askAriaAboutDeal(deal); }}
+            className="inline-flex items-center justify-center gap-1 h-9 px-2 rounded-pill border border-tat-charcoal/15 bg-white text-[12px] font-semibold text-tat-charcoal hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal transition-colors"
+          >
+            <MessageCircle className="h-3.5 w-3.5" />
+            Ask Aria
+          </button>
+        </div>
+        <Link
+          href={deal.href}
+          prefetch={false}
+          className="mt-1 inline-flex items-center justify-center gap-1 h-9 px-3 rounded-pill bg-tat-teal text-white text-[12px] font-semibold whitespace-nowrap hover:bg-tat-teal-deep transition-colors shadow-sm"
+        >
+          View deal
           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-        </span>
+        </Link>
       </div>
-    </Link>
+    </article>
   );
 }
 
