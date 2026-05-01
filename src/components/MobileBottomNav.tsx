@@ -36,8 +36,11 @@ function Tab({ href, icon: Icon, label, active, badge }: {
   return (
     <Link href={href}
       className={clsx("flex flex-col items-center gap-1 flex-1 py-2 transition-all duration-200 min-h-[56px] justify-center relative",
-        active ? "text-tat-teal" : "text-tat-charcoal/45 hover:text-tat-charcoal/70")}>
-      <div className={clsx("flex items-center justify-center rounded-xl w-10 h-7 transition-all duration-200 relative", active && "bg-tat-teal/12")}>
+        active
+          ? "text-tat-teal dark:text-tat-teal-mist"
+          : "text-tat-charcoal/55 hover:text-tat-charcoal/80 dark:text-tat-paper/65 dark:hover:text-tat-paper")}>
+      <div className={clsx("flex items-center justify-center rounded-xl w-10 h-7 transition-all duration-200 relative",
+        active && "bg-tat-teal/12 dark:bg-tat-teal-mist/15")}>
         <Icon className={clsx("h-[18px] w-[18px] transition-transform duration-200", active && "scale-110")} />
         {!!badge && (
           <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-tat-orange text-white text-[9px] font-semibold flex items-center justify-center">
@@ -46,7 +49,9 @@ function Tab({ href, icon: Icon, label, active, badge }: {
         )}
       </div>
       <span className={clsx("text-[10px] uppercase tracking-[0.12em] font-medium leading-none",
-        active ? "text-tat-teal" : "text-tat-charcoal/45")}>
+        active
+          ? "text-tat-teal dark:text-tat-teal-mist"
+          : "text-tat-charcoal/55 dark:text-tat-paper/65")}>
         {label}
       </span>
     </Link>
@@ -112,7 +117,7 @@ export default function MobileBottomNav() {
       className="fixed bottom-0 inset-x-0 z-50 lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="bg-white/95 backdrop-blur-md border-t border-tat-charcoal/8 shadow-[0_-4px_24px_rgba(42,42,42,0.10)]">
+      <div className="bg-white/95 dark:bg-tat-charcoal/95 backdrop-blur-md border-t border-tat-charcoal/8 dark:border-white/10 shadow-[0_-4px_24px_rgba(42,42,42,0.10)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.45)]">
         <div className="flex items-end justify-around h-16 px-1 max-w-lg mx-auto">
           {leftTabs.map((t) => (
             <Tab key={t.href} {...t} active={isActive(t.href)} />
@@ -152,7 +157,7 @@ export default function MobileBottomNav() {
                   : { y: [0, -3, 0, -2, 0], rotate: [0, -2, 0, 2, 0] }
               }
               transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-              className="relative h-16 w-16 rounded-full bg-tat-cream-warm shadow-[0_6px_24px_rgba(200,147,42,0.45)] ring-4 ring-white overflow-hidden"
+              className="relative h-16 w-16 rounded-full bg-tat-cream-warm shadow-[0_6px_24px_rgba(200,147,42,0.45)] ring-4 ring-white dark:ring-tat-charcoal overflow-hidden"
               whileTap={{ scale: 0.92 }}
               whileHover={{ scale: 1.05 }}
             >
@@ -169,7 +174,7 @@ export default function MobileBottomNav() {
               </span>
               <span className="absolute bottom-0.5 right-0.5 h-3 w-3 rounded-full bg-tat-success-fg ring-2 ring-white" />
             </motion.div>
-            <span className="text-[10px] uppercase tracking-[0.14em] font-semibold text-tat-charcoal leading-none mt-0.5">
+            <span className="text-[10px] uppercase tracking-[0.14em] font-semibold text-tat-charcoal dark:text-tat-paper leading-none mt-0.5">
               Aria
             </span>
           </button>
@@ -184,9 +189,9 @@ export default function MobileBottomNav() {
               analytics.whatsappClick("mobile_bottom_nav");
               captureIntent("whatsapp_click", { note: "Mobile bottom nav — WhatsApp" });
             }}
-            className="flex flex-col items-center gap-1 flex-1 py-2 min-h-[56px] justify-center text-tat-charcoal/45 hover:text-tat-charcoal/70"
+            className="flex flex-col items-center gap-1 flex-1 py-2 min-h-[56px] justify-center text-tat-charcoal/55 hover:text-tat-charcoal/80 dark:text-tat-paper/65 dark:hover:text-tat-paper"
           >
-            <div className="flex items-center justify-center rounded-xl w-10 h-7 bg-whatsapp/10">
+            <div className="flex items-center justify-center rounded-xl w-10 h-7 bg-whatsapp/10 dark:bg-whatsapp/20">
               <MessageCircle className="h-[18px] w-[18px] text-whatsapp" />
             </div>
             <span className="text-[10px] uppercase tracking-[0.12em] font-medium leading-none">
