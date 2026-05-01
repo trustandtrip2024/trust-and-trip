@@ -1,10 +1,12 @@
 export const revalidate = 300;
 
 import Image from "next/image";
+import { Suspense } from "react";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
 import { getDestinations, getPackages } from "@/lib/sanity-queries";
 import DestinationsBrowser from "@/components/destinations/DestinationsBrowser";
+import DestinationTileSkeleton from "@/components/DestinationTileSkeleton";
 
 export const metadata = {
   title: "Destinations — Explore Incredible India & the World",
@@ -35,26 +37,21 @@ const VISA_FREE_SLUGS = [
   "vietnam", "mauritius", "kenya", "jordan", "indonesia", "fiji",
 ];
 
-export default async function DestinationsPage() {
+// Pulls the heavy Sanity data + JSON-LD + browser grid. Lifted into its
+// own async component so the hero can stream sync at TTFB while this
+// suspends behind a skeleton — turns a 1 s blank screen into "real
+// content + grid placeholder" for Meta-ad cold clicks.
+async function DestinationsBody() {
   const [destinations, packages] = await Promise.all([
     getDestinations(),
     getPackages().catch(() => []),
   ]);
 
-  // Pre-compute package count per destination slug so cards can show "12 trips"
-  // without each card refetching.
   const packageCountBySlug: Record<string, number> = {};
   for (const p of packages) {
     packageCountBySlug[p.destinationSlug] = (packageCountBySlug[p.destinationSlug] ?? 0) + 1;
   }
 
-  const indiaSet = new Set(INDIA_SLUGS);
-  const isIndia = (slug: string, country: string) => country === "India" || indiaSet.has(slug);
-  const indiaCount = destinations.filter((d) => isIndia(d.slug, d.country)).length;
-  const intlCount = destinations.length - indiaCount;
-
-  // ItemList JSON-LD seeds search engines with the canonical destination
-  // catalog regardless of how the page is split into India / International.
   const listLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -71,7 +68,35 @@ export default async function DestinationsPage() {
   return (
     <>
       <JsonLd data={listLd} />
-      {/* Hero */}
+      <DestinationsBrowser
+        destinations={destinations}
+        packageCountBySlug={packageCountBySlug}
+        indiaSlugs={INDIA_SLUGS}
+        visaFreeSlugs={VISA_FREE_SLUGS}
+      />
+    </>
+  );
+}
+
+function DestinationsBodySkeleton() {
+  return (
+    <section className="py-12 md:py-16">
+      <div className="container-custom">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
+          {Array.from({ length: 15 }).map((_, i) => (
+            <DestinationTileSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function DestinationsPage() {
+  return (
+    <>
+      {/* Hero — sync, ships in TTFB. Stat counters fall back to fixed
+          strings while the real numbers stream in below. */}
       <section className="relative pt-20 pb-12 md:pt-28 md:pb-16 bg-tat-charcoal overflow-hidden">
         <div className="absolute inset-0">
           <Image
@@ -95,9 +120,9 @@ export default async function DestinationsPage() {
           </p>
           <div className="mt-8 flex items-center justify-center gap-8 md:gap-12">
             {[
-              { n: indiaCount || "15+", label: "India destinations" },
-              { n: intlCount || "20+", label: "International" },
-              { n: packages.length || "130+", label: "Trips ready" },
+              { n: "15+", label: "India destinations" },
+              { n: "20+", label: "International" },
+              { n: "130+", label: "Trips ready" },
             ].map(({ n, label }) => (
               <div key={label} className="text-center">
                 <p className="font-display text-2xl md:text-3xl text-tat-gold font-medium">{n}</p>
@@ -108,12 +133,9 @@ export default async function DestinationsPage() {
         </div>
       </section>
 
-      <DestinationsBrowser
-        destinations={destinations}
-        packageCountBySlug={packageCountBySlug}
-        indiaSlugs={INDIA_SLUGS}
-        visaFreeSlugs={VISA_FREE_SLUGS}
-      />
+      <Suspense fallback={<DestinationsBodySkeleton />}>
+        <DestinationsBody />
+      </Suspense>
 
       <CTASection />
     </>

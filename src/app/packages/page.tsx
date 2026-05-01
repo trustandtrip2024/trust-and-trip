@@ -1,7 +1,9 @@
 export const revalidate = 300;
 
+import { Suspense } from "react";
 import { getPackages, getDestinations } from "@/lib/sanity-queries";
 import PackagesClient from "./PackagesClient";
+import PackageCardSkeleton from "@/components/PackageCardSkeleton";
 import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
 
@@ -15,20 +17,27 @@ export const metadata = {
   },
 };
 
-export default async function PackagesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | undefined }> | { [key: string]: string | undefined };
-}) {
-  const [packages, destinations, params] = await Promise.all([
+interface SP {
+  destination?: string;
+  type?: string;
+  duration?: string;
+  budget?: string;
+  region?: string;
+  category?: string;
+}
+
+// Heavy data + grid moved into its own async component so it can stream
+// inside a Suspense boundary. Without this the page blocks for the full
+// `getPackages()` round-trip (250+ docs from Sanity, ~3 MB of HTML once
+// rendered) before ANY byte ships, which on a Meta-ad cold click gives
+// the visitor a blank screen for ~2 s. Now the header section + skeleton
+// fallback ship as the first byte and the grid streams in behind it.
+async function PackagesGrid({ params }: { params: SP }) {
+  const [packages, destinations] = await Promise.all([
     getPackages(),
     getDestinations(),
-    Promise.resolve(searchParams),
   ]);
 
-  // ItemList JSON-LD so search engines see the catalog structure
-  // independent of client-side filter state. Caps at 50 entries to keep
-  // payload reasonable.
   const listLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -45,7 +54,45 @@ export default async function PackagesPage({
   return (
     <>
       <JsonLd data={listLd} />
+      <PackagesClient
+        packages={packages}
+        destinations={destinations}
+        initialDestination={params.destination ?? ""}
+        initialTravelType={params.type ?? ""}
+        initialDuration={params.duration ?? ""}
+        initialBudget={params.budget ?? ""}
+        initialRegion={params.region ?? ""}
+        initialCategory={params.category ?? ""}
+      />
+    </>
+  );
+}
 
+function PackagesGridSkeleton() {
+  return (
+    <section className="py-12 md:py-16">
+      <div className="container-custom">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <PackageCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default async function PackagesPage({
+  searchParams,
+}: {
+  searchParams: Promise<SP> | SP;
+}) {
+  // Resolve searchParams up-front so Suspense doesn't re-suspend on it.
+  // Header section ships sync — visitor sees real content within TTFB.
+  const params = await Promise.resolve(searchParams);
+
+  return (
+    <>
       <section className="pt-28 md:pt-36 pb-12 md:pb-16 bg-tat-paper border-b border-tat-charcoal/5">
         <div className="container-custom">
           <span className="eyebrow">Our Packages</span>
@@ -60,16 +107,9 @@ export default async function PackagesPage({
         </div>
       </section>
 
-      <PackagesClient
-        packages={packages}
-        destinations={destinations}
-        initialDestination={params.destination ?? ""}
-        initialTravelType={params.type ?? ""}
-        initialDuration={params.duration ?? ""}
-        initialBudget={params.budget ?? ""}
-        initialRegion={params.region ?? ""}
-        initialCategory={params.category ?? ""}
-      />
+      <Suspense fallback={<PackagesGridSkeleton />}>
+        <PackagesGrid params={params} />
+      </Suspense>
 
       <CTASection />
     </>
