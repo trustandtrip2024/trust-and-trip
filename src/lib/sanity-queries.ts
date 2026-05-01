@@ -2,27 +2,31 @@ import { cache } from "react";
 import { sanityClient, urlFor } from "./sanity";
 import type { Destination, Package } from "./data";
 import { DESTINATION_GALLERY } from "./gallery-images";
-import { cacheGet, cacheSet } from "./redis";
 
-// React.cache memoizes the wrapped async function within a single server
-// render — when the same getter is called twice in one request (e.g. by the
-// page and a child component), the Sanity round-trip happens once. Layered
-// on top of the existing Redis cache, which spans multiple requests. Safe
-// for API-route callers too: outside a render context, cache() simply runs
-// the function as-is without memoization.
+// React.cache() handles per-render dedup. Cross-request caching is
+// delegated to Next.js's data cache + ISR (`export const revalidate = N`
+// on the consuming page), which is more correct than the Redis layer we
+// used to wrap around these queries.
+//
+// Why we dropped Redis here: @upstash/redis's REST client defaults its
+// underlying fetch to `cache: "no-store"`. Calling it from inside a
+// Server Component render path tripped Next 14's dynamic-rendering
+// opt-in, which forced /, /destinations, /packages and friends to
+// re-execute on every request and emitted `Cache-Control: private,
+// no-cache, no-store` — turning every Meta-ad cold-click into a fresh
+// function invocation. Removing the Redis layer here lets Vercel serve
+// the prerendered ISR HTML from the edge cache (X-Vercel-Cache:
+// PRERENDER → HIT). Redis stays in place for rate limiting and other
+// non-render hot paths.
 
 const TTL = {
-  short: 2 * 60,    // 2 min — individual pages
-  medium: 5 * 60,   // 5 min — listings
-  long: 10 * 60,    // 10 min — rarely changing data
+  short: 2 * 60,
+  medium: 5 * 60,
+  long: 10 * 60,
 };
 
-async function cached<T>(key: string, ttl: number, fn: () => Promise<T>): Promise<T> {
-  const hit = await cacheGet<T>(key);
-  if (hit !== null) return hit;
-  const value = await fn();
-  await cacheSet(key, value, ttl);
-  return value;
+async function cached<T>(_key: string, _ttl: number, fn: () => Promise<T>): Promise<T> {
+  return fn();
 }
 
 // ─── Blog post type ────────────────────────────────────────────────────────
