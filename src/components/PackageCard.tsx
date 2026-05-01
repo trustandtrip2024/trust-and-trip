@@ -129,7 +129,7 @@ export default function PackageCard({
       whileTap={{ scale: 0.98 }}
       className="card-travel group h-full flex flex-col touch-manipulation"
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[3/2] overflow-hidden">
         <Image
           src={image}
           alt={title}
@@ -203,26 +203,26 @@ export default function PackageCard({
         </div>
       </div>
 
-      <div className="p-4 md:p-6 flex-1 flex flex-col">
+      <div className="p-3.5 md:p-4 flex-1 flex flex-col">
         {destinationName && (
-          <div className="flex items-center gap-2 mb-2 text-[10px] uppercase tracking-[0.2em] text-tat-charcoal/70 font-semibold">
-            <MapPin className="h-3 w-3" />
-            {destinationName}
+          <div className="flex items-center gap-1.5 mb-1.5 text-[10px] uppercase tracking-[0.18em] text-tat-charcoal/70 font-semibold">
+            <MapPin className="h-3 w-3 shrink-0" />
+            <span className="truncate">{destinationName}</span>
             {travelType && (
               <>
                 <span className="text-tat-charcoal/30">·</span>
-                <span className="bg-tat-charcoal/5 px-2 py-0.5 rounded-full">{travelType}</span>
+                <span className="bg-tat-charcoal/5 px-2 py-0.5 rounded-full shrink-0">{travelType}</span>
               </>
             )}
           </div>
         )}
 
         {categories && categories.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-2">
+          <div className="flex flex-wrap gap-1 mb-1.5">
             {categories.slice(0, 3).map((c) => (
               <span
                 key={c}
-                className="inline-flex items-center text-[10px] tracking-wide font-medium px-2 py-0.5 rounded-full bg-tat-gold/10 text-tat-charcoal/75 border border-tat-gold/25"
+                className="inline-flex items-center text-[10px] tracking-wide font-medium px-1.5 py-0.5 rounded-full bg-tat-gold/10 text-tat-charcoal/75 border border-tat-gold/25"
               >
                 {c}
               </span>
@@ -232,14 +232,14 @@ export default function PackageCard({
 
         <h3
           title={title}
-          className="font-display text-lg md:text-xl font-medium leading-tight text-balance group-hover:text-tat-gold transition-colors duration-300 line-clamp-2"
+          className="font-display text-[15px] md:text-[17px] font-medium leading-snug text-balance group-hover:text-tat-gold transition-colors duration-300 line-clamp-2"
         >
           {title}
         </h3>
 
-        <div className="flex items-center gap-3 mt-2.5 text-xs text-tat-charcoal/60">
-          <span className="inline-flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5" />
+        <div className="flex items-center gap-3 mt-1.5 text-[11px] text-tat-charcoal/60">
+          <span className="inline-flex items-center gap-1">
+            <Clock className="h-3 w-3" />
             {duration}
           </span>
           {reviews && (
@@ -250,10 +250,10 @@ export default function PackageCard({
           )}
         </div>
 
-        <div className="mt-auto pt-4 mt-4 border-t border-tat-charcoal/5 space-y-3">
-          <div className="flex items-end justify-between">
-            <div>
-              <div className="flex items-center gap-1.5 mb-0.5">
+        <div className="mt-auto pt-3 border-t border-tat-charcoal/5 space-y-2">
+          <div className="flex items-end justify-between gap-2">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
                 <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full ${tier.color}`}>{tier.badge}</span>
                 {savings > 0 && (
                   <span className="text-[9px] text-tat-success-fg font-medium">
@@ -261,9 +261,9 @@ export default function PackageCard({
                   </span>
                 )}
               </div>
-              <p className="font-display text-xl md:text-2xl text-tat-charcoal">
+              <p className="font-display text-lg md:text-xl leading-none text-tat-charcoal">
                 <Price inr={dynPrice} />
-                <span className="text-xs text-tat-charcoal/50 font-sans font-normal ml-1">/ person</span>
+                <span className="text-[11px] text-tat-charcoal/50 font-sans font-normal ml-1">/ person</span>
               </p>
               {savings > 0 && (
                 <Price
@@ -274,7 +274,7 @@ export default function PackageCard({
             </div>
             <Link
               href={`/packages/${slug}`}
-              className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal transition-all duration-300 flex items-center justify-center group-hover:scale-110"
+              className="h-9 w-9 shrink-0 rounded-full bg-tat-charcoal hover:bg-tat-gold text-tat-paper hover:text-tat-charcoal transition-all duration-300 flex items-center justify-center group-hover:scale-110"
               aria-label={`View details for ${title}`}
             >
               <ArrowRight className="h-4 w-4" />
@@ -286,7 +286,7 @@ export default function PackageCard({
             <button
               onClick={handleAddToCart}
               disabled={addingCart}
-              className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] font-semibold transition-all duration-200 border ${
+              className={`w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 border ${
                 inCart
                   ? "bg-tat-success-bg border-tat-success-fg/25 text-tat-success-fg"
                   : "bg-tat-charcoal/5 border-tat-charcoal/12 text-tat-charcoal/70 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal"
@@ -303,10 +303,10 @@ export default function PackageCard({
           )}
 
           {/* Quick Book + Ask Aria — shared CTA pair on every PackageCard across the site */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1.5">
             <Link
               href={`/packages/${slug}?book=1`}
-              className="flex items-center justify-center gap-1.5 py-2 rounded-xl border border-tat-gold/40 bg-tat-gold/8 text-[11px] font-semibold text-tat-charcoal hover:bg-tat-gold hover:text-tat-charcoal hover:border-tat-gold transition-all duration-200"
+              className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-tat-gold/40 bg-tat-gold/8 text-[11px] font-semibold text-tat-charcoal hover:bg-tat-gold hover:text-tat-charcoal hover:border-tat-gold transition-all duration-200"
             >
               <CreditCard className="h-3.5 w-3.5 shrink-0 text-tat-gold" />
               Quick Book
@@ -316,7 +316,7 @@ export default function PackageCard({
                 e.preventDefault();
                 askAriaAboutPackage({ slug, title, price: dynPrice, duration, destinationName, travelType });
               }}
-              className="flex items-center justify-center gap-1.5 py-2 rounded-xl border border-tat-charcoal/12 text-[11px] font-semibold text-tat-charcoal/80 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal transition-all duration-200"
+              className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-tat-charcoal/12 text-[11px] font-semibold text-tat-charcoal/80 hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal transition-all duration-200"
             >
               <MessageCircle className="h-3.5 w-3.5 shrink-0" />
               Ask Aria

@@ -112,7 +112,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         href={p.href}
         className={[
           "relative block overflow-hidden bg-tat-charcoal/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2",
-          horizontal ? "md:w-[40%] aspect-[4/3] md:aspect-auto" : "aspect-[4/3]",
+          horizontal ? "md:w-[40%] aspect-[3/2] md:aspect-auto" : "aspect-[3/2]",
         ].join(" ")}
         aria-label={p.title}
       >
@@ -184,7 +184,7 @@ export default function PackageCardUI(p: PackageCardProps) {
       </button>
 
       {/* BODY */}
-      <div className={`flex-1 flex flex-col ${compact ? "p-3.5 sm:p-4" : "p-3 md:p-5"}`}>
+      <div className={`flex-1 flex flex-col ${compact ? "p-3 sm:p-3.5" : "p-3 md:p-4"}`}>
         {/* Destination + travel style */}
         {(p.destination || p.travelStyle) && (
           <div className="flex items-center gap-2 text-tag uppercase text-tat-slate/80">
@@ -206,7 +206,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         {/* Title */}
         <h3
           title={p.title}
-          className={`mt-1.5 font-display font-normal ${compact ? "text-[15px] sm:text-h4" : "text-h3"} text-tat-charcoal leading-snug text-balance line-clamp-2`}
+          className={`mt-1 font-display font-normal ${compact ? "text-[14.5px] sm:text-[16px]" : "text-[16px] md:text-[18px]"} text-tat-charcoal leading-snug text-balance line-clamp-2`}
         >
           {p.title}
         </h3>
@@ -214,7 +214,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         {/* Urgency / social-proof line — single row, only renders when there's
             real signal. Limited slots wins over booked-this-month if both. */}
         {(seatsLeft || p.bookedThisMonth) && (
-          <div className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] font-semibold">
+          <div className="mt-1 inline-flex items-center gap-1.5 text-[11px] font-semibold">
             {seatsLeft ? (
               <>
                 <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-tat-orange animate-pulse" />
@@ -229,7 +229,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         )}
 
         {/* Inclusions strip — hidden on mobile in compact mode to shorten the rail card */}
-        <ul className={`${compact ? "mt-2.5 hidden sm:flex" : "mt-3 flex"} flex-wrap items-center gap-x-3 gap-y-1.5 text-meta text-tat-charcoal/75`}>
+        <ul className={`${compact ? "mt-2 hidden sm:flex" : "mt-2.5 flex"} flex-wrap items-center gap-x-3 gap-y-1 text-meta text-tat-charcoal/75`}>
           {inclusions.map((id) => {
             const meta = INCLUSION_META[id];
             const Icon = meta.icon;
@@ -243,7 +243,7 @@ export default function PackageCardUI(p: PackageCardProps) {
         </ul>
 
         {/* Price block — borderless on mobile compact for tighter card */}
-        <div className={`${compact ? "mt-2.5 sm:mt-3 sm:pt-2.5 sm:border-t sm:border-tat-charcoal/10" : "mt-4 pt-3 border-t border-tat-charcoal/10"}`}>
+        <div className={`${compact ? "mt-2 sm:mt-2.5 sm:pt-2 sm:border-t sm:border-tat-charcoal/10" : "mt-auto pt-2.5 border-t border-tat-charcoal/10"}`}>
           <div className="flex items-end justify-between gap-3">
             <div className="min-w-0">
               {p.originalPrice && p.originalPrice > p.price && (
@@ -256,7 +256,7 @@ export default function PackageCardUI(p: PackageCardProps) {
                   )}
                 </p>
               )}
-              <p className={`mt-1 font-display ${compact ? "text-[20px] sm:text-h3" : "text-h2"} text-tat-charcoal leading-none`}>
+              <p className={`mt-0.5 font-display ${compact ? "text-[19px] sm:text-[22px]" : "text-[22px] md:text-[26px]"} text-tat-charcoal leading-none`}>
                 <span className="text-[11px] font-sans text-tat-slate font-normal mr-0.5 align-baseline">from</span>
                 <Price inr={p.price} />
                 <span className="text-[11px] font-sans text-tat-slate font-normal ml-1">
@@ -275,14 +275,14 @@ export default function PackageCardUI(p: PackageCardProps) {
               </span>
             )}
           </div>
-          <p className={`${compact ? "hidden sm:block" : "block"} mt-1 text-[11px] text-tat-slate/70`}>+ taxes &amp; fees</p>
+          <p className={`${compact ? "hidden sm:block" : "block"} mt-0.5 text-[11px] text-tat-slate/70`}>+ taxes &amp; fees</p>
         </div>
 
         {/* CTAs */}
-        <div className={`${compact ? "mt-2.5 sm:mt-3 gap-1.5" : "mt-4 gap-2"} flex flex-col`}>
+        <div className={`${compact ? "mt-2 sm:mt-2.5 gap-1.5" : "mt-3 gap-1.5"} flex flex-col`}>
           <Link
             href={p.href}
-            className={`group/cta inline-flex items-center justify-center gap-1.5 ${compact ? "h-11" : "h-11"} px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 shadow-sm hover:shadow`}
+            className={`group/cta inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-pill bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 shadow-sm hover:shadow`}
           >
             Plan this trip
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover/cta:translate-x-0.5" />
@@ -291,7 +291,7 @@ export default function PackageCardUI(p: PackageCardProps) {
           <div className="grid grid-cols-2 gap-1.5">
             <Link
               href={`${p.href}?book=1`}
-              className={`inline-flex items-center justify-center gap-1 ${compact ? "h-9" : "h-10"} px-2 rounded-pill border border-tat-gold/40 bg-tat-gold/8 text-[12px] font-semibold text-tat-charcoal hover:bg-tat-gold hover:border-tat-gold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
+              className={`inline-flex items-center justify-center gap-1 h-9 px-2 rounded-pill border border-tat-gold/40 bg-tat-gold/8 text-[12px] font-semibold text-tat-charcoal hover:bg-tat-gold hover:border-tat-gold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
             >
               <CreditCard className="h-3.5 w-3.5 text-tat-gold" />
               Quick Book
@@ -299,7 +299,7 @@ export default function PackageCardUI(p: PackageCardProps) {
             <button
               type="button"
               onClick={(e) => { e.preventDefault(); askAriaAboutPackage(p); }}
-              className={`inline-flex items-center justify-center gap-1 ${compact ? "h-9" : "h-10"} px-2 rounded-pill border border-tat-charcoal/15 bg-white text-[12px] font-semibold text-tat-charcoal hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
+              className={`inline-flex items-center justify-center gap-1 h-9 px-2 rounded-pill border border-tat-charcoal/15 bg-white text-[12px] font-semibold text-tat-charcoal hover:bg-tat-charcoal hover:text-tat-paper hover:border-tat-charcoal transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2`}
             >
               <MessageCircle className="h-3.5 w-3.5" />
               Ask Aria
@@ -309,7 +309,7 @@ export default function PackageCardUI(p: PackageCardProps) {
           {/* Risk-reversal trust strip — three crossed-checks below the CTA
               cluster. Lowers hesitation right where the user decides whether
               to tap. Single line on all breakpoints; truncates if cramped. */}
-          <ul className="mt-1.5 flex items-center justify-between gap-1.5 text-[10px] text-tat-charcoal/65">
+          <ul className="mt-1 flex items-center justify-between gap-1.5 text-[10px] text-tat-charcoal/65">
             <li className="inline-flex items-center gap-1 truncate">
               <ShieldCheck className="h-3 w-3 text-tat-success-fg shrink-0" aria-hidden />
               <span>₹0 to start</span>
