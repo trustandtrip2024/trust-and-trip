@@ -286,71 +286,85 @@ export default function Header() {
             "md:bg-tat-paper/85 md:backdrop-blur-2xl md:border-b md:border-tat-orange/15 md:shadow-[0_8px_32px_-12px_rgba(45,26,55,0.18)]"
         )}
       >
-        <div className="container-custom flex flex-nowrap items-center justify-between h-16 md:h-20 gap-3 overflow-hidden">
-          {/* Mobile hamburger — placed first so it sits at far left.
-              Morphs Menu ↔ X based on drawerOpen so the trigger doubles as
-              an in-flow close affordance (the in-drawer X still works too).
-              A small orange dot appears when the user has wishlist items
-              they haven't acted on, nudging them to revisit the menu. */}
+        <div className="container-custom flex flex-nowrap items-center justify-between h-[68px] md:h-[84px] gap-3 overflow-hidden">
+          {/* Mobile hamburger — pill-style trigger with subtle gold ring
+              so it reads as a tactile button, not a bare icon. Morphs
+              Menu ↔ X. Wishlist nudge dot. Active scale gives haptic
+              feedback on tap. */}
           <button
             type="button"
             aria-label={drawerOpen ? "Close menu" : "Open menu"}
             aria-expanded={drawerOpen}
             onClick={() => setDrawerOpen((v) => !v)}
-            className="lg:hidden p-2 rounded-md hover:bg-white/10 transition-colors -ml-1"
+            className={clsx(
+              "lg:hidden relative grid place-items-center h-10 w-10 rounded-full transition-all duration-200 active:scale-95 -ml-1",
+              drawerOpen
+                ? "bg-tat-gold text-tat-charcoal ring-1 ring-tat-gold shadow-[0_4px_14px_-4px_rgba(200,147,42,0.55)]"
+                : "bg-white/10 text-tat-paper ring-1 ring-tat-gold/40 hover:bg-white/15 hover:ring-tat-gold/70"
+            )}
           >
-            <span className="relative inline-block h-5 w-5">
+            <span className="relative inline-block h-[18px] w-[18px]">
               <Menu
                 className={clsx(
-                  "absolute inset-0 h-5 w-5 text-tat-paper transition-all duration-200",
+                  "absolute inset-0 h-[18px] w-[18px] transition-all duration-200",
                   drawerOpen ? "opacity-0 rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"
                 )}
+                strokeWidth={2.25}
                 aria-hidden
               />
               <X
                 className={clsx(
-                  "absolute inset-0 h-5 w-5 text-tat-paper transition-all duration-200",
+                  "absolute inset-0 h-[18px] w-[18px] transition-all duration-200",
                   drawerOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-75"
                 )}
+                strokeWidth={2.25}
                 aria-hidden
               />
-              {wishlistCount > 0 && !drawerOpen && (
-                <span
-                  className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-tat-orange ring-2 ring-tat-charcoal"
-                  aria-hidden
-                />
-              )}
             </span>
+            {wishlistCount > 0 && !drawerOpen && (
+              <span
+                className="absolute top-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-tat-orange ring-2 ring-tat-charcoal"
+                aria-hidden
+              />
+            )}
           </button>
 
-          {/* Logo — desktop / tablet (≥md) */}
-          <Link href="/" className="hidden lg:flex items-center gap-2.5 group shrink-0">
+          {/* Logo — desktop / tablet (≥lg). Brand mark unchanged; sizes
+              nudged up for stronger presence in the now-taller header. */}
+          <Link href="/" className="hidden lg:flex items-center gap-3 group shrink-0">
             <div className="relative">
-              <div className="h-10 w-10 rounded-full bg-tat-teal flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-gold">
-                <span className="text-white text-lg font-display font-semibold tracking-tight">T</span>
+              <div className="h-11 w-11 rounded-full bg-tat-teal flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-gold">
+                <span className="text-white text-[20px] font-display font-semibold tracking-tight">T</span>
               </div>
               <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-tat-gold shadow-[0_0_10px_rgba(200,147,42,0.85)] ring-1 ring-white" />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="font-display text-lg md:text-xl font-semibold tracking-tight whitespace-nowrap">
+              <span className="font-display text-xl md:text-[22px] font-semibold tracking-tight whitespace-nowrap">
                 <span className="text-tat-charcoal">Trust</span>
                 <span className="text-tat-gold italic">&amp;</span>
                 <span className="text-tat-teal">Trip</span>
               </span>
-              <span className="eyebrow-ember text-[8.5px] tracking-[0.28em] mt-1 hidden sm:block whitespace-nowrap text-tat-gold">
+              <span className="eyebrow-ember text-[9px] tracking-[0.3em] mt-1.5 hidden sm:block whitespace-nowrap text-tat-gold">
                 Crafted with passion
               </span>
             </div>
           </Link>
 
-          {/* Logo — mobile (compact, on dark) */}
-          <Link href="/" className="lg:hidden flex items-center gap-2 shrink-0">
-            <span className="relative h-8 w-8 rounded-md bg-tat-teal grid place-items-center font-display font-semibold text-tat-paper text-sm">
+          {/* Logo — mobile (compact, on dark). Bumped one notch up so the
+              brand reads from across the room without crowding the right
+              cluster. */}
+          <Link href="/" className="lg:hidden flex items-center gap-2.5 shrink-0">
+            <span className="relative h-9 w-9 rounded-lg bg-tat-teal grid place-items-center font-display font-semibold text-tat-paper text-[15px] shadow-[0_4px_12px_-4px_rgba(14,124,123,0.55)]">
               T
-              <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-tat-gold ring-1 ring-tat-charcoal" />
+              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-tat-gold ring-1 ring-tat-charcoal shadow-[0_0_6px_rgba(200,147,42,0.8)]" />
             </span>
-            <span className="font-display text-base font-semibold tracking-tight text-tat-paper whitespace-nowrap">
-              Trust<span className="text-tat-gold italic"> &amp; </span>Trip
+            <span className="flex flex-col leading-none">
+              <span className="font-display text-[17px] font-semibold tracking-tight text-tat-paper whitespace-nowrap">
+                Trust<span className="text-tat-gold italic"> &amp; </span>Trip
+              </span>
+              <span className="text-[8.5px] tracking-[0.24em] text-tat-gold/85 mt-1 uppercase font-medium whitespace-nowrap">
+                Crafted with passion
+              </span>
             </span>
           </Link>
 
@@ -467,19 +481,23 @@ export default function Header() {
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
 
-            {/* Plan My Trip CTA — desktop */}
+            {/* Plan My Trip CTA — desktop. Bumped padding + trailing
+                arrow for stronger conversion affordance. */}
             <button
               onClick={() => openPlanner()}
-              className="hidden lg:inline-flex btn-primary !py-2.5 !px-5 !text-xs whitespace-nowrap"
+              className="hidden lg:inline-flex group items-center gap-1.5 btn-primary !py-3 !px-6 !text-[13px] whitespace-nowrap"
             >
               Plan My Trip
+              <ChevronRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
             </button>
 
-            {/* Mobile cluster — phone pill + profile + hamburger */}
+            {/* Mobile cluster — phone pill + profile + hamburger.
+                All sized h-10 so the row reads as one consistent
+                touch-target band. */}
             <a
               href="tel:+918115999588"
               onClick={() => captureIntent("call_click", { note: "Header mobile call pill" })}
-              className="lg:hidden inline-flex items-center gap-1.5 px-3 h-9 rounded-full bg-tat-teal text-white text-[12px] font-semibold whitespace-nowrap shadow-[0_4px_12px_-4px_rgba(14,124,123,0.55)]"
+              className="lg:hidden inline-flex items-center gap-1.5 px-3 h-10 rounded-full bg-tat-teal text-white text-[12.5px] font-semibold whitespace-nowrap shadow-[0_6px_14px_-4px_rgba(14,124,123,0.6)] active:scale-95 transition-transform"
               aria-label="Call Trust and Trip"
             >
               <span className="grid place-items-center h-5 w-5 rounded-full bg-white/20">
@@ -492,11 +510,11 @@ export default function Header() {
             </a>
             <Link
               href={user ? "/dashboard" : "/login"}
-              className="lg:hidden inline-flex items-center gap-0.5 h-9 px-1.5 rounded-full text-tat-paper hover:bg-white/10 transition-colors"
+              className="lg:hidden inline-flex items-center gap-0.5 h-10 px-1.5 rounded-full text-tat-paper hover:bg-white/10 transition-colors"
               aria-label={user ? "My dashboard" : "Sign in"}
             >
-              <span className="h-7 w-7 rounded-full border border-white/40 grid place-items-center">
-                <User className="h-3.5 w-3.5" />
+              <span className="h-8 w-8 rounded-full border border-white/40 grid place-items-center">
+                <User className="h-4 w-4" />
               </span>
               <ChevronDown className="h-3 w-3 opacity-70" aria-hidden />
             </Link>
