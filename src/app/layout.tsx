@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
-import { headers } from "next/headers";
 import dynamic from "next/dynamic";
 
 // Self-hosted via next/font — eliminates render-blocking Google Fonts
@@ -147,18 +146,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Per-request nonce comes from middleware.ts → CSP header. Stamp it on
-  // every <script> tag we emit so the strict-dynamic policy accepts them.
-  const nonce = headers().get("x-nonce") ?? undefined;
-
+  // No `headers()` call here — Next.js would force every page using this
+  // layout into dynamic rendering and emit Cache-Control: no-store. The
+  // CSP nonce + strict-dynamic pairing was dropped on 2026-05-01 in favor
+  // of allowlist-based script-src so the edge cache can serve public
+  // pages on Meta-ad cold-clicks. See src/middleware.ts buildCsp() doc.
   return (
     <html lang="en" className={cn(fraunces.variable, inter.variable, "font-sans")}>
       <head>
-        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: PRE_PAINT_INIT_SCRIPT }} />
-        {/* Expose nonce to client-side dynamic-script loaders (e.g. Razorpay
-            in BookingDeposit). Reading from a <meta> is the standard pattern
-            so we don't need to thread the nonce through every client tree. */}
-        {nonce && <meta property="csp-nonce" content={nonce} />}
+        <script dangerouslySetInnerHTML={{ __html: PRE_PAINT_INIT_SCRIPT }} />
         {/* Preconnect to speed up third-party resources */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
@@ -173,7 +169,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Trust and Trip" />
       </head>
       <body className="min-h-screen flex flex-col">
-        <JsonLd nonce={nonce} data={[
+        <JsonLd data={[
           {
             "@context": "https://schema.org",
             "@type": "TravelAgency",
@@ -257,11 +253,11 @@ export default function RootLayout({
           <AriaChatWidget />
           <DesktopPlannerCTA />
           <ScrollToTop />
-          <GoogleAnalytics nonce={nonce} />
-          <GoogleTagManager nonce={nonce} />
+          <GoogleAnalytics />
+          <GoogleTagManager />
           <VercelAnalytics />
           <WebVitalsReporter />
-          <MetaPixel nonce={nonce} />
+          <MetaPixel />
           <ServiceWorkerRegister />
           <CookieBanner />
           <PWAInstallPrompt />

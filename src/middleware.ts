@@ -6,28 +6,27 @@ const REF_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 const REF_CODE_RE = /^CRTR-[A-Z0-9]{4,10}$/;
 
 /**
- * Build the Content-Security-Policy for a request. Generates a fresh nonce
- * on each call; the nonce is exposed to Server Components via the `x-nonce`
- * request header so layout/page code can stamp it onto every <Script> they
- * emit. Pairs with `'strict-dynamic'` so that a nonced loader script can
- * pull in transitive third-party scripts without them needing their own
- * nonce.
+ * Build the Content-Security-Policy for a request.
  *
- * Sanity Studio (/studio) is exempted — Studio injects many inline scripts
- * without nonce support and uses eval; we fall back to 'unsafe-inline' +
- * 'unsafe-eval' on that path only.
+ * Switched from per-request-nonce + strict-dynamic to allowlist + unsafe-inline
+ * on 2026-05-01. Reason: reading the nonce in `src/app/layout.tsx` via
+ * `headers()` forced Next.js into dynamic rendering on every page, which
+ * emitted `Cache-Control: private, no-cache, no-store` and turned every Meta
+ * ad click into a cold function invocation. The previous CSP already carried
+ * `'unsafe-inline' https: http:` as a fallback for browsers without
+ * strict-dynamic support, so most of the protective benefit was already
+ * watered down. Allowlist + script-source isolation gets us back ISR with
+ * minimal real-world security loss.
+ *
+ * Sanity Studio (/studio) keeps its more-permissive CSP because Studio
+ * injects many inline scripts and uses eval.
  */
-function buildCsp(pathname: string, nonce: string): string {
+function buildCsp(pathname: string): string {
   const isStudio = pathname.startsWith("/studio");
 
   const scriptSrc = isStudio
     ? "'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://*.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://checkout.razorpay.com https://*.razorpay.com https://va.vercel-scripts.com https://*.vercel-scripts.com"
-    : `'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' https: http:`;
-
-  // 'unsafe-inline' next to 'nonce-…' is a fallback for browsers that don't
-  // grok 'strict-dynamic' — modern browsers ignore 'unsafe-inline' when a
-  // nonce is present, older ones get a permissive policy. The `https: http:`
-  // tail is also legacy fallback (ignored under strict-dynamic).
+    : "'self' 'unsafe-inline' https://www.googletagmanager.com https://*.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://connect.facebook.net https://*.facebook.com https://www.facebook.com https://checkout.razorpay.com https://*.razorpay.com https://va.vercel-scripts.com https://*.vercel-scripts.com https://vercel.live https://*.vercel.live";
 
   const directives = [
     `default-src 'self'`,
@@ -50,26 +49,15 @@ function buildCsp(pathname: string, nonce: string): string {
   return directives.join("; ");
 }
 
-function generateNonce(): string {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  // base64 — Edge runtime doesn't have Buffer
-  let bin = "";
-  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-  return btoa(bin);
-}
-
 export function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
 
-  const nonce = generateNonce();
-  const csp = buildCsp(pathname, nonce);
+  const csp = buildCsp(pathname);
 
-  // Forward the nonce to Server Components so they can stamp <Script
-  // nonce={…} /> tags. Reading from request headers in a Server Component
-  // is supported via next/headers.
+  // Forward request headers unchanged. Layout intentionally no longer calls
+  // headers() so Next.js can keep static/ISR rendering on public pages —
+  // see buildCsp doc comment for the trade-off.
   const reqHeaders = new Headers(req.headers);
-  reqHeaders.set("x-nonce", nonce);
 
   // ─── Geo-IP city forward ──────────────────────────────────────────────
   // Vercel auto-populates request.geo from edge IP geolocation. Mirror the
@@ -105,12 +93,11 @@ export function middleware(req: NextRequest) {
 
   function applyHeaders(res: NextResponse): NextResponse {
     res.headers.set("Content-Security-Policy", csp);
-    res.headers.set("x-nonce", nonce);
     if (isPublicCacheable) {
-      // Edge cache: 5 min fresh, 24 h stale-while-revalidate. Vercel CDN
-      // serves cached HTML in the fresh window; after that it serves stale
-      // while a background regeneration runs. Browser sees max-age=0 so it
-      // always asks the edge — gives us full control.
+      // Edge cache: 5 min fresh, 24 h stale-while-revalidate. Belt to the
+      // suspenders of `revalidate = 300` exports on the page modules — Next
+      // already respects those for static/ISR rendering, this just makes
+      // the intent explicit at the edge.
       res.headers.set(
         "Cache-Control",
         "public, max-age=0, s-maxage=300, stale-while-revalidate=86400",
@@ -186,6 +173,8 @@ export function middleware(req: NextRequest) {
     },
   });
 }
+
+// generateNonce removed 2026-05-01 — see buildCsp() doc comment.
 
 // Match admin routes AND every page (for ref capture). API routes excluded so
 // they don't pay middleware cost on hot paths; ref is read from cookie there.
