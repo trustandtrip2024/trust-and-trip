@@ -10,6 +10,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { timingSafeEqualStrings } from "@/lib/timing-safe";
 
 type Status = "ok" | "missing" | "error";
 type Check = { status: Status; detail?: string };
@@ -169,7 +170,8 @@ async function pingWhatsApp(): Promise<Check> {
 export async function GET(req: NextRequest) {
   // Optional admin guard — if ?key= matches ADMIN_SECRET, return verbose check
   const adminKey = req.nextUrl.searchParams.get("key");
-  const isAdmin = adminKey && adminKey === process.env.ADMIN_SECRET;
+  const expected = process.env.ADMIN_SECRET;
+  const isAdmin = !!adminKey && !!expected && timingSafeEqualStrings(adminKey, expected);
 
   const env = await checkEnv();
 

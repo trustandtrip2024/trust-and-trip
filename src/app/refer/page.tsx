@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Gift, Copy, Check, Share2, MessageCircle, Users, IndianRupee } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function ReferPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
@@ -15,9 +16,20 @@ export default function ReferPage() {
   const generate = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true); setError("");
+    // Earlier this route trusted body.email — anyone could mint a referral
+    // attributed to a victim's email. Now the referral is tied to the JWT
+    // email server-side, so users must sign in first.
+    const sess = await supabase.auth.getSession();
+    const token = sess.data.session?.access_token;
+    if (!token) {
+      setError("Please sign in first — your referral code is tied to your account.");
+      setLoading(false);
+      return;
+    }
     const res = await fetch("/api/referral", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ name: form.name, phone: form.phone }),
     });
     const data = await res.json();
     if (data.code) setCode(data.code);

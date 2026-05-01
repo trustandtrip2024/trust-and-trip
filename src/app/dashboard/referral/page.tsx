@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Gift, Copy, Check, MessageCircle, IndianRupee, Loader2, Users, TrendingUp } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
+import { supabase } from "@/lib/supabase";
 
 interface ReferralData {
   code: string;
@@ -25,12 +26,16 @@ export default function ReferralDashboardPage() {
   const referralUrl = referral ? `https://trustandtrip.com?ref=${referral.code}` : "";
 
   useEffect(() => {
-    const email = user?.email;
-    if (!email) return;
+    if (!user?.email) return;
     let cancelled = false;
     (async () => {
       setLoading(true);
-      const res = await fetch(`/api/referral?email=${encodeURIComponent(email)}`);
+      const sess = await supabase.auth.getSession();
+      const token = sess.data.session?.access_token;
+      if (!token) { setLoading(false); return; }
+      const res = await fetch("/api/referral", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (res.ok && !cancelled) {
         const data = await res.json();
         if (data.referral) setReferral(data.referral);
@@ -42,12 +47,18 @@ export default function ReferralDashboardPage() {
 
   async function generate() {
     setGenerating(true); setError("");
+    const sess = await supabase.auth.getSession();
+    const token = sess.data.session?.access_token;
+    if (!token) {
+      setError("Please sign in to generate a referral code.");
+      setGenerating(false);
+      return;
+    }
     const res = await fetch("/api/referral", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({
         name: displayName,
-        email: user!.email,
         phone: user?.user_metadata?.phone ?? "",
       }),
     });

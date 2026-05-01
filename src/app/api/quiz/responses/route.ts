@@ -91,15 +91,45 @@ function isPatchValid(b: unknown): b is PatchBody {
 }
 
 export async function PATCH(req: NextRequest) {
+  // Per-IP rate limit + freshness guard so a stranger can't sweep the
+  // quiz_response UUID space and re-attribute responses to arbitrary leads.
+  // Real callers PATCH within seconds of the POST that returned the id, so
+  // the 5-minute freshness window is comfortable for the legit flow and
+  // shuts the IDOR enumeration window.
+  const ip = clientIp(req);
+  const { allowed } = await rateLimit(`quiz-patch:${ip}`, { limit: 20, windowSeconds: 60 });
+  if (!allowed) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   const body = await req.json().catch(() => null);
   if (!isPatchValid(body)) {
     return NextResponse.json({ error: "Invalid patch payload" }, { status: 400 });
   }
 
+  // Only allow PATCH when (a) the row is < 5 min old and (b) lead_id is not
+  // already set. Stops a future replay from rewriting historical attribution.
+  const { data: row } = await supabase
+    .from("quiz_responses")
+    .select("id, lead_id, created_at")
+    .eq("id", body.id)
+    .maybeSingle();
+  if (!row) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+  if (row.lead_id) {
+    return NextResponse.json({ error: "Already attributed" }, { status: 409 });
+  }
+  const ageMs = Date.now() - new Date(row.created_at as string).getTime();
+  if (ageMs > 5 * 60 * 1000) {
+    return NextResponse.json({ error: "Window expired" }, { status: 410 });
+  }
+
   const { error } = await supabase
     .from("quiz_responses")
     .update({ lead_id: body.lead_id })
-    .eq("id", body.id);
+    .eq("id", body.id)
+    .is("lead_id", null);
 
   if (error) {
     console.error("[quiz] patch failed:", error);

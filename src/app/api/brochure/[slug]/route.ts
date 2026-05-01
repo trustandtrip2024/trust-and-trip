@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { renderToStream } from "@react-pdf/renderer";
 import { getPackageBySlug } from "@/lib/sanity-queries";
 import { BrochurePDF } from "@/lib/brochure-pdf";
+import { rateLimit, clientIp } from "@/lib/redis";
 
 export const runtime = "nodejs";
 // 1 hour Vercel CDN cache, 1 day stale-while-revalidate. Brochures change
@@ -22,7 +23,19 @@ interface Params {
  * edge runtime doesn't ship). renderToStream returns a Node Readable
  * which we wrap in a Web ReadableStream for the NextResponse.
  */
-export async function GET(_req: NextRequest, { params }: Params) {
+export async function GET(req: NextRequest, { params }: Params) {
+  // PDF rendering is heavy (renderToStream allocates fonts/images per call).
+  // Without a limit, anyone can spin a tab loop and force the function to
+  // burn CPU/memory until it OOMs. 10/min/IP is generous for a real human
+  // downloading a brochure and tight enough to keep cost bounded.
+  const { allowed } = await rateLimit(`brochure:${clientIp(req)}`, {
+    limit: 10,
+    windowSeconds: 60,
+  });
+  if (!allowed) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  }
+
   const slug = decodeURIComponent(params.slug);
   const pkg = await getPackageBySlug(slug);
   if (!pkg) {

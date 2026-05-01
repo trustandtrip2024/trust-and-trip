@@ -132,7 +132,21 @@ function MyBookingInner() {
 
   const lookup = async (val: string, m: "id" | "phone") => {
     setLoading(true); setError(""); setBookings([]);
-    const res = await fetch(`/api/booking-status?${m === "id" ? "id" : "phone"}=${encodeURIComponent(val.trim())}`);
+    // Booking lookup now requires a signed-in user — server-side it filters
+    // by `customer_email = jwt.email` so users only see their own bookings,
+    // even if they paste a stranger's booking ID.
+    const { supabase } = await import("@/lib/supabase");
+    const sess = await supabase.auth.getSession();
+    const token = sess.data.session?.access_token;
+    if (!token) {
+      setError("Please sign in to view your bookings.");
+      setLoading(false);
+      return;
+    }
+    const res = await fetch(
+      `/api/booking-status?${m === "id" ? "id" : "phone"}=${encodeURIComponent(val.trim())}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
     const data = await res.json();
     if (!res.ok) setError(data.error ?? "Something went wrong.");
     else setBookings(data.bookings);
