@@ -17,12 +17,11 @@ import SocialProof from "@/components/home-v3/SocialProof";
 import FaqAndCTA from "@/components/home-v3/FaqAndCTA";
 import EditorialBand from "@/components/home-v3/EditorialBand";
 import PersonalRails from "@/components/home-v3/PersonalRails";
-import SeoContent from "@/components/home-v3/SeoContent";
 import BudgetChipShelf from "@/components/home-v3/BudgetChipShelf";
 import VisaFreeShelf from "@/components/home-v3/VisaFreeShelf";
 import MayMixedChipShelf from "@/components/home-v3/MayMixedChipShelf";
 import type { PackageCardProps } from "@/components/ui/PackageCard";
-import type { Package, Destination } from "@/lib/data";
+import type { Package } from "@/lib/data";
 import {
   getHomeShelves,
   getPackagesByType,
@@ -61,7 +60,7 @@ const MAY_FRIENDLY_SLUGS = new Set([
   "japan", "europe", "italy", "france", "norway",
 ]);
 
-export default async function HomeShelves({ destinations }: { destinations: Destination[] }) {
+export default async function HomeShelves() {
   // Run inside the Suspense boundary so the slowest fetch doesn't block
   // the hero. React's automatic streaming flushes this section as soon as
   // every await resolves.
@@ -170,7 +169,6 @@ export default async function HomeShelves({ destinations }: { destinations: Dest
       <WhyTrustAndTrip />
       <SocialProof />
       <FaqAndCTA />
-      <SeoContent destinations={destinations} />
     </>
   );
 }

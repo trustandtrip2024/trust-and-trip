@@ -60,7 +60,7 @@ export default async function HomePage() {
           immediately; this Suspense flush waits on the package fetches but
           shows a skeleton instead of blocking the whole document. */}
       <Suspense fallback={<HomeShelvesSkeleton />}>
-        <HomeShelves destinations={destinations} />
+        <HomeShelves />
       </Suspense>
     </>
   );

@@ -6,8 +6,31 @@ import { captureIntent } from "@/lib/capture-intent";
 import {
   Instagram, Facebook, Linkedin, Twitter, Youtube,
   MapPin, Mail, Phone, ArrowRight, Shield, Award,
-  CheckCircle2,
+  CheckCircle2, MessageCircle,
 } from "lucide-react";
+
+// SEO topic clusters — flat list at the top of the footer. Same job
+// the old <SeoContent> dark slab used to do (duplicating the footer
+// look right above it), folded into the footer itself so the page
+// reads as one cohesive surface instead of two stacked dark blocks.
+const SEO_TOPICS = [
+  { label: "Honeymoon packages",    href: "/packages?style=Honeymoon" },
+  { label: "Family holidays",       href: "/packages?style=Family" },
+  { label: "Solo travel",           href: "/packages?style=Solo" },
+  { label: "Group tours",           href: "/group-trips" },
+  { label: "Pilgrim journeys",      href: "/pilgrim" },
+  { label: "Char Dham Yatra",       href: "/char-dham-yatra-package" },
+  { label: "Vaishno Devi",          href: "/packages?destination=vaishno-devi" },
+  { label: "Tirupati Balaji",       href: "/packages?destination=tirupati" },
+  { label: "Visa-free for Indians", href: "/packages?theme=visa-free" },
+  { label: "Trips under ₹50,000",   href: "/essentials" },
+  { label: "Bespoke luxury",        href: "/private" },
+  { label: "Adventure trips",       href: "/packages?style=Adventure" },
+  { label: "Wellness retreats",     href: "/packages?style=Wellness" },
+  { label: "Beach holidays",        href: "/packages?theme=beach" },
+  { label: "Mountain trips",        href: "/packages?theme=mountain" },
+  { label: "Best in May",           href: "/packages?month=may" },
+];
 
 const EXPLORE = [
   { label: "All Destinations", href: "/destinations" },
@@ -102,7 +125,58 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-tat-charcoal text-tat-paper overflow-hidden relative">
+    <footer
+      className="bg-tat-charcoal text-tat-paper overflow-hidden relative"
+      aria-labelledby="footer-seo-title"
+    >
+
+      {/* ── SEO content block (replaces old <SeoContent> slab) ──
+          One editorial paragraph + topic chips. Indexable, semantic
+          (H2 + descriptive copy + crawlable links), but visually folded
+          into the footer so the page no longer reads as two stacked
+          charcoal blocks. ─────────────────────────────────────────── */}
+      <div className="border-b border-tat-paper/8">
+        <div className="container-custom py-12 md:py-14">
+          <p className="eyebrow text-tat-gold mb-2">Plan with us</p>
+          <h2
+            id="footer-seo-title"
+            className="font-display font-normal text-[22px] md:text-[28px] leading-tight max-w-3xl"
+          >
+            Plan a holiday from India with{" "}
+            <em className="not-italic font-display italic text-tat-gold">Trust and Trip.</em>
+          </h2>
+          <p className="mt-3 max-w-4xl text-[13px] md:text-[14px] leading-relaxed text-tat-paper/65">
+            Trust and Trip is a Made-in-India travel agency that designs custom
+            holiday packages for couples, families, solo travelers, groups, and
+            pilgrim journeys. A real planner reads your brief and sends a full
+            itinerary within 24 hours — destinations, hotels, day-by-day flow,
+            line-item pricing — free until you decide to book. Since 2019 we&apos;ve
+            handled 8,000+ trips across India and 60+ international destinations,
+            with a 4.9★ rating on Google. We specialise in honeymoons to Bali,
+            Maldives, Switzerland and Santorini; family trips in Kerala,
+            Singapore, Dubai and Thailand; pilgrim yatras to Char Dham, Vaishno
+            Devi, Tirupati and Amarnath with VIP darshan and helicopter
+            transfers; and visa-free escapes for Indian passports to Thailand,
+            Indonesia, Sri Lanka, Nepal, Bhutan and Mauritius. Every booking
+            includes 24×7 emergency support, a doctor-on-call on Yatra trips,
+            line-item billing (no inflated MRPs), and one named planner from
+            quote to homecoming.
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            {SEO_TOPICS.map((t) => (
+              <Link
+                key={t.href}
+                href={t.href}
+                prefetch={false}
+                className="text-xs text-tat-paper/55 hover:text-tat-gold border border-tat-paper/12 hover:border-tat-gold/40 px-3 py-1.5 rounded-full transition-all duration-200"
+              >
+                {t.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* ── Newsletter strip ───────────────────────────────────── */}
       <div className="border-b border-tat-paper/8">
@@ -164,9 +238,33 @@ export default function Footer() {
               </div>
             </Link>
 
-            <p className="text-sm text-tat-paper/45 leading-relaxed mb-6 max-w-xs">
-              Handcrafted journeys for families, couples, and groups — 23 destinations, 150+ packages, zero hidden costs.
+            <p className="text-sm text-tat-paper/45 leading-relaxed mb-5 max-w-xs">
+              Handcrafted journeys for couples, families, groups and pilgrims —
+              60+ destinations, 250+ trips, 8,000+ travelers since 2019.
             </p>
+
+            {/* Quick CTAs — WhatsApp + plan-my-trip. Customer experience
+                upgrade vs static text-only contact: prominent buttons
+                that match the rest of the site, clear next step. */}
+            <div className="flex flex-col gap-2 mb-6 max-w-xs">
+              <a
+                href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip!%20I'd%20like%20help%20planning%20a%20trip."
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => captureIntent("whatsapp_click", { note: "Footer WhatsApp" })}
+                className="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-full bg-whatsapp text-white text-sm font-semibold hover:bg-whatsapp-hover transition-colors"
+              >
+                <MessageCircle className="h-4 w-4 fill-white" />
+                Chat on WhatsApp
+              </a>
+              <Link
+                href="/customize-trip"
+                className="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-full bg-tat-gold text-tat-charcoal text-sm font-semibold hover:bg-tat-gold/90 transition-colors"
+              >
+                Plan my trip in 60 seconds
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
 
             {/* Contact */}
             <div className="space-y-2.5 mb-7">
