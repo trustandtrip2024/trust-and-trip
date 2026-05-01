@@ -1,13 +1,17 @@
 export default function PackageDetailLoading() {
   return (
     <>
-      {/* Hero skeleton — soft cream gradient instead of dark charcoal so
-          the loading state reads as "loading" not "broken page". */}
-      <div className="relative h-[80vh] min-h-[560px] w-full bg-gradient-to-br from-tat-cream via-tat-paper to-tat-cream animate-pulse" />
+      {/* Hero skeleton — height MUST match the real hero in page.tsx
+          (h-[55vh] min-h-[380px]) so hydration doesn't punch a 25vh
+          gap into the layout the moment the real page replaces this one.
+          Soft cream gradient reads as "loading", not "broken". */}
+      <div className="relative h-[55vh] min-h-[380px] w-full bg-gradient-to-br from-tat-cream via-tat-paper to-tat-cream animate-pulse" />
 
-      {/* Content skeleton */}
-      <section className="py-16 md:py-20">
-        <div className="container-custom grid lg:grid-cols-[1fr_380px] gap-12 lg:gap-16">
+      {/* Content skeleton — grid template MUST match page.tsx
+          (lg:grid-cols-[1fr_360px], gap-8 lg:gap-12) so the sidebar
+          column doesn't jump when the real page swaps in. */}
+      <section className="py-8 md:py-12 pb-24 lg:pb-12">
+        <div className="container-custom grid lg:grid-cols-[1fr_360px] gap-8 lg:gap-12">
           <div className="space-y-10">
             {/* Highlights */}
             <div>

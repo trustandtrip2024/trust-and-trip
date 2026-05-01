@@ -3,9 +3,10 @@ import PackageCardSkeleton from "@/components/PackageCardSkeleton";
 export default function DestinationDetailLoading() {
   return (
     <>
-      {/* Hero skeleton — soft cream gradient instead of dark charcoal so
-          the loading state reads as "loading" not "broken page". */}
-      <div className="h-[85vh] min-h-[600px] w-full bg-gradient-to-br from-tat-cream via-tat-paper to-tat-cream animate-pulse" />
+      {/* Hero skeleton — height MUST match the real hero in page.tsx
+          (h-[60vh] min-h-[420px] md:h-[75vh] md:min-h-[500px]) so hydration
+          doesn't shift the layout the moment the real page swaps in. */}
+      <div className="h-[60vh] min-h-[420px] md:h-[75vh] md:min-h-[500px] w-full bg-gradient-to-br from-tat-cream via-tat-paper to-tat-cream animate-pulse" />
 
       {/* Overview skeleton */}
       <section className="py-20 md:py-24">
