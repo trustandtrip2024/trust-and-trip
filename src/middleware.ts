@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { timingSafeEqualStrings } from "@/lib/timing-safe";
 
 const REF_COOKIE = "tt_ref";
 const REF_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
@@ -128,9 +129,17 @@ export function middleware(req: NextRequest) {
   if (authHeader) {
     const [scheme, encoded] = authHeader.split(" ");
     if (scheme === "Basic" && encoded) {
-      const decoded = atob(encoded);
-      const [, pass] = decoded.split(":");
-      if (pass === adminSecret) {
+      let decoded = "";
+      try {
+        decoded = atob(encoded);
+      } catch {
+        // Malformed base64 — fall through to 401.
+      }
+      const colon = decoded.indexOf(":");
+      const pass = colon >= 0 ? decoded.slice(colon + 1) : "";
+      // Constant-time compare so the response time doesn't leak password bytes
+      // to a brute-forcer.
+      if (timingSafeEqualStrings(pass, adminSecret)) {
         return applyHeaders(NextResponse.next({ request: { headers: reqHeaders } }));
       }
     }

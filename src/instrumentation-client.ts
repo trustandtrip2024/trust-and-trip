@@ -32,8 +32,13 @@ if (dsn) {
     enableLogs: true,
     integrations: [
       Sentry.replayIntegration({
-        maskAllText: false,
-        blockAllMedia: false,
+        // Privacy by default — payment/booking forms collect name, phone,
+        // email, travel dates, special requests. Replay should never ship
+        // any of that off-box. Engineers who need to read a specific input
+        // value during incident triage can opt-in per element with the
+        // `data-sentry-unmask` attribute.
+        maskAllText: true,
+        blockAllMedia: true,
       }),
     ],
     // Ignore noise from extensions / 3rd-party scripts

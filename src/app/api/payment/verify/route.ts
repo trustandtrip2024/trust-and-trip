@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 import { createClient } from "@supabase/supabase-js";
 import crypto from "crypto";
+import { timingSafeEqualStrings } from "@/lib/timing-safe";
 import { computeTier, pointsForRupees } from "@/lib/points";
 import { markDealPaid } from "@/lib/bitrix24";
 import { findActiveCreator } from "@/lib/creator-attribution";
@@ -58,10 +59,14 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify signature
-    const secret = process.env.RAZORPAY_KEY_SECRET!;
+    const secret = process.env.RAZORPAY_KEY_SECRET;
+    if (!secret) {
+      console.error("[verify] RAZORPAY_KEY_SECRET not configured");
+      return NextResponse.json({ error: "Payment not configured." }, { status: 503 });
+    }
     const body = `${razorpay_order_id}|${razorpay_payment_id}`;
     const expected = crypto.createHmac("sha256", secret).update(body).digest("hex");
-    if (expected !== razorpay_signature) {
+    if (typeof razorpay_signature !== "string" || !timingSafeEqualStrings(expected, razorpay_signature)) {
       return NextResponse.json({ error: "Payment verification failed." }, { status: 400 });
     }
 

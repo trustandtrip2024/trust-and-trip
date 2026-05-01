@@ -232,16 +232,25 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       console.error("Supabase insert error:", error);
-      return NextResponse.json({
-        error: "Failed to save enquiry.",
-        supabase_error: {
-          message: error.message,
-          code: (error as { code?: string }).code,
-          details: (error as { details?: string }).details,
-          hint: (error as { hint?: string }).hint,
-        },
-        debug,
-      }, { status: 500 });
+      // In production return a generic message — leaking column names, RLS
+      // hints, or constraint details to the client gives an attacker a free
+      // schema map. Dev still gets the raw error to make local debugging fast.
+      const isProd = process.env.NODE_ENV === "production";
+      return NextResponse.json(
+        isProd
+          ? { error: "Failed to save enquiry." }
+          : {
+              error: "Failed to save enquiry.",
+              supabase_error: {
+                message: error.message,
+                code: (error as { code?: string }).code,
+                details: (error as { details?: string }).details,
+                hint: (error as { hint?: string }).hint,
+              },
+              debug,
+            },
+        { status: 500 },
+      );
     }
 
     mark("5. supabase insert OK");
@@ -368,14 +377,22 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     const e = err as Error & { code?: string; digest?: string };
     console.error("Lead API error:", e);
-    return NextResponse.json({
-      error: "Route threw an exception",
-      name: e?.name,
-      message: e?.message,
-      stack: e?.stack?.split("\n").slice(0, 8),
-      code: e?.code,
-      digest: e?.digest,
-      debug,
-    }, { status: 500 });
+    // Production returns no stack/internals — those land in the server log,
+    // not in the client response body where any browser-tab onlooker can see.
+    const isProd = process.env.NODE_ENV === "production";
+    return NextResponse.json(
+      isProd
+        ? { error: "Internal error." }
+        : {
+            error: "Route threw an exception",
+            name: e?.name,
+            message: e?.message,
+            stack: e?.stack?.split("\n").slice(0, 8),
+            code: e?.code,
+            digest: e?.digest,
+            debug,
+          },
+      { status: 500 },
+    );
   }
 }
