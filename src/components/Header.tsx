@@ -59,6 +59,11 @@ const EXP_LIST: DropdownLink[] = [
   { label: "Pilgrim",    href: "/experiences/pilgrim",    emoji: "🛕" },
   { label: "Luxury",     href: "/experiences/luxury",     emoji: "👑" },
 ];
+const TIER_LIST: DropdownLink[] = [
+  { label: "Essentials · Pocket-friendly", href: "/essentials", emoji: "💼" },
+  { label: "Signature · Most trips",       href: "/signature",  emoji: "🧭" },
+  { label: "Private · Bespoke luxury",     href: "/private",    emoji: "👑" },
+];
 const OFFER_LIST: DropdownLink[] = [
   { label: "Flash Deals",         href: "/offers?kind=flash",       emoji: "⚡" },
   { label: "Early-Bird",          href: "/offers?kind=early-bird",  emoji: "🌅" },
@@ -82,7 +87,10 @@ const TOP_LINKS: TopLink[] = [
   {
     href: "/experiences", label: "Experiences",
     dropdown: {
-      groups: [{ title: "Browse by mood", items: EXP_LIST }],
+      groups: [
+        { title: "By tier", items: TIER_LIST },
+        { title: "Browse by mood", items: EXP_LIST },
+      ],
       cta: { label: "All experiences →", href: "/experiences" },
     },
   },
@@ -130,6 +138,7 @@ export default function Header() {
     pathname === href || (href !== "/" && pathname?.startsWith(href + "/"));
 
   const moreItems: MoreItem[] = [
+    { href: "/why-us",   label: "Why Trust and Trip", icon: Sparkles },
     { href: "/journal",  label: "Journal",  icon: BookOpen },
     { href: "/about",    label: "About",    icon: Info },
     { href: "/wishlist", label: `Wishlist${wishlistCount > 0 ? ` (${wishlistCount})` : ""}`, icon: Heart },

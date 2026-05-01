@@ -243,6 +243,21 @@ export default function PackagesClient({
               );
             })}
           </div>
+          {filterTier && filterTier !== "" && (() => {
+            const tierLink = filterTier === "essentials" ? "/essentials"
+              : filterTier === "signature" ? "/signature"
+              : filterTier === "private"   ? "/private"
+              : null;
+            if (!tierLink) return null;
+            return (
+              <p className="text-[11px] text-tat-charcoal/55">
+                Want the dedicated story for this tier?{" "}
+                <Link href={tierLink} className="font-semibold text-tat-gold hover:text-tat-charcoal underline-offset-2 hover:underline">
+                  Visit the {filterTier.charAt(0).toUpperCase() + filterTier.slice(1)} page →
+                </Link>
+              </p>
+            );
+          })()}
           {(() => {
             // Source-city pickup rail. Surfaces only when any package carries
             // an `ex-*` tag, so the chip strip disappears for flat catalogs
