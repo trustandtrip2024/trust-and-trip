@@ -1,9 +1,8 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
-import { cacheGet, cacheSet } from "./redis";
 
-const CACHE_KEY = "site:stats:v1";
 const TTL_SECONDS = 60 * 60; // 1 hour
 
 // Baseline seeds — keep our copy honest when Supabase counts are small early
@@ -48,49 +47,54 @@ function fallback(): SiteStats {
   return { ...base, trustStripLine: buildStripLine(base) };
 }
 
-export async function getSiteStats(): Promise<SiteStats> {
-  const cached = await cacheGet<SiteStats>(CACHE_KEY);
-  if (cached) return cached;
+// Wrapped in unstable_cache so the Supabase HEAD-count fetches don't trip
+// the route into dynamic rendering. Without this, calling Supabase from a
+// Server Component on the homepage emitted Cache-Control: no-store and
+// turned every Meta-ad cold-click into a fresh function invocation.
+// unstable_cache routes the work through Next's data cache, where the
+// stats are stored for TTL_SECONDS and ISR revalidates them periodically.
+export const getSiteStats = unstable_cache(
+  async (): Promise<SiteStats> => {
+    try {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      if (!url || !key) return fallback();
 
-  try {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !key) return fallback();
+      const supabase = createClient(url, key, {
+        auth: { persistSession: false },
+      });
 
-    const supabase = createClient(url, key, {
-      auth: { persistSession: false },
-    });
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const [leadsTotalRes, leadsWeekRes, reviewsRes] = await Promise.all([
+        supabase.from("leads").select("*", { count: "exact", head: true }),
+        supabase
+          .from("leads")
+          .select("*", { count: "exact", head: true })
+          .gte("created_at", sevenDaysAgo),
+        supabase
+          .from("reviews")
+          .select("*", { count: "exact", head: true })
+          .eq("status", "approved"),
+      ]);
 
-    const [leadsTotalRes, leadsWeekRes, reviewsRes] = await Promise.all([
-      supabase.from("leads").select("*", { count: "exact", head: true }),
-      supabase
-        .from("leads")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", sevenDaysAgo),
-      supabase
-        .from("reviews")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "approved"),
-    ]);
+      const liveTravelers = leadsTotalRes.count ?? 0;
+      const liveWeekTrips = leadsWeekRes.count ?? 0;
+      const liveReviewCount = reviewsRes.count ?? 0;
 
-    const liveTravelers = leadsTotalRes.count ?? 0;
-    const liveWeekTrips = leadsWeekRes.count ?? 0;
-    const liveReviewCount = reviewsRes.count ?? 0;
+      const stats: Omit<SiteStats, "trustStripLine"> = {
+        totalTravelers: Math.max(SEED_TOTAL_TRAVELERS, liveTravelers),
+        tripsThisWeek: Math.max(SEED_TRIPS_THIS_WEEK, liveWeekTrips),
+        googleRating: SEED_GOOGLE_RATING,
+        googleReviewCount: Math.max(SEED_GOOGLE_REVIEW_COUNT, liveReviewCount),
+        destinationCount: DESTINATION_COUNT,
+      };
 
-    const stats: Omit<SiteStats, "trustStripLine"> = {
-      totalTravelers: Math.max(SEED_TOTAL_TRAVELERS, liveTravelers),
-      tripsThisWeek: Math.max(SEED_TRIPS_THIS_WEEK, liveWeekTrips),
-      googleRating: SEED_GOOGLE_RATING,
-      googleReviewCount: Math.max(SEED_GOOGLE_REVIEW_COUNT, liveReviewCount),
-      destinationCount: DESTINATION_COUNT,
-    };
-
-    const out: SiteStats = { ...stats, trustStripLine: buildStripLine(stats) };
-    await cacheSet(CACHE_KEY, out, TTL_SECONDS);
-    return out;
-  } catch {
-    return fallback();
-  }
-}
+      return { ...stats, trustStripLine: buildStripLine(stats) };
+    } catch {
+      return fallback();
+    }
+  },
+  ["site-stats:v1"],
+  { revalidate: TTL_SECONDS, tags: ["site-stats"] },
+);
