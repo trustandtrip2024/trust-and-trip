@@ -353,35 +353,38 @@ export default async function PackageDetail({ params }: Props) {
             ) : (
               <section id="hotel" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
                 <span className="eyebrow">Where you&rsquo;ll stay</span>
-                <h2 className="heading-section mt-2 mb-6 text-balance">
+                <h2 className="heading-section mt-2 mb-8 text-balance">
                   Comfort you&rsquo;ll
                   <span className="italic text-tat-gold font-light"> remember.</span>
                 </h2>
-                <div className="bg-tat-cream/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
-                  <div className="h-14 w-14 rounded-2xl bg-tat-gold/15 flex items-center justify-center shrink-0">
-                    <Hotel className="h-7 w-7 text-tat-gold" />
-                  </div>
+                {/* Hotel — typographic, no card chrome. Hotel icon sits
+                    inline as a quiet eyebrow next to the star rating. */}
+                <div className="grid grid-cols-[auto_1fr] gap-5 items-start">
+                  <Hotel className="h-7 w-7 text-tat-gold mt-1" aria-hidden />
                   <div>
-                    <h3 className="font-display text-h2 font-medium">{pkg.hotel.name}</h3>
-                    <div className="flex items-center gap-1 mt-1.5">
+                    <h3 className="font-display text-[22px] md:text-[26px] font-medium text-tat-charcoal leading-tight">
+                      {pkg.hotel.name}
+                    </h3>
+                    <div className="flex items-center gap-1 mt-2">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} />
+                        <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} aria-hidden />
                       ))}
-                      <span className="text-xs text-tat-charcoal/50 ml-1">{hotelStars}-star accommodation</span>
+                      <span className="text-[12px] text-tat-charcoal/50 ml-1.5">{hotelStars}-star accommodation</span>
                     </div>
-                    <p className="mt-3 text-tat-charcoal/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
+                    <p className="mt-4 text-tat-charcoal/75 leading-relaxed text-[14px] max-w-[60ch]">{pkg.hotel.description}</p>
                   </div>
                 </div>
                 {pkg.activities.length > 0 && (
-                  <div className="mt-6">
-                    <p className="text-xs uppercase tracking-[0.2em] text-tat-charcoal/50 mb-3 font-medium">Signature activities</p>
-                    <div className="flex flex-wrap gap-2">
-                      {pkg.activities.map((a) => (
-                        <span key={a} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal text-tat-paper text-xs">
-                          <span className="h-1.5 w-1.5 rounded-full bg-tat-gold" />{a}
+                  <div className="mt-8 pt-6 border-t border-tat-charcoal/8">
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-tat-charcoal/50 mb-3 font-semibold">Signature activities</p>
+                    <p className="text-[14px] text-tat-charcoal/85 leading-relaxed max-w-[62ch]">
+                      {pkg.activities.map((a, i) => (
+                        <span key={a}>
+                          <span className="font-medium text-tat-charcoal">{a}</span>
+                          {i < pkg.activities.length - 1 && <span className="text-tat-gold mx-2">·</span>}
                         </span>
                       ))}
-                    </div>
+                    </p>
                   </div>
                 )}
               </section>
@@ -402,42 +405,40 @@ export default async function PackageDetail({ params }: Props) {
               </div>
             )}
 
-            {/* Inclusions / Exclusions — single source. */}
+            {/* Inclusions / Exclusions — editorial spread, no boxed cards.
+                Two-column typographic layout with a hairline divider, gold
+                check bullets on the left, muted X bullets on the right. */}
             <section id="inclusions" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <span className="eyebrow">Inclusions & Exclusions</span>
-              <h2 className="heading-section mt-2 mb-6 text-balance">
+              <h2 className="heading-section mt-2 mb-8 text-balance">
                 What&rsquo;s in — and
                 <span className="italic text-tat-gold font-light"> what&rsquo;s not.</span>
               </h2>
-              <div className="grid md:grid-cols-2 gap-5">
-                <div className="bg-tat-paper rounded-2xl p-6 border border-tat-charcoal/5">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-7 w-7 rounded-full bg-tat-gold/15 flex items-center justify-center">
-                      <Check className="h-4 w-4 text-tat-gold" />
-                    </div>
-                    <h3 className="font-medium text-tat-charcoal">What&rsquo;s included</h3>
-                  </div>
+              <div className="grid md:grid-cols-2 gap-x-10 gap-y-8 md:divide-x md:divide-tat-charcoal/8">
+                <div className="md:pr-10">
+                  <p className="text-[11px] uppercase tracking-[0.22em] font-semibold text-tat-gold mb-4 inline-flex items-center gap-1.5">
+                    <Check className="h-3.5 w-3.5" aria-hidden />
+                    Included
+                  </p>
                   <ul className="space-y-2.5">
                     {pkg.inclusions.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-sm text-tat-charcoal/70">
-                        <Check className="h-4 w-4 text-tat-gold shrink-0 mt-0.5" />
-                        {item}
+                      <li key={i} className="flex items-start gap-2.5 text-[14px] text-tat-charcoal/85 leading-relaxed">
+                        <Check className="h-4 w-4 text-tat-gold shrink-0 mt-0.5" aria-hidden />
+                        <span>{item}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div className="bg-tat-paper rounded-2xl p-6 border border-tat-charcoal/5">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-7 w-7 rounded-full bg-tat-charcoal/8 flex items-center justify-center">
-                      <XIcon className="h-4 w-4 text-tat-charcoal/50" />
-                    </div>
-                    <h3 className="font-medium text-tat-charcoal/60">Not included</h3>
-                  </div>
+                <div className="md:pl-10">
+                  <p className="text-[11px] uppercase tracking-[0.22em] font-semibold text-tat-charcoal/55 mb-4 inline-flex items-center gap-1.5">
+                    <XIcon className="h-3.5 w-3.5" aria-hidden />
+                    Not included
+                  </p>
                   <ul className="space-y-2.5">
                     {pkg.exclusions.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-sm text-tat-charcoal/50">
-                        <XIcon className="h-4 w-4 text-tat-charcoal/30 shrink-0 mt-0.5" />
-                        {item}
+                      <li key={i} className="flex items-start gap-2.5 text-[14px] text-tat-charcoal/55 leading-relaxed">
+                        <XIcon className="h-4 w-4 text-tat-charcoal/35 shrink-0 mt-0.5" aria-hidden />
+                        <span>{item}</span>
                       </li>
                     ))}
                   </ul>

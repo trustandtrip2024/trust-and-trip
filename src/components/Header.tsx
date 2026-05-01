@@ -64,6 +64,10 @@ const TIER_LIST: DropdownLink[] = [
   { label: "Signature · Most trips",       href: "/signature",  emoji: "🧭" },
   { label: "Private · Bespoke luxury",     href: "/private",    emoji: "👑" },
 ];
+const CONCIERGE_LIST: DropdownLink[] = [
+  { label: "Pilgrim Yatras · Doctor on call", href: "/pilgrim",      emoji: "🛕" },
+  { label: "Group Trips · Your group only",   href: "/group-trips",  emoji: "👥" },
+];
 const OFFER_LIST: DropdownLink[] = [
   { label: "Flash Deals",         href: "/offers?kind=flash",       emoji: "⚡" },
   { label: "Early-Bird",          href: "/offers?kind=early-bird",  emoji: "🌅" },
@@ -89,6 +93,7 @@ const TOP_LINKS: TopLink[] = [
     dropdown: {
       groups: [
         { title: "By tier", items: TIER_LIST },
+        { title: "Concierge", items: CONCIERGE_LIST },
         { title: "Browse by mood", items: EXP_LIST },
       ],
       cta: { label: "All experiences →", href: "/experiences" },
