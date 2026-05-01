@@ -14,15 +14,26 @@ interface PilgrimRoute {
   highlights: { icon: LucideIcon; text: string }[];
 }
 
+// Each href points to an actual package detail page (slugs confirmed
+// against Sanity production on 2026-05-01). Card duration + priceFrom
+// mirror the live package so visitors don't see a price jump after
+// clicking through.
+//
+// Why Varanasi (and not Vaishno Devi) sits in the third slot: Sanity
+// has zero Vaishno Devi packages yet. A "Plan this yatra" CTA pointing
+// to a non-existent detail page would 404. A seed script —
+// scripts/seed-vaishno-devi.mjs — is queued and ready; once a teammate
+// runs it, swap the slot back to Vaishno Devi and update slug/href to
+// /packages/vaishno-devi-3n4d-darshan.
 const ROUTES: PilgrimRoute[] = [
   {
     slug: "char-dham",
-    href: "/packages?theme=yatra",
+    href: "/packages/uttarakhand-chardham-road-11n12d",
     title: "Char Dham Yatra",
     region: "Yamunotri · Gangotri · Kedarnath · Badrinath",
     duration: "11N · 12D",
     image: "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&w=1100&q=75",
-    priceFrom: 49500,
+    priceFrom: 48000,
     highlights: [
       { icon: Plane,        text: "Helicopter to Kedarnath included" },
       { icon: Hotel,        text: "Hotels under 5 min from temples" },
@@ -30,27 +41,27 @@ const ROUTES: PilgrimRoute[] = [
     ],
   },
   {
-    slug: "vaishno-devi",
-    href: "/packages?destination=vaishno-devi",
-    title: "Vaishno Devi Darshan",
-    region: "Katra · Bhavan · Bhairon Mandir",
-    duration: "3N · 4D",
-    image: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1100&q=75",
-    priceFrom: 18500,
+    slug: "varanasi",
+    href: "/packages/varanasi-family",
+    title: "Varanasi & Kashi",
+    region: "Kashi Vishwanath · Ganga Aarti · Sarnath",
+    duration: "5N · 6D",
+    image: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=1100&q=75",
+    priceFrom: 20000,
     highlights: [
-      { icon: Sparkles,     text: "VIP darshan slot pre-booked" },
-      { icon: Plane,        text: "Helicopter Katra ↔ Sanjichhat" },
-      { icon: Hotel,        text: "4-star stay in Katra" },
+      { icon: Sparkles,     text: "Front-row Ganga Aarti at Dashashwamedh" },
+      { icon: Hotel,        text: "Heritage stay walking distance to ghats" },
+      { icon: ShieldCheck,  text: "Family-friendly pace · senior-suited" },
     ],
   },
   {
     slug: "tirupati",
-    href: "/packages?destination=tirupati",
+    href: "/packages/tirupati-family",
     title: "Tirupati Balaji",
     region: "Tirumala · Tirupati · Padmavathi temple",
-    duration: "2N · 3D",
+    duration: "5N · 6D",
     image: "https://images.unsplash.com/photo-1593693411515-c20261bcad6e?auto=format&fit=crop&w=1100&q=75",
-    priceFrom: 14500,
+    priceFrom: 15500,
     highlights: [
       { icon: Sparkles,     text: "Special-entry darshan ticket" },
       { icon: Hotel,        text: "Stay near Alipiri footpath" },
@@ -78,7 +89,7 @@ export default function PilgrimSpotlight() {
               id="pilgrim-spotlight-title"
               className="mt-2 font-display font-normal text-[26px] md:text-[36px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
             >
-              Char Dham, Vaishno Devi, Tirupati —{" "}
+              Char Dham, Varanasi, Tirupati —{" "}
               <em className="not-italic font-display italic text-tat-gold">elders looked after.</em>
             </h2>
             <p className="mt-3 text-body-sm text-tat-charcoal/70 dark:text-tat-paper/70 max-w-2xl">
@@ -86,7 +97,7 @@ export default function PilgrimSpotlight() {
             </p>
           </div>
           <Link
-            href="/packages?theme=yatra"
+            href="/packages?category=Pilgrim"
             className="hidden sm:inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-gold hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
           >
             All yatra packages
@@ -102,7 +113,7 @@ export default function PilgrimSpotlight() {
 
         <div className="sm:hidden mt-6 text-center">
           <Link
-            href="/packages?theme=yatra"
+            href="/packages?category=Pilgrim"
             className="inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-gold hover:underline underline-offset-4"
           >
             All yatra packages
