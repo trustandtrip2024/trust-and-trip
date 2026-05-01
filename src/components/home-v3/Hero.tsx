@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Search, Calendar, Users, Wallet, ArrowRight, MessageCircle, Star,
+  ShieldCheck, Clock, Sparkles,
 } from "lucide-react";
 import { useTripPlanner } from "@/context/TripPlannerContext";
 
@@ -104,6 +105,17 @@ export default function Hero({
         }}
       />
 
+      {/* Decorative gold orb — soft glow in upper-right of the hero on
+          desktop. Pure ambient depth, sits behind everything. */}
+      <div
+        aria-hidden
+        className="hidden sm:block absolute top-[-15%] right-[-8%] h-[520px] w-[520px] rounded-full bg-tat-gold/15 blur-3xl pointer-events-none -z-[5]"
+      />
+      <div
+        aria-hidden
+        className="hidden sm:block absolute bottom-[-20%] left-[-10%] h-[420px] w-[420px] rounded-full bg-tat-orange/12 blur-3xl pointer-events-none -z-[5]"
+      />
+
       <div className="container-custom pt-8 pb-7 md:pt-20 md:pb-16">
         <div className="max-w-3xl">
           <p className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-pill bg-white/10 backdrop-blur-sm text-tat-orange-soft text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.18em] border border-white/15">
@@ -115,24 +127,54 @@ export default function Hero({
               the badge + bottom trust strip alone. */}
           <h1
             id="hero-h1"
-            className="sr-only sm:not-sr-only sm:mt-4 sm:font-display sm:font-normal sm:text-[40px] md:text-[54px] lg:text-[62px] sm:leading-[1.05] sm:text-white sm:text-balance"
+            className="sr-only sm:not-sr-only sm:mt-4 sm:font-display sm:font-normal sm:text-[40px] md:text-[56px] lg:text-[68px] sm:leading-[1.04] sm:text-white sm:text-balance sm:[text-shadow:0_2px_24px_rgba(0,0,0,0.35)]"
           >
             Trips planned by a real human{" "}
-            <em className="not-italic font-display italic text-tat-gold">
+            <em className="not-italic font-display italic relative inline-block bg-gradient-to-r from-tat-gold via-[#E8B547] to-tat-gold bg-clip-text text-transparent">
               in 24 hours.
+              <span
+                aria-hidden
+                className="absolute left-0 right-0 -bottom-2 h-[3px] rounded-full bg-gradient-to-r from-transparent via-tat-gold/80 to-transparent"
+              />
             </em>
           </h1>
-          <p className="mt-3 md:mt-5 text-[14px] md:text-lead text-white/85 max-w-2xl hidden sm:block">
+          <p className="mt-3 md:mt-6 text-[14px] md:text-lead text-white/85 max-w-2xl hidden sm:block">
             Tell us your dates and what you love. A real travel planner drafts
             your itinerary — free until you&apos;re sure. No card, no commitment.
           </p>
+
+          {/* Risk-killers — three pills that close the "what does this
+              cost me to try?" loop before the user reaches the form.
+              Desktop only; mobile has its own trust strip in the footer. */}
+          <ul className="hidden sm:flex flex-wrap items-center gap-2 mt-5 md:mt-7">
+            {[
+              { Icon: Clock,       label: "Itinerary in 24h"  },
+              { Icon: ShieldCheck, label: "₹0 to start"        },
+              { Icon: Sparkles,    label: "48h free changes"   },
+            ].map(({ Icon, label }) => (
+              <li
+                key={label}
+                className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full bg-white/10 backdrop-blur-md text-white/90 text-[12px] font-medium border border-white/15"
+              >
+                <Icon className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
+                {label}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        {/* ─── Desktop: full search form ─────────────────────────── */}
+        {/* ─── Desktop: full search form ───────────────────────────
+            Gold gradient hairline at top + glow ring on hover sells
+            the form as a premium primary action, not a flat web
+            widget. Submit button gets gold→orange gradient + shimmer. */}
         <form
           onSubmit={submit}
-          className="hidden md:block mt-8 bg-white/95 dark:bg-tat-charcoal/95 backdrop-blur-md rounded-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] ring-1 ring-white/10"
+          className="group/heroform relative hidden md:block mt-8 bg-white/95 dark:bg-tat-charcoal/95 backdrop-blur-md rounded-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.55)] ring-1 ring-white/15 hover:ring-tat-gold/45 transition-shadow duration-300"
         >
+          <span
+            aria-hidden
+            className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-tat-gold/70 to-transparent"
+          />
           <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_0.8fr_1fr_auto] divide-y md:divide-y-0 md:divide-x divide-tat-charcoal/10 dark:divide-white/10">
             <Field label="Destination" icon={Search}>
               <input
@@ -182,17 +224,28 @@ export default function Hero({
             <div className="p-2 md:p-2.5 flex">
               <button
                 type="submit"
-                className="w-full md:w-auto inline-flex items-center justify-center gap-2 h-12 md:h-14 px-6 md:px-7 rounded-xl bg-tat-teal hover:bg-tat-teal-deep text-white font-semibold text-[15px] shadow-[0_12px_28px_-10px_rgba(14,124,123,0.7)] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
+                className="relative overflow-hidden w-full md:w-auto inline-flex flex-col items-center justify-center gap-0 h-12 md:h-14 px-6 md:px-8 rounded-xl bg-gradient-to-r from-tat-teal via-tat-teal to-tat-teal-deep text-white font-semibold text-[15px] shadow-[0_14px_30px_-10px_rgba(14,124,123,0.85)] active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 group/cta"
               >
-                Plan my trip
-                <ArrowRight className="h-4 w-4" />
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-tt-shimmer"
+                />
+                <span className="relative inline-flex items-center gap-1.5 leading-none">
+                  Plan my trip
+                  <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover/cta:translate-x-0.5" />
+                </span>
+                <span className="relative text-[10px] font-medium opacity-80 mt-1 tracking-wide leading-none">
+                  Free · 2 mins · No card
+                </span>
               </button>
             </div>
           </div>
         </form>
 
-        {/* Below-form trust line + WhatsApp escape */}
-        <div className="mt-4 md:mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:gap-3 text-white/85">
+        {/* Below-form trust line + live-planner WhatsApp escape.
+            Green pulse dot on the WhatsApp link sells "real human
+            online right now" without making a fake claim. */}
+        <div className="mt-4 md:mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:gap-3 text-white/85">
           <p className="inline-flex flex-wrap items-center gap-x-2 text-meta">
             <Star className="h-3.5 w-3.5 fill-tat-gold text-tat-gold" aria-hidden />
             <span className="font-semibold text-white">{trustStrip}</span>
@@ -201,10 +254,15 @@ export default function Hero({
             href={WHATSAPP_HREF}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-meta font-semibold text-white/85 hover:text-tat-orange-soft underline-offset-4 hover:underline transition"
+            className="inline-flex items-center gap-2 text-meta font-semibold text-white/90 hover:text-tat-orange-soft underline-offset-4 hover:underline transition group/wa"
           >
+            <span className="relative flex h-2 w-2 shrink-0" aria-hidden>
+              <span className="absolute inset-0 rounded-full bg-whatsapp/70 animate-ping" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-whatsapp" />
+            </span>
             <MessageCircle className="h-4 w-4 text-whatsapp" />
-            or chat with a planner on WhatsApp
+            Planners online — chat on WhatsApp
+            <ArrowRight className="h-3.5 w-3.5 opacity-70 transition-transform duration-200 group-hover/wa:translate-x-0.5" />
           </Link>
         </div>
       </div>
