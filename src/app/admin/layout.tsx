@@ -3,7 +3,7 @@ import {
   Home, ShieldCheck,
   CheckSquare, Users, ShoppingBag, Star, Activity,
   Map as MapIcon, BarChart3, Megaphone, Palette,
-  Sparkles, Wallet, Gift,
+  Sparkles, Wallet, Gift, Lightbulb,
 } from "lucide-react";
 
 const NAV_GROUPS: { label: string; items: { href: string; label: string; icon: typeof Home }[] }[] = [
@@ -21,6 +21,7 @@ const NAV_GROUPS: { label: string; items: { href: string; label: string; icon: t
     label: "Direction",
     items: [
       { href: "/admin/roadmap",   label: "Roadmap",   icon: MapIcon },
+      { href: "/admin/decisions", label: "Decisions", icon: Lightbulb },
       { href: "/admin/insights",  label: "Insights",  icon: BarChart3 },
       { href: "/admin/marketing", label: "Marketing", icon: Megaphone },
       { href: "/admin/brand",     label: "Brand",     icon: Palette },

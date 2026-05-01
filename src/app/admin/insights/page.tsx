@@ -224,6 +224,114 @@ export default async function InsightsPage() {
   const dowMax = Math.max(...dowCounts, 1);
   const DOW_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+  // ─── Recommendations — auto-generated plain-English suggestions ────
+  // Each rec is a small heuristic over the same numbers shown above.
+  // Goal: founder reads them and knows what to do without crunching.
+  type Rec = { kind: "push" | "kill" | "fix" | "watch"; text: string };
+  const recs: Rec[] = [];
+
+  // Source quality: top channel by tier-A %
+  if (sourceQuality.length >= 2) {
+    const top = sourceQuality[0];
+    const bottom = sourceQuality[sourceQuality.length - 1];
+    if (top.pct >= 25 && top.total >= 8) {
+      recs.push({
+        kind: "push",
+        text: `Push more budget to "${top.source}" — ${top.pct.toFixed(0)}% tier-A on ${top.total} leads. Best-converting source.`,
+      });
+    }
+    if (bottom.pct < 5 && bottom.total >= 10 && bottom.source !== top.source) {
+      recs.push({
+        kind: "kill",
+        text: `Pause or audit "${bottom.source}" — ${bottom.pct.toFixed(0)}% tier-A on ${bottom.total} leads. Channel is leaking budget.`,
+      });
+    }
+  }
+
+  // Top package by leads with low conversion
+  for (const p of topPkgsByLead.slice(0, 3)) {
+    const conv = bookingsByPkg.get(p.slug) ?? 0;
+    const ratio = p.count > 0 ? (conv / p.count) * 100 : 0;
+    if (p.count >= 8 && ratio < 5) {
+      recs.push({
+        kind: "fix",
+        text: `Many leads on "${p.title}" but only ${conv} booked (${ratio.toFixed(0)}%). Audit price, hero, or itinerary clarity.`,
+      });
+    }
+    if (p.count >= 8 && ratio >= 15) {
+      recs.push({
+        kind: "push",
+        text: `"${p.title}" converts ${ratio.toFixed(0)}% — promote on home + social. Hero candidate.`,
+      });
+    }
+  }
+
+  // Slow burner highlight
+  if (slowBurners.length > 0) {
+    const sb = slowBurners[0];
+    recs.push({
+      kind: "fix",
+      text: `Slow burner: ${sb.slug} — ${sb.viewCount} views, ${sb.leadCount} leads. CTA broken or copy weak. Re-test hero + first-fold form.`,
+    });
+  }
+
+  // Day-of-week skew → ad scheduling
+  const totalLeads = leads30.length;
+  if (totalLeads >= 30) {
+    const peakIdx = dowCounts.indexOf(Math.max(...dowCounts));
+    const lowIdx = dowCounts.indexOf(Math.min(...dowCounts));
+    const peakShare = (dowCounts[peakIdx] / totalLeads) * 100;
+    const lowShare = (dowCounts[lowIdx] / totalLeads) * 100;
+    if (peakShare > 22) {
+      recs.push({
+        kind: "push",
+        text: `${DOW_LABELS[peakIdx]} delivers ${peakShare.toFixed(0)}% of weekly leads. Concentrate ad spend + planner shifts here.`,
+      });
+    }
+    if (lowShare < 8) {
+      recs.push({
+        kind: "kill",
+        text: `${DOW_LABELS[lowIdx]} delivers only ${lowShare.toFixed(0)}% of leads. Drop ad budget or run repurposed creative.`,
+      });
+    }
+  }
+
+  // Stuck bookings
+  if (stuckBookings >= 3) {
+    recs.push({
+      kind: "fix",
+      text: `${stuckBookings} bookings stuck at status=created. Razorpay verify webhook may be misfiring. Check /api/payment/verify logs.`,
+    });
+  }
+
+  // Tier-A ratio
+  if (leads30.length >= 30) {
+    const tierAPctRaw = (tierA30 / leads30.length) * 100;
+    if (tierAPctRaw < 15) {
+      recs.push({
+        kind: "watch",
+        text: `Tier-A ratio ${tierAPctRaw.toFixed(0)}% (target 25%+). Check scoring rules in src/lib/lead-scoring.ts — gates may be too loose.`,
+      });
+    }
+    if (tierAPctRaw > 50) {
+      recs.push({
+        kind: "watch",
+        text: `Tier-A ratio ${tierAPctRaw.toFixed(0)}% — suspiciously high. Scoring may be too generous; verify recent rule changes.`,
+      });
+    }
+  }
+
+  // Lead → booking week-over-week
+  if (leads7.length >= 10 && leadsPrior7.length >= 10) {
+    const w = (leads7.length - leadsPrior7.length) / leadsPrior7.length;
+    if (w < -0.2) {
+      recs.push({
+        kind: "watch",
+        text: `Leads down ${(w * -100).toFixed(0)}% week-over-week. Check creative fatigue + paused campaigns before assuming demand drop.`,
+      });
+    }
+  }
+
   return (
     <div className="min-h-screen bg-tat-paper">
       <div className="max-w-6xl mx-auto px-4 py-10 space-y-10">
@@ -260,6 +368,34 @@ export default async function InsightsPage() {
             tone={stuckBookings > 0 ? "warn" : "default"}
           />
           <Kpi label="Package views · 7d" value={views.length} />
+        </section>
+
+        {/* Auto-recommendations */}
+        <section>
+          <Card title="Recommendations · auto-generated">
+            {recs.length === 0 ? (
+              <Empty>Not enough signal yet — collect more leads/views, then re-check.</Empty>
+            ) : (
+              <ul className="divide-y divide-tat-charcoal/8">
+                {recs.map((r, i) => {
+                  const tone = {
+                    push:  { tag: "PUSH",  cls: "bg-tat-teal text-white" },
+                    kill:  { tag: "KILL",  cls: "bg-tat-orange text-white" },
+                    fix:   { tag: "FIX",   cls: "bg-tat-gold text-tat-charcoal" },
+                    watch: { tag: "WATCH", cls: "bg-tat-slate/30 text-tat-charcoal" },
+                  }[r.kind];
+                  return (
+                    <li key={i} className="px-4 py-3 flex items-start gap-3">
+                      <span className={`inline-block rounded-pill px-2 py-0.5 text-[9px] font-bold tracking-wider shrink-0 mt-0.5 ${tone.cls}`}>
+                        {tone.tag}
+                      </span>
+                      <p className="text-sm text-tat-charcoal">{r.text}</p>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </Card>
         </section>
 
         {/* Top packages */}
