@@ -4,7 +4,7 @@ import Link from "next/link";
 import path from "path";
 import { createClient } from "@supabase/supabase-js";
 import {
-  CheckSquare, Map as MapIcon, BarChart3, Megaphone, Palette,
+  CheckSquare, Map as MapIcon, BarChart3, Megaphone, Palette, Activity,
   Users, ShoppingBag, Star, ArrowRight,
 } from "lucide-react";
 import { DAILY_CHECK_ITEMS, todayIST } from "@/lib/daily-checks";
@@ -207,6 +207,12 @@ export default async function AdminHome() {
             icon={Palette}
             title="Brand guideline"
             sub="Palette · type · media specs · copy voice"
+          />
+          <Tile
+            href="/admin/health"
+            icon={Activity}
+            title="System health"
+            sub="Live probes · cron jobs · 14d uptime · external dashboards"
           />
           <Tile
             href="/admin/leads"

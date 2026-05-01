@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {
   Home, ShieldCheck,
-  CheckSquare, Users, ShoppingBag, Star,
+  CheckSquare, Users, ShoppingBag, Star, Activity,
   Map as MapIcon, BarChart3, Megaphone, Palette,
   Sparkles, Wallet, Gift,
 } from "lucide-react";
@@ -11,6 +11,7 @@ const NAV_GROUPS: { label: string; items: { href: string; label: string; icon: t
     label: "Ops",
     items: [
       { href: "/admin/daily",    label: "Daily",    icon: CheckSquare },
+      { href: "/admin/health",   label: "Health",   icon: Activity },
       { href: "/admin/leads",    label: "Leads",    icon: Users },
       { href: "/admin/bookings", label: "Bookings", icon: ShoppingBag },
       { href: "/admin/reviews",  label: "Reviews",  icon: Star },
