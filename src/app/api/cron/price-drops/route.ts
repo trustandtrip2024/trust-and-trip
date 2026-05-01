@@ -30,13 +30,11 @@ interface SavedTrip {
   last_alerted_price: number | null;
 }
 
+import { assertCronAuth } from "@/lib/cron-auth";
+
 export async function GET(req: NextRequest) {
-  // Auth: Vercel Cron sends Authorization: Bearer <CRON_SECRET>
-  const authHeader = req.headers.get("authorization");
-  const expected = process.env.CRON_SECRET;
-  if (expected && authHeader !== `Bearer ${expected}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denial = assertCronAuth(req);
+  if (denial) return denial;
 
   const { data: trips, error } = await admin
     .from("user_saved_trips")

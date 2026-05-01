@@ -51,12 +51,11 @@ function tripEndDate(row: BookingRow): Date {
 
 export const dynamic = "force-dynamic";
 
+import { assertCronAuth } from "@/lib/cron-auth";
+
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get("authorization");
-  const expected = process.env.CRON_SECRET;
-  if (expected && authHeader !== `Bearer ${expected}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denial = assertCronAuth(req);
+  if (denial) return denial;
 
   // Only verified bookings eligible.
   const { data: rows, error } = await admin

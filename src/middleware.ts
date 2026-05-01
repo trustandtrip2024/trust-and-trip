@@ -110,6 +110,17 @@ export function middleware(req: NextRequest) {
 
   const adminSecret = process.env.ADMIN_SECRET;
   if (!adminSecret) {
+    // Fail closed in production. Earlier the route fell through to
+    // NextResponse.next(), which meant a botched env-var rollout (typo,
+    // accidental delete in Vercel, missing in a preview deploy) would
+    // expose the entire admin panel + every /api/admin/* route to the
+    // public internet. Local dev keeps working without ADMIN_SECRET set.
+    if (process.env.NODE_ENV === "production") {
+      return new NextResponse("Admin not configured", {
+        status: 503,
+        headers: { "Content-Security-Policy": csp },
+      });
+    }
     return applyHeaders(NextResponse.next({ request: { headers: reqHeaders } }));
   }
 

@@ -24,12 +24,11 @@ const STALE_AFTER_MINUTES = 30;
 // Bitrix user id of senior planner / on-call. Falls back to portal admin (1).
 const SENIOR_PLANNER_ID = Number(process.env.BITRIX_SENIOR_PLANNER_ID ?? 1);
 
+import { assertCronAuth } from "@/lib/cron-auth";
+
 export async function GET(req: NextRequest) {
-  const authHeader = req.headers.get("authorization");
-  const expected = process.env.CRON_SECRET;
-  if (expected && authHeader !== `Bearer ${expected}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denial = assertCronAuth(req);
+  if (denial) return denial;
 
   const cutoff = new Date(Date.now() - STALE_AFTER_MINUTES * 60 * 1000).toISOString();
 

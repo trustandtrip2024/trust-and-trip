@@ -41,11 +41,11 @@ interface CreativeStats {
   rate: number;
 }
 
+import { assertCronAuth } from "@/lib/cron-auth";
+
 export async function GET(req: NextRequest) {
-  const auth = req.headers.get("authorization");
-  if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const denial = assertCronAuth(req);
+  if (denial) return denial;
 
   const since = new Date(Date.now() - WINDOW_DAYS * 24 * 3600 * 1000).toISOString();
 

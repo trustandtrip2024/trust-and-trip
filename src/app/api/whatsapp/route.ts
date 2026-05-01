@@ -56,6 +56,13 @@ export async function GET(req: NextRequest) {
   const mode = req.nextUrl.searchParams.get("hub.mode");
   const token = req.nextUrl.searchParams.get("hub.verify_token");
   const challenge = req.nextUrl.searchParams.get("hub.challenge");
+  // Fail closed when WHATSAPP_VERIFY_TOKEN is missing or empty.
+  // Earlier `process.env.WHATSAPP_VERIFY_TOKEN ?? ""` made the comparison
+  // succeed on `?hub.verify_token=` (empty value matching empty config),
+  // letting a third party subscribe their own Meta app to our webhook URL.
+  if (!VERIFY_TOKEN) {
+    return new Response("Webhook not configured", { status: 503 });
+  }
   if (mode === "subscribe" && token === VERIFY_TOKEN) {
     return new Response(challenge, { status: 200 });
   }
