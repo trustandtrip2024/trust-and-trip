@@ -8,7 +8,8 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   Menu, X, Phone, Heart, BookOpen, MoreVertical,
   Info, User, LogOut, Sparkles, ChevronRight, ChevronDown, Mail, Instagram,
-  MessageCircle,
+  MessageCircle, Wallet, Compass, Crown, Stethoscope, Users as UsersIcon,
+  ShieldCheck, Clock,
 } from "lucide-react";
 import clsx from "clsx";
 import { useTripPlanner } from "@/context/TripPlannerContext";
@@ -535,10 +536,111 @@ export default function Header() {
                     </Dialog.Close>
                   </div>
 
+                  {/* Trust ribbon — live Google rating + ambient catalogue size.
+                      Sits between the user header and the nav so the first thing
+                      a visitor reads on opening the drawer is "you can trust us". */}
+                  <div className="px-6 py-3 bg-tat-cream-warm/40 border-b border-tat-charcoal/8 flex items-center justify-between gap-3">
+                    <GoogleReviewsBadge variant="light" />
+                    <p className="text-[11px] text-tat-charcoal/65 font-medium">
+                      8k+ travelers · 250+ trips
+                    </p>
+                  </div>
+
                   <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-4 py-4">
-                    <div className="space-y-0.5">
-                      {/* Top-level nav: dropdown groups become tap-to-expand
-                          accordions; flat links open directly. */}
+                    {/* TIER QUICK STRIP — three large tap-targets so users can
+                        jump to a tier landing without expanding the Experiences
+                        accordion. Visually differentiated chips so Private looks
+                        distinct from Essentials at a glance. */}
+                    <div className="mb-5">
+                      <p className="px-2 mb-2 text-[10px] uppercase tracking-[0.22em] text-tat-charcoal/45 font-semibold">
+                        Pick your tier
+                      </p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { l: "Essentials", sub: "₹15k+",  href: "/essentials", icon: Wallet,  cls: "bg-tat-orange/10 text-tat-charcoal border-tat-orange/30" },
+                          { l: "Signature",  sub: "₹50k+",  href: "/signature",  icon: Compass, cls: "bg-tat-gold/15 text-tat-charcoal border-tat-gold/40" },
+                          { l: "Private",    sub: "₹1.5L+", href: "/private",    icon: Crown,   cls: "bg-tat-charcoal text-tat-paper border-tat-charcoal" },
+                        ].map((t) => (
+                          <Link
+                            key={t.href}
+                            href={t.href}
+                            onClick={() => setDrawerOpen(false)}
+                            className={clsx(
+                              "flex flex-col gap-1 rounded-xl p-3 border transition-transform active:scale-[0.98]",
+                              t.cls,
+                            )}
+                          >
+                            <t.icon className="h-4 w-4" aria-hidden />
+                            <span className="font-display font-semibold text-[13px] leading-tight">{t.l}</span>
+                            <span className="text-[10px] opacity-75 leading-tight">{t.sub}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* CONCIERGE CARDS — Pilgrim and Group Trips are the
+                        umbrella combat pages, surfaced as visual cards so they
+                        feel like distinct services rather than buried nav rows. */}
+                    <div className="mb-5 grid grid-cols-2 gap-2">
+                      <Link
+                        href="/pilgrim"
+                        onClick={() => setDrawerOpen(false)}
+                        className="flex flex-col gap-1 rounded-xl p-3 bg-gradient-to-br from-tat-gold/12 to-tat-orange/8 border border-tat-gold/20 active:scale-[0.98] transition-transform"
+                      >
+                        <Stethoscope className="h-4 w-4 text-tat-gold" aria-hidden />
+                        <span className="font-display font-semibold text-[13px] text-tat-charcoal leading-tight">Pilgrim</span>
+                        <span className="text-[10px] text-tat-charcoal/65 leading-tight">Doctor on call · elder care</span>
+                      </Link>
+                      <Link
+                        href="/group-trips"
+                        onClick={() => setDrawerOpen(false)}
+                        className="flex flex-col gap-1 rounded-xl p-3 bg-gradient-to-br from-tat-teal/10 to-tat-teal/[0.04] border border-tat-teal/25 active:scale-[0.98] transition-transform"
+                      >
+                        <UsersIcon className="h-4 w-4 text-tat-teal" aria-hidden />
+                        <span className="font-display font-semibold text-[13px] text-tat-charcoal leading-tight">Group Trips</span>
+                        <span className="text-[10px] text-tat-charcoal/65 leading-tight">Your group only · no coach</span>
+                      </Link>
+                    </div>
+
+                    {/* HOT DESTINATIONS — horizontal-scroll chip rail for
+                        one-tap access to the most-clicked destinations.
+                        Negative margin so chips bleed to the drawer edge. */}
+                    <div className="mb-5 -mx-4">
+                      <p className="px-6 mb-2 text-[10px] uppercase tracking-[0.22em] text-tat-charcoal/45 font-semibold">
+                        Hot right now
+                      </p>
+                      <ul className="px-4 flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                        {[
+                          { l: "Bali",        e: "🌺", href: "/destinations/bali" },
+                          { l: "Maldives",    e: "🏝️", href: "/destinations/maldives" },
+                          { l: "Char Dham",   e: "🛕", href: "/destinations/uttarakhand" },
+                          { l: "Switzerland", e: "🏔️", href: "/destinations/switzerland" },
+                          { l: "Thailand",    e: "🐘", href: "/destinations/thailand" },
+                          { l: "Kerala",      e: "🌴", href: "/destinations/kerala" },
+                          { l: "Vietnam",     e: "🛶", href: "/destinations/vietnam" },
+                          { l: "Dubai",       e: "🌆", href: "/destinations/dubai" },
+                        ].map((d) => (
+                          <li key={d.href} className="shrink-0">
+                            <Link
+                              href={d.href}
+                              onClick={() => setDrawerOpen(false)}
+                              className="inline-flex items-center gap-1.5 px-3 h-9 rounded-full bg-tat-cream-warm/50 text-tat-charcoal/85 text-[12px] font-medium border border-tat-charcoal/8 hover:bg-tat-cream-warm whitespace-nowrap"
+                            >
+                              <span aria-hidden>{d.e}</span>
+                              <span>{d.l}</span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* TOP-LEVEL NAV ACCORDIONS — full taxonomy for users
+                        who want to browse by Destination / Experience / Offer
+                        rather than tap a quick shortcut. */}
+                    <p className="px-2 mb-2 text-[10px] uppercase tracking-[0.22em] text-tat-charcoal/45 font-semibold">
+                      Browse
+                    </p>
+                    <div className="space-y-0.5 mb-5">
                       {TOP_LINKS.map((l) => (
                         <MobileDrawerLink
                           key={l.href}
@@ -547,47 +649,26 @@ export default function Header() {
                           onNavigate={() => setDrawerOpen(false)}
                         />
                       ))}
-
-                      {/* Secondary "more" links flat under the groups. */}
-                      {moreItems
-                        .filter((m) => m.href)
-                        .map((m) => ({ href: m.href!, label: m.label.replace(/\s\(\d+\)$/, "") }))
-                        .map((l) => (
-                          <Link
-                            key={l.href}
-                            href={l.href}
-                            aria-current={isActive(l.href) ? "page" : undefined}
-                            onClick={() => setDrawerOpen(false)}
-                            className={clsx(
-                              "flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium transition-colors",
-                              isActive(l.href) ? "bg-tat-orange/10 text-tat-orange" : "text-tat-charcoal/80 hover:bg-tat-charcoal/5 hover:text-tat-charcoal"
-                            )}
-                          >
-                            {l.label}
-                            <ChevronRight className="h-4 w-4 opacity-40" />
-                          </Link>
-                      ))}
-
-                      {!user ? (
-                        <Link
-                          href="/login"
-                          onClick={() => setDrawerOpen(false)}
-                          className="flex items-center gap-2 px-4 py-3.5 rounded-xl text-base font-medium text-tat-charcoal/80 hover:bg-tat-charcoal/5"
-                        >
-                          <User className="h-4 w-4" /> Sign In / Register
-                        </Link>
-                      ) : (
-                        <Link
-                          href="/dashboard"
-                          onClick={() => setDrawerOpen(false)}
-                          className="flex items-center gap-2 px-4 py-3.5 rounded-xl text-base font-medium text-tat-charcoal/80 hover:bg-tat-charcoal/5"
-                        >
-                          <User className="h-4 w-4" /> My Dashboard
-                        </Link>
-                      )}
                     </div>
 
-                    <div className="mt-4 space-y-2">
+                    {/* PROMISE STRIP — three quiet trust signals that round
+                        out the drawer. Static; doesn't pretend to be live. */}
+                    <div className="mb-5 grid grid-cols-3 gap-2 py-3 border-y border-tat-charcoal/8">
+                      {[
+                        { i: ShieldCheck, l: "₹0 to start" },
+                        { i: Clock,       l: "48h free changes" },
+                        { i: Sparkles,    l: "Real human planner" },
+                      ].map(({ i: Icon, l }) => (
+                        <div key={l} className="flex flex-col items-center gap-1 text-center px-1">
+                          <Icon className="h-4 w-4 text-tat-gold" aria-hidden />
+                          <span className="text-[10px] text-tat-charcoal/65 font-medium leading-tight">{l}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* PRIMARY CTAs — Plan My Trip + WhatsApp. Pinned high
+                        in the drawer because these are the conversion moments. */}
+                    <div className="space-y-2 mb-5">
                       <button
                         onClick={() => { setDrawerOpen(false); openPlanner(); }}
                         className="w-full btn-primary justify-center py-3.5"
@@ -607,6 +688,50 @@ export default function Header() {
                         <MessageCircle className="h-4 w-4 fill-whatsapp text-whatsapp" />
                         Chat on WhatsApp
                       </a>
+                    </div>
+
+                    {/* SECONDARY MORE LINKS — Why Us / About / Journal /
+                        Wishlist. Smaller weight than the main accordions. */}
+                    <p className="px-2 mb-2 text-[10px] uppercase tracking-[0.22em] text-tat-charcoal/45 font-semibold">
+                      More
+                    </p>
+                    <div className="space-y-0.5">
+                      {moreItems
+                        .filter((m) => m.href)
+                        .map((m) => ({ href: m.href!, label: m.label.replace(/\s\(\d+\)$/, "") }))
+                        .map((l) => (
+                          <Link
+                            key={l.href}
+                            href={l.href}
+                            aria-current={isActive(l.href) ? "page" : undefined}
+                            onClick={() => setDrawerOpen(false)}
+                            className={clsx(
+                              "flex items-center justify-between px-4 py-3 rounded-xl text-[14px] font-medium transition-colors",
+                              isActive(l.href) ? "bg-tat-orange/10 text-tat-orange" : "text-tat-charcoal/75 hover:bg-tat-charcoal/5 hover:text-tat-charcoal"
+                            )}
+                          >
+                            {l.label}
+                            <ChevronRight className="h-4 w-4 opacity-40" />
+                          </Link>
+                      ))}
+
+                      {!user ? (
+                        <Link
+                          href="/login"
+                          onClick={() => setDrawerOpen(false)}
+                          className="flex items-center gap-2 px-4 py-3 rounded-xl text-[14px] font-medium text-tat-charcoal/75 hover:bg-tat-charcoal/5"
+                        >
+                          <User className="h-4 w-4" /> Sign In / Register
+                        </Link>
+                      ) : (
+                        <Link
+                          href="/dashboard"
+                          onClick={() => setDrawerOpen(false)}
+                          className="flex items-center gap-2 px-4 py-3 rounded-xl text-[14px] font-medium text-tat-charcoal/75 hover:bg-tat-charcoal/5"
+                        >
+                          <User className="h-4 w-4" /> My Dashboard
+                        </Link>
+                      )}
                     </div>
                   </nav>
 
@@ -633,18 +758,15 @@ export default function Header() {
                         <p className="text-sm font-medium text-tat-charcoal group-hover:text-tat-orange transition-colors">hello@trustandtrip.com</p>
                       </div>
                     </a>
-                    <div className="flex items-center justify-between pt-1">
-                      <a
-                        href="https://instagram.com/trust_and_trip"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[11px] text-tat-charcoal/65 hover:text-tat-orange transition-colors"
-                      >
-                        <Instagram className="h-3.5 w-3.5" />
-                        @trust_and_trip
-                      </a>
-                      <GoogleReviewsBadge variant="light" />
-                    </div>
+                    <a
+                      href="https://instagram.com/trust_and_trip"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-[11px] text-tat-charcoal/65 hover:text-tat-orange transition-colors pt-1"
+                    >
+                      <Instagram className="h-3.5 w-3.5" />
+                      @trust_and_trip · DM us
+                    </a>
                   </div>
                 </Dialog.Content>
               </Dialog.Portal>
