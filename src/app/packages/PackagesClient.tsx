@@ -76,6 +76,12 @@ export default function PackagesClient({
   const initialBudget = sp.get("budget") ?? "";
   const initialRegion = sp.get("region") ?? "";
   const initialCategory = sp.get("category") ?? "";
+  // ?style= comes from BrowseByStyle tiles on the home page. It maps to
+  // category-based filtering (with Pilgrim covering Pilgrim+Spiritual,
+  // and Family/Solo/Group falling back to travelType when the category
+  // is missing on older docs). Without this, every tile click landed on
+  // the unfiltered packages list and showed irrelevant trips.
+  const initialStyle = sp.get("style") ?? "";
 
   const resolvedPrice = initialBudget ? (BUDGET_TO_PRICE[initialBudget] ?? "") : "";
   const resolvedDuration = initialDuration
@@ -101,6 +107,7 @@ export default function PackagesClient({
   // open slot vs Veena (Mumbai/Pune-anchored) and PYT (metro-only).
   const initialPickup = sp.get("pickup") ?? "";
   const [filterPickup, setFilterPickup] = useState(initialPickup);
+  const [filterStyle, setFilterStyle] = useState(initialStyle);
   const [sortBy, setSortBy] = useState<string>("popular");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -118,13 +125,14 @@ export default function PackagesClient({
     if (filterCategory) params.set("category", filterCategory);
     if (filterTier) params.set("tier", filterTier);
     if (filterPickup) params.set("pickup", filterPickup);
+    if (filterStyle) params.set("style", filterStyle);
     if (sortBy && sortBy !== "popular") params.set("sort", sortBy);
     if (filterRegion) params.set("region", filterRegion);
 
     const qs = params.toString();
     const url = qs ? `${pathname}?${qs}` : pathname;
     router.replace(url, { scroll: false });
-  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterTier, filterRegion, filterPickup, sortBy, pathname, router]);
+  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterTier, filterRegion, filterPickup, filterStyle, sortBy, pathname, router]);
 
   const filtered = useMemo(() => {
     const list = packages.filter((p) => {
@@ -155,6 +163,23 @@ export default function PackagesClient({
       }
       if (filterPickup) {
         if (!p.tags?.includes(`ex-${filterPickup}`)) return false;
+      }
+      if (filterStyle) {
+        const cats = (p.categories ?? []).map((c) => c.toLowerCase());
+        const tt = p.travelType ?? "";
+        let ok = false;
+        switch (filterStyle) {
+          case "Honeymoon": ok = cats.includes("honeymoon"); break;
+          case "Family":    ok = cats.includes("family") || tt === "Family"; break;
+          case "Solo":      ok = cats.includes("solo") || tt === "Solo"; break;
+          case "Group":     ok = cats.includes("groups") || tt === "Group"; break;
+          case "Adventure": ok = cats.includes("adventure"); break;
+          case "Wellness":  ok = cats.includes("wellness"); break;
+          case "Pilgrim":   ok = cats.includes("pilgrim") || cats.includes("spiritual"); break;
+          case "Luxury":    ok = cats.includes("luxury"); break;
+          default:          ok = true;
+        }
+        if (!ok) return false;
       }
       return true;
     });
@@ -187,7 +212,7 @@ export default function PackagesClient({
         });
     }
     return sorted;
-  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, sortBy, initialRegion]);
+  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterStyle, filterTier, filterRegion, filterPickup, sortBy]);
 
   const activeFilterCount =
     (filterDestination ? 1 : 0) +
@@ -195,7 +220,8 @@ export default function PackagesClient({
     (filterDuration ? 1 : 0) +
     (filterPrice ? 1 : 0) +
     (filterRating ? 1 : 0) +
-    (filterCategory ? 1 : 0);
+    (filterCategory ? 1 : 0) +
+    (filterStyle ? 1 : 0);
 
   const clearAll = () => {
     setFilterDestination("");
@@ -207,6 +233,7 @@ export default function PackagesClient({
     setFilterTier("");
     setFilterRegion("");
     setFilterPickup("");
+    setFilterStyle("");
     setSortBy("popular");
   };
 
@@ -444,6 +471,8 @@ export default function PackagesClient({
                 clearRating={() => setFilterRating("")}
                 filterCategory={filterCategory}
                 clearCategory={() => setFilterCategory("")}
+                filterStyle={filterStyle}
+                clearStyle={() => setFilterStyle("")}
                 clearAll={clearAll}
               />
             )}
@@ -828,6 +857,8 @@ interface ChipsProps {
   clearRating: () => void;
   filterCategory: string;
   clearCategory: () => void;
+  filterStyle: string;
+  clearStyle: () => void;
   clearAll: () => void;
 }
 
@@ -839,6 +870,7 @@ function ActiveFilterChips({
   filterPrice, clearPrice,
   filterRating, clearRating,
   filterCategory, clearCategory,
+  filterStyle, clearStyle,
   clearAll,
 }: ChipsProps) {
   const destName = filterDestination
@@ -847,6 +879,7 @@ function ActiveFilterChips({
 
   const chips: { label: string; onRemove: () => void }[] = [];
   if (filterDestination) chips.push({ label: destName, onRemove: clearDestination });
+  if (filterStyle) chips.push({ label: `Style: ${filterStyle}`, onRemove: clearStyle });
   if (filterTravelType) chips.push({ label: filterTravelType, onRemove: clearTravelType });
   if (filterCategory) chips.push({ label: filterCategory, onRemove: clearCategory });
   if (filterDuration) chips.push({ label: filterDuration, onRemove: clearDuration });

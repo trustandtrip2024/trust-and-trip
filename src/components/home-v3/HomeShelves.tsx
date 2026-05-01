@@ -73,14 +73,6 @@ export default async function HomeShelves() {
     getHomeShelves().catch(() => [] as HomeShelf[]),
   ]);
 
-  const packagesByStyle: Partial<Record<StyleId, PackageCardProps[]>> = {
-    Honeymoon: couple.map(toCardProps),
-    Family:    family.map(toCardProps),
-    Solo:      solo.map(toCardProps),
-    Group:     group.map(toCardProps),
-    Pilgrim:   pilgrimPackages.map(toCardProps),
-  };
-
   const featuredByType = {
     Couple: couple.map(toCardProps),
     Family: family.map(toCardProps),
@@ -96,6 +88,44 @@ export default async function HomeShelves() {
   }
 
   const allCardPropsDeduped = Object.values(packagesBySlug);
+
+  // Style → relevant package pool. Earlier this map fed Honeymoon=Couple
+  // (any couple trip, not specifically honeymoon-tagged) and left
+  // Adventure/Wellness/Luxury empty so their tiles always read "0".
+  // Now we derive each pool from the canonical category list, with
+  // travelType used as a fallback for Family/Solo/Group where the
+  // category column may be missing on older docs. Pilgrim still uses
+  // the dedicated query (covers Pilgrim + Spiritual categories).
+  // Dedupe by slug so the same package never lands in a tile twice.
+  const uniqueBySlug = (list: Package[]) => {
+    const seen = new Set<string>();
+    return list.filter((p) => (seen.has(p.slug) ? false : (seen.add(p.slug), true)));
+  };
+  const byCategory = (cat: string) => {
+    const lower = cat.toLowerCase();
+    return allPackages.filter((p) =>
+      (p.categories ?? []).some((c) => c.toLowerCase() === lower),
+    );
+  };
+
+  const honeymoonPool = byCategory("Honeymoon");
+  const familyPool    = uniqueBySlug([...byCategory("Family"),     ...family]);
+  const soloPool      = uniqueBySlug([...byCategory("Solo"),       ...solo]);
+  const groupPool     = uniqueBySlug([...byCategory("Groups"),     ...group]);
+  const adventurePool = byCategory("Adventure");
+  const wellnessPool  = byCategory("Wellness");
+  const luxuryPool    = byCategory("Luxury");
+
+  const packagesByStyle: Partial<Record<StyleId, PackageCardProps[]>> = {
+    Honeymoon: honeymoonPool.map(toCardProps),
+    Family:    familyPool.map(toCardProps),
+    Solo:      soloPool.map(toCardProps),
+    Group:     groupPool.map(toCardProps),
+    Adventure: adventurePool.map(toCardProps),
+    Wellness:  wellnessPool.map(toCardProps),
+    Pilgrim:   pilgrimPackages.map(toCardProps),
+    Luxury:    luxuryPool.map(toCardProps),
+  };
   const visaFreePool = allCardPropsDeduped.filter((p) => {
     const slug = p.href.replace(/^\/packages\//, "").split("/")[0];
     const dest = (p.destination ?? "").toLowerCase();
