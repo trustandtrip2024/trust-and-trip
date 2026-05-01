@@ -54,19 +54,14 @@ export function middleware(req: NextRequest) {
 
   const csp = buildCsp(pathname);
 
-  // Forward request headers unchanged. Layout intentionally no longer calls
-  // headers() so Next.js can keep static/ISR rendering on public pages —
-  // see buildCsp doc comment for the trade-off.
-  const reqHeaders = new Headers(req.headers);
-
-  // ─── Geo-IP city forward ──────────────────────────────────────────────
-  // Vercel auto-populates request.geo from edge IP geolocation. Mirror the
-  // city + country into custom headers so server components can read them
-  // via next/headers. Empty when geolocation is missing (e.g. local dev).
-  const geoCity = (req as unknown as { geo?: { city?: string; country?: string } }).geo?.city ?? "";
-  const geoCountry = (req as unknown as { geo?: { city?: string; country?: string } }).geo?.country ?? "";
-  if (geoCity) reqHeaders.set("x-tt-geo-city", decodeURIComponent(geoCity));
-  if (geoCountry) reqHeaders.set("x-tt-geo-country", geoCountry);
+  // CRITICAL: do NOT pass `request: { headers: ... }` into NextResponse.next().
+  // That call pattern is what tells Next.js the route consumes a request-scoped
+  // header and the route gets marked dynamic, which kills ISR and forces
+  // Cache-Control: no-store. Pass-through pages must stay static so the
+  // edge cache can serve Meta-ad cold-clicks. Geo header forwarding +
+  // x-nonce header forwarding were both dropped on 2026-05-01 for this
+  // reason — geo headers had no consumer and nonce is gone with the CSP
+  // refactor.
 
   // Public marketing/content paths that are safe to cache at the Vercel
   // edge. Pages here render the same HTML for every visitor (no auth, no
@@ -109,7 +104,7 @@ export function middleware(req: NextRequest) {
   // ─── 1. Creator referral capture (any non-API page hit) ────────────────
   const ref = searchParams.get("ref");
   if (ref && REF_CODE_RE.test(ref) && !pathname.startsWith("/api/")) {
-    const res = NextResponse.next({ request: { headers: reqHeaders } });
+    const res = NextResponse.next();
     res.cookies.set(REF_COOKIE, ref, {
       maxAge: REF_COOKIE_MAX_AGE,
       sameSite: "lax",
@@ -126,7 +121,7 @@ export function middleware(req: NextRequest) {
   // ─── 2. Admin Basic Auth ───────────────────────────────────────────────
   const isAdminPath = pathname.startsWith("/admin") || pathname.startsWith("/api/admin");
   if (!isAdminPath) {
-    return applyHeaders(NextResponse.next({ request: { headers: reqHeaders } }));
+    return applyHeaders(NextResponse.next());
   }
 
   const adminSecret = process.env.ADMIN_SECRET;
@@ -142,7 +137,7 @@ export function middleware(req: NextRequest) {
         headers: { "Content-Security-Policy": csp },
       });
     }
-    return applyHeaders(NextResponse.next({ request: { headers: reqHeaders } }));
+    return applyHeaders(NextResponse.next());
   }
 
   const authHeader = req.headers.get("authorization");
@@ -160,7 +155,7 @@ export function middleware(req: NextRequest) {
       // Constant-time compare so the response time doesn't leak password bytes
       // to a brute-forcer.
       if (timingSafeEqualStrings(pass, adminSecret)) {
-        return applyHeaders(NextResponse.next({ request: { headers: reqHeaders } }));
+        return applyHeaders(NextResponse.next());
       }
     }
   }
