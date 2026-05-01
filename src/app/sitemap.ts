@@ -28,6 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/essentials`, lastModified: now, priority: 0.85, changeFrequency: "weekly" },
     { url: `${BASE}/why-us`, lastModified: now, priority: 0.7, changeFrequency: "monthly" },
     { url: `${BASE}/pilgrim`, lastModified: now, priority: 0.85, changeFrequency: "weekly" },
+    { url: `${BASE}/group-trips`, lastModified: now, priority: 0.85, changeFrequency: "weekly" },
     { url: `${BASE}/destinations`, lastModified: now, priority: 0.9, changeFrequency: "weekly" },
     { url: `${BASE}/customize-trip`, lastModified: now, priority: 0.8, changeFrequency: "monthly" },
     { url: `${BASE}/offers`, lastModified: now, priority: 0.8, changeFrequency: "daily" },

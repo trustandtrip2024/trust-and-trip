@@ -15,6 +15,8 @@ const EXPLORE = [
   { label: "Private (Bespoke Luxury)", href: "/private" },
   { label: "Signature (Most Trips)", href: "/signature" },
   { label: "Essentials (Pocket-Friendly)", href: "/essentials" },
+  { label: "Group Trips", href: "/group-trips" },
+  { label: "Pilgrim Concierge", href: "/pilgrim" },
   { label: "Experiences", href: "/experiences" },
   { label: "Offers & Deals", href: "/offers" },
   { label: "Plan a Trip (AI)", href: "/plan" },

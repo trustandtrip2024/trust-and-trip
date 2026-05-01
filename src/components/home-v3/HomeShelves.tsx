@@ -143,11 +143,11 @@ export default async function HomeShelves({ destinations }: { destinations: Dest
       <PilgrimSpotlight />
       {group.length > 0 && (
         <ContentShelf
-          eyebrow="Fixed-departure group trips"
+          eyebrow="Group trips, your group only"
           title="Travel together,"
           italicTail="planner along."
-          ctaHref="/packages?category=Groups"
-          ctaLabel="See every group batch →"
+          ctaHref="/group-trips"
+          ctaLabel="Group concierge & all batches →"
           packages={group.map(toCardProps).slice(0, 8)}
           bg="cream"
         />
