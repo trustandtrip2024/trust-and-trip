@@ -23,13 +23,13 @@ function buildWaLink(messages: Message[], packageTitle?: string | null) {
 type Message = { role: "user" | "assistant"; content: string };
 
 const QUICK_PROMPTS = [
-  "Best honeymoon under ₹60,000?",
-  "Family trip to Bali 🌴",
-  "Solo trip for December",
-  "Maldives packages",
+  "Char Dham yatra ex Lucknow",
+  "Bali honeymoon under ₹1.2L",
+  "Private Switzerland 7 nights",
+  "Family Singapore in May",
 ];
 
-const WELCOME = "Hi! I'm Aria, your personal travel assistant 👋\n\nTell me where you'd love to go, your budget, and who you're traveling with — I'll find the perfect trip for you!";
+const WELCOME = "Hi! I'm Aria — Akash's planning assistant 👋\n\nWe handle India + 30 countries across three tiers (Essentials, Signature, Private). Tell me destination, budget, and group — I'll line up two real options and loop in a planner. Pickup from your city if you're outside metros.";
 
 // Quiz handoff: /quiz writes a summary to sessionStorage and dispatches
 // `tt:aria-open` with the same payload. Aria opens, replaces the welcome

@@ -16,9 +16,7 @@ import {
   synthesiseVisaInfo,
 } from "@/lib/seo-package";
 import { getPackageStats } from "@/lib/package-stats";
-import { resolveGallery } from "@/lib/gallery-images";
 import PackageItinerary from "@/components/PackageItinerary";
-import PackageGallery from "@/components/PackageGallery";
 import PackageSlider from "@/components/PackageSlider";
 import PackageSectionNav from "@/components/PackageSectionNav";
 import ReviewsList from "@/components/ReviewsList";
@@ -52,7 +50,6 @@ import PackingList from "@/components/package-detail/PackingList";
 import PackageGuestPhotos from "@/components/package-detail/PackageGuestPhotos";
 import PackageMap from "@/components/package-detail/PackageMap";
 import PackageAriaPreload from "@/components/package-detail/PackageAriaPreload";
-import HeroPhotoRail from "@/components/package-detail/HeroPhotoRail";
 import PackageHeroTrustRibbon from "@/components/package-detail/PackageHeroTrustRibbon";
 import PackageDecisionPrompts from "@/components/package-detail/PackageDecisionPrompts";
 import PackageGuaranteeBanner from "@/components/package-detail/PackageGuaranteeBanner";
@@ -109,8 +106,6 @@ export default async function PackageDetail({ params }: Props) {
   const seo = fillPackageSeo(pkg, dest);
   const bestMonths = synthesiseBestMonths(pkg, dest);
   const visaInfo = synthesiseVisaInfo(pkg, dest);
-  const galleryImages = resolveGallery(pkg.gallery, pkg.destinationSlug, pkg.heroImage);
-
   // Real "vs OTA" reference price comes from Sanity comparePrice — only set
   // when the content team has verified savings against an aggregator. No
   // synthetic 22% markup so detail pages don't fake a discount on every
@@ -130,12 +125,6 @@ export default async function PackageDetail({ params }: Props) {
       return !Number.isNaN(t) && t > Date.now();
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
-
-  // Flatten itinerary day photos for the under-hero rail. Dedupe so a
-  // photo reused across days only appears once.
-  const heroRailPhotos = Array.from(
-    new Set(pkg.itinerary.flatMap((d) => d.images ?? [])),
-  );
 
   const waBook = `https://wa.me/${WA}?text=${encodeURIComponent(`Hi Trust and Trip! 🙏\n\nI'd like to book the *${pkg.title}* package (₹${pkg.price.toLocaleString("en-IN")}/person · ${pkg.duration}).\n\nPlease help me proceed.`)}`;
 
@@ -249,11 +238,6 @@ export default async function PackageDetail({ params }: Props) {
         </div>
       </section>
 
-      {/* Hero photo rail — flattened itinerary day photos. Returns null
-          when fewer than 3 photos so single-day or photo-less packages
-          aren't padded out. */}
-      <HeroPhotoRail images={heroRailPhotos} title={pkg.title} />
-
       {/* Trust ribbon beneath hero — rating · views · enquiries · ₹0 to
           start · 48 h free changes. Same pattern as destination detail. */}
       <PackageHeroTrustRibbon
@@ -272,11 +256,6 @@ export default async function PackageDetail({ params }: Props) {
 
           {/* ── Left column ────────────────────────────────────── */}
           <div className="min-w-0 space-y-0">
-
-            {/* Gallery */}
-            <div className="mb-10">
-              <PackageGallery images={galleryImages} title={pkg.title} />
-            </div>
 
             {/* Why this package — 3-bullet elevator pitch + best-for tag.
                 seo.* fills in defaults when Sanity fields are blank so every

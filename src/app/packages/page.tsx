@@ -8,12 +8,12 @@ import CTASection from "@/components/CTASection";
 import JsonLd from "@/components/JsonLd";
 
 export const metadata = {
-  title: "Tour Packages — Handcrafted Trips for Every Traveller",
-  description: "Browse 130+ handcrafted tour packages across India and the world — honeymoon, family, group and solo trips starting from ₹10,000.",
+  title: "Tour Packages — India + 30 Countries · Essentials, Signature, Private",
+  description: "250+ founder-signed tour packages across India and 30+ countries. Three tiers — Essentials from ₹15k, Signature, and Private — with pickup from your city. Built by Akash and his planning team, not a marketplace.",
   alternates: { canonical: "https://trustandtrip.com/packages" },
   openGraph: {
-    title: "Tour Packages — Trust and Trip",
-    description: "130+ handcrafted packages across 23 destinations. Couples, families, groups and solo.",
+    title: "Trust and Trip — Tour Packages",
+    description: "250+ packages across 50+ destinations. Three tiers (Essentials/Signature/Private). Founder-signed itineraries.",
   },
 };
 
