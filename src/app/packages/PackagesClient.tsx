@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useDeferredValue } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import PackageCard from "@/components/PackageCard";
 import type { Package, Destination } from "@/lib/data";
 import { SlidersHorizontal, X, ArrowUpDown, Star, Sparkles, ArrowRight } from "lucide-react";
@@ -51,12 +51,6 @@ const INDIA_SLUGS = new Set(["kerala","goa","manali","rajasthan","ladakh","andam
 interface Props {
   packages: Package[];
   destinations: Destination[];
-  initialDestination?: string;
-  initialTravelType?: string;
-  initialDuration?: string;
-  initialBudget?: string;
-  initialRegion?: string;
-  initialCategory?: string;
 }
 
 const BUDGET_TO_PRICE: Record<string, string> = {
@@ -69,15 +63,19 @@ const BUDGET_TO_PRICE: Record<string, string> = {
 export default function PackagesClient({
   packages,
   destinations,
-  initialDestination = "",
-  initialTravelType = "",
-  initialDuration = "",
-  initialBudget = "",
-  initialRegion = "",
-  initialCategory = "",
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
+  // useSearchParams reads URL on the client. Suspense boundary above this
+  // client component lets the page stay statically renderable; the param
+  // values resolve post-hydration.
+  const sp = useSearchParams();
+  const initialDestination = sp.get("destination") ?? "";
+  const initialTravelType = sp.get("type") ?? "";
+  const initialDuration = sp.get("duration") ?? "";
+  const initialBudget = sp.get("budget") ?? "";
+  const initialRegion = sp.get("region") ?? "";
+  const initialCategory = sp.get("category") ?? "";
 
   const resolvedPrice = initialBudget ? (BUDGET_TO_PRICE[initialBudget] ?? "") : "";
   const resolvedDuration = initialDuration

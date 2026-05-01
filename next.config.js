@@ -17,10 +17,15 @@ const sentryOptions = {
   hideSourceMaps: true,
   tunnelRoute: "/monitoring",
   disableLogger: true,
-  // Per Sentry Next.js skill — uploads source maps for the entire client
-  // bundle (not just the server-rendered chunks) so stack traces in the
-  // browser get unminified to original sources.
   widenClientFileUpload: true,
+  // Disable Sentry's server-component Proxy wrapper. Its
+  // `requestAsyncStorage.getStore()` call inside the wrapper trips Next 14's
+  // dynamic-rendering opt-in, which marks every page `ƒ` and emits
+  // `Cache-Control: private, no-cache, no-store`. Server-component errors are
+  // still captured via `onRequestError = Sentry.captureRequestError` in
+  // src/instrumentation.ts, so we lose nothing operationally — but we
+  // recover ISR + edge cache for Meta-ad cold clicks.
+  autoInstrumentAppDirectory: false,
 };
 
 /** @type {import('next').NextConfig} */

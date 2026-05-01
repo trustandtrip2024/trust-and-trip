@@ -17,22 +17,12 @@ export const metadata = {
   },
 };
 
-interface SP {
-  destination?: string;
-  type?: string;
-  duration?: string;
-  budget?: string;
-  region?: string;
-  category?: string;
-}
-
-// Heavy data + grid moved into its own async component so it can stream
-// inside a Suspense boundary. Without this the page blocks for the full
-// `getPackages()` round-trip (250+ docs from Sanity, ~3 MB of HTML once
-// rendered) before ANY byte ships, which on a Meta-ad cold click gives
-// the visitor a blank screen for ~2 s. Now the header section + skeleton
-// fallback ship as the first byte and the grid streams in behind it.
-async function PackagesGrid({ params }: { params: SP }) {
+// Reading `searchParams` server-side forces the route into dynamic
+// rendering, which kills ISR + edge cache. Filters are seeded inside
+// PackagesClient via `useSearchParams()` (post-hydration on the client),
+// so the page stays statically renderable and Meta-ad cold-clicks hit
+// the cached HTML instead of a fresh function invocation.
+async function PackagesGrid() {
   const [packages, destinations] = await Promise.all([
     getPackages(),
     getDestinations(),
@@ -54,16 +44,7 @@ async function PackagesGrid({ params }: { params: SP }) {
   return (
     <>
       <JsonLd data={listLd} />
-      <PackagesClient
-        packages={packages}
-        destinations={destinations}
-        initialDestination={params.destination ?? ""}
-        initialTravelType={params.type ?? ""}
-        initialDuration={params.duration ?? ""}
-        initialBudget={params.budget ?? ""}
-        initialRegion={params.region ?? ""}
-        initialCategory={params.category ?? ""}
-      />
+      <PackagesClient packages={packages} destinations={destinations} />
     </>
   );
 }
@@ -82,15 +63,7 @@ function PackagesGridSkeleton() {
   );
 }
 
-export default async function PackagesPage({
-  searchParams,
-}: {
-  searchParams: Promise<SP> | SP;
-}) {
-  // Resolve searchParams up-front so Suspense doesn't re-suspend on it.
-  // Header section ships sync — visitor sees real content within TTFB.
-  const params = await Promise.resolve(searchParams);
-
+export default function PackagesPage() {
   return (
     <>
       <section className="pt-28 md:pt-36 pb-12 md:pb-16 bg-tat-paper border-b border-tat-charcoal/5">
@@ -108,7 +81,7 @@ export default async function PackagesPage({
       </section>
 
       <Suspense fallback={<PackagesGridSkeleton />}>
-        <PackagesGrid params={params} />
+        <PackagesGrid />
       </Suspense>
 
       <CTASection />

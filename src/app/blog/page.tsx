@@ -1,5 +1,6 @@
 export const revalidate = 60;
 
+import { Suspense } from "react";
 import { getBlogPosts } from "@/lib/sanity-queries";
 import { blogPosts as staticPosts } from "@/lib/data";
 import NewsletterInline from "@/components/NewsletterInline";
@@ -28,12 +29,11 @@ function normalizePosts(posts: any[]) {
   }));
 }
 
-export default async function BlogPage({
-  searchParams,
-}: {
-  searchParams?: { category?: string };
-}) {
-  const activeCategory = searchParams?.category ?? "All";
+export default async function BlogPage() {
+  // Category filter is seeded inside BlogBrowser via `useSearchParams()`
+  // so the page stays statically renderable. Reading `searchParams` here
+  // would force dynamic rendering and kill ISR.
+  const activeCategory = "All";
 
   const rawPosts = await getBlogPosts().catch(() => []);
   const posts = normalizePosts(rawPosts.length > 0 ? rawPosts : staticPosts);
@@ -82,12 +82,16 @@ export default async function BlogPage({
         </div>
       </section>
 
-      <BlogBrowser
-        posts={posts}
-        categories={categories}
-        activeCategory={activeCategory}
-        totalCount={posts.length}
-      />
+      {/* useSearchParams() inside BlogBrowser needs a Suspense boundary so
+          the page can stay statically prerendered. */}
+      <Suspense fallback={null}>
+        <BlogBrowser
+          posts={posts}
+          categories={categories}
+          activeCategory={activeCategory}
+          totalCount={posts.length}
+        />
+      </Suspense>
 
       {/* Newsletter */}
       <section className="pb-16 md:pb-20">

@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Clock, Search, X } from "lucide-react";
@@ -29,8 +30,18 @@ interface Props {
 export default function BlogBrowser({
   posts, categories, activeCategory: initialCategory, totalCount,
 }: Props) {
+  const sp = useSearchParams();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState(initialCategory);
+
+  // Hydrate the active category from the URL on the client. Server-side
+  // we deliberately default to "All" so the page can be statically
+  // pre-rendered (reading searchParams in the page would force dynamic
+  // rendering and break ISR for the route).
+  useEffect(() => {
+    const cat = sp.get("category");
+    if (cat) setActiveCategory(cat);
+  }, [sp]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
