@@ -23,6 +23,7 @@ const EXPLORE = [
 ];
 
 const PILGRIM = [
+  { label: "All Yatras (Pilgrim Concierge)", href: "/pilgrim" },
   { label: "Char Dham Yatra", href: "/char-dham-yatra-package" },
   { label: "Kedarnath Yatra", href: "/kedarnath-yatra-package" },
   { label: "Kedarnath Helicopter", href: "/kedarnath-helicopter-package" },

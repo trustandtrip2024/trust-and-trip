@@ -139,10 +139,10 @@ export default function PilgrimSpotlight() {
             </p>
           </div>
           <Link
-            href="/packages?category=Pilgrim"
+            href="/pilgrim"
             className="hidden sm:inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-gold hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-orange focus-visible:ring-offset-2 rounded-sm"
           >
-            All yatra packages
+            Pilgrim concierge & all yatras
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -155,10 +155,10 @@ export default function PilgrimSpotlight() {
 
         <div className="sm:hidden mt-6 text-center">
           <Link
-            href="/packages?category=Pilgrim"
+            href="/pilgrim"
             className="inline-flex items-center gap-1.5 text-body-sm font-semibold text-tat-gold hover:underline underline-offset-4"
           >
-            All yatra packages
+            Pilgrim concierge & all yatras
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
