@@ -44,6 +44,7 @@ const HONEYMOON = [
 
 const SUPPORT = [
   { label: "About Us", href: "/about" },
+  { label: "Why Trust and Trip", href: "/why-us" },
   { label: "Contact Us", href: "/contact" },
   { label: "Our Journal", href: "/blog" },
   { label: "My Booking", href: "/my-booking" },
