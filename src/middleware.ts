@@ -5,6 +5,15 @@ const REF_COOKIE = "tt_ref";
 const REF_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 const REF_CODE_RE = /^CRTR-[A-Z0-9]{4,10}$/;
 
+// Pre-launch gate: when COMING_SOON_MODE=1, every public page is rewritten
+// to /coming-soon. Owner can preview the real site by hitting any URL with
+// `?preview=<ADMIN_SECRET>`, which sets a `tt_preview` cookie that bypasses
+// the gate. Admin, Studio, API, and the coming-soon page itself stay open
+// so the team can still finish content updates.
+const COMING_SOON_PATH = "/coming-soon";
+const PREVIEW_COOKIE = "tt_preview";
+const PREVIEW_COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+
 /**
  * Build the Content-Security-Policy for a request.
  *
@@ -99,6 +108,57 @@ export function middleware(req: NextRequest) {
       );
     }
     return res;
+  }
+
+  // ─── 0. Pre-launch coming-soon gate ────────────────────────────────────
+  // Toggled by COMING_SOON_MODE env. When on, public pages rewrite to
+  // /coming-soon. Admin/Studio/API stay live so the team can finish
+  // pre-launch content. Preview cookie (set via ?preview=<ADMIN_SECRET>)
+  // lets the owner walk through the real site while the gate is active.
+  if (process.env.COMING_SOON_MODE === "1") {
+    const adminSecret = process.env.ADMIN_SECRET;
+    const previewParam = searchParams.get("preview");
+
+    // Set/refresh preview cookie when the owner passes the secret in the URL.
+    // Set CSP but NOT Cache-Control — caching a Set-Cookie response would let
+    // the edge strip the cookie before serving subsequent visitors.
+    if (adminSecret && previewParam && previewParam === adminSecret) {
+      const res = NextResponse.redirect(
+        new URL(pathname, req.nextUrl.origin),
+      );
+      res.cookies.set(PREVIEW_COOKIE, adminSecret, {
+        maxAge: PREVIEW_COOKIE_MAX_AGE,
+        sameSite: "lax",
+        path: "/",
+        httpOnly: true,
+        secure: req.nextUrl.protocol === "https:",
+      });
+      res.headers.set("Content-Security-Policy", csp);
+      return res;
+    }
+
+    const hasPreview =
+      adminSecret !== undefined &&
+      req.cookies.get(PREVIEW_COOKIE)?.value === adminSecret;
+
+    const isExempt =
+      pathname === COMING_SOON_PATH ||
+      pathname.startsWith("/admin") ||
+      pathname.startsWith("/api/") ||
+      pathname.startsWith("/studio") ||
+      pathname === "/robots.txt" ||
+      pathname === "/sitemap.xml" ||
+      pathname === "/manifest.webmanifest" ||
+      pathname === "/sw.js" ||
+      pathname === "/icon.svg" ||
+      pathname === "/favicon.ico";
+
+    if (!hasPreview && !isExempt) {
+      const url = req.nextUrl.clone();
+      url.pathname = COMING_SOON_PATH;
+      url.search = "";
+      return applyHeaders(NextResponse.rewrite(url));
+    }
   }
 
   // ─── 1. Creator referral capture (any non-API page hit) ────────────────
