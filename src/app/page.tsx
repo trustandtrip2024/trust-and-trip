@@ -16,6 +16,7 @@ import TrendingDestinations from "@/components/home-v3/TrendingDestinations";
 import HomepageSchema from "@/components/home-v3/HomepageSchema";
 import HomeShelves from "@/components/home-v3/HomeShelves";
 import HomeShelvesSkeleton from "@/components/home-v3/HomeShelvesSkeleton";
+import RecognitionStrip from "@/components/home-v3/RecognitionStrip";
 import {
   getDestinations,
   getHomepageContent,
@@ -55,6 +56,7 @@ export default async function HomePage() {
         rating={siteStats.googleRating}
       />
       <TrendingDestinations destinations={destinations} />
+      <RecognitionStrip />
 
       {/* Stream the heavy below-fold sections. The hero/trust above ships
           immediately; this Suspense flush waits on the package fetches but
