@@ -184,7 +184,7 @@ export default async function PackageDetail({ params }: Props) {
 
       {/* ── Compact Hero ───────────────────────────────────────── */}
       <section className="relative h-[55vh] min-h-[380px] w-full overflow-hidden bg-tat-charcoal">
-        <Image src={pkg.heroImage} alt={pkg.title} fill priority className="object-cover" sizes="100vw" />
+        <Image src={pkg.heroImage} alt={pkg.title} fill priority fetchPriority="high" className="object-cover" sizes="100vw" quality={70} />
         <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/95 via-tat-charcoal/40 to-tat-charcoal/20" />
 
         {/* Breadcrumb */}

@@ -140,7 +140,7 @@ export default async function DestinationDetail({ params }: Props) {
       {/* Hero — slightly shorter on mobile so the page action is closer to
           the fold (60vh vs 75vh). Desktop unchanged. */}
       <section className="relative h-[60vh] min-h-[420px] md:h-[75vh] md:min-h-[500px] w-full overflow-hidden bg-tat-charcoal">
-        <Image src={destination.heroImage} alt={destination.name} fill priority className="object-cover animate-slow-zoom" sizes="100vw" />
+        <Image src={destination.heroImage} alt={destination.name} fill priority fetchPriority="high" className="object-cover animate-slow-zoom" sizes="100vw" quality={70} />
         <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/92 via-tat-charcoal/30 to-tat-charcoal/40" />
 
         <div className="absolute top-20 md:top-24 inset-x-0 z-10 container-custom flex items-center gap-2 text-xs text-tat-paper/60">
