@@ -64,7 +64,7 @@ export default function Hero({
   return (
     <section
       aria-labelledby="hero-h1"
-      className="relative isolate overflow-hidden bg-tat-charcoal"
+      className="relative isolate overflow-hidden bg-tat-charcoal min-h-[125vw] sm:min-h-0 flex flex-col justify-end sm:block"
     >
       {/* Background image — always rendered so LCP stays fast even when
           video is also configured. */}
