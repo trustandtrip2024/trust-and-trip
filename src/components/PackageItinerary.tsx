@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import {
-  ChevronDown, Mountain, Bed, Plane, Coffee, MapPin,
+  ChevronDown, ChevronLeft, ChevronRight, Mountain, Bed, Plane, Coffee, MapPin,
   Maximize2, Minimize2, Sparkles, MessageCircle, Image as ImageIcon,
 } from "lucide-react";
 
@@ -100,6 +100,11 @@ export default function PackageItinerary({
   const [allOpen, setAllOpen] = useState<boolean | null>(null);
   const dayRefs = useRef<Map<number, HTMLLIElement>>(new Map());
   const trackRef = useRef<HTMLDivElement>(null);
+  // Mobile carousel — one day per viewport-width slide. Tracks which slide
+  // is currently snapped so the dot row + counter highlight the right day.
+  const [mobileDay, setMobileDay] = useState(0);
+  const mobileRailRef = useRef<HTMLOListElement>(null);
+  const mobileSlideRefs = useRef<Map<number, HTMLLIElement>>(new Map());
 
   // Aggregate trip stats — surface counts before the day-by-day list so
   // skim-readers see the shape of the trip without expanding any card.
@@ -171,6 +176,33 @@ export default function PackageItinerary({
     if (details) details.open = true;
   }
 
+  // Mobile carousel — observe which slide is currently snapped and update
+  // the active dot + counter. rootMargin tightens the trigger so it only
+  // fires when a slide is meaningfully centered in the rail.
+  useEffect(() => {
+    const rail = mobileRailRef.current;
+    if (!rail || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        const idx = Number(visible.target.getAttribute("data-mobile-idx"));
+        if (!Number.isNaN(idx)) setMobileDay(idx);
+      },
+      { root: rail, threshold: [0.6, 0.9] },
+    );
+    mobileSlideRefs.current.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, [filtered]);
+
+  function gotoMobileDay(idx: number) {
+    const slide = mobileSlideRefs.current.get(idx);
+    if (!slide) return;
+    slide.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }
+
   // Bulk expand/collapse — flips every <details> element inside the day refs.
   // Tracks the last action via allOpen so the toggle button label can swap.
   function toggleAll() {
@@ -205,10 +237,9 @@ export default function PackageItinerary({
         Your journey, <em>unfolded.</em>
       </h2>
 
-      {/* Trip totals — shape of the trip in one glance. Each pill only renders
-          when its underlying count is non-zero so short trips don't show
-          empty noise. */}
-      <div className="mt-4 flex flex-wrap items-center gap-1.5 md:gap-2">
+      {/* Trip totals — desktop only. Mobile shows just day count inside
+          the carousel header to keep vertical space for actual content. */}
+      <div className="mt-4 hidden md:flex md:flex-wrap md:items-center md:gap-2">
         <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-gold/15 text-tat-gold text-[11px] font-semibold">
           <Sparkles className="h-3 w-3" />
           {days.length} {days.length === 1 ? "day" : "days"}
@@ -245,8 +276,9 @@ export default function PackageItinerary({
         )}
       </div>
 
-      {/* Controls — stacked on mobile, side-by-side on desktop, both as scroll rails */}
-      <div className="mt-5 space-y-3 md:space-y-0 md:flex md:items-center md:justify-between md:gap-3">
+      {/* Controls — desktop only. Mobile carousel below uses a leaner
+          counter+dots+arrows pattern that fits a single horizontal row. */}
+      <div className="mt-5 hidden md:flex md:items-center md:justify-between md:gap-3">
         <div className="flex items-center gap-2">
           {/* View toggle */}
           <div className="inline-flex p-1 rounded-pill bg-tat-cream-warm/40 text-[13px] font-medium" role="tablist" aria-label="Itinerary view">
@@ -308,14 +340,14 @@ export default function PackageItinerary({
         </div>
       </div>
 
-      {/* Day-jump nav — sticky pill rail of Day 1, Day 2 ... that scrolls
-          to each day's card. Active pill follows the viewport. */}
+      {/* Day-jump nav — desktop only. Mobile carousel has its own
+          counter+dots row at the top of the slide rail. */}
       {filtered.length > 1 && (
         <div
           ref={trackRef}
           role="navigation"
           aria-label="Jump to day"
-          className="mt-5 -mx-5 md:mx-0 px-5 md:px-0 pt-2 pb-2 flex gap-1.5 overflow-x-auto no-scrollbar sticky top-16 lg:top-20 z-10 bg-white/90 backdrop-blur-md border-b border-tat-charcoal/8"
+          className="hidden md:flex mt-5 mx-0 px-0 pt-2 pb-2 gap-1.5 overflow-x-auto no-scrollbar sticky top-16 lg:top-20 z-10 bg-white/90 backdrop-blur-md border-b border-tat-charcoal/8"
         >
           {filtered.map((d) => {
             const active = activeDay === d.day;
@@ -340,8 +372,172 @@ export default function PackageItinerary({
         </div>
       )}
 
-      {/* Timeline — tighter padding on mobile */}
-      <ol className="mt-6 md:mt-8 relative pl-5 md:pl-8 border-l border-dashed border-tat-orange/40 space-y-3 md:space-y-4">
+      {/* MOBILE carousel — one day per viewport-width slide with snap.
+          Top bar = Day X of N + arrows + dot rail; gives skim-readers
+          progress at a glance and shows only one card's worth of
+          content at a time so the page never feels stacked. */}
+      <div className="md:hidden mt-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-baseline gap-1.5">
+            <span className="font-display text-[18px] font-medium text-tat-charcoal">Day {filtered[mobileDay]?.day ?? 1}</span>
+            <span className="text-[12px] text-tat-charcoal/45">of {filtered.length}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => gotoMobileDay(Math.max(0, mobileDay - 1))}
+              disabled={mobileDay === 0}
+              aria-label="Previous day"
+              className="h-8 w-8 rounded-full bg-tat-cream-warm/50 text-tat-charcoal grid place-items-center disabled:opacity-30 disabled:cursor-not-allowed active:bg-tat-cream-warm"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => gotoMobileDay(Math.min(filtered.length - 1, mobileDay + 1))}
+              disabled={mobileDay === filtered.length - 1}
+              aria-label="Next day"
+              className="h-8 w-8 rounded-full bg-tat-cream-warm/50 text-tat-charcoal grid place-items-center disabled:opacity-30 disabled:cursor-not-allowed active:bg-tat-cream-warm"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Dot rail — tappable, doubles as progress */}
+        <div className="flex items-center gap-1 mb-3 overflow-x-auto no-scrollbar">
+          {filtered.map((d, i) => (
+            <button
+              key={d.day}
+              type="button"
+              onClick={() => gotoMobileDay(i)}
+              aria-label={`Go to day ${d.day}`}
+              className="shrink-0 py-1.5"
+            >
+              <span
+                className={[
+                  "block h-1 rounded-full transition-all",
+                  i === mobileDay ? "w-6 bg-tat-gold" : "w-2 bg-tat-charcoal/15",
+                ].join(" ")}
+              />
+            </button>
+          ))}
+        </div>
+
+        {/* Slide rail — full-width snap. -mx-5 + px-5 lets cards bleed
+            edge-to-edge while keeping inner padding aligned with the
+            tt-card outer container. */}
+        <ol
+          ref={mobileRailRef}
+          className="-mx-5 px-5 flex overflow-x-auto snap-x snap-mandatory no-scrollbar gap-3 pb-2"
+          style={{ scrollPaddingLeft: "1.25rem", scrollPaddingRight: "1.25rem" }}
+        >
+          {filtered.map((d, idx) => {
+            const pace = classifyPace(d, idx, filtered.length);
+            const paceMeta = PACE_META[pace];
+            return (
+              <li
+                key={d.day}
+                data-mobile-idx={idx}
+                ref={(el) => {
+                  if (el) mobileSlideRefs.current.set(idx, el);
+                  else mobileSlideRefs.current.delete(idx);
+                }}
+                className="snap-center shrink-0 w-[calc(100vw-2.5rem)] tt-subcard !p-4"
+              >
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="tt-day-pill">DAY {d.day}</span>
+                  <span
+                    title={paceMeta.tooltip}
+                    aria-label={`Pace: ${paceMeta.label}. ${paceMeta.tooltip}`}
+                    className={`inline-flex items-center h-5 px-2 rounded-pill text-[10px] font-semibold uppercase tracking-wide ${paceMeta.cls}`}
+                  >
+                    {paceMeta.label}
+                  </span>
+                </div>
+                <h3 className="mt-2 font-serif text-[18px] text-tat-charcoal leading-snug text-balance">
+                  {d.title}
+                </h3>
+                {d.subtitle && (
+                  <p className="mt-1 text-[12px] text-tat-slate">{d.subtitle}</p>
+                )}
+                <p className="mt-3 text-[14px] leading-[1.6] text-tat-charcoal/85 line-clamp-[8]">
+                  {d.description}
+                </p>
+
+                {(d.transfer || d.stay || d.highlights || d.meals) && (
+                  <div className="mt-3 space-y-2">
+                    {d.transfer && (
+                      <div className="flex items-start gap-2 text-[12px]">
+                        <Plane className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" />
+                        <div className="min-w-0">
+                          <span className="font-semibold text-tat-charcoal">{d.transfer.value}</span>
+                          {d.transfer.meta && <span className="text-tat-slate"> · {d.transfer.meta}</span>}
+                        </div>
+                      </div>
+                    )}
+                    {d.stay && (
+                      <div className="flex items-start gap-2 text-[12px]">
+                        <Bed className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" />
+                        <div className="min-w-0">
+                          <span className="font-semibold text-tat-charcoal">{d.stay.value}</span>
+                          {d.stay.meta && <span className="text-tat-slate"> · {d.stay.meta}</span>}
+                        </div>
+                      </div>
+                    )}
+                    {d.highlights && (
+                      <div className="flex items-start gap-2 text-[12px]">
+                        <MapPin className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-tat-charcoal">{d.highlights.value}</p>
+                          {d.highlights.images && d.highlights.images.length > 0 && (
+                            <ul className="mt-2 flex gap-2 overflow-x-auto pb-1 no-scrollbar -mx-1 px-1">
+                              {d.highlights.images.map((src, i) => (
+                                <li
+                                  key={i}
+                                  className="w-16 h-12 rounded-md bg-tat-charcoal/10 shrink-0 bg-cover bg-center"
+                                  style={{ backgroundImage: `url(${src})` }}
+                                  aria-hidden
+                                />
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    {d.meals && (
+                      <div className="flex items-start gap-2 text-[12px]">
+                        <Coffee className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" />
+                        <span className="text-tat-charcoal/85">{mealsLine(d.meals)}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => askAriaAboutDay(d)}
+                  className="mt-4 w-full inline-flex items-center justify-center gap-1.5 h-9 rounded-pill bg-tat-gold/15 active:bg-tat-gold/30 text-tat-gold text-[12px] font-semibold"
+                >
+                  <MessageCircle className="h-3.5 w-3.5" />
+                  Ask Aria about Day {d.day}
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+
+        {/* Swipe hint — fades out after first interaction */}
+        {filtered.length > 1 && mobileDay === 0 && (
+          <p className="text-center text-[11px] text-tat-charcoal/40 mt-1">
+            Swipe to see Day {filtered[1]?.day} →
+          </p>
+        )}
+      </div>
+
+      {/* DESKTOP timeline — vertical, with dashed rail.
+          Hidden on mobile in favour of the carousel below. */}
+      <ol className="hidden md:block mt-8 relative pl-8 border-l border-dashed border-tat-orange/40 space-y-4">
         {filtered.map((d, idx) => {
           const pace = classifyPace(d, idx, filtered.length);
           const paceMeta = PACE_META[pace];
