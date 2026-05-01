@@ -7,15 +7,12 @@ import crypto from "crypto";
 import { pushBookingAsDeal } from "@/lib/bitrix24";
 import { REF_COOKIE, isValidRefCode } from "@/lib/creator-attribution";
 import { rateLimit, clientIp } from "@/lib/redis";
+import { getPackageBySlug } from "@/lib/sanity-queries";
 
 const adminClient = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
-
-function depositFor(pricePerPerson: number): number {
-  return Math.max(5000, Math.round((pricePerPerson * 0.30) / 100) * 100);
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -49,14 +46,37 @@ export async function POST(req: NextRequest) {
     if (cartErr) return NextResponse.json({ error: cartErr.message }, { status: 500 });
     if (!cartItems?.length) return NextResponse.json({ error: "Cart is empty." }, { status: 400 });
 
-    // Compute total deposit in paise
+    // Authoritative price + title come from Sanity per cart row, not from
+    // the user_cart values (those are populated client-side under RLS and
+    // can be tampered with). We refuse to checkout if any cart row points
+    // at a slug Sanity does not know -- safer than silently dropping the
+    // line item. Resolve all slugs in parallel; getPackageBySlug is cached
+    // via the Sanity query layer so this is cheap.
+    const resolved = await Promise.all(
+      cartItems.map(async (item) => {
+        const pkg = await getPackageBySlug(String(item.package_slug)).catch(() => null);
+        return pkg ? { item, pkg } : null;
+      }),
+    );
+    const missing = resolved
+      .map((r, i) => (r ? null : cartItems[i].package_slug))
+      .filter(Boolean) as string[];
+    if (missing.length > 0) {
+      return NextResponse.json(
+        { error: `Some cart items are no longer available: ${missing.join(", ")}` },
+        { status: 400 },
+      );
+    }
+
+    // Compute total deposit in paise using server-derived prices only.
     let totalDepositPaise = 0;
-    const lineItems = cartItems.map((item) => {
-      const num = item.num_travelers || 1;
-      const depositPerPerson = depositFor(item.package_price);
-      const depositTotal = depositPerPerson * num;
+    const lineItems = resolved.map((r) => {
+      const { item, pkg } = r!;
+      const num = Math.max(1, Math.min(20, Number(item.num_travelers) || 1));
+      const tripTotal = pkg.price * num;
+      const depositTotal = Math.max(5000, Math.round((tripTotal * 0.30) / 100) * 100);
       totalDepositPaise += depositTotal * 100;
-      return { item, num, depositTotal };
+      return { item, pkg, num, depositTotal };
     });
 
     // Generate group id upfront (shared across bookings)
@@ -92,13 +112,14 @@ export async function POST(req: NextRequest) {
     const cookieRef = cookies().get(REF_COOKIE)?.value;
     const refCode = isValidRefCode(cookieRef) ? cookieRef : null;
 
-    // Insert one bookings row per cart item, all sharing order_group_id + razorpay_order_id
-    const bookingRows = lineItems.map(({ item, num, depositTotal }) => ({
+    // Insert one bookings row per cart item, all sharing order_group_id + razorpay_order_id.
+    // package_title and package_price come from Sanity (pkg), not the cart row.
+    const bookingRows = lineItems.map(({ item, pkg, num, depositTotal }) => ({
       razorpay_order_id: order.id,
       order_group_id: orderGroupId,
       package_slug: item.package_slug,
-      package_title: item.package_title,
-      package_price: item.package_price,
+      package_title: pkg.title,
+      package_price: pkg.price,
       deposit_amount: depositTotal,
       customer_name: customerName,
       customer_email: user.email,

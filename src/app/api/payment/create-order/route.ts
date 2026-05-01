@@ -8,6 +8,7 @@ import { REF_COOKIE, isValidRefCode } from "@/lib/creator-attribution";
 import { rateLimit, clientIp } from "@/lib/redis";
 import { sendCapiEvents, ipFromRequest } from "@/lib/meta-capi";
 import { ga4InitiateCheckout, clientIdFromCookie } from "@/lib/ga4-mp";
+import { getPackageBySlug } from "@/lib/sanity-queries";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
     const { allowed } = await rateLimit(`payorder:${clientIp(req)}`, { limit: 10, windowSeconds: 60 });
     if (!allowed) return NextResponse.json({ error: "Too many requests." }, { status: 429 });
     const body = await req.json();
-    const { package_slug, package_title, package_price,
+    const { package_slug,
             customer_name, customer_email, customer_phone,
             travel_date, num_travellers, special_requests,
             coupon_code } = body;
@@ -28,6 +29,18 @@ export async function POST(req: NextRequest) {
     if (!customer_name || !customer_email || !customer_phone || !package_slug) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
     }
+
+    // Authoritative price + title come from Sanity, never the request body.
+    // Earlier the client could pass any package_price in the JSON and we
+    // would charge a 30% deposit on that figure -- which meant a determined
+    // attacker could pay ₹5,000 on a ₹2,00,000 trip. Sanity is the source
+    // of truth; the client's value is discarded for pricing math.
+    const sanityPkg = await getPackageBySlug(String(package_slug)).catch(() => null);
+    if (!sanityPkg) {
+      return NextResponse.json({ error: "Package not found." }, { status: 404 });
+    }
+    const package_price = sanityPkg.price;
+    const package_title = sanityPkg.title;
 
     // Validate coupon (optional). Reject if expired, redeemed, or under min order.
     let discountAmount = 0;
