@@ -25,6 +25,9 @@ export const dynamic = "force-dynamic";
 
 interface RazorpayEvent {
   event: string;
+  // Razorpay sends a top-level event id on every webhook (`evt_…`). Use
+  // it as the dedup key in processed_webhook_events.
+  id?: string;
   payload: {
     payment?: { entity: RazorpayPayment };
     order?: { entity: { id: string; amount: number; status: string } };
@@ -185,6 +188,35 @@ export async function POST(req: NextRequest) {
     }
 
     const evt = JSON.parse(raw) as RazorpayEvent;
+
+    // Idempotency. Razorpay retries non-2xx for up to 24h. Without this
+    // dedup, a retry of a refund/dispute event re-stamps refund metadata
+    // and re-fires the Slack/Telegram dispute alert — both have happened
+    // in production. INSERT-on-conflict is the canonical SQL idiom for
+    // exactly-once delivery semantics on top of at-least-once webhooks.
+    if (evt.id) {
+      const { error: dupErr } = await supabase
+        .from("processed_webhook_events")
+        .insert({
+          event_id: evt.id,
+          event_type: evt.event,
+          payload_summary: {
+            payment_id: evt.payload.payment?.entity?.id ?? null,
+            order_id: evt.payload.payment?.entity?.order_id ?? evt.payload.order?.entity?.id ?? null,
+            refund_id: evt.payload.refund?.entity?.id ?? null,
+            dispute_id: evt.payload.dispute?.entity?.id ?? null,
+          },
+        });
+      if (dupErr) {
+        // Postgres 23505 = unique_violation. Anything else is a real error
+        // and we want Razorpay to retry — return 500 below.
+        if ((dupErr as { code?: string }).code === "23505") {
+          return NextResponse.json({ received: true, deduped: true });
+        }
+        console.error("[webhook] dedup insert error:", dupErr);
+        return NextResponse.json({ error: "dedup_failed" }, { status: 500 });
+      }
+    }
 
     switch (evt.event) {
       case "payment.captured":

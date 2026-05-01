@@ -47,9 +47,20 @@ export async function POST(req: NextRequest) {
     let validatedCoupon: string | null = null;
     if (coupon_code) {
       const code = String(coupon_code).toUpperCase().trim();
+
+      // Best-effort GC of stale claims older than 30 min. Carts that
+      // abandoned at the Razorpay modal would otherwise hold the coupon
+      // hostage forever. Failure is non-fatal — the claim attempt below
+      // still works, the next user just sees "already used".
+      try {
+        await supabase.rpc("release_stale_coupon_claims", { stale_minutes: 30 });
+      } catch {
+        // ignore — claim sweep is best-effort
+      }
+
       const { data: coupon } = await supabase
         .from("coupons")
-        .select("code, amount_off, min_order_value, expires_at, redeemed_at")
+        .select("code, amount_off, min_order_value, expires_at, redeemed_at, claimed_at")
         .eq("code", code)
         .maybeSingle();
 
@@ -58,6 +69,11 @@ export async function POST(req: NextRequest) {
       }
       if (coupon.redeemed_at) {
         return NextResponse.json({ error: "This coupon has already been used." }, { status: 400 });
+      }
+      if (coupon.claimed_at) {
+        return NextResponse.json({
+          error: "This coupon is being used by another booking. Try again in a few minutes.",
+        }, { status: 409 });
       }
       if (new Date(coupon.expires_at).getTime() < Date.now()) {
         return NextResponse.json({ error: "This coupon has expired." }, { status: 400 });
@@ -73,6 +89,25 @@ export async function POST(req: NextRequest) {
       }
       discountAmount = coupon.amount_off;
       validatedCoupon = coupon.code;
+
+      // Atomic claim. The partial unique index on coupons (claimed_at IS
+      // NOT NULL AND redeemed_at IS NULL) means only one in-flight order
+      // can hold the claim. If two carts race past the read above, the
+      // second UPDATE returns 0 rows and we fail closed instead of issuing
+      // the discount twice. claimed_by_booking_id stays null until the
+      // booking row exists; we patch it after insert below.
+      const { data: claim } = await supabase
+        .from("coupons")
+        .update({ claimed_at: new Date().toISOString() })
+        .eq("code", validatedCoupon)
+        .is("claimed_at", null)
+        .is("redeemed_at", null)
+        .select("code");
+      if (!claim || claim.length === 0) {
+        return NextResponse.json({
+          error: "This coupon was just used by another booking. Please try a different code.",
+        }, { status: 409 });
+      }
     }
 
     // Trip total = per-person price × travellers, capped to a sane integer
@@ -180,6 +215,17 @@ export async function POST(req: NextRequest) {
     // Coupon is NOT redeemed here — only locked to the booking. The verify
     // route flips redeemed_at on successful payment so abandoned checkouts
     // don't burn the user's code.
+
+    // Patch claimed_by_booking_id now that the booking row exists. Best
+    // effort — if the booking insert failed (dbErr above) the claim sweeper
+    // releases the coupon after 30 min anyway.
+    if (validatedCoupon && bookingRow?.id) {
+      await supabase
+        .from("coupons")
+        .update({ claimed_by_booking_id: bookingRow.id })
+        .eq("code", validatedCoupon)
+        .is("redeemed_at", null);
+    }
 
     // CAPI InitiateCheckout — paired with browser-side fbq fire on Razorpay open.
     // event_id = razorpay order_id so any browser-side IC dedupes naturally.

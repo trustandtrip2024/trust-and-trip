@@ -88,15 +88,36 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Update all bookings tied to this order (supports cart checkout → 1 order, N bookings)
+    // Atomic claim. Pinning the UPDATE to status IN (created, pending) means
+    // only one of two concurrent /verify calls can flip the rows — the loser
+    // sees an empty `bookings` array and falls through to the
+    // already_verified short-circuit below. Without this, both calls used to
+    // award points and insert duplicate "DEPOSIT PAID" leads.
     const { data: bookings, error } = await supabase
       .from("bookings")
       .update({ razorpay_payment_id, razorpay_signature, status: "verified" })
       .eq("razorpay_order_id", razorpay_order_id)
+      .in("status", ["created", "pending"])
       .select();
 
     if (error) throw error;
     if (!bookings || bookings.length === 0) {
+      // Either the row never existed OR a concurrent verify (or webhook)
+      // already finalised it. Return the same shape as the early-exit
+      // already_verified branch so the client treats this as a no-op.
+      const { data: alreadyDone } = await supabase
+        .from("bookings")
+        .select("id, status")
+        .eq("razorpay_order_id", razorpay_order_id);
+      if (alreadyDone && alreadyDone.length > 0) {
+        return NextResponse.json({
+          success: true,
+          already_verified: true,
+          booking_id: alreadyDone[0].id,
+          booking_ids: alreadyDone.map((b) => b.id),
+          is_group: alreadyDone.length > 1,
+        });
+      }
       return NextResponse.json({ error: "Booking not found." }, { status: 404 });
     }
 

@@ -27,8 +27,40 @@ export async function POST(req: NextRequest) {
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
 
   const reason = body.reason ? String(body.reason).slice(0, 500) : null;
-  const refundAmount = body.refundAmount ? Number(body.refundAmount) : 0;
+  const refundAmountRaw = body.refundAmount ? Number(body.refundAmount) : 0;
   const refundRef = body.refundRef ? String(body.refundRef) : null;
+
+  // Look up the booking first so we can clamp refund to the actual deposit.
+  // Earlier this route accepted ANY refundAmount the admin typed and
+  // recorded it verbatim — a slipped finger or a compromised admin session
+  // could push a refund line item that exceeds the original deposit and
+  // either overdrew the Razorpay payout buffer or quietly corrupted the
+  // ledger when the figure was later reconciled.
+  const { data: existing, error: lookupErr } = await supabase
+    .from("bookings")
+    .select("id, deposit_amount, status, refund_amount")
+    .eq("id", id)
+    .maybeSingle();
+  if (lookupErr) return NextResponse.json({ error: "Lookup failed." }, { status: 500 });
+  if (!existing) return NextResponse.json({ error: "Booking not found." }, { status: 404 });
+
+  const deposit = Number(existing.deposit_amount ?? 0);
+  if (!Number.isFinite(refundAmountRaw) || refundAmountRaw < 0) {
+    return NextResponse.json({ error: "refundAmount must be ≥ 0." }, { status: 400 });
+  }
+  if (refundAmountRaw > deposit) {
+    return NextResponse.json({
+      error: `Refund cannot exceed the captured deposit (₹${deposit.toLocaleString("en-IN")}).`,
+    }, { status: 400 });
+  }
+  // Reject re-refunds — once refunded, the row should not be re-stamped from
+  // this endpoint. Use a fresh booking record if a customer is owed more.
+  if (existing.status === "refunded" && refundAmountRaw > 0) {
+    return NextResponse.json({
+      error: "Booking already refunded. Issue a separate adjustment.",
+    }, { status: 409 });
+  }
+  const refundAmount = Math.round(refundAmountRaw);
 
   const update: Record<string, unknown> = {
     status: refundAmount > 0 ? "refunded" : "cancelled",
@@ -48,6 +80,6 @@ export async function POST(req: NextRequest) {
     .select("id, status, cancelled_at, refund_amount")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Update failed." }, { status: 500 });
   return NextResponse.json({ ok: true, booking: data });
 }
