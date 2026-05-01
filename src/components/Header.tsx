@@ -18,6 +18,7 @@ import { captureIntent } from "@/lib/capture-intent";
 import { supabase } from "@/lib/supabase";
 import ThemeToggle from "./ThemeToggle";
 import CurrencySwitcher from "./CurrencySwitcher";
+import GoogleReviewsBadge from "./GoogleReviewsBadge";
 
 // FlashDealRotator is SSR-safe (renders DEALS[0] server-side; setInterval
 // only spins up in useEffect on client), so we render it normally to avoid
@@ -246,7 +247,8 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-2 whitespace-nowrap">
             <span className="font-semibold tracking-wide text-tat-orange"><FlashDealRotator /></span>
           </div>
-          <div className="hidden lg:flex items-center gap-4 whitespace-nowrap">
+          <div className="hidden lg:flex items-center gap-3 whitespace-nowrap">
+            <GoogleReviewsBadge variant="dark" />
             <a
               href="tel:+918115999588"
               onClick={() => captureIntent("call_click", { note: "Header top strip" })}
@@ -617,15 +619,18 @@ export default function Header() {
                         <p className="text-sm font-medium text-tat-charcoal group-hover:text-tat-orange transition-colors">hello@trustandtrip.com</p>
                       </div>
                     </a>
-                    <a
-                      href="https://instagram.com/trust_and_trip"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[11px] text-tat-charcoal/65 hover:text-tat-orange transition-colors pt-1"
-                    >
-                      <Instagram className="h-3.5 w-3.5" />
-                      @trust_and_trip
-                    </a>
+                    <div className="flex items-center justify-between pt-1">
+                      <a
+                        href="https://instagram.com/trust_and_trip"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-[11px] text-tat-charcoal/65 hover:text-tat-orange transition-colors"
+                      >
+                        <Instagram className="h-3.5 w-3.5" />
+                        @trust_and_trip
+                      </a>
+                      <GoogleReviewsBadge variant="light" />
+                    </div>
                   </div>
                 </Dialog.Content>
               </Dialog.Portal>

@@ -88,6 +88,19 @@ export default function PackagesClient({
   const [filterPrice, setFilterPrice] = useState(resolvedPrice);
   const [filterRating, setFilterRating] = useState("");
   const [filterCategory, setFilterCategory] = useState(initialCategory);
+  // Tier (Essentials/Signature/Private) is derived from existing categories so
+  // we don't need a Sanity migration. We keep it as a separate filter state
+  // because "Signature" maps to "no Budget AND no Luxury", which a single
+  // category-string filter can't express.
+  const initialTier = sp.get("tier") ?? "";
+  const [filterTier, setFilterTier] = useState(initialTier);
+  // Region toggles the existing ?region= URL param via state so the chips
+  // stay in sync without a full page reload.
+  const [filterRegion, setFilterRegion] = useState(initialRegion);
+  // Source-city pickup. Tier-2/3 routes (Lucknow/Kanpur/Haridwar) are an
+  // open slot vs Veena (Mumbai/Pune-anchored) and PYT (metro-only).
+  const initialPickup = sp.get("pickup") ?? "";
+  const [filterPickup, setFilterPickup] = useState(initialPickup);
   const [sortBy, setSortBy] = useState<string>("popular");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -103,20 +116,22 @@ export default function PackagesClient({
     }
     if (filterRating) params.set("rating", filterRating);
     if (filterCategory) params.set("category", filterCategory);
+    if (filterTier) params.set("tier", filterTier);
+    if (filterPickup) params.set("pickup", filterPickup);
     if (sortBy && sortBy !== "popular") params.set("sort", sortBy);
-    if (initialRegion) params.set("region", initialRegion);
+    if (filterRegion) params.set("region", filterRegion);
 
     const qs = params.toString();
     const url = qs ? `${pathname}?${qs}` : pathname;
     router.replace(url, { scroll: false });
-  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, sortBy, initialRegion, pathname, router]);
+  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterTier, filterRegion, filterPickup, sortBy, pathname, router]);
 
   const filtered = useMemo(() => {
     const list = packages.filter((p) => {
       if (filterDestination && p.destinationSlug !== filterDestination) return false;
       if (filterTravelType && p.travelType !== filterTravelType) return false;
-      if (initialRegion === "domestic" && !INDIA_SLUGS.has(p.destinationSlug)) return false;
-      if (initialRegion === "international" && INDIA_SLUGS.has(p.destinationSlug)) return false;
+      if (filterRegion === "domestic" && !INDIA_SLUGS.has(p.destinationSlug)) return false;
+      if (filterRegion === "international" && INDIA_SLUGS.has(p.destinationSlug)) return false;
       if (filterDuration) {
         const range = durationRanges.find((d) => d.label === filterDuration);
         if (range && (p.days < range.min || p.days > range.max)) return false;
@@ -131,6 +146,15 @@ export default function PackagesClient({
       }
       if (filterCategory) {
         if (!p.categories || !p.categories.includes(filterCategory)) return false;
+      }
+      if (filterTier) {
+        const cats = (p.categories ?? []).map((c) => c.toLowerCase());
+        if (filterTier === "essentials" && !cats.includes("budget")) return false;
+        if (filterTier === "private"    && !cats.includes("luxury")) return false;
+        if (filterTier === "signature"  && (cats.includes("budget") || cats.includes("luxury"))) return false;
+      }
+      if (filterPickup) {
+        if (!p.tags?.includes(`ex-${filterPickup}`)) return false;
       }
       return true;
     });
@@ -180,12 +204,123 @@ export default function PackagesClient({
     setFilterPrice("");
     setFilterRating("");
     setFilterCategory("");
+    setFilterTier("");
+    setFilterRegion("");
+    setFilterPickup("");
     setSortBy("popular");
   };
 
   return (
     <section className="py-12 md:py-16">
       <div className="container-custom">
+        {/* Tier + region chip rail — quick top-level segmenting that maps to
+            existing categories/region filters. Renders on every viewport. */}
+        <div className="mb-6 flex flex-col gap-3">
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">Tier</span>
+            {[
+              { v: "",           l: "All",        sub: "Every budget" },
+              { v: "essentials", l: "Essentials", sub: "Pocket-friendly" },
+              { v: "signature",  l: "Signature",  sub: "Hand-curated" },
+              { v: "private",    l: "Private",    sub: "Bespoke + concierge" },
+            ].map((t) => {
+              const active = filterTier === t.v;
+              return (
+                <button
+                  key={t.v || "all-tier"}
+                  type="button"
+                  onClick={() => setFilterTier(t.v)}
+                  aria-pressed={active}
+                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
+                    active
+                      ? "bg-tat-charcoal text-tat-paper border-tat-charcoal"
+                      : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30 hover:text-tat-charcoal"
+                  }`}
+                >
+                  {t.l}
+                  <span className={`text-[10px] font-normal ${active ? "text-tat-paper/70" : "text-tat-charcoal/45"}`}>· {t.sub}</span>
+                </button>
+              );
+            })}
+          </div>
+          {(() => {
+            // Source-city pickup rail. Surfaces only when any package carries
+            // an `ex-*` tag, so the chip strip disappears for flat catalogs
+            // and keeps the UI honest.
+            const cityCounts = new Map<string, number>();
+            for (const p of packages) {
+              for (const t of p.tags ?? []) {
+                if (t.startsWith("ex-")) cityCounts.set(t.slice(3), (cityCounts.get(t.slice(3)) ?? 0) + 1);
+              }
+            }
+            if (!cityCounts.size) return null;
+            const cities = [...cityCounts.entries()].sort((a, b) => b[1] - a[1]);
+            return (
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">Pickup from</span>
+                <button
+                  type="button"
+                  onClick={() => setFilterPickup("")}
+                  aria-pressed={!filterPickup}
+                  className={`shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
+                    !filterPickup
+                      ? "bg-tat-orange text-white border-tat-orange"
+                      : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30"
+                  }`}
+                >
+                  Any city
+                </button>
+                {cities.map(([city, n]) => {
+                  const active = filterPickup === city;
+                  const label = city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+                  return (
+                    <button
+                      key={city}
+                      type="button"
+                      onClick={() => setFilterPickup(active ? "" : city)}
+                      aria-pressed={active}
+                      className={`shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
+                        active
+                          ? "bg-tat-orange text-white border-tat-orange"
+                          : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30 hover:text-tat-charcoal"
+                      }`}
+                    >
+                      Ex {label}
+                      <span className={`text-[10px] ${active ? "text-white/70" : "text-tat-charcoal/40"}`}>{n}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })()}
+
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">Region</span>
+            {[
+              { v: "",              l: "All regions" },
+              { v: "domestic",      l: "India" },
+              { v: "international", l: "International" },
+            ].map((r) => {
+              const active = filterRegion === r.v;
+              return (
+                <button
+                  key={r.v || "all-region"}
+                  type="button"
+                  onClick={() => setFilterRegion(r.v)}
+                  aria-pressed={active}
+                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
+                    active
+                      ? "bg-tat-gold text-tat-charcoal border-tat-gold"
+                      : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30 hover:text-tat-charcoal"
+                  }`}
+                >
+                  {r.l}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Mobile bar */}
         <div className="flex items-center justify-between gap-3 mb-6 lg:hidden">
           <button

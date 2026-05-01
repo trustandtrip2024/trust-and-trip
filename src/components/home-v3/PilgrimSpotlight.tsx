@@ -68,6 +68,48 @@ const ROUTES: PilgrimRoute[] = [
       { icon: ShieldCheck,  text: "Senior-friendly transport" },
     ],
   },
+  {
+    slug: "panchkedar",
+    href: "/packages/panchkedar-itinerary-53",
+    title: "Panchkedar Yatra",
+    region: "Kedarnath · Madhyamaheshwar · Tungnath · Rudranath · Kalpeshwar",
+    duration: "14N · 15D",
+    image: "https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&w=1100&q=75",
+    priceFrom: 29870,
+    highlights: [
+      { icon: Plane,        text: "Helicopter to higher Kedars where possible" },
+      { icon: Hotel,        text: "Acclimatisation halts on every leg" },
+      { icon: ShieldCheck,  text: "Doctor on call · oxygen kit · pony assist" },
+    ],
+  },
+  {
+    slug: "ayodhya-prayagraj-chitrakoot",
+    href: "/packages/ayodhya-prayagraj-chitrakoot-varanasi-66",
+    title: "Ayodhya · Prayagraj · Chitrakoot · Varanasi",
+    region: "Ram Mandir · Triveni Sangam · Kashi Vishwanath",
+    duration: "5N · 6D",
+    image: "https://images.unsplash.com/photo-1707748812537-d7b6796f5715?auto=format&fit=crop&w=1100&q=75",
+    priceFrom: 6650,
+    highlights: [
+      { icon: Sparkles,     text: "Ram Mandir darshan window booked" },
+      { icon: Hotel,        text: "Walking-distance hotels at every stop" },
+      { icon: ShieldCheck,  text: "VIP queue assistance · senior pace" },
+    ],
+  },
+  {
+    slug: "do-dham-lucknow",
+    href: "/packages/do-dham-yatra-ex-lucknow-3",
+    title: "Do Dham Ex Lucknow",
+    region: "Kedarnath · Badrinath · Lucknow pickup",
+    duration: "6N · 7D",
+    image: "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?auto=format&fit=crop&w=1100&q=75",
+    priceFrom: 15400,
+    highlights: [
+      { icon: Plane,        text: "Lucknow pickup · 12-seat traveller" },
+      { icon: Hotel,        text: "Hotels at every halt, MAPAI meals" },
+      { icon: ShieldCheck,  text: "Doctor on call · helicopter to Kedar" },
+    ],
+  },
 ];
 
 function inr(n: number) { return `₹${n.toLocaleString("en-IN")}`; }
@@ -89,8 +131,8 @@ export default function PilgrimSpotlight() {
               id="pilgrim-spotlight-title"
               className="mt-2 font-display font-normal text-[26px] md:text-[36px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
             >
-              Char Dham, Varanasi, Tirupati —{" "}
-              <em className="not-italic font-display italic text-tat-gold">elders looked after.</em>
+              Char Dham. Varanasi. Tirupati. Panchkedar.{" "}
+              <em className="not-italic font-display italic text-tat-gold">Elders looked after.</em>
             </h2>
             <p className="mt-3 text-body-sm text-tat-charcoal/70 dark:text-tat-paper/70 max-w-2xl">
               VIP darshan tickets, helicopter transfers, hotels close to the temple gate. Doctor-on-call on every Yatra.
@@ -105,7 +147,7 @@ export default function PilgrimSpotlight() {
           </Link>
         </div>
 
-        <div className="mt-7 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-5">
+        <div className="mt-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {ROUTES.map((r) => (
             <PilgrimCard key={r.slug} route={r} />
           ))}

@@ -46,6 +46,10 @@ export interface Lead {
   wa_variant?: string;
   page_url?: string;
   ref_code?: string;
+  // Segment tier carried from the source package's categories — drives
+  // Bitrix24 routing (Private → senior planner, Essentials → junior).
+  // Independent of the score-derived `tier` (hot/warm/cold) used for alerts.
+  segment_tier?: "essentials" | "signature" | "private";
   status?: "new" | "contacted" | "qualified" | "booked" | "lost";
   created_at?: string;
 }

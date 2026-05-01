@@ -141,7 +141,24 @@ export default function PackageCard({
         <div className="absolute inset-0 bg-gradient-to-t from-tat-charcoal/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {/* Top tags */}
-        <div className="absolute top-3 left-3 flex items-center gap-1.5">
+        <div className="absolute top-3 left-3 flex items-center gap-1.5 flex-wrap max-w-[calc(100%-7.5rem)]">
+          {(() => {
+            // Derive segment tier from existing `categories` so we can ship the
+            // tier story without a Sanity migration. Luxury → Private,
+            // Budget → Essentials, otherwise → Signature. Single chip per card.
+            const cats = (categories ?? []).map((c) => c.toLowerCase());
+            const tier = cats.includes("luxury")
+              ? { label: "Private",    cls: "bg-tat-charcoal/90 text-tat-paper",          dot: "bg-tat-gold" }
+              : cats.includes("budget")
+              ? { label: "Essentials", cls: "bg-tat-paper/95 text-tat-charcoal",           dot: "bg-tat-orange" }
+              : { label: "Signature",  cls: "bg-tat-gold text-tat-charcoal",               dot: "bg-tat-charcoal" };
+            return (
+              <span className={`inline-flex items-center gap-1.5 backdrop-blur-sm text-[10px] tracking-wider uppercase font-semibold px-2.5 py-1 rounded-full ${tier.cls}`}>
+                <span className={`h-1.5 w-1.5 rounded-full ${tier.dot}`} />
+                {tier.label}
+              </span>
+            );
+          })()}
           {trending && (
             <span className="inline-flex items-center gap-1 bg-tat-gold text-tat-charcoal text-[10px] tracking-wider uppercase font-medium px-2.5 py-1 rounded-full">
               <Flame className="h-3 w-3" />

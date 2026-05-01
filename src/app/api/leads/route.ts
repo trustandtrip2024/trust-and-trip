@@ -131,6 +131,28 @@ export async function POST(req: NextRequest) {
 
     mark(`3b. ref_code=${refCode ?? "(none)"}`);
 
+    // Segment tier — derived from the package's categories when the lead came
+    // from a /packages/[slug] context. Used for Bitrix24 routing (Private →
+    // senior planner). Forms can also pass `segment_tier` directly when the
+    // lead came from a tier landing page.
+    const bodyAny = body as unknown as Record<string, unknown>;
+    const rawCats = Array.isArray(bodyAny.package_categories)
+      ? (bodyAny.package_categories as unknown[]).filter((x): x is string => typeof x === "string")
+      : [];
+    const lcCats = rawCats.map((c) => c.toLowerCase());
+    const explicit = bodyAny.segment_tier;
+    const segmentTier: "essentials" | "signature" | "private" | undefined =
+      explicit === "essentials" || explicit === "signature" || explicit === "private"
+        ? explicit
+        : lcCats.includes("luxury")
+        ? "private"
+        : lcCats.includes("budget")
+        ? "essentials"
+        : lcCats.length
+        ? "signature"
+        : undefined;
+    mark(`3b1. segment_tier=${segmentTier ?? "(unset)"}`);
+
     // Score before insert so the row carries score + tier from day one.
     const { score, tier, reasons } = scoreLead({
       name: safeName,
@@ -225,6 +247,7 @@ export async function POST(req: NextRequest) {
           ref_code: refCode,
           score,
           tier,
+          segment_tier: segmentTier,
           status: "new",
         })
         .select("id")
@@ -298,6 +321,7 @@ export async function POST(req: NextRequest) {
           email: safeEmail,
           phone: safePhone,
           ref_code: refCode ?? undefined,
+          segment_tier: segmentTier,
         });
         if (bitrixLeadId && tier === "A" && !isIntent) {
           await createLeadTask({

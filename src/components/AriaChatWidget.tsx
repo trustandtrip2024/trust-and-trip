@@ -3,9 +3,22 @@
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Sparkles, ChevronDown, Check } from "lucide-react";
+import { X, Send, Sparkles, ChevronDown, Check, MessageCircle } from "lucide-react";
 import { submitLead } from "@/lib/submit-lead";
+import { captureIntent } from "@/lib/capture-intent";
 import AriaFace from "@/components/AriaFace";
+
+// Build a context-aware wa.me deep link. We feed the planner a one-line
+// summary so they pick up the conversation instead of starting over.
+function buildWaLink(messages: Message[], packageTitle?: string | null) {
+  const lastUser = [...messages].reverse().find((m) => m.role === "user")?.content?.trim();
+  const parts = ["Hi Trust and Trip!"];
+  if (packageTitle) parts.push(`I was looking at ${packageTitle}.`);
+  if (lastUser) parts.push(`Aria chat: "${lastUser.slice(0, 200)}"`);
+  parts.push("Can a planner take this from here?");
+  const txt = parts.join(" ");
+  return `https://wa.me/918115999588?text=${encodeURIComponent(txt)}`;
+}
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -476,8 +489,19 @@ export default function AriaChatWidget() {
                   <p className="font-semibold text-tat-paper text-sm">Aria</p>
                   <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-tat-gold/20 text-tat-gold uppercase tracking-wider font-medium">AI</span>
                 </div>
-                <p className="text-[11px] text-tat-paper/50">Travel assistant · Online now</p>
+                <p className="text-[11px] text-tat-paper/50">AI · Akash's planning team takes over on WhatsApp</p>
               </div>
+              <a
+                href={buildWaLink(messages, packagePreload?.title)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => captureIntent("whatsapp_click", { note: "Aria chat header handoff" })}
+                className="inline-flex items-center gap-1 px-2.5 h-7 rounded-full bg-whatsapp/15 text-whatsapp-deep text-[11px] font-semibold border border-whatsapp/30 hover:bg-whatsapp/25 transition-colors"
+                aria-label="Continue on WhatsApp with a human planner"
+              >
+                <MessageCircle className="h-3 w-3 fill-whatsapp text-whatsapp" aria-hidden />
+                Talk to human
+              </a>
               <button onClick={() => setOpen(false)} className="text-tat-paper/40 hover:text-tat-paper transition-colors p-1">
                 <X className="h-4 w-4" />
               </button>

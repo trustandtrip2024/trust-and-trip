@@ -297,6 +297,10 @@ export default function Footer() {
             <span className="text-xs">IATA Accredited Agency</span>
           </div>
           <div className="flex items-center gap-2.5 text-tat-paper/40">
+            <CheckCircle2 className="h-4 w-4 text-tat-gold/60 shrink-0" />
+            <span className="text-xs">GSTIN registered</span>
+          </div>
+          <div className="flex items-center gap-2.5 text-tat-paper/40">
             <Shield className="h-4 w-4 text-tat-gold/60 shrink-0" />
             <span className="text-xs">SSL Secured Payments</span>
           </div>
@@ -305,12 +309,12 @@ export default function Footer() {
             <span className="text-xs">Razorpay Payment Gateway</span>
           </div>
           <div className="flex items-center gap-2.5 text-tat-paper/40">
-            <Shield className="h-4 w-4 text-tat-gold/60 shrink-0" />
-            <span className="text-xs">100% Secure Booking</span>
+            <Award className="h-4 w-4 text-tat-gold/60 shrink-0" />
+            <span className="text-xs">4.9★ on Google &amp; TripAdvisor</span>
           </div>
           <div className="flex items-center gap-2.5 text-tat-paper/40">
-            <Award className="h-4 w-4 text-tat-gold/60 shrink-0" />
-            <span className="text-xs">4.9★ on Google & TripAdvisor</span>
+            <Shield className="h-4 w-4 text-tat-gold/60 shrink-0" />
+            <span className="text-xs">Founder-led · Plans in 24hr</span>
           </div>
         </div>
       </div>
@@ -320,7 +324,7 @@ export default function Footer() {
       <div className="container-custom pt-5 pb-24 lg:pb-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-tat-paper/30">
-            © {new Date().getFullYear()} Trust and Trip Pvt. Ltd. · All rights reserved.
+            © {new Date().getFullYear()} Trust and Trip Experiences Pvt. Ltd. · All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-xs text-tat-paper/30">
             <Link href="/privacy-policy" className="hover:text-tat-gold transition-colors">Privacy</Link>
@@ -328,6 +332,17 @@ export default function Footer() {
             <Link href="/cancellation-policy" className="hover:text-tat-gold transition-colors">Cancellation</Link>
           </div>
         </div>
+        {(process.env.NEXT_PUBLIC_GSTIN || process.env.NEXT_PUBLIC_CIN) && (
+          <p className="mt-2 text-[10px] text-tat-paper/25 leading-relaxed">
+            {process.env.NEXT_PUBLIC_GSTIN && (
+              <span>GSTIN: <span className="tabular-nums">{process.env.NEXT_PUBLIC_GSTIN}</span></span>
+            )}
+            {process.env.NEXT_PUBLIC_GSTIN && process.env.NEXT_PUBLIC_CIN && <span className="mx-2">·</span>}
+            {process.env.NEXT_PUBLIC_CIN && (
+              <span>CIN: <span className="tabular-nums">{process.env.NEXT_PUBLIC_CIN}</span></span>
+            )}
+          </p>
+        )}
       </div>
 
       {/* Subtle wordmark */}

@@ -99,6 +99,7 @@ const UF = {
   commissionPaid: "UF_CRM_COMMISSION_PAID",
   leadScore: "UF_CRM_LEAD_SCORE",
   leadTier: "UF_CRM_LEAD_TIER",
+  segmentTier: "UF_CRM_SEGMENT_TIER",
 } as const;
 
 // ---- Types ----------------------------------------------------------------
@@ -210,6 +211,17 @@ function buildLeadFields(lead: Bitrix24LeadPayload): Record<string, unknown> {
   if (lead.utm_content)     fields[UF.utmContent]    = lead.utm_content;
   if (lead.utm_term)        fields[UF.utmTerm]       = lead.utm_term;
   if (lead.ref_code)        fields[UF.refCode]       = lead.ref_code;
+  if (lead.segment_tier)    fields[UF.segmentTier]   = lead.segment_tier;
+
+  // Stage routing — Private leads land in the senior-planner stage so the
+  // top-tier customer doesn't queue behind a ₹15k Essentials lead. Stage
+  // codes are environment-specific; pass through env so portals with
+  // different pipeline configs can override without code changes.
+  if (lead.segment_tier === "private" && process.env.BITRIX24_STAGE_PRIVATE) {
+    fields["STATUS_ID"] = process.env.BITRIX24_STAGE_PRIVATE;
+  } else if (lead.segment_tier === "essentials" && process.env.BITRIX24_STAGE_ESSENTIALS) {
+    fields["STATUS_ID"] = process.env.BITRIX24_STAGE_ESSENTIALS;
+  }
 
   return fields;
 }
