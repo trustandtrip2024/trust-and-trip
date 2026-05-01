@@ -36,6 +36,7 @@ import GoogleTagManager from "@/components/GoogleTagManager";
 import VercelAnalytics from "@/components/VercelAnalytics";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
 import ConditionalFooter from "@/components/ConditionalFooter";
+import ChromeGuard from "@/components/ChromeGuard";
 import SearchProvider from "@/components/SearchProvider";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import MetaPixel from "@/components/MetaPixel";
@@ -244,14 +245,16 @@ export default function RootLayout({
           <ConditionalNavbar />
           <MainWrapper>{children}</MainWrapper>
           <ConditionalFooter />
-          <FloatingWhatsApp />
-          <MobileBottomNav />
-          <TripPlannerModal />
-          <ExitIntentPopup />
-          <CompareBar />
-          <SearchProvider />
-          <AriaChatWidget />
-          <DesktopPlannerCTA />
+          <ChromeGuard>
+            <FloatingWhatsApp />
+            <MobileBottomNav />
+            <TripPlannerModal />
+            <ExitIntentPopup />
+            <CompareBar />
+            <SearchProvider />
+            <AriaChatWidget />
+            <DesktopPlannerCTA />
+          </ChromeGuard>
           <ScrollToTop />
           <GoogleAnalytics />
           <GoogleTagManager />

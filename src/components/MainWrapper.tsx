@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-const NO_PADDING = ["/dashboard", "/login", "/creators/dashboard", "/admin"];
+const NO_PADDING = ["/dashboard", "/login", "/creators/dashboard", "/admin", "/coming-soon"];
 
 export default function MainWrapper({ children }: { children: React.ReactNode }) {
   const path = usePathname();

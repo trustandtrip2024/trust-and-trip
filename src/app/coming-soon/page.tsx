@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { Sparkles, Mountain, Camera, Compass, MessageCircle, Instagram, Mail } from "lucide-react";
+import { Sparkles, Mountain, Camera, Compass, MessageCircle, Instagram, Mail, Facebook, Linkedin, Youtube, Phone } from "lucide-react";
 import ComingSoonCountdown from "@/components/ComingSoonCountdown";
 import WaitlistForm from "@/components/WaitlistForm";
 
@@ -165,37 +165,70 @@ export default function ComingSoonPage() {
           </div>
         </section>
 
-        <footer className="flex flex-col items-start justify-between gap-4 border-t border-tat-charcoal/10 py-6 text-sm text-tat-charcoal/60 md:flex-row md:items-center">
-          <p>
-            © {new Date().getFullYear()} Trust and Trip · Designed in India
-          </p>
-          <div className="flex items-center gap-4">
-            <a
-              href="https://wa.me/918115999588"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 transition hover:text-tat-teal-deep"
-            >
-              <MessageCircle className="h-4 w-4" />
-              WhatsApp
-            </a>
-            <a
-              href="mailto:trustandtrip2023@gmail.com"
-              className="inline-flex items-center gap-2 transition hover:text-tat-teal-deep"
-            >
-              <Mail className="h-4 w-4" />
-              Email
-            </a>
-            <a
-              href="https://instagram.com/trustandtrip"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 transition hover:text-tat-teal-deep"
-            >
-              <Instagram className="h-4 w-4" />
-              Instagram
-            </a>
+        <section className="border-t border-tat-charcoal/10 py-10">
+          <div className="grid gap-8 md:grid-cols-[1.2fr_1fr]">
+            <div>
+              <p className="eyebrow-ink">In the meantime</p>
+              <h2 className="mt-3 font-display text-h2 font-medium leading-tight text-balance">
+                Already dreaming of somewhere?{" "}
+                <span className="italic text-tat-orange">Talk to us now.</span>
+              </h2>
+              <p className="mt-3 max-w-xl text-prose text-tat-charcoal/70">
+                Our planners are still online while the new site finishes
+                cooking. WhatsApp is fastest — you&apos;ll hear back the same
+                day, often within the hour.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <a
+                  href="https://wa.me/918115999588?text=Hi%20Trust%20and%20Trip%2C%20I%27d%20like%20to%20plan%20a%20trip"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp us
+                </a>
+                <a href="tel:+918115999588" className="btn-outline">
+                  <Phone className="h-4 w-4" />
+                  +91 81159 99588
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <p className="eyebrow-ink">Follow the build</p>
+              <p className="mt-3 text-prose text-tat-charcoal/70">
+                We&apos;re sharing behind-the-scenes shots from the road
+                while we wrap things up.
+              </p>
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {[
+                  { href: "https://instagram.com/trust_and_trip", label: "Instagram", Icon: Instagram },
+                  { href: "https://facebook.com/trustandtrip", label: "Facebook", Icon: Facebook },
+                  { href: "https://linkedin.com/company/trust-and-trip", label: "LinkedIn", Icon: Linkedin },
+                  { href: "https://youtube.com/@trustandtrip", label: "YouTube", Icon: Youtube },
+                  { href: "https://x.com/trust_and_trip", label: "X / Twitter", Icon: Sparkles },
+                  { href: "mailto:hello@trustandtrip.com", label: "Email us", Icon: Mail },
+                ].map(({ href, label, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target={href.startsWith("mailto:") ? undefined : "_blank"}
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 rounded-card border border-tat-charcoal/10 bg-tat-paper/80 px-4 py-3 text-sm font-medium text-tat-charcoal/80 transition hover:-translate-y-0.5 hover:border-tat-teal/40 hover:text-tat-teal-deep hover:shadow-soft"
+                  >
+                    <Icon className="h-4 w-4 text-tat-teal-deep transition group-hover:scale-110" />
+                    {label}
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
+        </section>
+
+        <footer className="flex flex-col items-start justify-between gap-2 border-t border-tat-charcoal/10 py-6 text-sm text-tat-charcoal/55 md:flex-row md:items-center">
+          <p>© {new Date().getFullYear()} Trust and Trip · Crafting reliable travel · Noida, India</p>
+          <p className="text-xs uppercase tracking-[0.18em]">Back online · Mon 4 May, 9 AM IST</p>
         </footer>
       </div>
     </main>
