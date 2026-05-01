@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { Shield, CreditCard, CheckCircle2, Loader2, X, IndianRupee, Tag, Calendar, Users } from "lucide-react";
 import { pixel } from "@/components/MetaPixel";
 import { analytics } from "@/lib/analytics";
@@ -179,12 +180,16 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
       </button>
       <p className="text-center text-[11px] text-tat-charcoal/40 mt-1.5">100% refundable · No hidden charges</p>
 
-      {/* Modal — z-[200] sits above every floating widget on the detail
-          page (FloatingWhatsApp, AriaChat, MobileBottomNav, sticky bars).
+      {/* Modal — portalled to document.body so no ancestor stacking
+          context (transform/will-change/contain on a parent, e.g. the
+          sticky BookingAside or any future motion.* wrapper) can trap
+          the fixed positioning and confine the modal to the sidebar.
+          z-[200] sits above every floating widget on the detail page
+          (FloatingWhatsApp, AriaChat, MobileBottomNav, sticky bars).
           Body scroll is locked via the effect above; max-h ensures the
           form is scrollable on small viewports without the page bleeding
           underneath. */}
-      {open && (
+      {open && typeof document !== "undefined" && createPortal(
         <div
           role="dialog"
           aria-modal="true"
@@ -325,7 +330,8 @@ export default function BookingDeposit({ packageSlug, packageTitle, packagePrice
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
