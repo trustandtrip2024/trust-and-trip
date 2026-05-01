@@ -47,9 +47,11 @@ export default function PackageGallery({ images, title }: Props) {
         {/* Grid layout */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 rounded-3xl overflow-hidden">
           {/* Main large image */}
-          <div
-            className="col-span-2 row-span-2 relative aspect-[4/3] md:aspect-auto md:h-full min-h-[200px] cursor-pointer group"
+          <button
+            type="button"
             onClick={() => open(0)}
+            aria-label={`Open photo gallery — ${images.length} photos of ${title}`}
+            className="col-span-2 row-span-2 relative aspect-[4/3] md:aspect-auto md:h-full min-h-[200px] cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
           >
             <Image
               src={main}
@@ -59,15 +61,17 @@ export default function PackageGallery({ images, title }: Props) {
               sizes="(max-width: 768px) 100vw, 50vw"
             />
             <div className="absolute inset-0 bg-tat-charcoal/0 group-hover:bg-tat-charcoal/20 transition-colors duration-300" />
-          </div>
+          </button>
 
           {/* Side thumbnails */}
           {shown.map((img, i) => {
             const isLast = i === shown.length - 1 && remaining > 0;
             return (
-              <div
+              <button
+                type="button"
                 key={i}
-                className="relative aspect-square cursor-pointer group overflow-hidden"
+                aria-label={isLast && remaining > 0 ? `View ${remaining} more photos in lightbox` : `Open photo ${i + 2} of ${images.length} in lightbox`}
+                className="relative aspect-square cursor-pointer group overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
                 onClick={() => open(i + 1)}
               >
                 <Image
@@ -79,13 +83,13 @@ export default function PackageGallery({ images, title }: Props) {
                 />
                 <div className="absolute inset-0 bg-tat-charcoal/0 group-hover:bg-tat-charcoal/20 transition-colors duration-300" />
                 {isLast && remaining > 0 && (
-                  <div className="absolute inset-0 bg-tat-charcoal/60 flex flex-col items-center justify-center text-tat-paper">
+                  <div className="absolute inset-0 bg-tat-charcoal/60 flex flex-col items-center justify-center text-tat-paper" aria-hidden="true">
                     <Images className="h-6 w-6 mb-1 opacity-80" />
                     <span className="text-lg font-display font-medium">+{remaining}</span>
                     <span className="text-[11px] opacity-70">more photos</span>
                   </div>
                 )}
-              </div>
+              </button>
             );
           })}
         </div>

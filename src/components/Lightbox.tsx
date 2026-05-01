@@ -24,14 +24,32 @@ export default function Lightbox({ images, index, title, onClose, onPrev, onNext
   // (mobile-feel) rather than snapping at touch-end.
   const [drag, setDrag] = useState({ x: 0, y: 0 });
   const startRef = useRef({ x: 0, y: 0, t: 0 });
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const previouslyFocused = useRef<HTMLElement | null>(null);
 
   useEffect(() => setMounted(true), []);
+
+  // Focus management: remember who had focus before open, move focus to
+  // the close button (sensible landing for keyboard users + announces the
+  // dialog to screen readers), restore on unmount. Without this, a
+  // keyboard user opening the lightbox would be left tabbing through the
+  // page underneath.
+  useEffect(() => {
+    if (!mounted) return;
+    previouslyFocused.current =
+      typeof document !== "undefined" ? (document.activeElement as HTMLElement | null) : null;
+    closeBtnRef.current?.focus({ preventScroll: true });
+    return () => {
+      previouslyFocused.current?.focus?.({ preventScroll: true });
+    };
+  }, [mounted]);
 
   const handleKey = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
       if (e.key === "ArrowLeft") onPrev();
       if (e.key === "ArrowRight") onNext();
+      if (e.key === "Home") onPrev(); // Lazy mapping — first photo is one ←-cycle from photo 1.
     },
     [onClose, onPrev, onNext]
   );
@@ -76,12 +94,23 @@ export default function Lightbox({ images, index, title, onClose, onPrev, onNext
   // Portal to body so no ancestor stacking context (sticky aside, motion
   // wrappers, transformed sections) can trap the lightbox inside a
   // sibling of the page.
+  // Respect prefers-reduced-motion: skip fade + spring transitions for
+  // visitors who've asked the OS to limit motion (vestibular triggers).
+  const prefersReduced =
+    typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const motionInitial = prefersReduced ? false : { opacity: 0 };
+  const motionAnimate = prefersReduced ? { opacity: 1 } : { opacity: 1 };
+  const motionExit = prefersReduced ? { opacity: 1 } : { opacity: 0 };
+
   return createPortal(
     <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        initial={motionInitial}
+        animate={motionAnimate}
+        exit={motionExit}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${title} — photo gallery`}
         className="fixed inset-0 z-[100] bg-tat-charcoal/95 backdrop-blur-sm select-none"
         onClick={onClose}
         onTouchStart={onTouchStart}
@@ -89,31 +118,38 @@ export default function Lightbox({ images, index, title, onClose, onPrev, onNext
         onTouchEnd={onTouchEnd}
         style={{ touchAction: "pan-y pinch-zoom" }}
       >
+        {/* Live region — announces the active photo for screen readers
+            without interrupting other speech (polite). */}
+        <div className="sr-only" aria-live="polite" aria-atomic="true">
+          Photo {index + 1} of {images.length}
+        </div>
+
         {/* Top bar — counter left, close right. Safe-area padding so the
             iOS notch + Dynamic Island don't crash into controls. */}
         <div
           className="absolute top-0 inset-x-0 z-20 flex items-center justify-between px-3 py-3"
           style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top))" }}
         >
-          <div className="text-xs text-tat-paper/70 tabular-nums px-3 py-1.5 rounded-full bg-tat-charcoal/40 backdrop-blur">
+          <div className="text-xs text-tat-paper/70 tabular-nums px-3 py-1.5 rounded-full bg-tat-charcoal/40 backdrop-blur" aria-hidden="true">
             {index + 1} <span className="opacity-50">/ {images.length}</span>
           </div>
           <button
+            ref={closeBtnRef}
             onClick={(e) => { e.stopPropagation(); onClose(); }}
-            className="h-11 w-11 rounded-full bg-tat-paper/10 hover:bg-tat-paper/20 active:bg-tat-paper/30 flex items-center justify-center text-tat-paper transition-colors"
-            aria-label="Close"
+            className="h-11 w-11 rounded-full bg-tat-paper/10 hover:bg-tat-paper/20 active:bg-tat-paper/30 flex items-center justify-center text-tat-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 focus-visible:ring-offset-tat-charcoal"
+            aria-label="Close gallery"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
 
         {/* Prev arrow — desktop only, mobile uses swipe */}
         <button
           onClick={(e) => { e.stopPropagation(); onPrev(); }}
-          className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-tat-paper/10 hover:bg-tat-paper/20 items-center justify-center text-tat-paper transition-colors"
-          aria-label="Previous"
+          className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-tat-paper/10 hover:bg-tat-paper/20 items-center justify-center text-tat-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 focus-visible:ring-offset-tat-charcoal"
+          aria-label="Previous photo"
         >
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="h-6 w-6" aria-hidden="true" />
         </button>
 
         {/* Image stage — three-up layout (prev offscreen-left, current
@@ -181,10 +217,10 @@ export default function Lightbox({ images, index, title, onClose, onPrev, onNext
         {/* Next arrow — desktop only */}
         <button
           onClick={(e) => { e.stopPropagation(); onNext(); }}
-          className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-tat-paper/10 hover:bg-tat-paper/20 items-center justify-center text-tat-paper transition-colors"
-          aria-label="Next"
+          className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-20 h-12 w-12 rounded-full bg-tat-paper/10 hover:bg-tat-paper/20 items-center justify-center text-tat-paper transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 focus-visible:ring-offset-tat-charcoal"
+          aria-label="Next photo"
         >
-          <ChevronRight className="h-6 w-6" />
+          <ChevronRight className="h-6 w-6" aria-hidden="true" />
         </button>
 
         {/* Bottom — dot indicators on mobile, thumbnail strip on desktop.
@@ -209,15 +245,23 @@ export default function Lightbox({ images, index, title, onClose, onPrev, onNext
           </div>
 
           {/* Desktop thumbnails */}
-          <div className="hidden md:flex gap-2 overflow-x-auto max-w-[90vw] no-scrollbar">
+          <div
+            role="tablist"
+            aria-label="Gallery thumbnails"
+            className="hidden md:flex gap-2 overflow-x-auto max-w-[90vw] no-scrollbar"
+          >
             {images.map((img, i) => (
               <button
                 key={i}
+                role="tab"
+                aria-selected={i === index}
+                aria-current={i === index ? "true" : undefined}
+                tabIndex={i === index ? 0 : -1}
                 onClick={(e) => { e.stopPropagation(); if (i < index) { for (let x = index; x > i; x--) onPrev(); } else { for (let x = index; x < i; x++) onNext(); } }}
-                className={`relative h-14 w-20 shrink-0 rounded-lg overflow-hidden transition-all ${
+                className={`relative h-14 w-20 shrink-0 rounded-lg overflow-hidden transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 focus-visible:ring-offset-tat-charcoal ${
                   i === index ? "ring-2 ring-tat-gold opacity-100" : "opacity-50 hover:opacity-80"
                 }`}
-                aria-label={`Photo ${i + 1}`}
+                aria-label={`Show photo ${i + 1} of ${images.length}`}
               >
                 <Image src={img} alt="" fill className="object-cover" sizes="80px" />
               </button>
