@@ -25,7 +25,7 @@ import BookingAside from "@/components/BookingAside";
 import JsonLd from "@/components/JsonLd";
 import {
   Clock, Star, MapPin, Check, X as XIcon, ChevronRight,
-  Hotel, Sparkles, Zap, Users, Flame,
+  Hotel, Sparkles, Zap, Users, Flame, Plane, Heart,
 } from "lucide-react";
 import PackagePixelEvent from "@/components/PackagePixelEvent";
 import PackageStickyBar from "@/components/PackageStickyBar";
@@ -204,6 +204,30 @@ export default async function PackageDetail({ params }: Props) {
               {pkg.trending && (
                 <span className="inline-flex items-center gap-1.5 bg-tat-paper/10 border border-tat-paper/20 text-tat-paper/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
                   <Flame className="h-3 w-3 text-tat-gold" />Trending
+                </span>
+              )}
+              {/* Source-city pickup — surfaced from ex-* tag. Tier-2/3 hint
+                  Veena/PYT don't compete on. */}
+              {(() => {
+                const exTag = pkg.tags?.find((t) => t.startsWith("ex-"));
+                if (!exTag) return null;
+                const city = exTag.slice(3).replace(/-/g, " ");
+                return (
+                  <span className="inline-flex items-center gap-1.5 bg-tat-teal/15 border border-tat-teal/40 text-tat-paper text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                    <Plane className="h-3 w-3 text-tat-paper" />Pickup ex {city}
+                  </span>
+                );
+              })()}
+              {/* Best-for tag — direct quote from Sanity bestFor field. */}
+              {pkg.bestFor && (
+                <span className="inline-flex items-center gap-1.5 bg-tat-paper/10 border border-tat-paper/20 text-tat-paper/80 text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                  <Heart className="h-3 w-3 text-tat-gold" />For {pkg.bestFor}
+                </span>
+              )}
+              {/* Founder-signed for the Private tier — derived from category. */}
+              {pkg.categories?.includes("Luxury") && (
+                <span className="inline-flex items-center gap-1.5 bg-tat-gold/25 border border-tat-gold/50 text-tat-paper text-[10px] uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                  <Sparkles className="h-3 w-3 text-tat-gold" />Founder-signed
                 </span>
               )}
               {pkg.categories?.map((c) => (

@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import {
   ChevronDown, ChevronLeft, ChevronRight, Mountain, Bed, Plane, Coffee, MapPin,
   Maximize2, Minimize2, Sparkles, MessageCircle, Image as ImageIcon,
+  Camera, Sunrise, Footprints, Clock, ArrowRightLeft, Lightbulb,
 } from "lucide-react";
 
 type Filter = "all" | "activities" | "stay" | "transfers" | "meals";
@@ -81,6 +82,69 @@ const PACE_META: Record<Pace, { label: string; tooltip: string; cls: string }> =
   moderate: { label: "Moderate", tooltip: "Balanced pace — sights and downtime.", cls: "text-tat-gold border-tat-gold/40" },
   packed:   { label: "Packed",   tooltip: "Full day — wear comfortable shoes.",   cls: "text-tat-orange border-tat-orange/40" },
 };
+
+type DayChip = { icon: React.ComponentType<{ className?: string }>; label: string; tone: "neutral" | "gold" | "success" | "orange" };
+
+// Derive secondary chips per day from whatever Sanity gives us. No
+// fabricated data — every chip maps to a real signal in description /
+// highlights / meals / transfer / stay. Order matters: most informative
+// chip first so it survives line-wrap on narrow viewports.
+function derivedChips(d: ItineraryDay): DayChip[] {
+  const chips: DayChip[] = [];
+  const desc = (d.description ?? "").toLowerCase();
+  const photos = d.highlights?.images?.length ?? 0;
+
+  // Photo day — three or more day-photos uploaded by content team.
+  if (photos >= 3) {
+    chips.push({ icon: Camera, label: `${photos} photos`, tone: "gold" });
+  }
+  // Multi-stop transfer — two place names connected with → / to / hyphen.
+  if (d.transfer?.value && /\s(?:to|→|-|–|\bvia\b)\s/i.test(d.transfer.value)) {
+    chips.push({ icon: ArrowRightLeft, label: "Multi-stop", tone: "neutral" });
+  }
+  // View moment — sunrise / sunset / panorama in the description.
+  if (/\b(sunrise|sunset|panorama|viewpoint|vantage|skyline|ghat\s*aarti)\b/.test(desc)) {
+    chips.push({ icon: Sunrise, label: "Golden hour", tone: "gold" });
+  }
+  // Walking-heavy — trek / hike / climb / steep keywords.
+  if (/\b(trek|trekking|hike|hiking|climb|steep|footpath|walk\s+up|ascent)\b/.test(desc)) {
+    chips.push({ icon: Footprints, label: "Walking day", tone: "orange" });
+  }
+  // Free time / leisure — explicit "at leisure" or "on your own".
+  if (/\b(at\s+leisure|on\s+your\s+own|free\s+afternoon|free\s+morning|free\s+day|relax\s+at\s+the\s+(hotel|resort|villa))\b/.test(desc)) {
+    chips.push({ icon: Clock, label: "Free time", tone: "success" });
+  }
+  // Optional add-on — language signalling skip-able activity.
+  if (/\b(optional|optional\s+excursion|optional\s+activity|optional\s+visit|skip)\b/.test(desc)) {
+    chips.push({ icon: Sparkles, label: "Skip / swap", tone: "neutral" });
+  }
+
+  return chips.slice(0, 3); // cap to keep the row tidy
+}
+
+const CHIP_TONE: Record<DayChip["tone"], string> = {
+  neutral: "bg-tat-charcoal/[0.04] text-tat-charcoal/70",
+  gold:    "bg-tat-gold/12 text-tat-gold",
+  success: "bg-tat-success-fg/10 text-tat-success-fg",
+  orange:  "bg-tat-orange/10 text-tat-orange",
+};
+
+function DayChips({ chips }: { chips: DayChip[] }) {
+  if (chips.length === 0) return null;
+  return (
+    <ul className="mt-3 flex flex-wrap items-center gap-1.5">
+      {chips.map((c, i) => (
+        <li
+          key={i}
+          className={`inline-flex items-center gap-1 h-6 px-2 rounded-full text-[11px] font-semibold ${CHIP_TONE[c.tone]}`}
+        >
+          <c.icon className="h-3 w-3" aria-hidden />
+          {c.label}
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 // Editorial serif numeral — big, italic, gold. The visual anchor for
 // each day in the timeline.
@@ -556,6 +620,7 @@ export default function PackageItinerary({
                 {d.subtitle && (
                   <p className="mt-1 text-[12px] text-tat-charcoal/55">{d.subtitle}</p>
                 )}
+                <DayChips chips={derivedChips(d)} />
                 <p className="mt-3 text-[14px] leading-[1.65] text-tat-charcoal/85 line-clamp-[8]">
                   {d.description}
                 </p>
@@ -675,6 +740,7 @@ export default function PackageItinerary({
                     {d.subtitle && (
                       <p className="mt-1.5 text-[13px] text-tat-charcoal/55">{d.subtitle}</p>
                     )}
+                    <DayChips chips={derivedChips(d)} />
                   </div>
                   <ChevronDown className="w-5 h-5 text-tat-charcoal/45 shrink-0 mt-2 transition group-open:rotate-180" aria-hidden />
                 </summary>
@@ -721,6 +787,50 @@ export default function PackageItinerary({
           );
         })}
       </ol>
+
+      {/* End-of-itinerary flexibility callout — appears under the day list
+          on desktop AND mobile. Not a card; uses a quiet rule + offset
+          composition so it reads as part of the editorial spread. */}
+      <aside className="mt-10 md:mt-14 grid grid-cols-[auto_1fr] gap-5 md:gap-7 pt-8 border-t border-tat-charcoal/10">
+        <Lightbulb className="h-7 w-7 text-tat-gold mt-0.5" aria-hidden />
+        <div className="max-w-[62ch]">
+          <p className="text-[11px] uppercase tracking-[0.22em] font-semibold text-tat-gold">
+            What you can change
+          </p>
+          <h3 className="mt-2 font-display text-[20px] md:text-[24px] font-medium text-tat-charcoal leading-tight text-balance">
+            None of this is locked in.{" "}
+            <span className="italic text-tat-gold font-light">Tell us what to flex.</span>
+          </h3>
+          <p className="mt-3 text-[14px] leading-[1.7] text-tat-charcoal/75">
+            Swap a hotel, add a city, slow down a packed day, request a private
+            guide for the highlights, push the start by a week, build in a buffer
+            day if elders are travelling. Every line in this plan is editable
+            before you pay — that&rsquo;s not a feature, it&rsquo;s how we plan.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            {packageTitle && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window === "undefined") return;
+                  try { window.sessionStorage.setItem("tt_aria_text_preload", `Looking at "${packageTitle}"${destinationName ? ` for ${destinationName}` : ""}. Tell me what's flexible — hotels, pace, dates, group size — and what trade-offs each change would create.`); } catch {}
+                  window.dispatchEvent(new CustomEvent("tt:aria-open"));
+                }}
+                className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-tat-gold/15 hover:bg-tat-gold/25 text-tat-gold text-[12px] font-semibold transition-colors"
+              >
+                <MessageCircle className="h-3.5 w-3.5" aria-hidden />
+                Ask Aria what to flex
+              </button>
+            )}
+            <span className="text-[12px] text-tat-charcoal/55">
+              Or WhatsApp the planner direct on{" "}
+              <a href="https://wa.me/918115999588" target="_blank" rel="noopener noreferrer" className="font-semibold text-tat-charcoal hover:text-tat-gold">
+                +91 81159 99588
+              </a>.
+            </span>
+          </div>
+        </div>
+      </aside>
 
       {/* End-of-trip flourish — typographic, not a card */}
       <div className="mt-10 md:mt-14 flex items-center justify-center gap-4">
