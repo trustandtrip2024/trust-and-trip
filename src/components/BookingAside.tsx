@@ -38,13 +38,19 @@ interface Props {
 // per-slug fake deadlines. Returns null when target absent / past.
 function useCountdown(target?: string) {
   const deadline = target ? new Date(target).getTime() : 0;
-  const [now, setNow] = useState<number>(() => Date.now());
+  // Defer Date.now() to a useEffect tick. Putting it in the useState
+  // initializer ran during SSR with the build-time clock and again on the
+  // client at hydration with a different clock — guaranteed mismatch +
+  // "text content did not match" warning + visible countdown swap on first
+  // paint. now=null returns null below until the first effect tick lands.
+  const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
     if (!deadline) return;
+    setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, [deadline]);
-  if (!deadline) return null;
+  if (!deadline || now === null) return null;
   const ms = deadline - now;
   if (ms <= 0) return null;
   const h = Math.floor(ms / 3_600_000);

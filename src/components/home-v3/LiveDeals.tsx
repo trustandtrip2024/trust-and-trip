@@ -78,12 +78,27 @@ function timeLeft(ms: number): { primary: string; urgent: boolean; over: boolean
   return { primary: `${d}d ${h}h`, urgent: false, over: false };
 }
 
-function CountdownPill({ deadlineMs }: { deadlineMs: number }) {
-  const [now, setNow] = useState<number>(() => Date.now());
+function CountdownPill({ deadlineMs }: { deadlineMs: number | null }) {
+  // Render a neutral placeholder on SSR + first-paint to avoid hydration
+  // mismatch. Date.now() in a useState initializer drifts between the SSR
+  // build and the client mount, which throws "text content did not match"
+  // warnings AND swaps the visible countdown number on every load. Once
+  // we're on the client AND the parent has provided a deadline, kick off
+  // the per-second tick.
+  const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
+    setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
+  if (now === null || deadlineMs === null) {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/95 text-tat-charcoal text-[10px] sm:text-[11px] font-semibold tabular-nums shadow-sm">
+        <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+        <span className="opacity-50">—h —m</span>
+      </span>
+    );
+  }
   const t = timeLeft(deadlineMs - now);
   if (t.over) {
     return (
@@ -108,7 +123,11 @@ function CountdownPill({ deadlineMs }: { deadlineMs: number }) {
 // Replaces the cramped 2-col grid — each deal gets full attention, the
 // price + countdown read clearly, and the whole card is one big tap target.
 function DealRowMobile({ deal }: { deal: Deal }) {
-  const [deadlineMs] = useState<number>(() => Date.now() + deal.endsInHours * 3600 * 1000);
+  // Deadline is computed on the client only — see CountdownPill comment.
+  const [deadlineMs, setDeadlineMs] = useState<number | null>(null);
+  useEffect(() => {
+    setDeadlineMs(Date.now() + deal.endsInHours * 3600 * 1000);
+  }, [deal.endsInHours]);
   const meta = KIND_META[deal.kind];
   const Icon = meta.icon;
   const savings = deal.originalPrice - deal.dealPrice;
@@ -200,7 +219,11 @@ function DealRowMobile({ deal }: { deal: Deal }) {
 // Compact image-led tile. Image dominates (4:3), price + meta sit on a thin
 // strip below. Used at md+ in the horizontal rail.
 function DealTile({ deal }: { deal: Deal }) {
-  const [deadlineMs] = useState<number>(() => Date.now() + deal.endsInHours * 3600 * 1000);
+  // Deadline is computed on the client only — see CountdownPill comment.
+  const [deadlineMs, setDeadlineMs] = useState<number | null>(null);
+  useEffect(() => {
+    setDeadlineMs(Date.now() + deal.endsInHours * 3600 * 1000);
+  }, [deal.endsInHours]);
   const meta = KIND_META[deal.kind];
   const Icon = meta.icon;
   const savings = deal.originalPrice - deal.dealPrice;
