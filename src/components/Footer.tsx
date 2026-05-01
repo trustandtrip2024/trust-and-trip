@@ -13,6 +13,8 @@ const EXPLORE = [
   { label: "All Destinations", href: "/destinations" },
   { label: "All Packages", href: "/packages" },
   { label: "Private (Bespoke Luxury)", href: "/private" },
+  { label: "Signature (Most Trips)", href: "/signature" },
+  { label: "Essentials (Pocket-Friendly)", href: "/essentials" },
   { label: "Experiences", href: "/experiences" },
   { label: "Offers & Deals", href: "/offers" },
   { label: "Plan a Trip (AI)", href: "/plan" },
