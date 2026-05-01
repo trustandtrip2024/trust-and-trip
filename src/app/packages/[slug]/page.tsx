@@ -27,11 +27,9 @@ import {
   Clock, Star, MapPin, Check, X as XIcon, ChevronRight,
   Hotel, Sparkles, Zap, Users, Flame,
 } from "lucide-react";
-import SharePackage from "@/components/SharePackage";
 import PackagePixelEvent from "@/components/PackagePixelEvent";
 import PackageStickyBar from "@/components/PackageStickyBar";
 import PackageViewTracker from "@/components/PackageViewTracker";
-import TourIncludesRibbon from "@/components/package-detail/TourIncludesRibbon";
 import QuickActionRow from "@/components/package-detail/QuickActionRow";
 import CallbackForm from "@/components/package-detail/CallbackForm";
 import CancellationLadder from "@/components/package-detail/CancellationLadder";
@@ -125,8 +123,6 @@ export default async function PackageDetail({ params }: Props) {
       return !Number.isNaN(t) && t > Date.now();
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
-
-  const waBook = `https://wa.me/${WA}?text=${encodeURIComponent(`Hi Trust and Trip! 🙏\n\nI'd like to book the *${pkg.title}* package (₹${pkg.price.toLocaleString("en-IN")}/person · ${pkg.duration}).\n\nPlease help me proceed.`)}`;
 
   return (
     <>
@@ -254,56 +250,24 @@ export default async function PackageDetail({ params }: Props) {
       <div className="container-custom py-8 md:py-12 pb-24 lg:pb-12">
         <div className="grid lg:grid-cols-[1fr_360px] gap-8 lg:gap-12 items-start">
 
-          {/* ── Left column ────────────────────────────────────── */}
+          {/* ── Left column ──────────────────────────────────────
+              Section order follows the customer journey:
+              Information → Visualization → Decision → Social proof →
+              Action → Utility. Avoid stacking trust blocks ahead of
+              the description; readers want to know what the trip IS
+              before being told why it's good. */}
           <div className="min-w-0 space-y-0">
 
-            {/* Why this package — 3-bullet elevator pitch + best-for tag.
-                seo.* fills in defaults when Sanity fields are blank so every
-                package ships crawlable summary copy + speakable answer block. */}
+            {/* ┌─── INFORMATION ─────────────────────────────────┐ */}
+
+            {/* Why this package — 3-bullet elevator pitch + best-for tag. */}
             <div id="package-summary" className="mb-8">
               <PackageWhyThis bullets={seo.whyThisPackage} bestFor={seo.bestFor} />
             </div>
 
-            {/* Tour includes ribbon + tour highlights — replaces the legacy
-                inline badge row. */}
-            <div className="mb-8">
-              <TourIncludesRibbon highlights={pkg.highlights} inclusions={pkg.inclusions} />
-            </div>
-
-            {/* Quick facts — group size, difficulty, visa. Returns null
-                when none of the Sanity fields are populated. */}
-            <div className="mb-8">
-              <PackageQuickFacts
-                groupSize={pkg.groupSize}
-                difficulty={pkg.difficulty}
-                visaInfo={visaInfo}
-                destinationName={pkg.destinationName}
-                isInternational={pkg.categories?.includes("International")}
-              />
-            </div>
-
-            {/* vs Aggregator — only renders when comparePrice is set in Sanity. */}
-            {pkg.comparePrice && pkg.comparePrice > pkg.price && (
-              <div className="mb-8">
-                <PackageVsAggregator
-                  ourPrice={pkg.price}
-                  theirPrice={pkg.comparePrice}
-                  packageTitle={pkg.title}
-                />
-              </div>
-            )}
-
-            {/* Quick actions — Send Itinerary / Download Brochure / Email Itinerary */}
-            <div className="mb-10">
-              <QuickActionRow
-                packageTitle={pkg.title}
-                packageSlug={pkg.slug}
-                packagePrice={pkg.price}
-                duration={pkg.duration}
-              />
-            </div>
-
-            {/* OVERVIEW */}
+            {/* Overview — narrative description + highlights grid.
+                Highlights live here only (TourIncludesRibbon was the
+                second copy and is gone). */}
             <section id="overview" className="mb-12 scroll-mt-32">
               <span className="eyebrow">Overview</span>
               <h2 className="heading-section mt-2 mb-5 text-balance">
@@ -311,8 +275,6 @@ export default async function PackageDetail({ params }: Props) {
                 <span className="italic text-tat-gold font-light"> unforgettable.</span>
               </h2>
               <p className="text-tat-charcoal/70 leading-relaxed mb-8">{pkg.description}</p>
-
-              {/* Highlights grid */}
               <div className="grid sm:grid-cols-2 gap-3">
                 {pkg.highlights.map((h, i) => (
                   <div key={i} className="flex items-start gap-3 bg-tat-paper rounded-2xl p-4 border border-tat-charcoal/5">
@@ -325,8 +287,21 @@ export default async function PackageDetail({ params }: Props) {
               </div>
             </section>
 
-            {/* ITINERARY */}
-            <section id="itinerary" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+            {/* Quick facts — group size, difficulty, visa. */}
+            <div className="mb-12">
+              <PackageQuickFacts
+                groupSize={pkg.groupSize}
+                difficulty={pkg.difficulty}
+                visaInfo={visaInfo}
+                destinationName={pkg.destinationName}
+                isInternational={pkg.categories?.includes("International")}
+              />
+            </div>
+
+            {/* ┌─── VISUALIZATION ───────────────────────────────┐ */}
+
+            {/* Itinerary — day-by-day. */}
+            <section id="itinerary" className="mb-10 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <PackageItinerary
                 packageTitle={pkg.title}
                 destinationName={pkg.destinationName}
@@ -342,25 +317,97 @@ export default async function PackageDetail({ params }: Props) {
               />
             </section>
 
-            {/* DECISION PROMPTS — six high-intent shopper questions wired
-                into Aria. Surfaces objections we'd otherwise lose to silent
-                drop-off. */}
-            <PackageDecisionPrompts
+            {/* Quick actions — Send / Download / Email itinerary.
+                Placed right after itinerary because that's when "share
+                this with my partner" intent peaks. */}
+            <div className="mb-12">
+              <QuickActionRow
+                packageTitle={pkg.title}
+                packageSlug={pkg.slug}
+                packagePrice={pkg.price}
+                duration={pkg.duration}
+              />
+            </div>
+
+            {/* Map — geography aids itinerary comprehension. */}
+            <PackageMap
+              coords={pkg.mapCoords}
+              imageOverride={pkg.mapImage}
               destinationName={pkg.destinationName}
-              packageTitle={pkg.title}
-              travelType={pkg.travelType}
-              bestMonthHint={bestMonths
-                .filter((m) => m.tag === "peak" || !m.tag)
-                .map((m) => ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m.month - 1])
-                .filter(Boolean)[0]}
             />
 
-            {/* INCLUSIONS */}
+            {/* Video — when Sanity has youtubeUrl set. */}
+            {pkg.youtubeUrl && (
+              <PackageVideo
+                url={pkg.youtubeUrl}
+                poster={pkg.heroImage}
+                title={pkg.title}
+              />
+            )}
+
+            {/* Hotels — multi-city array when set, single-hotel fallback.
+                Hotels round out the visualization phase: itinerary +
+                map + video + where-you-sleep. */}
+            {pkg.hotels && pkg.hotels.length > 0 ? (
+              <PackageHotels hotels={pkg.hotels} activities={pkg.activities} />
+            ) : (
+              <section id="hotel" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+                <span className="eyebrow">Where you&rsquo;ll stay</span>
+                <h2 className="heading-section mt-2 mb-6 text-balance">
+                  Comfort you&rsquo;ll
+                  <span className="italic text-tat-gold font-light"> remember.</span>
+                </h2>
+                <div className="bg-tat-cream/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
+                  <div className="h-14 w-14 rounded-2xl bg-tat-gold/15 flex items-center justify-center shrink-0">
+                    <Hotel className="h-7 w-7 text-tat-gold" />
+                  </div>
+                  <div>
+                    <h3 className="font-display text-h2 font-medium">{pkg.hotel.name}</h3>
+                    <div className="flex items-center gap-1 mt-1.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} />
+                      ))}
+                      <span className="text-xs text-tat-charcoal/50 ml-1">{hotelStars}-star accommodation</span>
+                    </div>
+                    <p className="mt-3 text-tat-charcoal/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
+                  </div>
+                </div>
+                {pkg.activities.length > 0 && (
+                  <div className="mt-6">
+                    <p className="text-xs uppercase tracking-[0.2em] text-tat-charcoal/50 mb-3 font-medium">Signature activities</p>
+                    <div className="flex flex-wrap gap-2">
+                      {pkg.activities.map((a) => (
+                        <span key={a} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal text-tat-paper text-xs">
+                          <span className="h-1.5 w-1.5 rounded-full bg-tat-gold" />{a}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* ┌─── DECISION ────────────────────────────────────┐ */}
+
+            {/* vs Aggregator — only when comparePrice is set. Anchors
+                price BEFORE the inclusions reveal so the savings feel
+                earned, not artificial. */}
+            {pkg.comparePrice && pkg.comparePrice > pkg.price && (
+              <div className="mb-12">
+                <PackageVsAggregator
+                  ourPrice={pkg.price}
+                  theirPrice={pkg.comparePrice}
+                  packageTitle={pkg.title}
+                />
+              </div>
+            )}
+
+            {/* Inclusions / Exclusions — single source. */}
             <section id="inclusions" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <span className="eyebrow">Inclusions & Exclusions</span>
               <h2 className="heading-section mt-2 mb-6 text-balance">
-                What's in — and
-                <span className="italic text-tat-gold font-light"> what's not.</span>
+                What&rsquo;s in — and
+                <span className="italic text-tat-gold font-light"> what&rsquo;s not.</span>
               </h2>
               <div className="grid md:grid-cols-2 gap-5">
                 <div className="bg-tat-paper rounded-2xl p-6 border border-tat-charcoal/5">
@@ -368,7 +415,7 @@ export default async function PackageDetail({ params }: Props) {
                     <div className="h-7 w-7 rounded-full bg-tat-gold/15 flex items-center justify-center">
                       <Check className="h-4 w-4 text-tat-gold" />
                     </div>
-                    <h3 className="font-medium text-tat-charcoal">What's included</h3>
+                    <h3 className="font-medium text-tat-charcoal">What&rsquo;s included</h3>
                   </div>
                   <ul className="space-y-2.5">
                     {pkg.inclusions.map((item, i) => (
@@ -398,8 +445,7 @@ export default async function PackageDetail({ params }: Props) {
               </div>
             </section>
 
-            {/* DEPARTURES — fixed batches with slot urgency. Renders only
-                when Sanity has upcoming dates set. */}
+            {/* Departures — fixed batches with slot urgency. */}
             {pkg.departures && pkg.departures.length > 0 && (
               <DeparturesGrid
                 departures={pkg.departures}
@@ -410,83 +456,31 @@ export default async function PackageDetail({ params }: Props) {
               />
             )}
 
-            {/* PRICE BREAKDOWN — per-occupancy rates. Returns null when
-                fewer than 2 fields populated. */}
+            {/* Price breakdown — per-occupancy rates. */}
             {pkg.priceBreakdown && (
               <PriceBreakdown breakdown={pkg.priceBreakdown} basePrice={pkg.price} />
             )}
 
-            {/* HOTEL — multi-city array when set, single-hotel fallback. */}
-            {pkg.hotels && pkg.hotels.length > 0 ? (
-              <PackageHotels hotels={pkg.hotels} activities={pkg.activities} />
-            ) : (
-              <section id="hotel" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
-                <span className="eyebrow">Where you&rsquo;ll stay</span>
-                <h2 className="heading-section mt-2 mb-6 text-balance">
-                  Comfort you&rsquo;ll
-                  <span className="italic text-tat-gold font-light"> remember.</span>
-                </h2>
-                <div className="bg-tat-cream/40 rounded-2xl p-6 md:p-8 flex items-start gap-5">
-                  <div className="h-14 w-14 rounded-2xl bg-tat-gold/15 flex items-center justify-center shrink-0">
-                    <Hotel className="h-7 w-7 text-tat-gold" />
-                  </div>
-                  <div>
-                    <h3 className="font-display text-h2 font-medium">{pkg.hotel.name}</h3>
-                    <div className="flex items-center gap-1 mt-1.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`h-3.5 w-3.5 ${i < hotelStars ? "fill-tat-gold text-tat-gold" : "text-tat-charcoal/15"}`} />
-                      ))}
-                      <span className="text-xs text-tat-charcoal/50 ml-1">{hotelStars}-star accommodation</span>
-                    </div>
-                    <p className="mt-3 text-tat-charcoal/70 leading-relaxed text-sm max-w-xl">{pkg.hotel.description}</p>
-                  </div>
-                </div>
+            {/* Cancellation ladder — clarifies risk right after pricing
+                so the next thought ("what if I have to cancel?") gets
+                answered before doubt compounds. */}
+            <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+              <CancellationLadder price={pkg.price} />
+            </section>
 
-                {/* Activities */}
-                {pkg.activities.length > 0 && (
-                  <div className="mt-6">
-                    <p className="text-xs uppercase tracking-[0.2em] text-tat-charcoal/50 mb-3 font-medium">Signature activities</p>
-                    <div className="flex flex-wrap gap-2">
-                      {pkg.activities.map((a) => (
-                        <span key={a} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-tat-charcoal text-tat-paper text-xs">
-                          <span className="h-1.5 w-1.5 rounded-full bg-tat-gold" />{a}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </section>
-            )}
-
-            {/* MAP — Sanity mapCoords or mapImage override. Returns null
-                when neither is set. */}
-            <PackageMap
-              coords={pkg.mapCoords}
-              imageOverride={pkg.mapImage}
-              destinationName={pkg.destinationName}
-            />
-
-            {/* VIDEO — only when Sanity has youtubeUrl set. */}
-            {pkg.youtubeUrl && (
-              <PackageVideo
-                url={pkg.youtubeUrl}
-                poster={pkg.heroImage}
-                title={pkg.title}
-              />
-            )}
-
-            {/* GUARANTEE BANNER — risk-reversal block right before the
-                social-proof section. Combined trust + reviews lifts
-                conversion more than either alone. */}
+            {/* Guarantee banner — risk-reversal directly before social
+                proof. Trust + reviews compound. */}
             <PackageGuaranteeBanner />
 
-            {/* REVIEWS */}
+            {/* ┌─── SOCIAL PROOF ────────────────────────────────┐ */}
+
+            {/* Reviews. */}
             <section id="reviews" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <div className="flex items-center justify-between gap-4 mb-6">
                 <div>
                   <span className="eyebrow">Traveler Reviews</span>
                   <h2 className="heading-section mt-2 text-balance">
-                    Travelers who've
+                    Travelers who&rsquo;ve
                     <span className="italic text-tat-gold font-light"> been there.</span>
                   </h2>
                 </div>
@@ -497,27 +491,39 @@ export default async function PackageDetail({ params }: Props) {
               </div>
             </section>
 
-            {/* GUEST PHOTOS — Sanity UGC filtered by destination match. */}
+            {/* Guest photos — UGC filtered by destination. */}
             <PackageGuestPhotos posts={guestPhotos} destinationName={pkg.destinationName} />
 
-            {/* CALLBACK FORM */}
+            {/* Decision prompts — six high-intent shopper questions wired
+                into Aria. Surfaces here, after social proof, when the
+                visitor is closest to deciding but may still have one
+                last objection to clear. */}
+            <PackageDecisionPrompts
+              destinationName={pkg.destinationName}
+              packageTitle={pkg.title}
+              travelType={pkg.travelType}
+              bestMonthHint={bestMonths
+                .filter((m) => m.tag === "peak" || !m.tag)
+                .map((m) => ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m.month - 1])
+                .filter(Boolean)[0]}
+            />
+
+            {/* ┌─── ACTION ──────────────────────────────────────┐ */}
+
+            {/* Callback form — primary capture for fence-sitters who
+                want a human voice before paying. */}
             <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <CallbackForm packageTitle={pkg.title} packageSlug={pkg.slug} />
             </section>
 
-            {/* UPGRADES AVAILABLE */}
+            {/* Upgrades — paid add-ons (private guide, hotel bumps). */}
             <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <UpgradesTabs />
             </section>
 
-            {/* CANCELLATION POLICY & PAYMENT TERMS */}
-            <section className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
-              <CancellationLadder price={pkg.price} />
-            </section>
+            {/* ┌─── UTILITY (post-decision detail) ──────────────┐ */}
 
-            {/* FAQS — Sanity-driven when set, synthesised from package +
-                destination data otherwise. FAQPage JSON-LD already emitted
-                up top via packageFaqLd(seo.faqs). */}
+            {/* FAQs — Sanity-driven when set, synthesised otherwise. */}
             <div id="package-faqs">
               <PackageFaqs
                 faqs={seo.faqs}
@@ -525,19 +531,17 @@ export default async function PackageDetail({ params }: Props) {
               />
             </div>
 
-            {/* BEST MONTHS — 12-tile climate strip. Falls back to a strip
-                synthesised from the destination's bestTimeToVisit string
-                when Sanity package leaves bestMonths blank. */}
+            {/* Best months strip. */}
             {bestMonths.length > 0 && (
               <BestMonthsStrip months={bestMonths} destinationName={pkg.destinationName} />
             )}
 
-            {/* PACKING LIST — collapsible categories. Null when not set. */}
+            {/* Packing list. */}
             {pkg.packingList && pkg.packingList.length > 0 && (
               <PackingList list={pkg.packingList} />
             )}
 
-            {/* NEED TO KNOW */}
+            {/* Need to know — destination-level practical advice. */}
             <section className="mb-4 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
               <NeedToKnowGrid destinationName={pkg.destinationName} />
             </section>
