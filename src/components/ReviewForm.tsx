@@ -23,6 +23,7 @@ export default function ReviewForm({ packageSlug, packageTitle }: Props) {
     review_body: "",
     travel_type: "",
     travel_date: "",
+    _hp: "", // honeypot
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,6 +72,17 @@ export default function ReviewForm({ packageSlug, packageTitle }: Props) {
 
       {open && (
         <form onSubmit={handleSubmit} className="px-6 pb-6 space-y-4 border-t border-tat-charcoal/6 pt-5">
+          {/* Honeypot — humans never fill, bots do. Server silently drops. */}
+          <input
+            type="text"
+            name="_hp"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            value={form._hp}
+            onChange={(e) => setForm({ ...form, _hp: e.target.value })}
+            style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+          />
           {/* Star rating */}
           <div>
             <label className="block text-[11px] uppercase tracking-[0.15em] text-tat-charcoal/50 mb-2">Your Rating *</label>
@@ -128,7 +140,7 @@ export default function ReviewForm({ packageSlug, packageTitle }: Props) {
               onChange={(e) => setForm({ ...form, review_body: e.target.value })}
               placeholder="Tell others about your experience — the highlights, hotels, food, service..."
               className="input-travel resize-none" />
-            <p className="text-[10px] text-tat-charcoal/35 mt-1">Min. 20 characters · {form.review_body.length} typed</p>
+            <p className="text-[11px] text-tat-charcoal/40 mt-1">Min. 20 characters · {form.review_body.length} typed</p>
           </Field>
 
           {errorMsg && <p className="text-sm text-tat-danger-fg">{errorMsg}</p>}

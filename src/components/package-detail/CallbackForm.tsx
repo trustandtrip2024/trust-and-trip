@@ -18,6 +18,7 @@ interface Props {
 export default function CallbackForm({ packageTitle, packageSlug }: Props) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [hp, setHp] = useState(""); // honeypot — bots fill, humans never touch
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -35,7 +36,8 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
       package_slug: packageSlug,
       source: "package_enquiry",
       message: `Callback requested for ${packageTitle}`,
-    }).catch(() => ({ ok: false, error: "Network error" } as const));
+      _hp: hp,
+    } as Parameters<typeof submitLead>[0]).catch(() => ({ ok: false, error: "Network error" } as const));
     setBusy(false);
     if (res.ok) setDone(true);
     else setErr(res.error ?? "Could not submit. Please try again.");
@@ -74,8 +76,20 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
       </div>
 
       <form onSubmit={submit} className="space-y-3">
+        {/* Honeypot — visually hidden + aria-hidden + tabIndex=-1. Bots
+            that auto-fill every input give themselves away. */}
+        <input
+          type="text"
+          name="_hp"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          value={hp}
+          onChange={(e) => setHp(e.target.value)}
+          style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+        />
         <div>
-          <label className="block text-[10px] uppercase tracking-[0.16em] text-tat-charcoal/55 dark:text-tat-paper/55 font-medium mb-1">
+          <label className="block text-[11px] uppercase tracking-[0.16em] text-tat-charcoal/55 dark:text-tat-paper/55 font-medium mb-1">
             Full name
           </label>
           <input
@@ -87,7 +101,7 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
           />
         </div>
         <div>
-          <label className="block text-[10px] uppercase tracking-[0.16em] text-tat-charcoal/55 dark:text-tat-paper/55 font-medium mb-1">
+          <label className="block text-[11px] uppercase tracking-[0.16em] text-tat-charcoal/55 dark:text-tat-paper/55 font-medium mb-1">
             Mobile no.
           </label>
           <div className="flex gap-2">
@@ -123,7 +137,7 @@ export default function CallbackForm({ packageTitle, packageSlug }: Props) {
             </>
           )}
         </button>
-        <p className="text-[10.5px] text-tat-charcoal/45 dark:text-tat-paper/50 text-center">
+        <p className="text-[11px] text-tat-charcoal/45 dark:text-tat-paper/50 text-center">
           By submitting you agree to our privacy policy. No spam, no card needed.
         </p>
       </form>

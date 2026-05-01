@@ -51,6 +51,11 @@ export async function POST(req: NextRequest) {
     }
     const body = await req.json();
 
+    // Honeypot — silent-200 so bots think they succeeded.
+    if (typeof body._hp === "string" && body._hp.trim().length > 0) {
+      return NextResponse.json({ success: true });
+    }
+
     const { package_slug, reviewer_name, reviewer_email, reviewer_location,
             rating, title, review_body, travel_type, travel_date, package_title } = body;
 
@@ -63,6 +68,16 @@ export async function POST(req: NextRequest) {
     }
     if (review_body.trim().length < 20) {
       return NextResponse.json({ error: "Review must be at least 20 characters." }, { status: 400 });
+    }
+    // Length caps — defense-in-depth on top of HTML maxLength.
+    if (
+      reviewer_name.length > 120 ||
+      reviewer_email.length > 200 ||
+      (reviewer_location && reviewer_location.length > 120) ||
+      (title && title.length > 200) ||
+      review_body.length > 4000
+    ) {
+      return NextResponse.json({ error: "Input too long." }, { status: 400 });
     }
 
     // Rate limit check — one submission per IP per package per 7 days

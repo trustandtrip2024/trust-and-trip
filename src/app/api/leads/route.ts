@@ -91,6 +91,29 @@ export async function POST(req: NextRequest) {
     }
     const body: Lead = await req.json();
     mark(`2. body parsed (source=${body.source ?? "(none)"})`);
+
+    // Honeypot — forms render a hidden input named `_hp` that humans never
+    // touch. Bots that scrape and auto-fill every input expose themselves
+    // by filling it. Return 200 so the bot believes its submit succeeded
+    // and stops retrying; nothing hits Supabase / Bitrix / Resend.
+    const hp = (body as unknown as Record<string, unknown>)._hp;
+    if (typeof hp === "string" && hp.trim().length > 0) {
+      mark("2a. honeypot triggered — silent drop");
+      return NextResponse.json({ success: true });
+    }
+
+    // Server-side length caps. Defense-in-depth on top of HTML maxLength.
+    // Any field that exceeds the cap is rejected outright — a polite
+    // bot/proxy hitting the API directly cannot bypass these.
+    const tooLong =
+      (body.name && body.name.length > 120) ||
+      (body.email && body.email.length > 200) ||
+      (body.phone && body.phone.length > 30) ||
+      (body.message && body.message.length > 4000);
+    if (tooLong) {
+      return NextResponse.json({ error: "Input too long." }, { status: 400 });
+    }
+
     const isIntent = INTENT_SOURCES.has(body.source ?? "");
 
     if (!isIntent) {

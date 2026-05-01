@@ -310,6 +310,13 @@ const basePackages: Package[] = [
     destinationSlug: "bali",
     destinationName: "Bali",
     price: 55000,
+    priceBreakdown: {
+      doubleSharing: 55000,
+      tripleSharing: 48000,
+      singleSupplement: 18000,
+      childUnder12: 28000,
+      childUnder5: 0,
+    },
     duration: "4N/5D",
     nights: 4,
     days: 5,
@@ -393,6 +400,12 @@ const basePackages: Package[] = [
     destinationSlug: "maldives",
     destinationName: "Maldives",
     price: 120000,
+    priceBreakdown: {
+      doubleSharing: 120000,
+      singleSupplement: 35000,
+      childUnder12: 60000,
+      childUnder5: 0,
+    },
     duration: "5N/6D",
     nights: 5,
     days: 6,
@@ -481,6 +494,13 @@ const basePackages: Package[] = [
     destinationSlug: "switzerland",
     destinationName: "Switzerland",
     price: 185000,
+    priceBreakdown: {
+      doubleSharing: 185000,
+      tripleSharing: 165000,
+      singleSupplement: 60000,
+      childUnder12: 95000,
+      childUnder5: 0,
+    },
     duration: "7N/8D",
     nights: 7,
     days: 8,
@@ -540,6 +560,11 @@ const basePackages: Package[] = [
     destinationSlug: "santorini",
     destinationName: "Santorini",
     price: 115000,
+    priceBreakdown: {
+      doubleSharing: 115000,
+      tripleSharing: 102000,
+      singleSupplement: 35000,
+    },
     duration: "5N/6D",
     nights: 5,
     days: 6,
@@ -590,6 +615,13 @@ const basePackages: Package[] = [
     destinationSlug: "dubai",
     destinationName: "Dubai",
     price: 68000,
+    priceBreakdown: {
+      doubleSharing: 68000,
+      tripleSharing: 60000,
+      singleSupplement: 20000,
+      childUnder12: 32000,
+      childUnder5: 0,
+    },
     duration: "4N/5D",
     nights: 4,
     days: 5,
@@ -639,6 +671,13 @@ const basePackages: Package[] = [
     destinationSlug: "kerala",
     destinationName: "Kerala",
     price: 42000,
+    priceBreakdown: {
+      doubleSharing: 42000,
+      tripleSharing: 38000,
+      singleSupplement: 12000,
+      childUnder12: 22000,
+      childUnder5: 0,
+    },
     duration: "6N/7D",
     nights: 6,
     days: 7,
@@ -936,9 +975,16 @@ export const whyChooseUs = [
   },
 ];
 
+// Source-of-truth for homepage trust stats. Numbers must be defensible
+// (each one should map to a real Supabase count, Sanity record count, or
+// verified Google figure). Update only when the underlying source moves.
+//   - travelers:    matches "8,000+ travelers" claim in Hero trustStrip
+//   - destinations: 36 (6 base + 30 extras) + Sanity-only entries → 60+ approx
+//   - rating:       Google Places aggregate (sourced via getSiteStats)
+//   - crafting:     founded 2019 → today
 export const stats = [
-  { value: "15K+", label: "Travelers" },
+  { value: "8,000+", label: "Happy Travelers" },
   { value: "60+", label: "Destinations" },
   { value: "4.9", label: "Avg. Rating" },
-  { value: "12yrs", label: "Crafting Journeys" },
+  { value: "Since 2019", label: "Crafting Journeys" },
 ];

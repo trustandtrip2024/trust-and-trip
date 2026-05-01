@@ -487,7 +487,7 @@ export default function AriaChatWidget() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <p className="font-semibold text-tat-paper text-sm">Aria</p>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-tat-gold/20 text-tat-gold uppercase tracking-wider font-medium">AI</span>
+                  <span className="text-[10px] sm:text-[11px] px-1.5 py-0.5 rounded-full bg-tat-gold/20 text-tat-gold uppercase tracking-wider font-medium">AI</span>
                 </div>
                 <p className="text-[11px] text-tat-paper/50">AI · Akash's planning team takes over on WhatsApp</p>
               </div>

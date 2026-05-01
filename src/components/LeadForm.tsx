@@ -20,6 +20,8 @@ interface FormValues {
   budget: string;
   travelDates: string;
   notes: string;
+  /** Honeypot — humans never touch, bots fill. Server drops on hit. */
+  _hp: string;
 }
 
 const WA_NUMBER = "918115999588";
@@ -77,7 +79,8 @@ export default function LeadForm({
         num_travellers: data.travelers,
         budget: data.budget,
         source,
-      }).catch(() => ({ ok: false } as const));
+        _hp: data._hp,
+      } as Parameters<typeof submitLead>[0]).catch(() => ({ ok: false } as const));
 
       if (result.ok) {
         eventId = result.eventId;
@@ -147,6 +150,15 @@ export default function LeadForm({
         </motion.div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Honeypot — visually hidden but in DOM. Server drops on hit. */}
+          <input
+            {...register("_hp")}
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ position: "absolute", left: "-10000px", width: 1, height: 1, opacity: 0 }}
+          />
           <div className="grid md:grid-cols-2 gap-5">
             <Field label="Full Name" error={errors.name?.message}>
               <input

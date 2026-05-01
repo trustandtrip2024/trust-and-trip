@@ -143,6 +143,26 @@ export default function Hero({
             your itinerary — free until you&apos;re sure. No card, no commitment.
           </p>
 
+          {/* ─── Mobile-only CTA ───────────────────────────────────
+              Desktop hero has the full search form (line 170+). On
+              mobile that form is hidden, so without this CTA there is
+              no primary conversion action above the fold. */}
+          <div className="md:hidden mt-5 flex flex-col gap-3 max-w-md">
+            <button
+              type="button"
+              onClick={() => openPlanner({})}
+              className="relative overflow-hidden inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl bg-gradient-to-r from-tat-teal via-tat-teal to-tat-teal-deep text-white font-semibold text-[15px] shadow-[0_14px_30px_-10px_rgba(14,124,123,0.85)] active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
+            >
+              <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-tt-shimmer" />
+              <Sparkles className="relative h-4 w-4" aria-hidden />
+              <span className="relative">Plan my trip — free</span>
+              <ArrowRight className="relative h-4 w-4" aria-hidden />
+            </button>
+            <p className="text-[11px] text-white/75 text-center">
+              2 mins · No card · Real planner replies in 24h
+            </p>
+          </div>
+
           {/* Risk-killers — three pills that close the "what does this
               cost me to try?" loop before the user reaches the form.
               Desktop only; mobile has its own trust strip in the footer. */}
