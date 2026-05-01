@@ -18,6 +18,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
 import { sendCapiEvents, ipFromRequest } from "@/lib/meta-capi";
+import { rateLimit, clientIp } from "@/lib/redis";
 import crypto from "crypto";
 
 const DEFAULT_PHONE = "918115999588";
@@ -49,6 +50,22 @@ const supabase =
     : null;
 
 export async function GET(req: NextRequest) {
+  // Rate limit per IP. Each call inserts a Supabase row AND fires a Meta
+  // CAPI Contact event (paid traffic optimizer signal). Without a guard,
+  // an attacker can run up the lead/CAPI counters and pollute reporting.
+  // 60/min/IP is generous for a real human clicking the WhatsApp button
+  // multiple times across pages.
+  const { allowed } = await rateLimit(`wa-click:${clientIp(req)}`, {
+    limit: 60,
+    windowSeconds: 60,
+  });
+  if (!allowed) {
+    // Still redirect — better UX than a 429 in the user's tab. We just
+    // skip the lead/CAPI write.
+    const fallback = `https://wa.me/${DEFAULT_PHONE}`;
+    return NextResponse.redirect(fallback, { status: 302 });
+  }
+
   const url = req.nextUrl;
   const phoneRaw = url.searchParams.get("phone")?.replace(/\D/g, "") || DEFAULT_PHONE;
   const callerMsg = url.searchParams.get("msg");

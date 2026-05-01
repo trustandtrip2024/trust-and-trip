@@ -3,6 +3,7 @@
 // Loaded by src/instrumentation.ts when NEXT_RUNTIME === "nodejs".
 
 import * as Sentry from "@sentry/nextjs";
+import { scrubEvent } from "@/lib/sentry-scrub";
 
 const dsn = process.env.SENTRY_DSN ?? process.env.NEXT_PUBLIC_SENTRY_DSN;
 
@@ -25,8 +26,11 @@ if (dsn) {
     // production stack traces but adds a small perf cost on each throw.
     includeLocalVariables: true,
     beforeSend(event) {
-      if (event.request?.headers) delete event.request.headers["cookie"];
-      return event;
+      // Scrub Authorization, Cookie, x-razorpay-signature, ?key=…, and
+      // common PII keys (email/phone/customer_*). sendDefaultPii is on for
+      // triage convenience; the scrubber removes the parts that should
+      // never leave the box.
+      return scrubEvent(event);
     },
   });
 }

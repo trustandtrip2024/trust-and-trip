@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 import { createClient } from "@supabase/supabase-js";
+import { rateLimit, clientIp } from "@/lib/redis";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -36,7 +37,18 @@ export async function GET(req: NextRequest) {
 // POST — submit a new review (with rate limiting)
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    const ip = clientIp(req);
+    // Per-package + per-IP throttle exists in the DB-level review_rate_limits
+    // table below, but it only stops the same IP from submitting twice for
+    // the same slug. An attacker can still flood reviews across many slugs.
+    // 10 reviews per IP per hour caps that.
+    const { allowed } = await rateLimit(`reviews-post:${ip}`, {
+      limit: 10,
+      windowSeconds: 3600,
+    });
+    if (!allowed) {
+      return NextResponse.json({ error: "Too many submissions." }, { status: 429 });
+    }
     const body = await req.json();
 
     const { package_slug, reviewer_name, reviewer_email, reviewer_location,

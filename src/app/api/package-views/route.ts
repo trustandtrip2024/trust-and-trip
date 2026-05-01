@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { rateLimit, clientIp } from "@/lib/redis";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,6 +12,18 @@ export const revalidate = 0;
 
 // POST /api/package-views — record a view for the given slug.
 export async function POST(req: NextRequest) {
+  // Per-IP rate limit. Without one, an attacker can inflate the
+  // "X people viewing this now" social proof signal arbitrarily and
+  // pollute the Supabase package_views table. 60/min is generous for a
+  // human bouncing between package pages.
+  const { allowed } = await rateLimit(`pkgview:${clientIp(req)}`, {
+    limit: 60,
+    windowSeconds: 60,
+  });
+  if (!allowed) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  }
+
   const { slug, sessionId } = await req.json().catch(() => ({}));
   if (!slug || !sessionId) {
     return NextResponse.json({ error: "slug + sessionId required" }, { status: 400 });

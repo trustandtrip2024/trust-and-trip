@@ -6,6 +6,7 @@
 // dangling pending transactions in Sentry.
 
 import * as Sentry from "@sentry/nextjs";
+import { scrubEvent } from "@/lib/sentry-scrub";
 
 const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
 
@@ -48,8 +49,7 @@ if (dsn) {
       "Network request failed",
     ],
     beforeSend(event) {
-      if (event.request?.headers) delete event.request.headers["cookie"];
-      return event;
+      return scrubEvent(event);
     },
   });
 }

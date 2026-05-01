@@ -1,7 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sanityClient, urlFor } from "@/lib/sanity";
+import { rateLimit, clientIp } from "@/lib/redis";
 
 export async function GET(req: NextRequest) {
+  // Rate limit per IP. Each call hits Sanity's API. The 5-min CDN cache
+  // shields hot queries but long-tail queries each cost a Sanity request,
+  // and an attacker can rotate the q param to defeat caching.
+  const { allowed } = await rateLimit(`search:${clientIp(req)}`, {
+    limit: 60,
+    windowSeconds: 60,
+  });
+  if (!allowed) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  }
+
   const q = req.nextUrl.searchParams.get("q")?.trim() ?? "";
   if (!q || q.length < 2) return NextResponse.json({ results: [] });
 

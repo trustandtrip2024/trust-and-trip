@@ -17,6 +17,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { callBitrix } from "@/lib/bitrix24";
+import { timingSafeEqualStrings } from "@/lib/timing-safe";
 
 export const dynamic = "force-dynamic";
 
@@ -88,8 +89,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "bad_body" }, { status: 400 });
   }
 
-  if (REVERSE_TOKEN && body.application_token !== REVERSE_TOKEN) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  // Fail closed in production. Earlier the gate was `if (REVERSE_TOKEN &&
+  // body.token !== REVERSE_TOKEN)` which left the route open to anonymous
+  // POSTs whenever the env var was unset (typo, missing in a preview, etc).
+  // Anyone who guessed the route URL could push fake Lead/Deal updates and
+  // poison the bookings/leads tables. Now: in prod, missing env -> 503;
+  // present env -> constant-time compare so the token can't be brute-forced
+  // by timing the response.
+  if (!REVERSE_TOKEN) {
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
+    }
+  } else {
+    const supplied = typeof body.application_token === "string" ? body.application_token : "";
+    if (!timingSafeEqualStrings(supplied, REVERSE_TOKEN)) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
   }
 
   const event = (body.event ?? "").toUpperCase();

@@ -5,6 +5,7 @@
 // so includeLocalVariables is intentionally absent here.
 
 import * as Sentry from "@sentry/nextjs";
+import { scrubEvent } from "@/lib/sentry-scrub";
 
 const dsn = process.env.SENTRY_DSN ?? process.env.NEXT_PUBLIC_SENTRY_DSN;
 
@@ -19,5 +20,8 @@ if (dsn) {
     tracesSampleRate: Number(process.env.SENTRY_TRACE_RATE ?? 0.05),
     sendDefaultPii: true,
     enableLogs: true,
+    beforeSend(event) {
+      return scrubEvent(event);
+    },
   });
 }

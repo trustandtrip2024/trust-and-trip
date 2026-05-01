@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { pushNewsletterSubscriber } from "@/lib/bitrix24";
+import { rateLimit, clientIp } from "@/lib/redis";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -70,6 +71,18 @@ async function sendWelcomeEmail(email: string, code: string, expiresAt: Date) {
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit per IP — newsletter signup fires Resend (cost), Bitrix
+    // (rate-limited externally), and inserts a coupon row. Without a guard,
+    // a single attacker can burn the daily Resend quota in a few minutes
+    // and pollute the subscriber list with junk.
+    const { allowed } = await rateLimit(`newsletter:${clientIp(req)}`, {
+      limit: 5,
+      windowSeconds: 3600,
+    });
+    if (!allowed) {
+      return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+    }
+
     const { email } = await req.json();
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
