@@ -48,6 +48,32 @@ export const destinationType = defineType({
       name: 'highlights', title: 'Highlights', type: 'array',
       of: [{ type: 'string' }],
     }),
+    defineField({
+      name: 'gallery',
+      title: 'Photo Gallery',
+      description:
+        'Lightbox gallery shown on the destination detail page. 5–10 photos works best. Falls back to the curated Unsplash set if empty.',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt text (accessibility)',
+              type: 'string',
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Caption (shown under photo in lightbox)',
+              type: 'string',
+            }),
+          ],
+        },
+      ],
+      options: { layout: 'grid' },
+    }),
   ],
   preview: {
     select: { title: 'name', subtitle: 'country', media: 'image' },

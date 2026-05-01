@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getDestinationBySlug, getPriorityDestinationSlugs, getPackagesByDestination } from "@/lib/sanity-queries";
 import type { Package } from "@/lib/data";
-import { DESTINATION_GALLERY } from "@/lib/gallery-images";
+import { resolveGallery } from "@/lib/gallery-images";
 import DestinationGallery from "@/components/DestinationGallery";
 import PackageSlider from "@/components/PackageSlider";
 import CTASection from "@/components/CTASection";
@@ -65,7 +65,7 @@ export default async function DestinationDetail({ params }: Props) {
   if (!destination) return notFound();
 
   const packages = await getPackagesByDestination(destination.slug);
-  const gallery = DESTINATION_GALLERY[destination.slug] ?? [];
+  const gallery = resolveGallery(destination.gallery, destination.slug, destination.heroImage);
   const isVisaFree = VISA_FREE_SLUGS.has(destination.slug);
 
   // Aggregate the package list into per-travel-type buckets so we can render

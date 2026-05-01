@@ -13,6 +13,15 @@ export type Destination = {
   thingsToDo: string[];
   highlights: string[];
   whisper?: string;
+  /** Optional Sanity-managed lightbox gallery. Empty/missing falls back to
+   *  the curated DESTINATION_GALLERY set in lib/gallery-images.ts. */
+  gallery?: GalleryPhoto[];
+};
+
+export type GalleryPhoto = {
+  url: string;
+  alt?: string;
+  caption?: string;
 };
 
 export type Package = {
@@ -102,6 +111,9 @@ export type Package = {
   mapCoords?: { lat?: number; lng?: number; zoom?: number; label?: string };
   mapImage?: string;
   brochureFile?: string;
+  /** Optional Sanity-managed lightbox gallery. Empty/missing falls back to
+   *  the destination's curated DESTINATION_GALLERY set. */
+  gallery?: GalleryPhoto[];
 };
 
 export type Experience = {

@@ -16,7 +16,7 @@ import {
   synthesiseVisaInfo,
 } from "@/lib/seo-package";
 import { getPackageStats } from "@/lib/package-stats";
-import { getGalleryImages } from "@/lib/gallery-images";
+import { resolveGallery } from "@/lib/gallery-images";
 import PackageItinerary from "@/components/PackageItinerary";
 import PackageGallery from "@/components/PackageGallery";
 import PackageSlider from "@/components/PackageSlider";
@@ -110,7 +110,7 @@ export default async function PackageDetail({ params }: Props) {
   const seo = fillPackageSeo(pkg, dest);
   const bestMonths = synthesiseBestMonths(pkg, dest);
   const visaInfo = synthesiseVisaInfo(pkg, dest);
-  const galleryImages = getGalleryImages(pkg.destinationSlug, pkg.heroImage);
+  const galleryImages = resolveGallery(pkg.gallery, pkg.destinationSlug, pkg.heroImage);
 
   // Real "vs OTA" reference price comes from Sanity comparePrice — only set
   // when the content team has verified savings against an aggregator. No

@@ -26,6 +26,32 @@ export const packageType = defineType({
     }),
     defineField({ name: 'image', title: 'Card Image', type: 'image', options: { hotspot: true } }),
     defineField({ name: 'heroImage', title: 'Hero Image', type: 'image', options: { hotspot: true } }),
+    defineField({
+      name: 'gallery',
+      title: 'Photo Gallery',
+      description:
+        'Lightbox gallery shown on the package detail page. 5–10 photos works best. Falls back to the destination\'s curated set if empty.',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Alt text (accessibility)',
+              type: 'string',
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Caption (shown under photo in lightbox)',
+              type: 'string',
+            }),
+          ],
+        },
+      ],
+      options: { layout: 'grid' },
+    }),
     defineField({ name: 'rating', type: 'number', validation: (R) => R.min(0).max(5) }),
     defineField({ name: 'reviews', title: 'Review Count', type: 'number' }),
     defineField({ name: 'description', type: 'text', rows: 3 }),

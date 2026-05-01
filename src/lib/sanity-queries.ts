@@ -48,6 +48,15 @@ export type SanityBlogPost = {
 
 // ─── Destination queries ───────────────────────────────────────────────────
 
+// Gallery projection — flatten Sanity image refs to direct asset URLs +
+// preserve alt/caption for lightbox UI. `width=2400&q=85` keeps the
+// large-screen render sharp without blowing the cdn.sanity.io budget.
+const GALLERY_PROJ = `gallery[]{
+  "url": asset->url + "?w=2400&q=85&auto=format&fit=max",
+  alt,
+  caption
+}`;
+
 const DESTINATIONS_QUERY = `*[_type == "destination"] | order(name asc) {
   "name": name,
   "slug": slug.current,
@@ -62,7 +71,8 @@ const DESTINATIONS_QUERY = `*[_type == "destination"] | order(name asc) {
   "idealDuration": idealDuration,
   "thingsToDo": thingsToDo,
   "highlights": highlights,
-  "whisper": whisper
+  "whisper": whisper,
+  ${GALLERY_PROJ}
 }`;
 
 const DESTINATION_BY_SLUG_QUERY = `*[_type == "destination" && slug.current == $slug][0] {
@@ -79,7 +89,8 @@ const DESTINATION_BY_SLUG_QUERY = `*[_type == "destination" && slug.current == $
   "idealDuration": idealDuration,
   "thingsToDo": thingsToDo,
   "highlights": highlights,
-  "whisper": whisper
+  "whisper": whisper,
+  ${GALLERY_PROJ}
 }`;
 
 type SanityDestination = Omit<Destination, "image" | "heroImage"> & {
@@ -169,7 +180,8 @@ const PACKAGE_FIELDS = `
   "packingList": packingList[]{ category, items },
   "mapCoords": mapCoords,
   "mapImage": mapImage.asset->url,
-  "brochureFile": brochureFile.asset->url
+  "brochureFile": brochureFile.asset->url,
+  ${GALLERY_PROJ}
 `;
 
 const PACKAGES_QUERY = `*[_type == "package"] | order(featured desc, rating desc) { ${PACKAGE_FIELDS} }`;

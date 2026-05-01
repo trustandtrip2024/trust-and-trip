@@ -236,3 +236,28 @@ export function getGalleryImages(destinationSlug: string, heroImage: string): st
   // Hero first, then destination gallery (deduplicated)
   return [heroImage, ...dest.filter((img) => img !== heroImage)].slice(0, 6);
 }
+
+/**
+ * Resolve the lightbox gallery for a destination or package detail page.
+ *
+ * Priority:
+ *   1. Sanity-managed `gallery[]` (whatever the editor uploaded — full
+ *      control, captions, ordering)
+ *   2. Curated DESTINATION_GALLERY (Unsplash fallback for destinations
+ *      we haven't shot yet)
+ *   3. Hero image only (last resort so the section never renders empty)
+ *
+ * Caps at 12 photos so the bento grid + thumbnail strip stay manageable
+ * on mobile.
+ */
+export function resolveGallery(
+  sanityGallery: { url: string }[] | undefined | null,
+  destinationSlug: string,
+  heroImage: string,
+): string[] {
+  if (sanityGallery && sanityGallery.length > 0) {
+    const urls = sanityGallery.map((g) => g.url).filter(Boolean);
+    if (urls.length > 0) return urls.slice(0, 12);
+  }
+  return getGalleryImages(destinationSlug, heroImage);
+}
