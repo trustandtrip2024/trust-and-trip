@@ -110,9 +110,12 @@ export default function Hero({
             <Star className="h-3 w-3 fill-tat-orange-soft text-tat-orange-soft" />
             Trust and Trip · Crafted travel since 2019
           </p>
+          {/* H1 stays in DOM for SEO + screen readers, but visually
+              hidden on mobile per request — the mobile hero leans on
+              the badge + bottom trust strip alone. */}
           <h1
             id="hero-h1"
-            className="mt-3 md:mt-4 font-display font-normal text-[28px] sm:text-[40px] md:text-[54px] lg:text-[62px] leading-[1.05] text-white text-balance"
+            className="sr-only sm:not-sr-only sm:mt-4 sm:font-display sm:font-normal sm:text-[40px] md:text-[54px] lg:text-[62px] sm:leading-[1.05] sm:text-white sm:text-balance"
           >
             Trips planned by a real human{" "}
             <em className="not-italic font-display italic text-tat-gold">
@@ -124,24 +127,6 @@ export default function Hero({
             your itinerary — free until you&apos;re sure. No card, no commitment.
           </p>
         </div>
-
-        {/* ─── Mobile: 1-tap pseudo-search that opens the planner sheet ──
-            Five stacked fields cost ~280px above the fold on mobile. The
-            sheet has the same fields and is more thumb-friendly anyway. */}
-        <button
-          type="button"
-          onClick={() => openPlanner()}
-          className="md:hidden mt-5 w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl bg-white/95 backdrop-blur-md shadow-[0_18px_40px_-18px_rgba(0,0,0,0.5)] ring-1 ring-white/10 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
-        >
-          <Search className="h-5 w-5 text-tat-gold shrink-0" aria-hidden />
-          <span className="flex-1 text-[14px] text-tat-charcoal/70">
-            Where to? Tap to plan in 2 mins
-          </span>
-          <span className="inline-flex items-center justify-center h-9 px-3 rounded-pill bg-tat-teal text-white text-[12px] font-semibold">
-            Plan
-            <ArrowRight className="ml-1 h-3.5 w-3.5" />
-          </span>
-        </button>
 
         {/* ─── Desktop: full search form ─────────────────────────── */}
         <form
