@@ -56,3 +56,6 @@ pnpm-lock.yaml
 
 # Local script caches (PDF extracts + ad-hoc verify helpers)
 /.tat-pdf-cache/
+
+# Editorial flagger output — regenerated on demand
+/editorial-flags.csv

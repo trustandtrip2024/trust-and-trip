@@ -60,21 +60,25 @@ export default function FounderNote() {
             </p>
             <Quote className="h-8 w-8 text-tat-gold mb-5 opacity-60" />
             <h2 className="heading-section leading-[1.15] text-tat-charcoal text-balance">
-              We started Trust and Trip because{" "}
+              Every itinerary{" "}
               <span className="italic text-tat-gold font-light">
-                travel shouldn&apos;t feel transactional.
+                touches my desk before it ships.
               </span>
             </h2>
             <div className="mt-6 space-y-4 text-tat-charcoal/70 text-base leading-relaxed max-w-2xl">
               <p>
-                Every itinerary goes through a real human — not a template. We ask
-                about your anniversary, your grandma&apos;s knee, whether you&apos;d
-                rather sleep in a homestay or a palace. And we adjust.
+                We started Trust and Trip because travel shouldn&apos;t feel transactional.
+                Whether you&apos;re booking a ₹15,000 Char Dham yatra or a ₹3-lakh Seychelles honeymoon,
+                a real human builds your plan — not a template, not a chatbot, not a comparison engine.
               </p>
               <p>
-                No tour guide gang-tows, no forced shopping stops, no hidden charges.
-                Just a trip that fits — crafted with care, backed by people who pick
-                up the phone at 2am.
+                Pocket-friendly to private, India to 30+ countries, solo to multi-gen family —
+                same agency, same standard. We work with our own ground partners, run our own
+                pilgrim concierge with doctor on call, and pick up the phone at 2 am if your
+                trip needs us. That&apos;s the promise.
+              </p>
+              <p className="text-tat-charcoal/85 italic font-medium">
+                — Akash Mishra
               </p>
             </div>
             <div className="mt-8 flex items-center gap-5 flex-wrap">
