@@ -3,8 +3,9 @@ import PackageCardSkeleton from "@/components/PackageCardSkeleton";
 export default function DestinationDetailLoading() {
   return (
     <>
-      {/* Hero skeleton */}
-      <div className="h-[85vh] min-h-[600px] w-full bg-tat-charcoal/20 animate-pulse" />
+      {/* Hero skeleton — soft cream gradient instead of dark charcoal so
+          the loading state reads as "loading" not "broken page". */}
+      <div className="h-[85vh] min-h-[600px] w-full bg-gradient-to-br from-tat-cream via-tat-paper to-tat-cream animate-pulse" />
 
       {/* Overview skeleton */}
       <section className="py-20 md:py-24">

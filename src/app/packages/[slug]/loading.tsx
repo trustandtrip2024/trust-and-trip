@@ -1,8 +1,9 @@
 export default function PackageDetailLoading() {
   return (
     <>
-      {/* Hero skeleton */}
-      <div className="relative h-[80vh] min-h-[560px] w-full bg-tat-charcoal/20 animate-pulse" />
+      {/* Hero skeleton — soft cream gradient instead of dark charcoal so
+          the loading state reads as "loading" not "broken page". */}
+      <div className="relative h-[80vh] min-h-[560px] w-full bg-gradient-to-br from-tat-cream via-tat-paper to-tat-cream animate-pulse" />
 
       {/* Content skeleton */}
       <section className="py-16 md:py-20">
