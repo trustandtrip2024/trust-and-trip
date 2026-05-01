@@ -12,6 +12,7 @@
 // only the early-warning system.
 
 import { NextRequest, NextResponse } from "next/server";
+import { withCronLog } from "@/lib/cron-log";
 import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
@@ -43,7 +44,7 @@ interface CreativeStats {
 
 import { assertCronAuth } from "@/lib/cron-auth";
 
-export async function GET(req: NextRequest) {
+async function _runCron(req: NextRequest) {
   const denial = assertCronAuth(req);
   if (denial) return denial;
 
@@ -173,4 +174,8 @@ async function notifyTelegram(best: CreativeStats, flagged: CreativeStats[]) {
       disable_web_page_preview: true,
     }),
   }).catch((e) => console.error("[refresh-creatives] telegram failed", e));
+}
+
+export async function GET(req: NextRequest) {
+  return withCronLog("/api/cron/refresh-creatives", () => _runCron(req));
 }

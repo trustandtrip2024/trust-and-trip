@@ -5,6 +5,7 @@
 // tier-A leads as an action item. Email goes to FOUNDER_EMAIL via Resend.
 
 import { NextRequest, NextResponse } from "next/server";
+import { withCronLog } from "@/lib/cron-log";
 import { createClient } from "@supabase/supabase-js";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +37,7 @@ interface BookingRow {
 
 import { assertCronAuth } from "@/lib/cron-auth";
 
-export async function GET(req: NextRequest) {
+async function _runCron(req: NextRequest) {
   const denial = assertCronAuth(req);
   if (denial) return denial;
 
@@ -170,4 +171,8 @@ export async function GET(req: NextRequest) {
     unrespondedTierA,
     alerts: alerts.length,
   });
+}
+
+export async function GET(req: NextRequest) {
+  return withCronLog("/api/cron/founder-digest", () => _runCron(req));
 }

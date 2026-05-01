@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCronLog } from "@/lib/cron-log";
 import { createClient } from "@supabase/supabase-js";
 import { buildCartResumeUrl } from "@/lib/cart-resume";
 
@@ -43,7 +44,7 @@ export const dynamic = "force-dynamic";
 
 import { assertCronAuth } from "@/lib/cron-auth";
 
-export async function GET(req: NextRequest) {
+async function _runCron(req: NextRequest) {
   const denial = assertCronAuth(req);
   if (denial) return denial;
 
@@ -284,4 +285,8 @@ async function sendCartAbandonWhatsApp(opts: {
     console.error("[cart-abandon WA] send failed", e);
     return false;
   }
+}
+
+export async function GET(req: NextRequest) {
+  return withCronLog("/api/cron/cart-abandonment", () => _runCron(req));
 }

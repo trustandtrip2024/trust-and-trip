@@ -9,6 +9,7 @@
 // Auth: Vercel Cron sends Authorization: Bearer <CRON_SECRET>.
 
 import { NextRequest, NextResponse } from "next/server";
+import { withCronLog } from "@/lib/cron-log";
 import { createClient } from "@supabase/supabase-js";
 import { alertLead } from "@/lib/lead-alerts";
 import { createLeadTask, pushLead } from "@/lib/bitrix24";
@@ -26,7 +27,7 @@ const SENIOR_PLANNER_ID = Number(process.env.BITRIX_SENIOR_PLANNER_ID ?? 1);
 
 import { assertCronAuth } from "@/lib/cron-auth";
 
-export async function GET(req: NextRequest) {
+async function _runCron(req: NextRequest) {
   const denial = assertCronAuth(req);
   if (denial) return denial;
 
@@ -109,4 +110,8 @@ export async function GET(req: NextRequest) {
     escalated,
     cutoff,
   });
+}
+
+export async function GET(req: NextRequest) {
+  return withCronLog("/api/cron/escalate-stale-leads", () => _runCron(req));
 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCronLog } from "@/lib/cron-log";
 import { createClient } from "@supabase/supabase-js";
 
 // Runs daily. Sends a post-trip review request 3 days after the traveller's
@@ -53,7 +54,7 @@ export const dynamic = "force-dynamic";
 
 import { assertCronAuth } from "@/lib/cron-auth";
 
-export async function GET(req: NextRequest) {
+async function _runCron(req: NextRequest) {
   const denial = assertCronAuth(req);
   if (denial) return denial;
 
@@ -132,4 +133,8 @@ export async function GET(req: NextRequest) {
     sent,
     resend_configured: !!resend,
   });
+}
+
+export async function GET(req: NextRequest) {
+  return withCronLog("/api/cron/review-request", () => _runCron(req));
 }

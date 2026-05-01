@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCronLog } from "@/lib/cron-log";
 
 export const dynamic = "force-dynamic";
 import { createClient } from "@supabase/supabase-js";
@@ -32,7 +33,7 @@ interface SavedTrip {
 
 import { assertCronAuth } from "@/lib/cron-auth";
 
-export async function GET(req: NextRequest) {
+async function _runCron(req: NextRequest) {
   const denial = assertCronAuth(req);
   if (denial) return denial;
 
@@ -130,4 +131,8 @@ export async function GET(req: NextRequest) {
     alerted,
     resend_configured: !!resendKey,
   });
+}
+
+export async function GET(req: NextRequest) {
+  return withCronLog("/api/cron/price-drops", () => _runCron(req));
 }
