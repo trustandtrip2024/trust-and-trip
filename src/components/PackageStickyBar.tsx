@@ -5,9 +5,9 @@ import {
   MessageCircle, ArrowRight, ChevronUp, Tag, Users, Clock, Star,
   ShieldCheck,
 } from "lucide-react";
-import Link from "next/link";
 import { captureIntent } from "@/lib/capture-intent";
 import Price from "./Price";
+import PackageQuoteModal from "./PackageQuoteModal";
 
 interface Props {
   price: number;
@@ -56,6 +56,7 @@ export default function PackageStickyBar({
   limitedSlots, enquiredCount, nextDepartureDate, nextDepartureSlots,
 }: Props) {
   const [visible, setVisible] = useState(false);
+  const [quoteOpen, setQuoteOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 480);
@@ -79,13 +80,22 @@ export default function PackageStickyBar({
     `Hi Trust and Trip! 🙏\n\nI'd like to book the *${title}* package (₹${price.toLocaleString("en-IN")}/person · ${duration}).\n\nPlease help me proceed.`
   )}`;
 
-  if (!visible) return null;
-
   const hasSavings = !!originalPrice && originalPrice > price;
   const savings = hasSavings ? originalPrice! - price : 0;
   const savingsPct = hasSavings ? Math.round((savings / originalPrice!) * 100) : 0;
 
   return (
+    <>
+      {/* Modal kept outside the visibility gate so it stays mounted
+          even if the user scrolls the page while the modal is open. */}
+      <PackageQuoteModal
+        open={quoteOpen}
+        onOpenChange={setQuoteOpen}
+        packageTitle={title}
+        packageSlug={slug}
+      />
+
+      {!visible ? null : (
     <div
       className="fixed bottom-0 inset-x-0 z-40 lg:hidden animate-slide-up-soft"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
@@ -181,18 +191,20 @@ export default function PackageStickyBar({
             <MessageCircle className="h-[19px] w-[19px] fill-white text-white" />
           </a>
 
-          {/* Primary CTA — gold pill with shimmer + label + subtext.
-              Two-line stack so the secondary "free · 2 mins" reduces
-              perceived friction without taking another row. */}
-          <Link
-            href={`/customize-trip?package=${slug}`}
-            onClick={() =>
+          {/* Primary CTA — opens the inline quote modal instead of
+              navigating to /customize-trip. Keeps the user on the
+              detail page so the form sits over the package they were
+              evaluating, not a fresh page they can bounce from. */}
+          <button
+            type="button"
+            onClick={() => {
               captureIntent("book_now_click", {
                 package_title: title,
                 package_slug: slug,
                 note: `Sticky bar · ₹${price.toLocaleString("en-IN")} · ${duration}`,
-              })
-            }
+              });
+              setQuoteOpen(true);
+            }}
             className="relative overflow-hidden flex-[1.4] inline-flex items-center justify-center gap-2 h-12 px-3 rounded-full bg-gradient-to-r from-tat-gold via-tat-gold to-tat-gold/85 text-tat-charcoal font-semibold text-[13px] shadow-[0_8px_22px_-6px_rgba(200,147,42,0.7)] active:scale-[0.97] transition whitespace-nowrap group"
           >
             {/* Shimmer overlay — subtle gold sheen sweeping across the
@@ -212,7 +224,7 @@ export default function PackageStickyBar({
                 Free · 2 mins
               </span>
             </span>
-          </Link>
+          </button>
 
           {/* Back-to-top — small ghost button */}
           <button
@@ -226,6 +238,8 @@ export default function PackageStickyBar({
         </div>
       </div>
     </div>
+      )}
+    </>
   );
 }
 
