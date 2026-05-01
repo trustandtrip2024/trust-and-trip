@@ -52,12 +52,6 @@ function mealCount(m?: ItineraryDay["meals"]) {
 
 type Pace = "arrival" | "travel" | "light" | "moderate" | "packed";
 
-// Derive a per-day intensity badge from whatever Sanity ships back. The
-// goal is a single honest signal: "is this day busy or breathing?". The
-// classifier prefers explicit signals (transfers, highlights, meal density,
-// description size) before falling back to "moderate" so opinionated days
-// always over-ride the default. Title heuristics catch arrival/departure
-// days the data sometimes mislabels as activity-light.
 function classifyPace(d: ItineraryDay, idx: number, total: number): Pace {
   const titleLc = d.title.toLowerCase();
   const isFirst = idx === 0;
@@ -81,12 +75,25 @@ function classifyPace(d: ItineraryDay, idx: number, total: number): Pace {
 }
 
 const PACE_META: Record<Pace, { label: string; tooltip: string; cls: string }> = {
-  arrival:  { label: "Arrival",  tooltip: "Land, settle in, gentle start.",         cls: "bg-tat-cream-warm/70 text-tat-charcoal/70" },
-  travel:   { label: "Travel",   tooltip: "Mostly on the move between cities.",     cls: "bg-tat-cream-warm/70 text-tat-charcoal/70" },
-  light:    { label: "Light",    tooltip: "Easy day — room to breathe.",            cls: "bg-tat-success-fg/12 text-tat-success-fg" },
-  moderate: { label: "Moderate", tooltip: "Balanced pace — sights and downtime.",   cls: "bg-tat-gold/15 text-tat-gold" },
-  packed:   { label: "Packed",   tooltip: "Full day — wear comfortable shoes.",     cls: "bg-tat-orange/15 text-tat-orange" },
+  arrival:  { label: "Arrival",  tooltip: "Land, settle in, gentle start.",       cls: "text-tat-charcoal/60 border-tat-charcoal/15" },
+  travel:   { label: "Travel",   tooltip: "Mostly on the move between cities.",   cls: "text-tat-charcoal/60 border-tat-charcoal/15" },
+  light:    { label: "Light",    tooltip: "Easy day — room to breathe.",          cls: "text-tat-success-fg border-tat-success-fg/30" },
+  moderate: { label: "Moderate", tooltip: "Balanced pace — sights and downtime.", cls: "text-tat-gold border-tat-gold/40" },
+  packed:   { label: "Packed",   tooltip: "Full day — wear comfortable shoes.",   cls: "text-tat-orange border-tat-orange/40" },
 };
+
+// Editorial serif numeral — big, italic, gold. The visual anchor for
+// each day in the timeline.
+function DayNumeral({ n }: { n: number }) {
+  return (
+    <span
+      aria-hidden
+      className="font-display italic font-light text-tat-gold leading-none select-none tracking-tight"
+    >
+      <span className="block text-[56px] md:text-[88px]">{String(n).padStart(2, "0")}</span>
+    </span>
+  );
+}
 
 export default function PackageItinerary({
   days,
@@ -100,14 +107,10 @@ export default function PackageItinerary({
   const [allOpen, setAllOpen] = useState<boolean | null>(null);
   const dayRefs = useRef<Map<number, HTMLLIElement>>(new Map());
   const trackRef = useRef<HTMLDivElement>(null);
-  // Mobile carousel — one day per viewport-width slide. Tracks which slide
-  // is currently snapped so the dot row + counter highlight the right day.
   const [mobileDay, setMobileDay] = useState(0);
   const mobileRailRef = useRef<HTMLOListElement>(null);
   const mobileSlideRefs = useRef<Map<number, HTMLLIElement>>(new Map());
 
-  // Aggregate trip stats — surface counts before the day-by-day list so
-  // skim-readers see the shape of the trip without expanding any card.
   const totals = useMemo(() => {
     let stays = 0, transfers = 0, activities = 0, mealsCt = 0, photos = 0;
     days.forEach((d) => {
@@ -131,9 +134,6 @@ export default function PackageItinerary({
     });
   }, [days, filter]);
 
-  // Track which day's card is closest to the viewport top so the day-jump
-  // pill highlights it. IntersectionObserver with a top-band rootMargin so
-  // the active state flips as cards cross the upper third of the screen.
   useEffect(() => {
     if (typeof IntersectionObserver === "undefined") return;
     const obs = new IntersectionObserver(
@@ -152,7 +152,6 @@ export default function PackageItinerary({
     return () => obs.disconnect();
   }, [filtered]);
 
-  // Keep the active day-pill scrolled into view inside the horizontal track.
   useEffect(() => {
     if (activeDay === null) return;
     const track = trackRef.current;
@@ -171,14 +170,10 @@ export default function PackageItinerary({
     if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY - 110;
     window.scrollTo({ top, behavior: "smooth" });
-    // Force-open the details element so the user lands on visible content.
     const details = el.querySelector<HTMLDetailsElement>("details");
     if (details) details.open = true;
   }
 
-  // Mobile carousel — observe which slide is currently snapped and update
-  // the active dot + counter. rootMargin tightens the trigger so it only
-  // fires when a slide is meaningfully centered in the rail.
   useEffect(() => {
     const rail = mobileRailRef.current;
     if (!rail || typeof IntersectionObserver === "undefined") return;
@@ -200,7 +195,6 @@ export default function PackageItinerary({
   function gotoMobileDay(idx: number) {
     const slide = mobileSlideRefs.current.get(idx);
     if (!slide) return;
-    // Respect prefers-reduced-motion — instant snap instead of smooth.
     const prefersReduced =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -209,17 +203,11 @@ export default function PackageItinerary({
       inline: "center",
       block: "nearest",
     });
-    // Move focus into the slide so screen readers announce the new day's
-    // heading. Without this, keyboard users would still be focused on the
-    // arrow button while the visual context shifted underneath them.
     requestAnimationFrame(() => {
       slide.focus({ preventScroll: true });
     });
   }
 
-  // Keyboard ←/→ on the carousel rail or any focused slide navigates days.
-  // Native scroll-snap covers wheel + touch; this adds keyboard parity for
-  // visitors using assistive tech or just preferring keys over swipes.
   function onMobileRailKeyDown(e: React.KeyboardEvent) {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -236,8 +224,6 @@ export default function PackageItinerary({
     }
   }
 
-  // Bulk expand/collapse — flips every <details> element inside the day refs.
-  // Tracks the last action via allOpen so the toggle button label can swap.
   function toggleAll() {
     const next = !(allOpen ?? false);
     dayRefs.current.forEach((li) => {
@@ -247,9 +233,6 @@ export default function PackageItinerary({
     setAllOpen(next);
   }
 
-  // Hand a specific day's question to Aria via sessionStorage preload.
-  // The chat widget reads "tt_aria_text_preload" on the next "tt:aria-open"
-  // event and stuffs it into the input box.
   function askAriaAboutDay(d: ItineraryDay) {
     if (typeof window === "undefined") return;
     const ctx = packageTitle
@@ -262,64 +245,119 @@ export default function PackageItinerary({
     window.dispatchEvent(new CustomEvent("tt:aria-open"));
   }
 
-  return (
-    <section className="tt-card tt-card-p" aria-labelledby="itinerary-title">
-      {/* Header */}
-      <p className="tt-eyebrow">Day-by-day Itinerary</p>
-      <h2 id="itinerary-title" className="tt-title">
-        Your journey, <em>unfolded.</em>
-      </h2>
+  // Inline meta line for a day — text-led, icon-prefixed, no boxes.
+  // Replaces the boxed grid that used to live on the desktop card.
+  function MetaRow({ d }: { d: ItineraryDay }) {
+    const items: React.ReactNode[] = [];
 
-      {/* Trip totals — desktop only. Mobile shows just day count inside
-          the carousel header to keep vertical space for actual content. */}
-      <div className="mt-4 hidden md:flex md:flex-wrap md:items-center md:gap-2">
-        <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-gold/15 text-tat-gold text-[11px] font-semibold">
-          <Sparkles className="h-3 w-3" />
+    if (d.transfer && (filter === "all" || filter === "transfers")) {
+      items.push(
+        <span key="transfer" className="inline-flex items-center gap-1.5">
+          <Plane className="h-3.5 w-3.5 text-tat-gold shrink-0" aria-hidden />
+          <span className="font-medium text-tat-charcoal">{d.transfer.value}</span>
+          {d.transfer.meta && <span className="text-tat-charcoal/55">· {d.transfer.meta}</span>}
+        </span>,
+      );
+    }
+    if (d.stay && (filter === "all" || filter === "stay")) {
+      items.push(
+        <span key="stay" className="inline-flex items-center gap-1.5">
+          <Bed className="h-3.5 w-3.5 text-tat-gold shrink-0" aria-hidden />
+          <span className="font-medium text-tat-charcoal">{d.stay.value}</span>
+          {d.stay.meta && <span className="text-tat-charcoal/55">· {d.stay.meta}</span>}
+        </span>,
+      );
+    }
+    if (d.meals && (filter === "all" || filter === "meals")) {
+      items.push(
+        <span key="meals" className="inline-flex items-center gap-1.5">
+          <Coffee className="h-3.5 w-3.5 text-tat-gold shrink-0" aria-hidden />
+          <span className="text-tat-charcoal/85">{mealsLine(d.meals)}</span>
+        </span>,
+      );
+    }
+    if (d.highlights && (filter === "all" || filter === "activities")) {
+      items.push(
+        <span key="hl" className="inline-flex items-center gap-1.5">
+          <MapPin className="h-3.5 w-3.5 text-tat-gold shrink-0" aria-hidden />
+          <span className="text-tat-charcoal/85">{d.highlights.value}</span>
+        </span>,
+      );
+    }
+
+    if (items.length === 0) return null;
+
+    return (
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px]">
+        {items.map((it, i) => (
+          <span key={i} className="inline-flex items-center gap-1.5">
+            {it}
+          </span>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <section className="py-2" aria-labelledby="itinerary-title">
+      {/* Header — editorial, no card. */}
+      <p className="eyebrow">Day-by-day Itinerary</p>
+      <h2 id="itinerary-title" className="heading-section mt-2 mb-3 text-balance">
+        Your journey,{" "}
+        <span className="italic text-tat-gold font-light">unfolded.</span>
+      </h2>
+      <p className="text-[13px] text-tat-charcoal/55 max-w-2xl">
+        {days.length}-day plan with pace, stay, transfers and meals on each day. Swap, slow down,
+        or add anything — every day is editable before you pay.
+      </p>
+
+      {/* Trip totals — desktop only. Inline meta line, no chips. */}
+      <div className="mt-5 hidden md:flex md:flex-wrap md:items-center md:gap-x-5 md:gap-y-2 text-[12px] text-tat-charcoal/65">
+        <span className="inline-flex items-center gap-1.5 text-tat-charcoal font-semibold">
+          <Sparkles className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
           {days.length} {days.length === 1 ? "day" : "days"}
         </span>
         {totals.stays > 0 && (
-          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
-            <Bed className="h-3 w-3" />
+          <span className="inline-flex items-center gap-1.5">
+            <Bed className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
             {totals.stays} {totals.stays === 1 ? "stay" : "stays"}
           </span>
         )}
         {totals.transfers > 0 && (
-          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
-            <Plane className="h-3 w-3" />
+          <span className="inline-flex items-center gap-1.5">
+            <Plane className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
             {totals.transfers} {totals.transfers === 1 ? "transfer" : "transfers"}
           </span>
         )}
         {totals.activities > 0 && (
-          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
-            <Mountain className="h-3 w-3" />
+          <span className="inline-flex items-center gap-1.5">
+            <Mountain className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
             {totals.activities} sightseeing {totals.activities === 1 ? "block" : "blocks"}
           </span>
         )}
         {totals.meals > 0 && (
-          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
-            <Coffee className="h-3 w-3" />
+          <span className="inline-flex items-center gap-1.5">
+            <Coffee className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
             {totals.meals} {totals.meals === 1 ? "meal" : "meals"} included
           </span>
         )}
         {totals.photos > 0 && (
-          <span className="inline-flex items-center gap-1.5 h-7 px-2.5 rounded-pill bg-tat-cream-warm/60 text-tat-slate text-[11px] font-medium">
-            <ImageIcon className="h-3 w-3" />
+          <span className="inline-flex items-center gap-1.5">
+            <ImageIcon className="h-3.5 w-3.5 text-tat-gold" aria-hidden />
             {totals.photos} {totals.photos === 1 ? "photo" : "photos"}
           </span>
         )}
       </div>
 
-      {/* Controls — desktop only. Mobile carousel below uses a leaner
-          counter+dots+arrows pattern that fits a single horizontal row. */}
-      <div className="mt-5 hidden md:flex md:items-center md:justify-between md:gap-3">
+      {/* Controls — desktop only. */}
+      <div className="mt-6 hidden md:flex md:items-center md:justify-between md:gap-3">
         <div className="flex items-center gap-2">
-          {/* View toggle */}
           <div className="inline-flex p-1 rounded-pill bg-tat-cream-warm/40 text-[13px] font-medium" role="tablist" aria-label="Itinerary view">
             <button
               onClick={() => setView("detailed")}
               role="tab"
               aria-selected={view === "detailed"}
-              className={`px-4 h-9 rounded-pill transition duration-120 ${view === "detailed" ? "bg-white shadow-sm text-tat-charcoal" : "text-tat-slate"}`}
+              className={`px-4 h-9 rounded-pill transition duration-120 ${view === "detailed" ? "bg-white shadow-sm text-tat-charcoal" : "text-tat-charcoal/65"}`}
             >
               Detailed
             </button>
@@ -327,18 +365,17 @@ export default function PackageItinerary({
               onClick={() => setView("summarised")}
               role="tab"
               aria-selected={view === "summarised"}
-              className={`px-4 h-9 rounded-pill transition duration-120 ${view === "summarised" ? "bg-white shadow-sm text-tat-charcoal" : "text-tat-slate"}`}
+              className={`px-4 h-9 rounded-pill transition duration-120 ${view === "summarised" ? "bg-white shadow-sm text-tat-charcoal" : "text-tat-charcoal/65"}`}
             >
               Summarised
             </button>
           </div>
 
-          {/* Expand/collapse all — only useful in detailed view */}
           {view === "detailed" && days.length > 1 && (
             <button
               type="button"
               onClick={toggleAll}
-              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-pill bg-tat-cream-warm/40 text-tat-slate hover:text-tat-charcoal hover:bg-tat-cream-warm/70 text-[12px] font-medium transition-colors"
+              className="inline-flex items-center gap-1.5 h-9 px-3 rounded-pill bg-tat-cream-warm/40 text-tat-charcoal/65 hover:text-tat-charcoal hover:bg-tat-cream-warm/70 text-[12px] font-medium transition-colors"
               aria-pressed={allOpen ?? false}
             >
               {allOpen ? (
@@ -350,7 +387,6 @@ export default function PackageItinerary({
           )}
         </div>
 
-        {/* Filter chips — horizontal scroll on mobile */}
         <div
           role="group"
           aria-label="Filter by category"
@@ -373,14 +409,13 @@ export default function PackageItinerary({
         </div>
       </div>
 
-      {/* Day-jump nav — desktop only. Mobile carousel has its own
-          counter+dots row at the top of the slide rail. */}
+      {/* Day-jump nav — desktop only. */}
       {filtered.length > 1 && (
         <div
           ref={trackRef}
           role="navigation"
           aria-label="Jump to day"
-          className="hidden md:flex mt-5 mx-0 px-0 pt-2 pb-2 gap-1.5 overflow-x-auto no-scrollbar sticky top-16 lg:top-20 z-10 bg-white/90 backdrop-blur-md border-b border-tat-charcoal/8"
+          className="hidden md:flex mt-6 mx-0 px-0 pt-2 pb-2 gap-1.5 overflow-x-auto no-scrollbar sticky top-16 lg:top-20 z-10 bg-tat-cream/40 backdrop-blur-md border-b border-tat-charcoal/8"
         >
           {filtered.map((d) => {
             const active = activeDay === d.day;
@@ -395,7 +430,7 @@ export default function PackageItinerary({
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-1",
                   active
                     ? "bg-tat-gold text-tat-charcoal shadow-card"
-                    : "bg-tat-cream-warm/40 text-tat-slate hover:bg-tat-cream-warm/70",
+                    : "bg-tat-cream-warm/40 text-tat-charcoal/65 hover:bg-tat-cream-warm/70",
                 ].join(" ")}
               >
                 Day {d.day}
@@ -405,21 +440,12 @@ export default function PackageItinerary({
         </div>
       )}
 
-      {/* MOBILE carousel — one day per viewport-width slide with snap.
-          Top bar = Day X of N + arrows + dot rail; gives skim-readers
-          progress at a glance and shows only one card's worth of
-          content at a time so the page never feels stacked.
-          ARIA: section behaves as a carousel with each slide labelled
-          by its day. Live region announces day changes for screen
-          readers. */}
+      {/* MOBILE carousel — slides become softer cream tiles, no white card. */}
       <section
-        className="md:hidden mt-4"
+        className="md:hidden mt-6"
         aria-roledescription="carousel"
         aria-label="Day-by-day itinerary"
       >
-        {/* Visually-hidden live region — fires when the snapped slide
-            changes so screen-reader users hear "Day 2 of 7, Ubud day".
-            polite avoids interrupting other speech. */}
         <div className="sr-only" aria-live="polite" aria-atomic="true">
           {filtered[mobileDay]
             ? `Day ${filtered[mobileDay].day} of ${filtered.length}, ${filtered[mobileDay].title}`
@@ -459,10 +485,6 @@ export default function PackageItinerary({
           </div>
         </div>
 
-        {/* Dot rail — tab-like nav with aria-current on the active dot.
-            Wrapper buttons are 32px tall (py-2.5) so the WCAG 24x24
-            target floor is comfortably exceeded even though the visual
-            indicator stays a thin 4px line. */}
         <div
           role="tablist"
           aria-label="Jump to day"
@@ -491,11 +513,6 @@ export default function PackageItinerary({
           ))}
         </div>
 
-        {/* Slide rail — full-width snap. -mx-5 + px-5 lets cards bleed
-            edge-to-edge while keeping inner padding aligned with the
-            tt-card outer container.
-            tabIndex=0 lets keyboard users focus the rail and drive it
-            with ←/→/Home/End. */}
         <ol
           ref={mobileRailRef}
           id="itinerary-mobile-rail"
@@ -521,51 +538,51 @@ export default function PackageItinerary({
                 aria-label={`Day ${d.day} of ${filtered.length}: ${d.title}`}
                 aria-hidden={idx !== mobileDay}
                 tabIndex={-1}
-                className="snap-center shrink-0 w-[calc(100vw-2.5rem)] tt-subcard !p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 scroll-mt-24"
+                className="snap-center shrink-0 w-[calc(100vw-2.5rem)] bg-tat-cream-warm/40 rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 scroll-mt-24"
               >
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="tt-day-pill">DAY {d.day}</span>
+                <div className="flex items-start justify-between gap-3">
+                  <DayNumeral n={d.day} />
                   <span
                     title={paceMeta.tooltip}
                     aria-label={`Pace: ${paceMeta.label}. ${paceMeta.tooltip}`}
-                    className={`inline-flex items-center h-5 px-2 rounded-pill text-[10px] font-semibold uppercase tracking-wide ${paceMeta.cls}`}
+                    className={`shrink-0 inline-flex items-center h-6 px-2.5 rounded-pill text-[10px] font-semibold uppercase tracking-wider border bg-transparent ${paceMeta.cls}`}
                   >
                     {paceMeta.label}
                   </span>
                 </div>
-                <h3 className="mt-2 font-serif text-[18px] text-tat-charcoal leading-snug text-balance">
+                <h3 className="mt-1 font-display text-[20px] text-tat-charcoal leading-snug text-balance">
                   {d.title}
                 </h3>
                 {d.subtitle && (
-                  <p className="mt-1 text-[12px] text-tat-slate">{d.subtitle}</p>
+                  <p className="mt-1 text-[12px] text-tat-charcoal/55">{d.subtitle}</p>
                 )}
-                <p className="mt-3 text-[14px] leading-[1.6] text-tat-charcoal/85 line-clamp-[8]">
+                <p className="mt-3 text-[14px] leading-[1.65] text-tat-charcoal/85 line-clamp-[8]">
                   {d.description}
                 </p>
 
                 {(d.transfer || d.stay || d.highlights || d.meals) && (
-                  <div className="mt-3 space-y-2">
+                  <div className="mt-3 space-y-1.5 text-[12px]">
                     {d.transfer && (
-                      <div className="flex items-start gap-2 text-[12px]">
-                        <Plane className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" />
+                      <div className="flex items-start gap-2">
+                        <Plane className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" aria-hidden />
                         <div className="min-w-0">
                           <span className="font-semibold text-tat-charcoal">{d.transfer.value}</span>
-                          {d.transfer.meta && <span className="text-tat-slate"> · {d.transfer.meta}</span>}
+                          {d.transfer.meta && <span className="text-tat-charcoal/55"> · {d.transfer.meta}</span>}
                         </div>
                       </div>
                     )}
                     {d.stay && (
-                      <div className="flex items-start gap-2 text-[12px]">
-                        <Bed className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" />
+                      <div className="flex items-start gap-2">
+                        <Bed className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" aria-hidden />
                         <div className="min-w-0">
                           <span className="font-semibold text-tat-charcoal">{d.stay.value}</span>
-                          {d.stay.meta && <span className="text-tat-slate"> · {d.stay.meta}</span>}
+                          {d.stay.meta && <span className="text-tat-charcoal/55"> · {d.stay.meta}</span>}
                         </div>
                       </div>
                     )}
                     {d.highlights && (
-                      <div className="flex items-start gap-2 text-[12px]">
-                        <MapPin className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" />
+                      <div className="flex items-start gap-2">
+                        <MapPin className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" aria-hidden />
                         <div className="min-w-0 flex-1">
                           <p className="font-semibold text-tat-charcoal">{d.highlights.value}</p>
                           {d.highlights.images && d.highlights.images.length > 0 && (
@@ -584,8 +601,8 @@ export default function PackageItinerary({
                       </div>
                     )}
                     {d.meals && (
-                      <div className="flex items-start gap-2 text-[12px]">
-                        <Coffee className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" />
+                      <div className="flex items-start gap-2">
+                        <Coffee className="h-3.5 w-3.5 mt-0.5 text-tat-gold shrink-0" aria-hidden />
                         <span className="text-tat-charcoal/85">{mealsLine(d.meals)}</span>
                       </div>
                     )}
@@ -606,9 +623,6 @@ export default function PackageItinerary({
           })}
         </ol>
 
-        {/* Swipe hint — visual nudge for first-time users. aria-hidden
-            because the live region above already conveys position to
-            screen readers more accurately. */}
         {filtered.length > 1 && mobileDay === 0 && (
           <p className="text-center text-[11px] text-tat-charcoal/40 mt-1" aria-hidden="true">
             Swipe or use arrow keys to see Day {filtered[1]?.day} →
@@ -616,154 +630,106 @@ export default function PackageItinerary({
         )}
       </section>
 
-      {/* DESKTOP timeline — vertical, with dashed rail.
-          Hidden on mobile in favour of the carousel below. */}
-      <ol className="hidden md:block mt-8 relative pl-8 border-l border-dashed border-tat-orange/40 space-y-4">
+      {/* DESKTOP timeline — editorial spread.
+          No card chrome. Each day is a typographic entry: oversized
+          serif numeral on the left, content on the right, hairline
+          divider between days. The vertical dashed rail is gone — the
+          numerals are the rhythm now. */}
+      <ol className="hidden md:block mt-10">
         {filtered.map((d, idx) => {
           const pace = classifyPace(d, idx, filtered.length);
           const paceMeta = PACE_META[pace];
+          const isLast = idx === filtered.length - 1;
           return (
-          <li
-            key={d.day}
-            data-day={d.day}
-            ref={(el) => {
-              if (el) dayRefs.current.set(d.day, el);
-              else dayRefs.current.delete(d.day);
-            }}
-            className="relative"
-          >
-            <span
-              aria-hidden
-              className="absolute -left-[23px] md:-left-[33px] top-4 md:top-5 w-[14px] h-[14px] md:w-[18px] md:h-[18px] rounded-full bg-white border-2 border-tat-orange"
-            />
+            <li
+              key={d.day}
+              data-day={d.day}
+              ref={(el) => {
+                if (el) dayRefs.current.set(d.day, el);
+                else dayRefs.current.delete(d.day);
+              }}
+              className={`relative grid grid-cols-[120px_1fr] gap-7 lg:gap-10 py-8 lg:py-10 ${isLast ? "" : "border-b border-tat-charcoal/10"}`}
+            >
+              {/* Left rail — numeral + meta */}
+              <div className="pt-1">
+                <DayNumeral n={d.day} />
+                <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-tat-charcoal/45 font-semibold">
+                  Day {d.day}
+                </p>
+                <span
+                  title={paceMeta.tooltip}
+                  aria-label={`Pace: ${paceMeta.label}. ${paceMeta.tooltip}`}
+                  className={`mt-3 inline-flex items-center h-6 px-2.5 rounded-pill text-[10px] font-semibold uppercase tracking-wider border bg-transparent ${paceMeta.cls}`}
+                >
+                  {paceMeta.label}
+                </span>
+              </div>
 
-            <details open={idx === 0} className="tt-subcard group !p-3 md:!p-5">
-              <summary className="flex items-start justify-between gap-3 cursor-pointer list-none">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="tt-day-pill">DAY {d.day}</span>
-                    <span
-                      title={paceMeta.tooltip}
-                      aria-label={`Pace: ${paceMeta.label}. ${paceMeta.tooltip}`}
-                      className={`inline-flex items-center h-5 px-2 rounded-pill text-[10px] font-semibold uppercase tracking-wide ${paceMeta.cls}`}
-                    >
-                      {paceMeta.label}
-                    </span>
+              {/* Right column — content */}
+              <details open={idx === 0} className="group">
+                <summary className="flex items-start justify-between gap-3 cursor-pointer list-none">
+                  <div className="min-w-0">
+                    <h3 className="font-display text-[24px] lg:text-[28px] font-medium text-tat-charcoal leading-[1.2] text-balance">
+                      {d.title}
+                    </h3>
+                    {d.subtitle && (
+                      <p className="mt-1.5 text-[13px] text-tat-charcoal/55">{d.subtitle}</p>
+                    )}
                   </div>
-                  <h3 className="mt-2 font-serif text-[16px] md:text-[20px] text-tat-charcoal leading-snug text-balance">
-                    {d.title}
-                  </h3>
-                  {d.subtitle && (
-                    <p className="mt-1 text-[12px] md:text-[13px] text-tat-slate">{d.subtitle}</p>
-                  )}
-                </div>
-                <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-tat-slate shrink-0 mt-1 transition group-open:rotate-180" />
-              </summary>
+                  <ChevronDown className="w-5 h-5 text-tat-charcoal/45 shrink-0 mt-2 transition group-open:rotate-180" aria-hidden />
+                </summary>
 
-              {view === "detailed" && (
-                <>
-                  <p className="mt-3 md:mt-4 text-[14px] md:text-[15px] leading-[1.65] text-tat-charcoal/85">
-                    {d.description}
-                  </p>
+                {view === "detailed" && (
+                  <>
+                    <p className="mt-4 text-[15px] leading-[1.75] text-tat-charcoal/80 max-w-[62ch]">
+                      {d.description}
+                    </p>
 
-                  {(d.transfer || d.stay || d.highlights || d.meals) && (
-                    <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
-                      {d.transfer && (filter === "all" || filter === "transfers") && (
-                        <div className="flex items-start gap-2.5 p-2.5 md:p-3 rounded-sub bg-tat-cream-warm/30">
-                          <span className="h-7 w-7 md:h-8 md:w-8 rounded-md bg-white grid place-items-center shrink-0 text-tat-gold">
-                            <Plane className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                          </span>
-                          <div className="min-w-0">
-                            <p className="text-[10px] uppercase tracking-wide font-semibold text-tat-slate">{d.transfer.label}</p>
-                            <p className="text-[13px] font-medium text-tat-charcoal">{d.transfer.value}</p>
-                            {d.transfer.meta && (
-                              <p className="text-[11px] text-tat-slate mt-0.5">{d.transfer.meta}</p>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                    <MetaRow d={d} />
 
-                      {d.stay && (filter === "all" || filter === "stay") && (
-                        <div className="flex items-start gap-2.5 p-2.5 md:p-3 rounded-sub bg-tat-cream-warm/30">
-                          <span className="h-7 w-7 md:h-8 md:w-8 rounded-md bg-white grid place-items-center shrink-0 text-tat-gold">
-                            <Bed className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                          </span>
-                          <div className="min-w-0">
-                            <p className="text-[10px] uppercase tracking-wide font-semibold text-tat-slate">Stay</p>
-                            <p className="text-[13px] font-medium text-tat-charcoal">{d.stay.value}</p>
-                            {d.stay.meta && (
-                              <p className="text-[11px] text-tat-slate mt-0.5">{d.stay.meta}</p>
-                            )}
-                          </div>
-                        </div>
-                      )}
+                    {d.highlights?.images && d.highlights.images.length > 0 && (filter === "all" || filter === "activities") && (
+                      <ul className="mt-5 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                        {d.highlights.images.map((src, i) => (
+                          <li
+                            key={i}
+                            className="w-28 h-20 rounded-lg bg-tat-charcoal/10 shrink-0 bg-cover bg-center ring-1 ring-tat-charcoal/8"
+                            style={{ backgroundImage: `url(${src})` }}
+                            aria-hidden
+                          />
+                        ))}
+                      </ul>
+                    )}
 
-                      {d.highlights && (filter === "all" || filter === "activities") && (
-                        <div className="flex items-start gap-2.5 p-2.5 md:p-3 rounded-sub bg-tat-cream-warm/30 md:col-span-2">
-                          <span className="h-7 w-7 md:h-8 md:w-8 rounded-md bg-white grid place-items-center shrink-0 text-tat-gold">
-                            <MapPin className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                          </span>
-                          <div className="min-w-0">
-                            <p className="text-[10px] uppercase tracking-wide font-semibold text-tat-slate">Highlights</p>
-                            <p className="text-[13px] font-medium text-tat-charcoal">{d.highlights.value}</p>
-                            {d.highlights.images && d.highlights.images.length > 0 && (
-                              <ul className="mt-2 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-                                {d.highlights.images.map((src, i) => (
-                                  <li
-                                    key={i}
-                                    className="w-20 h-14 md:w-24 md:h-16 rounded-md bg-tat-charcoal/10 shrink-0 bg-cover bg-center"
-                                    style={{ backgroundImage: `url(${src})` }}
-                                    aria-hidden
-                                  />
-                                ))}
-                              </ul>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {d.meals && (filter === "all" || filter === "meals") && (
-                        <div className="flex items-start gap-2.5 p-2.5 md:p-3 rounded-sub bg-tat-cream-warm/30 md:col-span-2">
-                          <span className="h-7 w-7 md:h-8 md:w-8 rounded-md bg-white grid place-items-center shrink-0 text-tat-gold">
-                            <Coffee className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                          </span>
-                          <div className="min-w-0">
-                            <p className="text-[10px] uppercase tracking-wide font-semibold text-tat-slate">Meals today</p>
-                            <p className="text-[13px] font-medium text-tat-charcoal">{mealsLine(d.meals)}</p>
-                          </div>
-                        </div>
-                      )}
+                    {/* Per-day Aria handoff — text-link weight, no card. */}
+                    <div className="mt-5 flex flex-wrap items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => askAriaAboutDay(d)}
+                        className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-tat-gold hover:text-tat-charcoal transition-colors"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5" aria-hidden />
+                        Ask Aria about Day {d.day}
+                      </button>
+                      <span className="text-[12px] text-tat-charcoal/45">
+                        Want to swap, slow down, or add something? Tell us.
+                      </span>
                     </div>
-                  )}
-
-                  {/* Per-day Aria handoff — surfaces the most common
-                      objection ("can I tweak Day X?") right where it
-                      forms instead of pushing it to the end of the page. */}
-                  <div className="mt-3 flex flex-wrap items-center gap-2 pt-3 border-t border-tat-charcoal/6">
-                    <button
-                      type="button"
-                      onClick={() => askAriaAboutDay(d)}
-                      className="inline-flex items-center gap-1.5 h-8 px-3 rounded-pill bg-tat-gold/15 hover:bg-tat-gold/25 text-tat-gold text-[12px] font-semibold transition-colors"
-                    >
-                      <MessageCircle className="h-3.5 w-3.5" />
-                      Ask Aria about Day {d.day}
-                    </button>
-                    <span className="text-[11px] text-tat-charcoal/45">
-                      Want to swap, slow down, or add something? Tell us.
-                    </span>
-                  </div>
-                </>
-              )}
-            </details>
-          </li>
+                  </>
+                )}
+              </details>
+            </li>
           );
         })}
       </ol>
 
-      {/* End-of-trip flourish */}
-      <p className="mt-6 md:mt-8 text-center font-serif italic text-tat-orange text-[16px] md:text-[18px]">
-        — {endLabel} —
-      </p>
+      {/* End-of-trip flourish — typographic, not a card */}
+      <div className="mt-10 md:mt-14 flex items-center justify-center gap-4">
+        <span className="h-px w-10 bg-tat-gold/40" aria-hidden />
+        <p className="font-display italic text-tat-gold text-[16px] md:text-[20px]">
+          {endLabel}
+        </p>
+        <span className="h-px w-10 bg-tat-gold/40" aria-hidden />
+      </div>
     </section>
   );
 }
