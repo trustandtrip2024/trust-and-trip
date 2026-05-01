@@ -29,6 +29,22 @@ import type { Package, Destination } from "./data";
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+// Strip markdown fences + any prose preamble/epilogue, then return the
+// outer-most {...} object. Claude occasionally writes "Drafting the plan
+// now…\n\n{ ... }" which broke the prior `JSON.parse(textBlock.text)` path.
+// We grab the first `{` to the matching last `}` since the JSON is the only
+// object we expect — anything outside is conversational scaffolding.
+function extractJsonObject(raw: string): string {
+  const stripped = raw
+    .replace(/```json\n?/g, "")
+    .replace(/```\n?/g, "")
+    .trim();
+  const first = stripped.indexOf("{");
+  const last = stripped.lastIndexOf("}");
+  if (first === -1 || last === -1 || last <= first) return stripped;
+  return stripped.slice(first, last + 1);
+}
+
 const MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 4096;
 
@@ -349,11 +365,7 @@ Follow the mandatory process: getDestinationInfo → searchPackages → draft. R
     );
     if (!textBlock) throw new Error("No text content in final response");
 
-    const cleaned = textBlock.text
-      .replace(/```json\n?/g, "")
-      .replace(/```\n?/g, "")
-      .trim();
-
+    const cleaned = extractJsonObject(textBlock.text);
     let itinerary: GeneratedItinerary;
     try {
       itinerary = JSON.parse(cleaned);
@@ -521,11 +533,7 @@ Follow the mandatory process: getDestinationInfo → searchPackages → draft. R
       await onEvent({ phase: "delta", text: fullText.slice(i, i + CHUNK) });
     }
 
-    const cleaned = fullText
-      .replace(/```json\n?/g, "")
-      .replace(/```\n?/g, "")
-      .trim();
-
+    const cleaned = extractJsonObject(fullText);
     let itinerary: GeneratedItinerary;
     try {
       itinerary = JSON.parse(cleaned);

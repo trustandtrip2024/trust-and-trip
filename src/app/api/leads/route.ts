@@ -114,10 +114,13 @@ export async function POST(req: NextRequest) {
 
     mark("3. validating env");
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      return NextResponse.json({
-        error: "Server misconfigured: Supabase env vars missing",
-        debug,
-      }, { status: 500 });
+      const isProd = process.env.NODE_ENV === "production";
+      return NextResponse.json(
+        isProd
+          ? { error: "Server misconfigured." }
+          : { error: "Server misconfigured: Supabase env vars missing", debug },
+        { status: 500 },
+      );
     }
 
     // Read referral cookie (set by middleware on ?ref= visits) — body.ref_code overrides
@@ -373,7 +376,15 @@ export async function POST(req: NextRequest) {
     }
     mark(`9. lead alert fired (tier=${tier} reasons=${reasons.length})`);
 
-    return NextResponse.json({ success: true, eventId, score, tier, leadId: leadRow?.id, debug });
+    // Don't ship the debug trace in prod success responses — every browser
+    // tab onlooker would see internal pipeline timestamps + score/tier logic.
+    // Keep it in dev so local debugging stays one curl away.
+    const isProdSuccess = process.env.NODE_ENV === "production";
+    return NextResponse.json(
+      isProdSuccess
+        ? { success: true, eventId, score, tier, leadId: leadRow?.id }
+        : { success: true, eventId, score, tier, leadId: leadRow?.id, debug },
+    );
   } catch (err) {
     const e = err as Error & { code?: string; digest?: string };
     console.error("Lead API error:", e);
