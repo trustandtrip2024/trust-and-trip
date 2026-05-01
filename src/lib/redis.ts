@@ -71,12 +71,19 @@ export async function rateLimit(
 
     const count = (results[2] as number) ?? 0;
     const allowed = count <= limit;
+    if (process.env.RL_DEBUG === "1") {
+      console.log(`[rl] key=${key} count=${count} limit=${limit} allowed=${allowed}`);
+    }
     return {
       allowed,
       remaining: Math.max(0, limit - count),
       resetIn: windowSeconds,
     };
-  } catch {
+  } catch (err) {
+    // Don't kill the request, but DO surface why — silent fail-open hid a
+    // real bug for two audit cycles. If you see this in logs, fix the cause
+    // (Upstash auth, quota, network) — don't ignore it.
+    console.error("[rl] rateLimit failed (fail-open):", err instanceof Error ? err.message : err);
     return { allowed: true, remaining: limit, resetIn: windowSeconds };
   }
 }

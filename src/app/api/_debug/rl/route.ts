@@ -29,6 +29,15 @@ export async function GET(req: NextRequest) {
   const redisInstance = getRedis();
   const hasRedis = !!redisInstance;
 
+  // Fire 5 hits in one request against a fresh per-call key. With limit=3
+  // and a stable key, hits 1-3 = allowed, hits 4-5 = blocked. Anything else
+  // means the limiter logic, pipeline, or Redis connection is broken.
+  const debugKey = `debug:burst:${ip}:${Date.now()}`;
+  const rlBurst: Array<{ allowed: boolean; remaining: number }> = [];
+  for (let i = 0; i < 5; i++) {
+    const r = await rateLimit(debugKey, { limit: 3, windowSeconds: 60 });
+    rlBurst.push({ allowed: r.allowed, remaining: r.remaining });
+  }
   const rl = await rateLimit(`debug:${ip}`, { limit: 3, windowSeconds: 60 });
 
   // Direct ping — confirms whether @upstash/redis is reachable at all.
@@ -57,5 +66,6 @@ export async function GET(req: NextRequest) {
       pingError,
     },
     rateLimit: rl,
+    rateLimitBurst: rlBurst,
   });
 }
