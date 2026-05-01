@@ -80,9 +80,42 @@ export function middleware(req: NextRequest) {
   if (geoCity) reqHeaders.set("x-tt-geo-city", decodeURIComponent(geoCity));
   if (geoCountry) reqHeaders.set("x-tt-geo-country", geoCountry);
 
+  // Public marketing/content paths that are safe to cache at the Vercel
+  // edge. Pages here render the same HTML for every visitor (no auth, no
+  // per-user data) so a shared 5-min cache is fine. Calling `headers()` in
+  // the root layout to read the CSP nonce forces Next.js into dynamic
+  // rendering, which would otherwise emit `Cache-Control: no-store` and
+  // turn every Meta-ad click into a cold function invocation. Setting
+  // `s-maxage` from middleware overrides that — the edge serves the cached
+  // HTML, the browser still revalidates after the window. The nonce gets
+  // cached alongside the HTML, which is acceptable: strict-dynamic only
+  // requires nonce-in-header matches nonce-in-DOM, both come from the
+  // same cached response.
+  const isPublicCacheable =
+    req.method === "GET" &&
+    !pathname.startsWith("/admin") &&
+    !pathname.startsWith("/dashboard") &&
+    !pathname.startsWith("/studio") &&
+    !pathname.startsWith("/book/") &&
+    !pathname.startsWith("/refer/dashboard") &&
+    !pathname.startsWith("/creators/dashboard") &&
+    !req.headers.get("authorization") &&
+    !req.cookies.has("sb-access-token") &&
+    !req.cookies.has("sb-refresh-token");
+
   function applyHeaders(res: NextResponse): NextResponse {
     res.headers.set("Content-Security-Policy", csp);
     res.headers.set("x-nonce", nonce);
+    if (isPublicCacheable) {
+      // Edge cache: 5 min fresh, 24 h stale-while-revalidate. Vercel CDN
+      // serves cached HTML in the fresh window; after that it serves stale
+      // while a background regeneration runs. Browser sees max-age=0 so it
+      // always asks the edge — gives us full control.
+      res.headers.set(
+        "Cache-Control",
+        "public, max-age=0, s-maxage=300, stale-while-revalidate=86400",
+      );
+    }
     return res;
   }
 
