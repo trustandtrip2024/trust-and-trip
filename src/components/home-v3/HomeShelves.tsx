@@ -12,7 +12,6 @@ import FeaturedPackages from "@/components/home-v3/FeaturedPackages";
 import BrowseByStyle, { type StyleId } from "@/components/home-v3/BrowseByStyle";
 import LiveDeals from "@/components/home-v3/LiveDeals";
 import PilgrimSpotlight from "@/components/home-v3/PilgrimSpotlight";
-import FounderNote from "@/components/homepage-v2/FounderNote";
 import WhyTrustAndTrip from "@/components/home-v3/WhyTrustAndTrip";
 import SocialProof from "@/components/home-v3/SocialProof";
 import FaqAndCTA from "@/components/home-v3/FaqAndCTA";
@@ -142,7 +141,6 @@ export default async function HomeShelves({ destinations }: { destinations: Dest
       <LiveDeals />
       {sanityShelves.length ? renderShelfAt(2) : <MayMixedChipShelf packages={mayPool} />}
       <PilgrimSpotlight />
-      <FounderNote />
       {group.length > 0 && (
         <ContentShelf
           eyebrow="Fixed-departure group trips"

@@ -54,7 +54,6 @@ import PackageMap from "@/components/package-detail/PackageMap";
 import PackageAriaPreload from "@/components/package-detail/PackageAriaPreload";
 import HeroPhotoRail from "@/components/package-detail/HeroPhotoRail";
 import PackageHeroTrustRibbon from "@/components/package-detail/PackageHeroTrustRibbon";
-import PackagePlannerCard from "@/components/package-detail/PackagePlannerCard";
 import PackageDecisionPrompts from "@/components/package-detail/PackageDecisionPrompts";
 import PackageGuaranteeBanner from "@/components/package-detail/PackageGuaranteeBanner";
 
@@ -363,15 +362,6 @@ export default async function PackageDetail({ params }: Props) {
                 }))}
               />
             </section>
-
-            {/* PLANNER CARD — humanization between "the plan" and "the
-                fine print". Builds trust right before pricing-heavy
-                sections (inclusions, departures, price breakdown). */}
-            <PackagePlannerCard
-              destinationName={pkg.destinationName}
-              packageTitle={pkg.title}
-              waNumber={WA}
-            />
 
             {/* DECISION PROMPTS — six high-intent shopper questions wired
                 into Aria. Surfaces objections we'd otherwise lose to silent
