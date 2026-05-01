@@ -58,16 +58,26 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import "../styles/globals.css";
 import { cn } from "@/lib/utils";
 
-// Inline, pre-hydration theme setter — prevents light/dark flash.
+// Inline, pre-hydration setters — prevent the two visible flashes that
+// otherwise hit every cold page load:
+//   1. Light/dark theme flash (set 'dark' class before paint).
+//   2. HomeDealRibbon CLS — without this, the ribbon SSRs as `display:none`
+//      via React state hydration, then useEffect flips it on, pushing the
+//      whole page down ~36px. We mark `tt-ribbon-dismissed` here so CSS
+//      can hide the ribbon pre-paint when the user has already dismissed,
+//      and otherwise leave it shown — no shift either way.
 //
 // Default theme is always LIGHT. Dark mode activates only when the user has
 // explicitly chosen it via the ThemeToggle (stored in localStorage). We
 // deliberately ignore prefers-color-scheme so first-time visitors land on
 // the brand light palette.
-const THEME_INIT_SCRIPT = `
+const PRE_PAINT_INIT_SCRIPT = `
 try {
   if (localStorage.getItem('tt_theme') === 'dark') {
     document.documentElement.classList.add('dark');
+  }
+  if (localStorage.getItem('tt_deal_ribbon_dismissed_v1')) {
+    document.documentElement.classList.add('tt-ribbon-dismissed');
   }
 } catch (e) {}
 `;
@@ -144,7 +154,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn(fraunces.variable, inter.variable, "font-sans")}>
       <head>
-        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: PRE_PAINT_INIT_SCRIPT }} />
         {/* Expose nonce to client-side dynamic-script loaders (e.g. Razorpay
             in BookingDeposit). Reading from a <meta> is the standard pattern
             so we don't need to thread the nonce through every client tree. */}

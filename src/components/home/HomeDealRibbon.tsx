@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Gift, X } from "lucide-react";
 import { analytics } from "@/lib/analytics";
@@ -13,25 +13,35 @@ interface Props {
   ctaHref?: string;
 }
 
+/**
+ * Site-wide promo strip rendered above the navbar.
+ *
+ * Earlier this component rendered `null` until a useEffect flipped a
+ * `useState(false)` to true based on a localStorage check, which meant
+ * every cold page load shifted the whole document down ~36px when the
+ * ribbon appeared (visible CLS flicker — first-time visitors saw the
+ * navbar jump on load).
+ *
+ * Now we render server-side by default. The pre-paint init script in
+ * src/app/layout.tsx adds `html.tt-ribbon-dismissed` when localStorage
+ * has the dismiss flag, and the CSS rule in globals.css hides
+ * `[data-tt-ribbon]` under that class before first paint — no shift in
+ * either direction.
+ */
 export default function HomeDealRibbon({
   message = "Plan this week — flat ₹2,000 off your first trip. 4 planner slots left.",
   ctaLabel = "Claim",
   ctaHref = "#plan",
 }: Props = {}) {
-  const [open, setOpen] = useState(false);
+  const [dismissedThisSession, setDismissedThisSession] = useState(false);
 
-  useEffect(() => {
-    try {
-      if (!localStorage.getItem(DISMISS_KEY)) setOpen(true);
-    } catch {
-      setOpen(true);
-    }
-  }, []);
-
-  if (!open) return null;
+  // In-session dismiss only. The pre-paint init script handles cross-session
+  // persistence, so reading localStorage here would be redundant.
+  if (dismissedThisSession) return null;
 
   return (
     <div
+      data-tt-ribbon
       role="region"
       aria-label="Site-wide promotion"
       className="bg-tat-charcoal text-white text-[12.5px] md:text-[13px]"
@@ -51,9 +61,14 @@ export default function HomeDealRibbon({
         <button
           type="button"
           onClick={() => {
-            setOpen(false);
+            setDismissedThisSession(true);
             analytics.dealRibbonDismiss();
-            try { localStorage.setItem(DISMISS_KEY, "1"); } catch { /* private mode */ }
+            try {
+              localStorage.setItem(DISMISS_KEY, "1");
+              document.documentElement.classList.add("tt-ribbon-dismissed");
+            } catch {
+              /* private mode */
+            }
           }}
           aria-label="Dismiss promotion"
           className="ml-1 grid h-6 w-6 place-items-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition"
