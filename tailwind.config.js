@@ -112,6 +112,8 @@ module.exports = {
         "slide-in-right": "slideInRight 0.28s cubic-bezier(0.22, 1, 0.36, 1)",
         "slide-out-right": "slideOutRight 0.2s cubic-bezier(0.4, 0, 1, 1)",
         "tt-shimmer": "ttShimmer 3.6s ease-in-out infinite",
+        "tt-breathe": "ttBreathe 3.2s ease-in-out infinite",
+        "tt-glint":   "ttGlint 5s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -146,6 +148,15 @@ module.exports = {
           "0%":   { transform: "translateX(-100%)" },
           "60%":  { transform: "translateX(120%)"  },
           "100%": { transform: "translateX(120%)"  },
+        },
+        ttBreathe: {
+          "0%, 100%": { transform: "scale(1)",    opacity: "0.55" },
+          "50%":      { transform: "scale(1.18)", opacity: "0"    },
+        },
+        ttGlint: {
+          "0%, 100%": { transform: "translateX(-120%) skewX(-12deg)", opacity: "0"   },
+          "20%":      { opacity: "1" },
+          "60%":      { transform: "translateX(220%) skewX(-12deg)",  opacity: "0"   },
         },
         slideInRight: {
           "0%": { transform: "translateX(100%)" },

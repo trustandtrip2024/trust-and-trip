@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
-  Menu, X, Phone, Heart, BookOpen, MoreVertical,
+  X, Phone, Heart, BookOpen, MoreVertical,
   Info, User, LogOut, Sparkles, ChevronRight, ChevronDown, Mail, Instagram,
   MessageCircle, Wallet, Compass, Crown, Stethoscope, Users as UsersIcon,
   ShieldCheck, Clock,
@@ -287,56 +287,72 @@ export default function Header() {
         )}
       >
         <div className="container-custom flex flex-nowrap items-center justify-between h-[68px] md:h-[84px] gap-3 overflow-hidden">
-          {/* Mobile hamburger — pill-style trigger with subtle gold ring
-              so it reads as a tactile button, not a bare icon. Morphs
-              Menu ↔ X. Wishlist nudge dot. Active scale gives haptic
-              feedback on tap. */}
+          {/* Mobile hamburger — chunky 3-bar trigger that morphs into
+              an X. The bare lucide Menu icon read as skinny on dark;
+              custom bars (h-[2.5px], rounded, gold) feel tactile and
+              read clearly across the row. ring-2 frame seals the
+              button as a deliberate target. */}
           <button
             type="button"
             aria-label={drawerOpen ? "Close menu" : "Open menu"}
             aria-expanded={drawerOpen}
             onClick={() => setDrawerOpen((v) => !v)}
             className={clsx(
-              "lg:hidden relative grid place-items-center h-10 w-10 rounded-full transition-all duration-200 active:scale-95 -ml-1",
+              "lg:hidden relative grid place-items-center h-11 w-11 rounded-full transition-all duration-200 active:scale-95 -ml-1",
               drawerOpen
-                ? "bg-tat-gold text-tat-charcoal ring-1 ring-tat-gold shadow-[0_4px_14px_-4px_rgba(200,147,42,0.55)]"
-                : "bg-white/10 text-tat-paper ring-1 ring-tat-gold/40 hover:bg-white/15 hover:ring-tat-gold/70"
+                ? "bg-tat-gold ring-2 ring-tat-gold shadow-[0_6px_18px_-4px_rgba(200,147,42,0.65)]"
+                : "bg-white/10 ring-2 ring-tat-gold/55 hover:bg-white/15 hover:ring-tat-gold/80"
             )}
           >
-            <span className="relative inline-block h-[18px] w-[18px]">
-              <Menu
+            <span className="relative flex flex-col items-center justify-center h-5 w-6 gap-[5px]">
+              <span
                 className={clsx(
-                  "absolute inset-0 h-[18px] w-[18px] transition-all duration-200",
-                  drawerOpen ? "opacity-0 rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"
+                  "absolute left-0 right-0 h-[2.5px] rounded-full origin-center transition-all duration-300 ease-out",
+                  drawerOpen
+                    ? "top-1/2 -translate-y-1/2 rotate-45 bg-tat-charcoal"
+                    : "top-0 bg-tat-gold"
                 )}
-                strokeWidth={2.25}
-                aria-hidden
               />
-              <X
+              <span
                 className={clsx(
-                  "absolute inset-0 h-[18px] w-[18px] transition-all duration-200",
-                  drawerOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-75"
+                  "absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[2.5px] rounded-full transition-all duration-200",
+                  drawerOpen ? "opacity-0 scale-x-0 bg-tat-charcoal" : "opacity-100 scale-x-100 bg-tat-gold w-3/4 self-end"
                 )}
-                strokeWidth={2.25}
-                aria-hidden
+                style={!drawerOpen ? { right: 0, left: "auto", width: "75%" } : undefined}
+              />
+              <span
+                className={clsx(
+                  "absolute left-0 right-0 h-[2.5px] rounded-full origin-center transition-all duration-300 ease-out",
+                  drawerOpen
+                    ? "top-1/2 -translate-y-1/2 -rotate-45 bg-tat-charcoal"
+                    : "bottom-0 bg-tat-gold"
+                )}
               />
             </span>
             {wishlistCount > 0 && !drawerOpen && (
               <span
-                className="absolute top-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-tat-orange ring-2 ring-tat-charcoal"
+                className="absolute top-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-tat-orange ring-2 ring-tat-charcoal animate-pulse"
                 aria-hidden
               />
             )}
           </button>
 
           {/* Logo — desktop / tablet (≥lg). Brand mark unchanged; sizes
-              nudged up for stronger presence in the now-taller header. */}
+              nudged up. Breathing gold halo (absolute ring overlay) +
+              pulsing accent dot give the mark ambient life without
+              touching the static glyph. */}
           <Link href="/" className="hidden lg:flex items-center gap-3 group shrink-0">
             <div className="relative">
-              <div className="h-11 w-11 rounded-full bg-tat-teal flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-gold">
+              {/* Breathing halo — sits behind the badge, scales 1→1.18
+                  while fading to 0 every 3.2s. */}
+              <span
+                aria-hidden
+                className="absolute inset-0 rounded-full ring-2 ring-tat-gold/55 animate-tt-breathe motion-reduce:animate-none"
+              />
+              <div className="relative h-11 w-11 rounded-full bg-tat-teal flex items-center justify-center shadow-glow-ember ring-1 ring-tat-gold/30 transition-all duration-500 group-hover:scale-105 group-hover:ring-tat-gold/70 group-hover:shadow-glow-gold">
                 <span className="text-white text-[20px] font-display font-semibold tracking-tight">T</span>
               </div>
-              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-tat-gold shadow-[0_0_10px_rgba(200,147,42,0.85)] ring-1 ring-white" />
+              <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-tat-gold shadow-[0_0_10px_rgba(200,147,42,0.85)] ring-1 ring-white animate-pulse motion-reduce:animate-none" />
             </div>
             <div className="flex flex-col leading-none">
               <span className="font-display text-xl md:text-[22px] font-semibold tracking-tight whitespace-nowrap">
@@ -350,13 +366,18 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Logo — mobile (compact, on dark). Bumped one notch up so the
-              brand reads from across the room without crowding the right
-              cluster. */}
+          {/* Logo — mobile (compact, on dark). Same ambient halo pattern
+              scaled down to fit the smaller square mark. */}
           <Link href="/" className="lg:hidden flex items-center gap-2.5 shrink-0">
-            <span className="relative h-9 w-9 rounded-lg bg-tat-teal grid place-items-center font-display font-semibold text-tat-paper text-[15px] shadow-[0_4px_12px_-4px_rgba(14,124,123,0.55)]">
-              T
-              <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-tat-gold ring-1 ring-tat-charcoal shadow-[0_0_6px_rgba(200,147,42,0.8)]" />
+            <span className="relative h-9 w-9 shrink-0">
+              <span
+                aria-hidden
+                className="absolute inset-0 rounded-lg ring-2 ring-tat-gold/45 animate-tt-breathe motion-reduce:animate-none"
+              />
+              <span className="relative h-9 w-9 rounded-lg bg-tat-teal grid place-items-center font-display font-semibold text-tat-paper text-[15px] shadow-[0_4px_12px_-4px_rgba(14,124,123,0.55)]">
+                T
+                <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-tat-gold ring-1 ring-tat-charcoal shadow-[0_0_6px_rgba(200,147,42,0.8)] animate-pulse motion-reduce:animate-none" />
+              </span>
             </span>
             <span className="flex flex-col leading-none">
               <span className="font-display text-[17px] font-semibold tracking-tight text-tat-paper whitespace-nowrap">
