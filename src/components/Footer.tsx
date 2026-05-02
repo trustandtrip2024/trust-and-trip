@@ -74,6 +74,7 @@ const SUPPORT = [
   { label: "Contact Us", href: "/contact" },
   { label: "Our Journal", href: "/blog" },
   { label: "My Booking", href: "/my-booking" },
+  { label: "Brand Book (PDF)", href: "/api/brand-book/pdf" },
   { label: "Cancellation Policy", href: "/cancellation-policy" },
   { label: "Privacy Policy", href: "/privacy-policy" },
   { label: "Terms & Conditions", href: "/terms-and-conditions" },
