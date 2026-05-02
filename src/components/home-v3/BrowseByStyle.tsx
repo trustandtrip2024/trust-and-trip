@@ -39,7 +39,7 @@ export default function BrowseByStyle({ packagesByStyle = {} }: Props) {
     <section
       id="browse"
       aria-labelledby="browse-style-title"
-      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32"
+      className="py-12 md:py-16 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom">
         <div className="flex items-end justify-between gap-4 flex-wrap">
@@ -49,7 +49,7 @@ export default function BrowseByStyle({ packagesByStyle = {} }: Props) {
             </p>
             <h2
               id="browse-style-title"
-              className="mt-2 font-display font-normal text-[26px] md:text-[36px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
+              className="mt-2 font-display font-normal text-[24px] md:text-[30px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
             >
               Browse by{" "}
               <em className="not-italic font-display italic text-tat-gold">how you like to travel.</em>

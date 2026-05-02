@@ -12,10 +12,10 @@ interface Props {
 
 export default function SectionStub({ id, eyebrow, title, italicTail, lede, count = 4, children }: Props) {
   return (
-    <section id={id} className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32">
+    <section id={id} className="py-12 md:py-16 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32">
       <div className="container-custom">
         <p className="text-[11px] uppercase tracking-[0.22em] font-semibold text-tat-gold">{eyebrow}</p>
-        <h2 className="mt-2 font-display font-normal text-[26px] md:text-[36px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance">
+        <h2 className="mt-2 font-display font-normal text-[24px] md:text-[30px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance">
           {title}{" "}
           {italicTail && (
             <em className="not-italic font-display italic text-tat-gold">{italicTail}</em>

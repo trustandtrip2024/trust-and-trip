@@ -112,7 +112,7 @@ export default function TrendingDestinations({ destinations }: Props) {
             </p>
             <h2
               id="trending-dest-title"
-              className="mt-2 font-display font-normal text-[26px] md:text-[36px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
+              className="mt-2 font-display font-normal text-[28px] md:text-[40px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
             >
               Trending destinations,{" "}
               <em className="not-italic font-display italic text-tat-gold">picked by planners.</em>

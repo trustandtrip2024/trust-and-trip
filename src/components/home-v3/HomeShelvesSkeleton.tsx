@@ -9,8 +9,8 @@ import PackageCardSkeleton from "@/components/PackageCardSkeleton";
 export default function HomeShelvesSkeleton() {
   return (
     <>
-      {/* Featured packages skeleton */}
-      <section className="py-14 md:py-16 bg-tat-paper">
+      {/* Featured packages skeleton — anchor scale matches FeaturedPackages */}
+      <section className="py-14 md:py-20 bg-tat-paper">
         <div className="container-custom">
           <div className="space-y-3 mb-8">
             <div className="h-3 w-24 bg-tat-charcoal/8 rounded-full animate-pulse" />
@@ -24,8 +24,8 @@ export default function HomeShelvesSkeleton() {
         </div>
       </section>
 
-      {/* Generic chip shelf skeleton */}
-      <section className="py-14 md:py-16">
+      {/* Generic chip shelf skeleton — default scale */}
+      <section className="py-12 md:py-16">
         <div className="container-custom">
           <div className="space-y-3 mb-8">
             <div className="h-3 w-32 bg-tat-charcoal/8 rounded-full animate-pulse" />

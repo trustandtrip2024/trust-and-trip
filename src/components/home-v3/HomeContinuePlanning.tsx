@@ -65,7 +65,7 @@ export default function HomeContinuePlanning() {
   return (
     <section
       aria-label="Continue planning"
-      className="py-10 md:py-12 bg-white border-t border-tat-charcoal/8"
+      className="py-12 md:py-16 bg-white border-t border-tat-charcoal/8"
     >
       <div className="container-custom">
         <div className="flex items-end justify-between gap-3 mb-5">

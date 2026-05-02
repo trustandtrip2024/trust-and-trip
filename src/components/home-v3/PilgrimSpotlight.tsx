@@ -119,7 +119,7 @@ export default function PilgrimSpotlight() {
     <section
       id="pilgrim"
       aria-labelledby="pilgrim-spotlight-title"
-      className="py-14 md:py-20 bg-gradient-to-b from-tat-cream-warm/40 to-tat-paper dark:from-tat-charcoal dark:to-tat-charcoal/95 scroll-mt-28 lg:scroll-mt-32"
+      className="py-12 md:py-16 bg-gradient-to-b from-tat-cream-warm/40 to-tat-paper dark:from-tat-charcoal dark:to-tat-charcoal/95 scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom">
         <div className="flex items-end justify-between gap-4 flex-wrap">
@@ -129,7 +129,7 @@ export default function PilgrimSpotlight() {
             </p>
             <h2
               id="pilgrim-spotlight-title"
-              className="mt-2 font-display font-normal text-[26px] md:text-[36px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
+              className="mt-2 font-display font-normal text-[24px] md:text-[30px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
             >
               Char Dham. Varanasi. Tirupati. Panchkedar.{" "}
               <em className="not-italic font-display italic text-tat-gold">Elders looked after.</em>

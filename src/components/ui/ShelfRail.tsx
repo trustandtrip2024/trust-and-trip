@@ -8,8 +8,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
  * card widths can't drift between shelves. Apply on the <li> wrapping
  * each PackageCard inside a ShelfRail.
  */
+// Three-step responsive width ladder. Five-step caused micro-misalignment
+// across odd container widths (the gap between cards 2 and 3 looked
+// bigger than between 1 and 2 on tablets). Keep it simple: mobile
+// peeks the next card, tablet shows ~2, desktop shows 3.
 export const HOME_RAIL_ITEM =
-  "shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]";
+  "shrink-0 snap-start flex w-[78%] sm:w-[44%] lg:w-[31%]";
 
 interface Props {
   /** Accessible label for the carousel region (e.g. shelf eyebrow). */

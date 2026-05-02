@@ -27,16 +27,16 @@ export default function PersonalRails({ packagesBySlug }: Props) {
     return (
       <section
         aria-hidden
-        className="py-10 md:py-14 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95"
+        className="py-12 md:py-16 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95"
       >
         <div className="container-custom">
           <div className="h-3 w-32 bg-tat-charcoal/8 rounded animate-pulse" />
           <div className="mt-3 h-6 w-72 bg-tat-charcoal/8 rounded animate-pulse" />
           <div className="mt-7 flex gap-4 lg:gap-5 overflow-hidden">
-            {Array.from({ length: 4 }).map((_, i) => (
+            {Array.from({ length: 3 }).map((_, i) => (
               <div
                 key={i}
-                className="shrink-0 w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%] aspect-[4/3] rounded-2xl bg-tat-charcoal/8 animate-pulse"
+                className="shrink-0 w-[78%] sm:w-[44%] lg:w-[31%] aspect-[4/3] rounded-2xl bg-tat-charcoal/8 animate-pulse"
               />
             ))}
           </div>
@@ -58,7 +58,7 @@ export default function PersonalRails({ packagesBySlug }: Props) {
   return (
     <section
       aria-labelledby="personal-rails-title"
-      className="py-10 md:py-14 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95 scroll-mt-28 lg:scroll-mt-32"
+      className="py-12 md:py-16 bg-tat-cream-warm/40 dark:bg-tat-charcoal/95 scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom flex flex-col gap-10">
         <h2 id="personal-rails-title" className="sr-only">
@@ -139,7 +139,7 @@ function Rail({
             <Icon className="h-3 w-3" aria-hidden />
             {eyebrow}
           </p>
-          <h3 className="mt-2 font-display font-normal text-[22px] md:text-[28px] leading-tight text-tat-charcoal dark:text-tat-paper">
+          <h3 className="mt-2 font-display font-normal text-[24px] md:text-[30px] leading-tight text-tat-charcoal dark:text-tat-paper">
             {title}
           </h3>
         </div>

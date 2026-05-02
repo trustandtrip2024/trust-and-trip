@@ -69,7 +69,7 @@ export default function FeaturedPackages({ packagesByType }: Props) {
             </p>
             <h2
               id="featured-pkg-title"
-              className="mt-2 font-display font-normal text-[26px] md:text-[36px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
+              className="mt-2 font-display font-normal text-[28px] md:text-[40px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
             >
               Itineraries we&apos;d send{" "}
               <em className="not-italic font-display italic text-tat-gold">our own family on.</em>

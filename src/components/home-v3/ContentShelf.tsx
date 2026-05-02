@@ -42,7 +42,7 @@ export default function ContentShelf({
             </p>
             <h2
               id={`shelf-${id ?? eyebrow}-title`}
-              className="mt-2 font-display font-normal text-[22px] md:text-[30px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
+              className="mt-2 font-display font-normal text-[24px] md:text-[30px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
             >
               {title}
               {italicTail && (

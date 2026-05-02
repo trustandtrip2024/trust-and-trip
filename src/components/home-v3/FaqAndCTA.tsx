@@ -16,7 +16,7 @@ export default function FaqAndCTA() {
     <section
       id="faq"
       aria-labelledby="faq-title"
-      className="py-14 md:py-20 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32"
+      className="py-12 md:py-16 bg-tat-paper dark:bg-tat-charcoal scroll-mt-28 lg:scroll-mt-32"
     >
       <div className="container-custom">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-10 md:gap-14">
@@ -26,7 +26,7 @@ export default function FaqAndCTA() {
             </p>
             <h2
               id="faq-title"
-              className="mt-2 font-display font-normal text-[26px] md:text-[36px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
+              className="mt-2 font-display font-normal text-[24px] md:text-[30px] leading-tight text-tat-charcoal dark:text-tat-paper text-balance"
             >
               Everything you&apos;d ask{" "}
               <em className="not-italic font-display italic text-tat-gold">before saying yes.</em>
