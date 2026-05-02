@@ -16,6 +16,9 @@ import TrendingDestinations from "@/components/home-v3/TrendingDestinations";
 import HomepageSchema from "@/components/home-v3/HomepageSchema";
 import HomeShelves from "@/components/home-v3/HomeShelves";
 import HomeShelvesSkeleton from "@/components/home-v3/HomeShelvesSkeleton";
+import HomeContinuePlanning from "@/components/home-v3/HomeContinuePlanning";
+import HomeQuickStyleChips from "@/components/home-v3/HomeQuickStyleChips";
+import HomePickupCity from "@/components/home-v3/HomePickupCity";
 import RecognitionStrip from "@/components/home-v3/RecognitionStrip";
 import {
   getDestinations,
@@ -55,7 +58,25 @@ export default async function HomePage() {
         reviewCount={siteStats.googleReviewCount}
         rating={siteStats.googleRating}
       />
+
+      {/* Pickup-city memory chip — persists the visitor's preferred
+          start city to localStorage so package pricing + flight context
+          can adapt downstream. Default is "New Delhi" but stays
+          unacknowledged (and prompts) until the visitor confirms. */}
+      <HomePickupCity />
+
+      {/* Quick browse-by-style chips — single-tap path into the
+          /packages catalogue pre-filtered by category. Helps known-vibe
+          visitors skip the discovery scroll. */}
+      <HomeQuickStyleChips />
+
       <TrendingDestinations destinations={destinations} />
+
+      {/* Returning-visitor rail — pulls slugs from the persisted wishlist
+          store and renders mini cards. Self-hides on first-time visits.
+          Sits early in the page so known users land on their own state. */}
+      <HomeContinuePlanning />
+
       <RecognitionStrip />
 
       {/* Stream the heavy below-fold sections. The hero/trust above ships

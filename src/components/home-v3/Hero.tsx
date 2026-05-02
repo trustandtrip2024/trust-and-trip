@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   Search, Calendar, Users, Wallet, ArrowRight, MessageCircle, Star,
-  ShieldCheck, Clock, Sparkles,
+  ShieldCheck, Clock, Sparkles, Pause, Play,
 } from "lucide-react";
 import { useTripPlanner } from "@/context/TripPlannerContext";
 
@@ -52,6 +52,41 @@ export default function Hero({
   const [pax, setPax] = useState("");
   const [budget, setBudget] = useState("");
 
+  // Video accessibility: auto-pause when prefers-reduced-motion is on,
+  // and surface a visible play/pause toggle so vestibular-sensitive
+  // users (or anyone who finds the loop distracting) can stop it.
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoPaused, setVideoPaused] = useState(false);
+
+  useEffect(() => {
+    if (!videoMp4Url) return;
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => {
+      const v = videoRef.current;
+      if (!v) return;
+      if (mq.matches) {
+        v.pause();
+        setVideoPaused(true);
+      }
+    };
+    apply();
+    mq.addEventListener?.("change", apply);
+    return () => mq.removeEventListener?.("change", apply);
+  }, [videoMp4Url]);
+
+  const toggleVideo = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play().catch(() => {});
+      setVideoPaused(false);
+    } else {
+      v.pause();
+      setVideoPaused(true);
+    }
+  };
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
     openPlanner({
@@ -83,6 +118,7 @@ export default function Hero({
           image stays the LCP element; video fades in once it can play. */}
       {videoMp4Url && (
         <video
+          ref={videoRef}
           aria-hidden
           autoPlay
           loop
@@ -94,6 +130,17 @@ export default function Hero({
         >
           <source src={videoMp4Url} />
         </video>
+      )}
+      {videoMp4Url && (
+        <button
+          type="button"
+          onClick={toggleVideo}
+          aria-label={videoPaused ? "Play hero background video" : "Pause hero background video"}
+          aria-pressed={!videoPaused}
+          className="absolute bottom-3 right-3 sm:bottom-5 sm:right-5 z-10 inline-flex items-center justify-center h-9 w-9 rounded-full bg-black/45 hover:bg-black/65 backdrop-blur-sm text-white/95 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
+        >
+          {videoPaused ? <Play className="h-4 w-4" aria-hidden /> : <Pause className="h-4 w-4" aria-hidden />}
+        </button>
       )}
       {/* Bottom-weighted gradient — keeps form legible */}
       <div
