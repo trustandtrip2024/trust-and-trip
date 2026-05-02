@@ -3,6 +3,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+/**
+ * Shared classlist for every home-rail <li>. Single source of truth so
+ * card widths can't drift between shelves. Apply on the <li> wrapping
+ * each PackageCard inside a ShelfRail.
+ */
+export const HOME_RAIL_ITEM =
+  "shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]";
+
 interface Props {
   /** Accessible label for the carousel region (e.g. shelf eyebrow). */
   ariaLabel: string;

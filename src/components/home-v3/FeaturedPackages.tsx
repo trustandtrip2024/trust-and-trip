@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Award, Flame, Sparkles, Heart, Users, User, Globe2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import PackageCard, { type PackageCardProps } from "@/components/ui/PackageCard";
-import ShelfRail from "@/components/ui/ShelfRail";
+import ShelfRail, { HOME_RAIL_ITEM } from "@/components/ui/ShelfRail";
 
 interface Props {
   packagesByType: {
@@ -121,9 +121,9 @@ export default function FeaturedPackages({ packagesByType }: Props) {
               return (
                 <li
                   key={`${active}-${p.href}`}
-                  className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
+                  className={HOME_RAIL_ITEM}
                 >
-                  <div className="relative w-full">
+                  <div className="relative w-full flex">
                     {badge && (
                       <span
                         className={`absolute z-10 top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm ${badge.tone}`}

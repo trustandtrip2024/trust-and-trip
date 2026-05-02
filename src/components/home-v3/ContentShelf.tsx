@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PackageCard, { type PackageCardProps } from "@/components/ui/PackageCard";
-import ShelfRail from "@/components/ui/ShelfRail";
+import ShelfRail, { HOME_RAIL_ITEM } from "@/components/ui/ShelfRail";
 
 interface Props {
   id?: string;
@@ -67,7 +67,7 @@ export default function ContentShelf({
             {items.map((p) => (
               <li
                 key={p.href}
-                className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
+                className={HOME_RAIL_ITEM}
               >
                 <PackageCard {...p} density="compact" />
               </li>

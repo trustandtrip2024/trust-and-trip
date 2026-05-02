@@ -225,22 +225,24 @@ export default function PackageCardUI(p: PackageCardProps) {
           </Link>
         </h3>
 
-        {/* Urgency / social-proof line — single row, only renders when there's
-            real signal. Limited slots wins over booked-this-month if both. */}
-        {(seatsLeft || p.bookedThisMonth) && (
-          <div className="mt-1 inline-flex items-center gap-1.5 text-[11px] font-semibold">
-            {seatsLeft ? (
-              <>
-                <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-tat-orange animate-pulse motion-reduce:animate-none" />
-                <span className="text-tat-orange">Only {seatsLeft} seats left</span>
-              </>
-            ) : (
-              <span className="text-tat-charcoal/65">
-                <span className="text-tat-charcoal font-bold">{p.bookedThisMonth}</span> booked this month
-              </span>
-            )}
-          </div>
-        )}
+        {/* Urgency / social-proof line — always renders so cards in the
+            same rail row stay vertically aligned. The slot stays blank
+            (but height-stable) when there's no signal to show. Limited
+            slots wins over booked-this-month if both fire. */}
+        <div className="mt-1 min-h-[16px] inline-flex items-center gap-1.5 text-[11px] font-semibold">
+          {seatsLeft ? (
+            <>
+              <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-tat-orange animate-pulse motion-reduce:animate-none" />
+              <span className="text-tat-orange">Only {seatsLeft} seats left</span>
+            </>
+          ) : p.bookedThisMonth ? (
+            <span className="text-tat-charcoal/65">
+              <span className="text-tat-charcoal font-bold">{p.bookedThisMonth}</span> booked this month
+            </span>
+          ) : (
+            <span aria-hidden>&nbsp;</span>
+          )}
+        </div>
 
         {/* Inclusions strip — hidden on mobile in compact mode to shorten the rail card */}
         <ul className={`${compact ? "mt-2 hidden sm:flex" : "mt-2.5 flex"} flex-wrap items-center gap-x-3 gap-y-1 text-meta text-tat-charcoal/75`}>
@@ -256,20 +258,29 @@ export default function PackageCardUI(p: PackageCardProps) {
           })}
         </ul>
 
-        {/* Price block — borderless on mobile compact for tighter card */}
-        <div className={`${compact ? "mt-2 sm:mt-2.5 sm:pt-2 sm:border-t sm:border-tat-charcoal/10" : "mt-auto pt-2.5 border-t border-tat-charcoal/10"}`}>
+        {/* Price block — always anchored to bottom of the card body via
+            mt-auto, regardless of density. Compact still drops the
+            divider on mobile but no longer floats mid-card when
+            optional rows above collapse to zero. */}
+        <div className={`mt-auto ${compact ? "pt-2 sm:pt-2 sm:border-t sm:border-tat-charcoal/10" : "pt-2.5 border-t border-tat-charcoal/10"}`}>
           <div className="flex items-end justify-between gap-3">
             <div className="min-w-0">
-              {p.originalPrice && p.originalPrice > p.price && (
-                <p className="text-[11px] sm:text-[12px] text-tat-slate/70 leading-none">
-                  <Price inr={p.originalPrice} className="line-through" />
-                  {discountPct !== null && (
-                    <span className="ml-1.5 text-tat-success-fg font-semibold">
-                      {discountPct}% off
-                    </span>
-                  )}
-                </p>
-              )}
+              {/* Original-price line — height reserved so cards without a
+                  comparison price still align with neighbours that do. */}
+              <p className="text-[11px] sm:text-[12px] text-tat-slate/70 leading-none min-h-[14px]">
+                {p.originalPrice && p.originalPrice > p.price ? (
+                  <>
+                    <Price inr={p.originalPrice} className="line-through" />
+                    {discountPct !== null && (
+                      <span className="ml-1.5 text-tat-success-fg font-semibold">
+                        {discountPct}% off
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span aria-hidden>&nbsp;</span>
+                )}
+              </p>
               <p className={`mt-0.5 font-display ${compact ? "text-[19px] sm:text-[22px]" : "text-[22px] md:text-[26px]"} text-tat-charcoal leading-none`}>
                 <span className="text-[11px] font-sans text-tat-slate font-normal mr-0.5 align-baseline">from</span>
                 <Price inr={p.price} />
@@ -289,7 +300,7 @@ export default function PackageCardUI(p: PackageCardProps) {
               </span>
             )}
           </div>
-          <p className={`${compact ? "hidden sm:block" : "block"} mt-0.5 text-[11px] text-tat-slate/70`}>+ taxes &amp; fees</p>
+          <p className="mt-0.5 text-[11px] text-tat-slate/70 leading-none min-h-[14px]">+ taxes &amp; fees</p>
         </div>
 
         {/* CTAs */}

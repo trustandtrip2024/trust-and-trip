@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Heart, History, Sparkles } from "lucide-react";
 import PackageCard, { type PackageCardProps } from "@/components/ui/PackageCard";
+import ShelfRail, { HOME_RAIL_ITEM } from "@/components/ui/ShelfRail";
 import { useWishlistStore } from "@/store/useWishlistStore";
 
 interface Props {
@@ -152,22 +153,22 @@ function Rail({
         </Link>
       </div>
 
-      <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
-        <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
+      <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0">
+        <ShelfRail ariaLabel={title}>
           {items.map((p) => (
             <li
               key={p.href}
-              className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
+              className={HOME_RAIL_ITEM}
             >
               <PackageCard {...p} density="compact" />
             </li>
           ))}
           {tail && (
-            <li className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]">
+            <li className={HOME_RAIL_ITEM}>
               {tail}
             </li>
           )}
-        </ul>
+        </ShelfRail>
       </div>
     </div>
   );

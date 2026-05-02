@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Flame, Clock, ArrowRight, Sparkles, Sun, Hourglass, MessageCircle, CreditCard } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import ShelfRail from "@/components/ui/ShelfRail";
 
 type DealKind = "flash" | "early-bird" | "last-minute" | "honeymoon" | "yatra";
 
@@ -353,8 +354,8 @@ export default function LiveDeals() {
           ))}
         </ul>
 
-        <div className="hidden md:block mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
-          <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
+        <div className="hidden md:block mt-7 -mx-5 px-5 lg:mx-0 lg:px-0">
+          <ShelfRail ariaLabel="Live deals">
             {DEALS.map((d) => (
               <li
                 key={d.slug}
@@ -363,7 +364,7 @@ export default function LiveDeals() {
                 <DealTile deal={d} />
               </li>
             ))}
-          </ul>
+          </ShelfRail>
         </div>
 
         <div className="sm:hidden mt-6 text-center">

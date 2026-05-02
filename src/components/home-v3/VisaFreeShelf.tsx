@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Plane, Stamp } from "lucide-react";
 import PackageCard, { type PackageCardProps } from "@/components/ui/PackageCard";
+import ShelfRail, { HOME_RAIL_ITEM } from "@/components/ui/ShelfRail";
 
 interface Props {
   packages: PackageCardProps[];
@@ -92,14 +93,14 @@ export default function VisaFreeShelf({ packages }: Props) {
         </div>
 
         {items.length > 0 ? (
-          <div className="mt-5 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
-            <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
+          <div className="mt-5 -mx-5 px-5 lg:mx-0 lg:px-0">
+            <ShelfRail ariaLabel="Visa-free trips">
               {items.map((p) => (
                 <li
                   key={`${active}-${p.href}`}
-                  className="shrink-0 snap-start flex w-[85%] sm:w-[60%] md:w-[44%] lg:w-[31%] xl:w-[24%]"
+                  className={HOME_RAIL_ITEM}
                 >
-                  <div className="relative w-full">
+                  <div className="relative w-full flex">
                     {/* VISA-FREE corner stamp — passport-style, sits below the wishlist heart so they don't collide */}
                     <span
                       aria-label="Visa-free for Indian passports"
@@ -112,7 +113,7 @@ export default function VisaFreeShelf({ packages }: Props) {
                   </div>
                 </li>
               ))}
-            </ul>
+            </ShelfRail>
           </div>
         ) : (
           <div className="mt-6 rounded-2xl border border-dashed border-tat-charcoal/15 p-6 text-center">
