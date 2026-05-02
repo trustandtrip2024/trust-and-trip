@@ -242,10 +242,18 @@ function seededShuffle<T>(arr: T[], seed: string): T[] {
   return a;
 }
 
-// Build the lightbox gallery for a package detail page. Package's own
-// gallery wins, then 5 deterministic-random photos from the parent
-// destination's gallery (Sanity-managed first, curated Unsplash set as
-// final fallback). Deduped by URL so a photo on both sides shows once.
+// Build the lightbox gallery for a package detail page.
+//
+// Override-or-fallback semantics (NOT a merge):
+//   - If the package has its OWN gallery uploaded in Sanity → use only
+//     those photos. Destination photos are ignored entirely so the
+//     editor's per-package selection is authoritative.
+//   - Otherwise → pull 5 deterministic-random photos from the parent
+//     destination's gallery (Sanity-managed first, curated Unsplash
+//     set as final fallback).
+//
+// Deterministic-random keeps ISR HTML stable while still giving each
+// package a different sample of the destination pool.
 function composePackageGallery(
   pkgGallery: GalleryPhoto[] | undefined,
   destGallery: GalleryPhoto[] | undefined,
@@ -253,19 +261,15 @@ function composePackageGallery(
   packageSlug: string,
 ): GalleryPhoto[] {
   const own = (pkgGallery ?? []).filter((g): g is GalleryPhoto => !!g?.url);
+  if (own.length > 0) return own;
+
   const destSanity = (destGallery ?? []).filter((g): g is GalleryPhoto => !!g?.url);
   const destPool: GalleryPhoto[] = destSanity.length > 0
     ? destSanity
     : (DESTINATION_GALLERY[SLUG_ALIASES[destinationSlug] ?? destinationSlug] ?? []).map(
         (url) => ({ url }),
       );
-  const sample = seededShuffle(destPool, packageSlug || destinationSlug).slice(0, 5);
-  const seen = new Set<string>();
-  const merged: GalleryPhoto[] = [];
-  for (const g of [...own, ...sample]) {
-    if (g.url && !seen.has(g.url)) { seen.add(g.url); merged.push(g); }
-  }
-  return merged;
+  return seededShuffle(destPool, packageSlug || destinationSlug).slice(0, 5);
 }
 
 function mapPackage(p: SanityPackage): Package {

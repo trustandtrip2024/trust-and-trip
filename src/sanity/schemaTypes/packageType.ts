@@ -30,7 +30,7 @@ export const packageType = defineType({
       name: 'gallery',
       title: 'Photo Gallery (drag a folder to upload)',
       description:
-        'Drag-and-drop a whole folder of photos here — Sanity uploads them all at once. Shown as a lightbox on the package detail page. Optional: even when empty, 4–5 photos auto-flow in (random order) from the parent destination\'s gallery. Add photos here to override or extend that set.',
+        'Drag-and-drop a whole folder of photos here — Sanity uploads them all at once. Shown as a lightbox on the package detail page. OVERRIDE behaviour: when this field has any photos, the destination\'s gallery is ignored entirely for this package. Leave empty to auto-flow 5 photos (random order) from the parent destination instead.',
       type: 'array',
       of: [
         {
