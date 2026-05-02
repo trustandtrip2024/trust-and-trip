@@ -401,6 +401,7 @@ export default async function AdminHome() {
           <Tile href="/admin/brand"     icon={Palette}     title="Brand guideline"     sub="Palette · type · media specs · copy voice" />
           <Tile href="/admin/health"    icon={Activity}    title="System health"       sub="Live probes · cron jobs · 14d uptime · external dashboards" />
           <Tile href="/admin/leads"     icon={Users}       title="Leads CRM"           sub="Assignment, scoring, status" />
+          <Tile href="/admin/packages-overview" icon={ShoppingBag} title="Packages overview" sub="56 destinations · 206 packages · search, filter, export" />
         </section>
 
         {/* Activity feed */}

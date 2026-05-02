@@ -628,7 +628,7 @@ const DEST_EXTRA_CATEGORY: Record<string, string> = {
 // Five package shapes spawn for every destination. Couple is the 1.0 anchor;
 // other multipliers are calibrated to read believable on the listing grid.
 
-type ThemeKey = "couple" | "family" | "group" | "solo" | "weekend";
+type ThemeKey = "couple" | "family" | "group" | "weekend";
 
 const THEMES: Record<ThemeKey, {
   travelType: Package["travelType"];
@@ -662,13 +662,6 @@ const THEMES: Record<ThemeKey, {
     bestFor: "Friends, college groups, and adventurous families travelling together.",
     trending: true,
     category: "Adventure",
-  },
-  solo: {
-    travelType: "Solo", nights: 4, days: 5, duration: "4N/5D",
-    priceMult: 0.78, themeLabel: "Solo Explorer",
-    titleSuffix: "Solo Explorer",
-    bestFor: "Independent travellers, sabbatical takers, and weekend introverts.",
-    category: "Solo",
   },
   weekend: {
     travelType: "Couple", nights: 2, days: 3, duration: "2N/3D",
@@ -739,8 +732,6 @@ function buildPackage(dest: Destination, themeKey: ThemeKey): Package {
         return `A ${t.duration} family-friendly journey through ${dest.name}, paced for kids and grandparents alike — comfortable transfers, must-see sights, and breathing room between activities.`;
       case "group":
         return `A ${t.duration} group adventure across ${dest.name} — built for friends and adventurous families who want their itinerary loaded with action, photos, and shared meals.`;
-      case "solo":
-        return `A ${t.duration} solo route through ${dest.name} with safe-stay vetted hotels, meet-local moments, and a 24/7 concierge who feels like a friend on the ground.`;
       case "weekend":
         return `A ${t.duration} long-weekend escape to ${dest.name} — leave Friday night, return Sunday refreshed. Hotels, transfers, and the highlights, all done for you.`;
     }
@@ -752,7 +743,6 @@ function buildPackage(dest: Destination, themeKey: ThemeKey): Package {
     couple:  ["Romantic candlelight dinner", "Couples' spa or massage session"],
     family: ["Kid-friendly hotels with pools", "Flexible pace with rest afternoons"],
     group:  ["Adventure activities included", "Group-friendly stays and meals"],
-    solo:   ["Safe-stay vetted accommodation", "Meet-local guided experiences"],
     weekend:["Late-night Friday check-in support", "Compact 3-day highlights itinerary"],
   };
   const highlights = [...dest.thingsToDo.slice(0, 3), ...themeHighlights[themeKey]];
@@ -817,7 +807,7 @@ function buildPackage(dest: Destination, themeKey: ThemeKey): Package {
 
 // ─── Final exports ─────────────────────────────────────────────────────────
 
-const ALL_THEMES: ThemeKey[] = ["couple", "family", "group", "solo", "weekend"];
+const ALL_THEMES: ThemeKey[] = ["couple", "family", "group", "weekend"];
 
 export const extraPackages: Package[] = extraDestinations.flatMap((dest) =>
   ALL_THEMES.map((theme) => buildPackage(dest, theme)),

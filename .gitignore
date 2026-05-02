@@ -59,3 +59,10 @@ pnpm-lock.yaml
 
 # Editorial flagger output — regenerated on demand
 /editorial-flags.csv
+
+# Generated package overview artifacts (regen via npm run packages:*)
+/PACKAGES_BY_DESTINATION.html
+/PACKAGES_BY_DESTINATION.md
+/PACKAGES_BY_DESTINATION.pdf
+/brand-book.pdf
+/public/admin/packages-overview.html

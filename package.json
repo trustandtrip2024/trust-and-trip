@@ -11,7 +11,9 @@
     "check:lp": "node scripts/check-lp.mjs",
     "ads:push": "node scripts/push-creatives-to-meta.mjs",
     "eval:intent": "node scripts/eval-intent.mjs",
-    "wa:test": "node scripts/wa-test.mjs"
+    "wa:test": "node scripts/wa-test.mjs",
+    "packages:pdf": "node scripts/dump-packages-pdf.mjs",
+    "packages:html": "node scripts/dump-packages-html.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",
