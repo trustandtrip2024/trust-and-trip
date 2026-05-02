@@ -17,6 +17,7 @@ import {
 } from "@/lib/seo-package";
 import { getPackageStats } from "@/lib/package-stats";
 import PackageItinerary from "@/components/PackageItinerary";
+import PackageGallery from "@/components/PackageGallery";
 import PackageSlider from "@/components/PackageSlider";
 import PackageSectionNav from "@/components/PackageSectionNav";
 import ReviewsList from "@/components/ReviewsList";
@@ -323,6 +324,19 @@ export default async function PackageDetail({ params }: Props) {
             </div>
 
             {/* ┌─── VISUALIZATION ───────────────────────────────┐ */}
+
+            {/* Photo gallery — package's own photos + 4-5 random pulls
+                from the destination's gallery. Lightbox on click. Grid
+                is height-capped so the section never dominates the
+                fold. */}
+            {pkg.gallery && pkg.gallery.length >= 5 && (
+              <section id="gallery" className="mb-12 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">
+                <PackageGallery
+                  images={pkg.gallery.map((g) => g.url)}
+                  title={pkg.title}
+                />
+              </section>
+            )}
 
             {/* Itinerary — day-by-day. */}
             <section id="itinerary" className="mb-10 scroll-mt-32 pt-10 border-t border-tat-charcoal/8">

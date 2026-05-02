@@ -50,9 +50,9 @@ export const destinationType = defineType({
     }),
     defineField({
       name: 'gallery',
-      title: 'Photo Gallery',
+      title: 'Photo Gallery (drag a folder to upload)',
       description:
-        'Lightbox gallery shown on the destination detail page. 5–10 photos works best. Falls back to the curated Unsplash set if empty.',
+        'Drag-and-drop a whole folder of photos here — Sanity uploads them all at once. 8–20 photos works best. Shown as a lightbox on the destination page, AND 4–5 of these auto-populate (in random order) on every package belonging to this destination. Falls back to the curated Unsplash set if empty.',
       type: 'array',
       of: [
         {

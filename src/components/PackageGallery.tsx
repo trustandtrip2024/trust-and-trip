@@ -44,26 +44,28 @@ export default function PackageGallery({ images, title }: Props) {
           </button>
         </div>
 
-        {/* Grid layout */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 rounded-3xl overflow-hidden">
+        {/* Grid — fixed height (height-capped on purpose so the gallery
+            never dominates the fold). 4×2 cells; main spans 2×2. */}
+        <div className="grid grid-cols-4 grid-rows-2 gap-2 rounded-3xl overflow-hidden h-[260px] md:h-[360px]">
           {/* Main large image */}
           <button
             type="button"
             onClick={() => open(0)}
             aria-label={`Open photo gallery — ${images.length} photos of ${title}`}
-            className="col-span-2 row-span-2 relative aspect-[4/3] md:aspect-auto md:h-full min-h-[200px] cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
+            className="col-span-2 row-span-2 relative cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
           >
             <Image
               src={main}
               alt={`${title} — main photo`}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 768px) 50vw, 50vw"
             />
             <div className="absolute inset-0 bg-tat-charcoal/0 group-hover:bg-tat-charcoal/20 transition-colors duration-300" />
           </button>
 
-          {/* Side thumbnails */}
+          {/* Side thumbnails — auto-sized by the parent grid (each cell
+              is 25% wide × 50% tall). No aspect-ratio override. */}
           {shown.map((img, i) => {
             const isLast = i === shown.length - 1 && remaining > 0;
             return (
@@ -71,7 +73,7 @@ export default function PackageGallery({ images, title }: Props) {
                 type="button"
                 key={i}
                 aria-label={isLast && remaining > 0 ? `View ${remaining} more photos in lightbox` : `Open photo ${i + 2} of ${images.length} in lightbox`}
-                className="relative aspect-square cursor-pointer group overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
+                className="relative cursor-pointer group overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
                 onClick={() => open(i + 1)}
               >
                 <Image
@@ -79,7 +81,7 @@ export default function PackageGallery({ images, title }: Props) {
                   alt={`${title} — photo ${i + 2}`}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  sizes="(max-width: 768px) 50vw, 25vw"
+                  sizes="25vw"
                 />
                 <div className="absolute inset-0 bg-tat-charcoal/0 group-hover:bg-tat-charcoal/20 transition-colors duration-300" />
                 {isLast && remaining > 0 && (

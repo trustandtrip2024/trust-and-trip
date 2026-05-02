@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { sanityClient, urlFor } from "./sanity";
-import type { Destination, Package } from "./data";
+import type { Destination, GalleryPhoto, Package } from "./data";
 import { DESTINATION_GALLERY } from "./gallery-images";
 
 // React.cache() handles per-render dedup. Cross-request caching is
@@ -181,7 +181,12 @@ const PACKAGE_FIELDS = `
   "mapCoords": mapCoords,
   "mapImage": mapImage.asset->url,
   "brochureFile": brochureFile.asset->url,
-  ${GALLERY_PROJ}
+  ${GALLERY_PROJ},
+  "destinationGallery": destination->gallery[]{
+    "url": asset->url + "?w=2400&q=85&auto=format&fit=max",
+    alt,
+    caption
+  }
 `;
 
 const PACKAGES_QUERY = `*[_type == "package"] | order(featured desc, rating desc) { ${PACKAGE_FIELDS} }`;
@@ -218,13 +223,63 @@ function galleryImage(slug: string): string | null {
 type SanityPackage = Omit<Package, "image" | "heroImage"> & {
   image: any;
   heroImage: any;
+  destinationGallery?: GalleryPhoto[];
 };
+
+// Deterministic shuffle keyed by a string. Same package slug always
+// yields the same shuffled order, which keeps ISR HTML stable across
+// builds while still giving each package a different sample of the
+// destination's gallery. FNV-1a hash + multiply-with-carry mix.
+function seededShuffle<T>(arr: T[], seed: string): T[] {
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 16777619);
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    h = Math.imul(h ^ (h >>> 13), 1597334677);
+    const j = (h >>> 0) % (i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Build the lightbox gallery for a package detail page. Package's own
+// gallery wins, then 5 deterministic-random photos from the parent
+// destination's gallery (Sanity-managed first, curated Unsplash set as
+// final fallback). Deduped by URL so a photo on both sides shows once.
+function composePackageGallery(
+  pkgGallery: GalleryPhoto[] | undefined,
+  destGallery: GalleryPhoto[] | undefined,
+  destinationSlug: string,
+  packageSlug: string,
+): GalleryPhoto[] {
+  const own = (pkgGallery ?? []).filter((g): g is GalleryPhoto => !!g?.url);
+  const destSanity = (destGallery ?? []).filter((g): g is GalleryPhoto => !!g?.url);
+  const destPool: GalleryPhoto[] = destSanity.length > 0
+    ? destSanity
+    : (DESTINATION_GALLERY[SLUG_ALIASES[destinationSlug] ?? destinationSlug] ?? []).map(
+        (url) => ({ url }),
+      );
+  const sample = seededShuffle(destPool, packageSlug || destinationSlug).slice(0, 5);
+  const seen = new Set<string>();
+  const merged: GalleryPhoto[] = [];
+  for (const g of [...own, ...sample]) {
+    if (g.url && !seen.has(g.url)) { seen.add(g.url); merged.push(g); }
+  }
+  return merged;
+}
 
 function mapPackage(p: SanityPackage): Package {
   const destImage = galleryImage(p.destinationSlug ?? "");
+  const composedGallery = composePackageGallery(
+    p.gallery,
+    p.destinationGallery,
+    p.destinationSlug ?? "",
+    p.slug ?? "",
+  );
 
   return {
     ...p,
+    gallery: composedGallery,
     title: p.title ?? "Curated journey",
     slug: p.slug,
     destinationSlug: p.destinationSlug ?? "",

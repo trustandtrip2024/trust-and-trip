@@ -28,9 +28,9 @@ export const packageType = defineType({
     defineField({ name: 'heroImage', title: 'Hero Image', type: 'image', options: { hotspot: true } }),
     defineField({
       name: 'gallery',
-      title: 'Photo Gallery',
+      title: 'Photo Gallery (drag a folder to upload)',
       description:
-        'Lightbox gallery shown on the package detail page. 5–10 photos works best. Falls back to the destination\'s curated set if empty.',
+        'Drag-and-drop a whole folder of photos here — Sanity uploads them all at once. Shown as a lightbox on the package detail page. Optional: even when empty, 4–5 photos auto-flow in (random order) from the parent destination\'s gallery. Add photos here to override or extend that set.',
       type: 'array',
       of: [
         {
