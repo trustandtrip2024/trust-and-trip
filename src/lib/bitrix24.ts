@@ -32,6 +32,7 @@ function webhookBase(): string | null {
 const SOURCE_MAP: Record<LeadSource, string> = {
   contact_form: "WEB",
   package_enquiry: "WEB",
+  package_customize: "WEB",
   trip_planner: "WEB",
   exit_intent: "WEB",
   newsletter: "WEB",
@@ -54,6 +55,7 @@ const SOURCE_MAP: Record<LeadSource, string> = {
 const SOURCE_LABEL: Record<LeadSource, string> = {
   contact_form: "Contact form",
   package_enquiry: "Package enquiry",
+  package_customize: "Package customize request",
   trip_planner: "Trip planner",
   exit_intent: "Exit intent popup",
   newsletter: "Newsletter signup",

@@ -8,6 +8,7 @@ const SECTIONS = [
   { id: "overview",   label: "Overview" },
   { id: "itinerary",  label: "Itinerary" },
   { id: "inclusions", label: "Inclusions" },
+  { id: "customize",  label: "Customize" },
   { id: "departures", label: "Departures" },
   { id: "pricing",    label: "Pricing" },
   { id: "hotel",      label: "Hotel" },

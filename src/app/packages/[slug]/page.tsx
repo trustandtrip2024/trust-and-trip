@@ -35,6 +35,9 @@ import QuickActionRow from "@/components/package-detail/QuickActionRow";
 import CallbackForm from "@/components/package-detail/CallbackForm";
 import CancellationLadder from "@/components/package-detail/CancellationLadder";
 import UpgradesTabs from "@/components/package-detail/UpgradesTabs";
+import PackageCustomize from "@/components/package-detail/PackageCustomize";
+import PackageDurationVariants from "@/components/package-detail/PackageDurationVariants";
+import PackageRecentlyViewed from "@/components/package-detail/PackageRecentlyViewed";
 import NeedToKnowGrid from "@/components/package-detail/NeedToKnowGrid";
 import PackageWhyThis from "@/components/package-detail/PackageWhyThis";
 import PackageVsAggregator from "@/components/package-detail/PackageVsAggregator";
@@ -268,6 +271,12 @@ export default async function PackageDetail({ params }: Props) {
         enquiredCount={enquiredCount}
       />
 
+      {/* Duration flex strip — shorter / current / longer chips. Click
+          a non-current chip → fires a window event that PackageCustomize
+          catches downstream, prefilling the planner-callback with a
+          duration tweak. */}
+      <PackageDurationVariants packageTitle={pkg.title} nights={pkg.nights} />
+
       {/* ── Section Nav ────────────────────────────────────────── */}
       <PackageSectionNav packageTitle={pkg.title} />
 
@@ -484,6 +493,18 @@ export default async function PackageDetail({ params }: Props) {
               </div>
             </section>
 
+            {/* Customize block — flexibility chips that prefill a planner
+                callback request with the specific tweak (extra day,
+                different hotel tier, different month, different pickup
+                city, private guide, fully tailored). Lives in the
+                decision phase because "can I change X?" is the most
+                common late-stage objection. */}
+            <PackageCustomize
+              packageTitle={pkg.title}
+              packageSlug={pkg.slug}
+              destinationName={pkg.destinationName}
+            />
+
             {/* Departures — fixed batches with slot urgency. */}
             {pkg.departures && pkg.departures.length > 0 && (
               <DeparturesGrid
@@ -603,6 +624,11 @@ export default async function PackageDetail({ params }: Props) {
           />
         </div>
       </div>
+
+      {/* Recently viewed — pulled from local state by PackageViewTracker.
+          Hidden when nothing's been viewed yet or only the current pkg
+          is in history. */}
+      <PackageRecentlyViewed currentSlug={pkg.slug} />
 
       {/* ── You'll Also Like ───────────────────────────────────── */}
       {relatedPackages.length > 0 && (

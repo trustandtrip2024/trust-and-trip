@@ -8,6 +8,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export type LeadSource =
   // Full-form submissions (name + phone required)
   | "package_enquiry"
+  | "package_customize"
   | "contact_form"
   | "trip_planner"
   | "exit_intent"

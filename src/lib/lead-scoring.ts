@@ -18,6 +18,9 @@ export interface LeadScore {
 // the strongest signal; raw newsletter has near-zero buying intent.
 const SOURCE_WEIGHT: Record<LeadSource, number> = {
   package_enquiry:    18,
+  // Customize request = explicit "I want this trip with a tweak" — strongest
+  // mid-funnel signal. Even higher conviction than a vanilla enquiry.
+  package_customize:  20,
   trip_planner:       16,
   itinerary_generator:14,
   whatsapp:           14,   // user typed enough to start a WA conversation
