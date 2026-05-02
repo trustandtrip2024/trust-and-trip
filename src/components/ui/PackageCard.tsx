@@ -103,18 +103,24 @@ export default function PackageCardUI(p: PackageCardProps) {
   return (
     <article
       className={[
-        "tt-card group relative h-full flex overflow-hidden transition duration-200 hover:shadow-hover hover:-translate-y-0.5 motion-reduce:hover:translate-y-0",
+        "tt-card group relative h-full flex overflow-hidden transition duration-200 hover:shadow-hover hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none",
+        // Visible ring when any focusable element inside the card has
+        // focus — keyboard users see exactly which card they're on.
+        "focus-within:ring-2 focus-within:ring-tat-gold focus-within:ring-offset-2",
         horizontal ? "flex-col md:flex-row" : "flex-col",
       ].join(" ")}
     >
-      {/* IMAGE */}
+      {/* IMAGE — title link below is the canonical accessible name; this
+          link is decorative click target only, hidden from AT to avoid
+          duplicate "Package title" announcements. */}
       <Link
         href={p.href}
+        tabIndex={-1}
+        aria-hidden="true"
         className={[
-          "relative block overflow-hidden bg-tat-charcoal/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2",
+          "relative block overflow-hidden bg-tat-charcoal/15",
           horizontal ? "md:w-[40%] aspect-[3/2] md:aspect-auto" : "aspect-[3/2]",
         ].join(" ")}
-        aria-label={p.title}
       >
         <Image
           src={p.image}
@@ -203,12 +209,20 @@ export default function PackageCardUI(p: PackageCardProps) {
           </div>
         )}
 
-        {/* Title */}
+        {/* Title — wraps the canonical Link so screen readers, keyboard
+            users, and click-anywhere-on-the-name visitors all hit the
+            same target. The image link above is decorative + aria-hidden
+            so AT doesn't announce the title twice. */}
         <h3
           title={p.title}
           className={`mt-1 font-display font-normal ${compact ? "text-[14.5px] sm:text-[16px]" : "text-[16px] md:text-[18px]"} text-tat-charcoal leading-snug text-balance line-clamp-2`}
         >
-          {p.title}
+          <Link
+            href={p.href}
+            className="rounded-sm hover:text-tat-orange transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-1"
+          >
+            {p.title}
+          </Link>
         </h3>
 
         {/* Urgency / social-proof line — single row, only renders when there's
@@ -217,7 +231,7 @@ export default function PackageCardUI(p: PackageCardProps) {
           <div className="mt-1 inline-flex items-center gap-1.5 text-[11px] font-semibold">
             {seatsLeft ? (
               <>
-                <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-tat-orange animate-pulse" />
+                <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-tat-orange animate-pulse motion-reduce:animate-none" />
                 <span className="text-tat-orange">Only {seatsLeft} seats left</span>
               </>
             ) : (

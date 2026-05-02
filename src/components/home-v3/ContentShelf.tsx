@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import PackageCard, { type PackageCardProps } from "@/components/ui/PackageCard";
+import ShelfRail from "@/components/ui/ShelfRail";
 
 interface Props {
   id?: string;
@@ -61,8 +62,8 @@ export default function ContentShelf({
           </Link>
         </div>
 
-        <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
-          <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
+        <div className="mt-7 -mx-5 px-5 lg:mx-0 lg:px-0">
+          <ShelfRail ariaLabel={eyebrow}>
             {items.map((p) => (
               <li
                 key={p.href}
@@ -71,7 +72,7 @@ export default function ContentShelf({
                 <PackageCard {...p} density="compact" />
               </li>
             ))}
-          </ul>
+          </ShelfRail>
         </div>
 
         <div className="sm:hidden mt-5 text-center">

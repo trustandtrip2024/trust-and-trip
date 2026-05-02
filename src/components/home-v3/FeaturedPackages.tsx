@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, Award, Flame, Sparkles, Heart, Users, User, Globe2 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import PackageCard, { type PackageCardProps } from "@/components/ui/PackageCard";
+import ShelfRail from "@/components/ui/ShelfRail";
 
 interface Props {
   packagesByType: {
@@ -113,8 +114,8 @@ export default function FeaturedPackages({ packagesByType }: Props) {
           })}
         </div>
 
-        <div className="mt-5 -mx-5 px-5 lg:mx-0 lg:px-0 overflow-x-auto no-scrollbar snap-x snap-mandatory scroll-smooth">
-          <ul className="flex gap-4 lg:gap-5 pb-2 pr-5 lg:pr-0 items-stretch">
+        <div className="mt-5 -mx-5 px-5 lg:mx-0 lg:px-0">
+          <ShelfRail ariaLabel="Featured trips">
             {items.map((p, i) => {
               const badge = active === "all" ? BADGES[i] ?? null : null;
               return (
@@ -136,7 +137,7 @@ export default function FeaturedPackages({ packagesByType }: Props) {
                 </li>
               );
             })}
-          </ul>
+          </ShelfRail>
         </div>
 
         <div className="sm:hidden mt-6 text-center">
