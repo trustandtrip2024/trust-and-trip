@@ -1,10 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock, BookOpen } from "lucide-react";
-import { blogPosts } from "@/lib/data";
+import { blogPosts as staticBlogPosts } from "@/lib/data";
+import { getBlogPosts } from "@/lib/sanity-queries";
 
-export default function EditorialBand() {
-  const posts = blogPosts.slice(0, 3);
+// Sanity-driven now (was static blogPosts). Falls back to the static list
+// only if Sanity is empty so the band never renders broken. Cache-busted
+// via the same _updatedAt suffix used elsewhere, so swapping a blog cover
+// in Studio appears within the next ISR window.
+export default async function EditorialBand() {
+  const sanityPosts = await getBlogPosts().catch(() => []);
+  const source = sanityPosts.length > 0 ? sanityPosts : staticBlogPosts;
+  const posts = source.slice(0, 3);
   if (!posts.length) return null;
 
   return (
@@ -61,7 +68,7 @@ export default function EditorialBand() {
   );
 }
 
-type Post = (typeof blogPosts)[number];
+type Post = (typeof staticBlogPosts)[number] & { excerpt?: string };
 
 function FeaturePost({ post }: { post: Post }) {
   return (

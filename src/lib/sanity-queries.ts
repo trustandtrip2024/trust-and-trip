@@ -1,7 +1,6 @@
 import { cache } from "react";
 import { sanityClient, urlFor } from "./sanity";
 import type { Destination, GalleryPhoto, Package } from "./data";
-import { DESTINATION_GALLERY } from "./gallery-images";
 
 // React.cache() handles per-render dedup. Cross-request caching is
 // delegated to Next.js's data cache + ISR (`export const revalidate = N`
@@ -72,6 +71,7 @@ const DESTINATIONS_QUERY = `*[_type == "destination"] | order(name asc) {
   "thingsToDo": thingsToDo,
   "highlights": highlights,
   "whisper": whisper,
+  "_updatedAt": _updatedAt,
   ${GALLERY_PROJ}
 }`;
 
@@ -90,25 +90,40 @@ const DESTINATION_BY_SLUG_QUERY = `*[_type == "destination" && slug.current == $
   "thingsToDo": thingsToDo,
   "highlights": highlights,
   "whisper": whisper,
+  "_updatedAt": _updatedAt,
   ${GALLERY_PROJ}
 }`;
 
 type SanityDestination = Omit<Destination, "image" | "heroImage"> & {
   image: any;
   heroImage: any;
+  _updatedAt?: string;
 };
+
+// Append a doc-version cache-buster to image URLs so swapping a Sanity image
+// (or repositioning its hotspot) actually changes the URL the browser sees.
+// Without this, edits that reuse the same asset id render no visible change
+// because Vercel image-optimizer + browser keep the prior bytes.
+function bust(url: string, ts?: string): string {
+  if (!ts) return url;
+  const v = ts.replace(/\D/g, "").slice(0, 14);
+  return url + (url.includes("?") ? "&" : "?") + "v=" + v;
+}
 
 export const getDestinations = cache(async (): Promise<Destination[]> => {
   return cached("sanity:destinations", TTL.long, async () => {
     const raw = await sanityClient.fetch<SanityDestination[]>(DESTINATIONS_QUERY);
-    return raw.map((d) => {
-      const fallback = galleryImage(d.slug) ?? FALLBACK_DEST_IMAGE;
-      return {
-        ...d,
-        image: d.image ? urlFor(d.image).width(1200).quality(80).url() : fallback,
-        heroImage: d.heroImage ? urlFor(d.heroImage).width(2400).quality(85).url() : fallback,
-      };
-    });
+    return raw.map((d) => ({
+      ...d,
+      image: d.image
+        ? bust(urlFor(d.image).width(1200).quality(80).url(), d._updatedAt)
+        : FALLBACK_DEST_IMAGE,
+      heroImage: d.heroImage
+        ? bust(urlFor(d.heroImage).width(2400).quality(85).url(), d._updatedAt)
+        : (d.image
+            ? bust(urlFor(d.image).width(2400).quality(85).url(), d._updatedAt)
+            : FALLBACK_DEST_IMAGE),
+    }));
   });
 });
 
@@ -116,11 +131,16 @@ export const getDestinationBySlug = cache(async (slug: string): Promise<Destinat
   return cached(`sanity:destination:${slug}`, TTL.medium, async () => {
     const raw = await sanityClient.fetch<SanityDestination | null>(DESTINATION_BY_SLUG_QUERY, { slug });
     if (!raw) return null;
-    const fallback = galleryImage(raw.slug) ?? FALLBACK_DEST_IMAGE;
     return {
       ...raw,
-      image: raw.image ? urlFor(raw.image).width(2400).quality(85).url() : fallback,
-      heroImage: raw.heroImage ? urlFor(raw.heroImage).width(2400).quality(85).url() : fallback,
+      image: raw.image
+        ? bust(urlFor(raw.image).width(2400).quality(85).url(), raw._updatedAt)
+        : FALLBACK_DEST_IMAGE,
+      heroImage: raw.heroImage
+        ? bust(urlFor(raw.heroImage).width(2400).quality(85).url(), raw._updatedAt)
+        : (raw.image
+            ? bust(urlFor(raw.image).width(2400).quality(85).url(), raw._updatedAt)
+            : FALLBACK_DEST_IMAGE),
     };
   });
 });
@@ -171,6 +191,10 @@ const PACKAGE_FIELDS = `
   },
   "faqs": faqs[]{ q, a },
   "youtubeUrl": youtubeUrl,
+  "_updatedAt": _updatedAt,
+  "destUpdatedAt": destination->_updatedAt,
+  "destImage": destination->image,
+  "destHeroImage": destination->heroImage,
   "departures": departures[]{ date, batchLabel, slotsLeft, priceOverride },
   "priceBreakdown": priceBreakdown,
   "bestMonths": bestMonths[]{ month, tag, note },
@@ -201,29 +225,14 @@ const FALLBACK_HERO =
 const FALLBACK_DEST_IMAGE =
   "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1200&q=80&auto=format&fit=crop";
 
-// Some Sanity slugs differ from gallery keys — map them here
-const SLUG_ALIASES: Record<string, string> = {
-  "himachal-pradesh": "himachal-pradesh",
-  himachal: "himachal-pradesh",
-  manali: "himachal-pradesh",
-  shimla: "himachal-pradesh",
-  "spiti-valley": "spiti-valley",
-  spiti: "spiti-valley",
-  uttarakhand: "uttarakhand",
-  rishikesh: "rishikesh",
-  "andaman-and-nicobar": "andaman",
-  "andaman-nicobar": "andaman",
-};
-
-function galleryImage(slug: string): string | null {
-  const key = SLUG_ALIASES[slug] ?? slug;
-  return DESTINATION_GALLERY[key]?.[0] ?? null;
-}
-
 type SanityPackage = Omit<Package, "image" | "heroImage"> & {
   image: any;
   heroImage: any;
+  destImage?: any;
+  destHeroImage?: any;
   destinationGallery?: GalleryPhoto[];
+  _updatedAt?: string;
+  destUpdatedAt?: string;
 };
 
 // Deterministic shuffle keyed by a string. Same package slug always
@@ -264,22 +273,35 @@ function composePackageGallery(
   if (own.length > 0) return own;
 
   const destSanity = (destGallery ?? []).filter((g): g is GalleryPhoto => !!g?.url);
-  const destPool: GalleryPhoto[] = destSanity.length > 0
-    ? destSanity
-    : (DESTINATION_GALLERY[SLUG_ALIASES[destinationSlug] ?? destinationSlug] ?? []).map(
-        (url) => ({ url }),
-      );
-  return seededShuffle(destPool, packageSlug || destinationSlug).slice(0, 5);
+  if (destSanity.length === 0) return [];
+  return seededShuffle(destSanity, packageSlug || destinationSlug).slice(0, 5);
 }
 
 function mapPackage(p: SanityPackage): Package {
-  const destImage = galleryImage(p.destinationSlug ?? "");
   const composedGallery = composePackageGallery(
     p.gallery,
     p.destinationGallery,
     p.destinationSlug ?? "",
     p.slug ?? "",
   );
+
+  // Image priority — strictly Sanity-driven now:
+  //   1. Package's own image (editor uploaded it on the package doc)
+  //   2. Parent destination's image (covers most packages)
+  //   3. FALLBACK_IMAGE constant (last resort, never the local
+  //      DESTINATION_GALLERY map)
+  const pkgImg = p.image
+    ? bust(urlFor(p.image).width(1200).quality(80).url(), p._updatedAt)
+    : null;
+  const pkgHero = p.heroImage
+    ? bust(urlFor(p.heroImage).width(2400).quality(85).url(), p._updatedAt)
+    : null;
+  const destImg = p.destImage
+    ? bust(urlFor(p.destImage).width(1200).quality(80).url(), p.destUpdatedAt)
+    : null;
+  const destHero = p.destHeroImage
+    ? bust(urlFor(p.destHeroImage).width(2400).quality(85).url(), p.destUpdatedAt)
+    : (p.destImage ? bust(urlFor(p.destImage).width(2400).quality(85).url(), p.destUpdatedAt) : null);
 
   return {
     ...p,
@@ -324,10 +346,8 @@ function mapPackage(p: SanityPackage): Package {
     trending: p.trending ?? false,
     featured: p.featured ?? false,
     limitedSlots: p.limitedSlots ?? false,
-    image: destImage ?? (p.image ? urlFor(p.image).width(1200).quality(80).url() : FALLBACK_IMAGE),
-    heroImage: destImage
-      ? destImage.replace("w=1600", "w=2400")
-      : (p.heroImage ? urlFor(p.heroImage).width(2400).quality(85).url() : FALLBACK_HERO),
+    image: pkgImg ?? destImg ?? FALLBACK_IMAGE,
+    heroImage: pkgHero ?? destHero ?? FALLBACK_HERO,
   };
 }
 
@@ -739,6 +759,7 @@ const BLOG_FIELDS = `
   excerpt,
   content,
   "image": image.asset->url,
+  "_updatedAt": _updatedAt,
   author,
   date,
   readTime,
@@ -746,13 +767,25 @@ const BLOG_FIELDS = `
   tags
 `;
 
+// Append the same ?v=<digits> cache-buster used on destination/package
+// images so a Sanity Studio image swap on a blog post lands within the
+// next ISR window instead of waiting for the asset id to change.
+function bustBlogImage(url: string | undefined, ts: string | undefined): string {
+  if (!url) return "";
+  if (!ts) return url;
+  const v = ts.replace(/\D/g, "").slice(0, 14);
+  return url + (url.includes("?") ? "&" : "?") + "v=" + v;
+}
+
 export async function getBlogPosts(category?: string): Promise<SanityBlogPost[]> {
   const key = category ? `sanity:blog:${category}` : "sanity:blog:all";
   return cached(key, TTL.long, async () => {
     const filter = category
       ? `*[_type == "blogPost" && category == $category] | order(date desc)`
       : `*[_type == "blogPost"] | order(date desc)`;
-    return sanityClient.fetch<SanityBlogPost[]>(`${filter} { ${BLOG_FIELDS} }`, category ? { category } : {});
+    type Raw = SanityBlogPost & { _updatedAt?: string };
+    const raw = await sanityClient.fetch<Raw[]>(`${filter} { ${BLOG_FIELDS} }`, category ? { category } : {});
+    return raw.map((p) => ({ ...p, image: bustBlogImage(p.image, p._updatedAt) }));
   });
 }
 

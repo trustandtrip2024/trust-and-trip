@@ -13,6 +13,10 @@ import {
 // the old <SeoContent> dark slab used to do (duplicating the footer
 // look right above it), folded into the footer itself so the page
 // reads as one cohesive surface instead of two stacked dark blocks.
+// SEO topic chips — every href below points to a param the destination
+// page actually reads. Earlier this list carried `?theme=`, `?month=`,
+// `?dest=` and a `vaishno-devi` slug that don't exist as Sanity content
+// or supported filters, so chip clicks landed on the unfiltered list.
 const SEO_TOPICS = [
   { label: "Honeymoon packages",    href: "/packages?style=Honeymoon" },
   { label: "Family holidays",       href: "/packages?style=Family" },
@@ -20,16 +24,16 @@ const SEO_TOPICS = [
   { label: "Group tours",           href: "/group-trips" },
   { label: "Pilgrim journeys",      href: "/pilgrim" },
   { label: "Char Dham Yatra",       href: "/char-dham-yatra-package" },
-  { label: "Vaishno Devi",          href: "/packages?destination=vaishno-devi" },
+  { label: "Vaishno Devi",          href: "/destinations/vaishno-devi" },
   { label: "Tirupati Balaji",       href: "/packages?destination=tirupati" },
   { label: "Visa-free for Indians", href: "/packages?theme=visa-free" },
   { label: "Trips under ₹50,000",   href: "/essentials" },
   { label: "Bespoke luxury",        href: "/private" },
-  { label: "Adventure trips",       href: "/packages?style=Adventure" },
-  { label: "Wellness retreats",     href: "/packages?style=Wellness" },
-  { label: "Beach holidays",        href: "/packages?theme=beach" },
-  { label: "Mountain trips",        href: "/packages?theme=mountain" },
-  { label: "Best in May",           href: "/packages?month=may" },
+  { label: "Adventure trips",       href: "/packages?category=Adventure" },
+  { label: "Wellness retreats",     href: "/packages?category=Wellness" },
+  { label: "Beach holidays",        href: "/packages?category=Beach" },
+  { label: "Mountain trips",        href: "/packages?category=Mountain" },
+  { label: "Wildlife & safari",     href: "/packages?category=Wildlife" },
 ];
 
 const EXPLORE = [
@@ -62,7 +66,7 @@ const HONEYMOON = [
   { label: "Bali Honeymoon", href: "/honeymoon-packages-bali" },
   { label: "Maldives Honeymoon", href: "/honeymoon-packages-maldives" },
   { label: "Thailand Honeymoon", href: "/honeymoon-packages-thailand" },
-  { label: "Kerala Honeymoon", href: "/packages?type=Couple&dest=kerala" },
+  { label: "Kerala Honeymoon", href: "/packages?type=Couple&destination=kerala" },
   { label: "Vietnam Packages", href: "/vietnam-tour-packages-from-india" },
   { label: "Ha Long Bay", href: "/ha-long-bay-tour-package" },
   { label: "Budget International", href: "/budget-international-packages" },

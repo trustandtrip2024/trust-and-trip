@@ -9,7 +9,7 @@ import {
   X, Phone, Heart, BookOpen, MoreVertical,
   Info, User, LogOut, Sparkles, ChevronRight, ChevronDown, Mail, Instagram,
   MessageCircle, Wallet, Compass, Crown, Stethoscope, Users as UsersIcon,
-  ShieldCheck, Clock,
+  ShieldCheck, Clock, Search as SearchIcon,
 } from "lucide-react";
 import clsx from "clsx";
 import { useTripPlanner } from "@/context/TripPlannerContext";
@@ -31,7 +31,6 @@ type DropdownLink = { label: string; href: string; emoji?: string };
 type TopLink = { href: string; label: string; dropdown?: { groups: { title: string; items: DropdownLink[] }[]; cta?: DropdownLink } };
 
 const DEST_INDIA: DropdownLink[] = [
-  { label: "Bali",        href: "/destinations/bali",        emoji: "🌺" },
   { label: "Kerala",      href: "/destinations/kerala",      emoji: "🌴" },
   { label: "Goa",         href: "/destinations/goa",         emoji: "🏖️" },
   { label: "Rajasthan",   href: "/destinations/rajasthan",   emoji: "🏜️" },
@@ -39,15 +38,16 @@ const DEST_INDIA: DropdownLink[] = [
   { label: "Ladakh",      href: "/destinations/ladakh",      emoji: "⛰️" },
   { label: "Andaman",     href: "/destinations/andaman",     emoji: "🐠" },
   { label: "Uttarakhand", href: "/destinations/uttarakhand", emoji: "🛕" },
+  { label: "Char Dham",   href: "/destinations/char-dham",   emoji: "🪔" },
 ];
 const DEST_INTL: DropdownLink[] = [
+  { label: "Bali",        href: "/destinations/bali",        emoji: "🌺" },
   { label: "Maldives",    href: "/destinations/maldives",    emoji: "🏝️" },
   { label: "Switzerland", href: "/destinations/switzerland", emoji: "🏔️" },
   { label: "Thailand",    href: "/destinations/thailand",    emoji: "🐘" },
   { label: "Dubai",       href: "/destinations/dubai",       emoji: "🌆" },
   { label: "Singapore",   href: "/destinations/singapore",   emoji: "🦁" },
   { label: "Japan",       href: "/destinations/japan",       emoji: "🗾" },
-  { label: "Sri Lanka",   href: "/destinations/sri-lanka",   emoji: "🌿" },
   { label: "Vietnam",     href: "/destinations/vietnam",     emoji: "🛶" },
 ];
 const EXP_LIST: DropdownLink[] = [
@@ -69,13 +69,19 @@ const CONCIERGE_LIST: DropdownLink[] = [
   { label: "Pilgrim Yatras · Doctor on call", href: "/pilgrim",      emoji: "🛕" },
   { label: "Group Trips · Your group only",   href: "/group-trips",  emoji: "👥" },
 ];
+// Hrefs map to the category keys OffersBrowser understands (?cat=…). The
+// previous list used `?kind=` and `?theme=` params that the page never
+// read, so each dropdown click landed on the unfiltered list. Yatra
+// specials route to /pilgrim because there's no yatra-tagged offer pool
+// — that page is the right surface for pilgrim deals.
 const OFFER_LIST: DropdownLink[] = [
-  { label: "Flash Deals",         href: "/offers?kind=flash",       emoji: "⚡" },
-  { label: "Early-Bird",          href: "/offers?kind=early-bird",  emoji: "🌅" },
-  { label: "Last-Minute",         href: "/offers?kind=last-minute", emoji: "⏳" },
-  { label: "Honeymoon Specials",  href: "/offers?theme=honeymoon",  emoji: "💑" },
-  { label: "Yatra Specials",      href: "/offers?theme=yatra",      emoji: "🛕" },
-  { label: "Group Bonanza",       href: "/offers?theme=group",      emoji: "🎉" },
+  { label: "All deals",           href: "/offers",                  emoji: "⚡" },
+  { label: "Honeymoon Specials",  href: "/offers?cat=honeymoon",    emoji: "💑" },
+  { label: "Family Specials",     href: "/offers?cat=family",       emoji: "👨‍👩‍👧" },
+  { label: "Group Bonanza",       href: "/offers?cat=group",        emoji: "🎉" },
+  { label: "Solo Travel Deals",   href: "/offers?cat=solo",         emoji: "🧭" },
+  { label: "International",       href: "/offers?cat=international", emoji: "🌍" },
+  { label: "Yatra Specials",      href: "/pilgrim",                  emoji: "🛕" },
 ];
 
 const TOP_LINKS: TopLink[] = [
@@ -145,7 +151,7 @@ export default function Header() {
 
   const moreItems: MoreItem[] = [
     { href: "/why-us",   label: "Why Trust and Trip", icon: Sparkles },
-    { href: "/journal",  label: "Journal",  icon: BookOpen },
+    { href: "/blog",     label: "Journal",  icon: BookOpen },
     { href: "/about",    label: "About",    icon: Info },
     { href: "/wishlist", label: `Wishlist${wishlistCount > 0 ? ` (${wishlistCount})` : ""}`, icon: Heart },
     { render: "currency", label: "Currency", icon: Sparkles },
@@ -408,6 +414,30 @@ export default function Header() {
               chip but is now reachable inside the More menu, freeing
               ~80px of horizontal density. */}
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* Search trigger — opens the Sanity-backed SearchModal. The
+                Cmd/Ctrl+K shortcut still works; this gives touch users a
+                visible affordance. */}
+            <button
+              type="button"
+              aria-label="Search Trust and Trip"
+              onClick={() => window.dispatchEvent(new CustomEvent("tt:search-open"))}
+              className="hidden lg:inline-flex items-center gap-2 h-9 pl-3 pr-2 rounded-full bg-tat-charcoal/5 hover:bg-tat-charcoal/10 text-tat-charcoal/65 hover:text-tat-charcoal text-[12px] transition-colors"
+            >
+              <SearchIcon className="h-3.5 w-3.5" aria-hidden />
+              <span className="hidden xl:inline">Search</span>
+              <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 rounded border border-tat-charcoal/15 text-[10px] font-medium tracking-wide text-tat-charcoal/55">
+                ⌘K
+              </kbd>
+            </button>
+            <button
+              type="button"
+              aria-label="Search Trust and Trip"
+              onClick={() => window.dispatchEvent(new CustomEvent("tt:search-open"))}
+              className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full text-tat-paper hover:bg-white/10 transition-colors"
+            >
+              <SearchIcon className="h-4 w-4" />
+            </button>
+
             {/* Single theme toggle; responsive Tailwind classes split the
                 paint between the dark mobile header and the light desktop
                 header without rendering the component twice in DOM. */}
@@ -586,6 +616,22 @@ export default function Header() {
                   </div>
 
                   <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-4 py-4">
+                    {/* SEARCH TRIGGER — opens the Sanity-backed SearchModal.
+                        Sits above every other drawer affordance so any
+                        landing path (deep link, Meta ad, organic) can pivot
+                        to a query without scanning the nav tree. */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDrawerOpen(false);
+                        window.dispatchEvent(new CustomEvent("tt:search-open"));
+                      }}
+                      className="w-full mb-5 flex items-center gap-3 h-11 px-4 rounded-full bg-tat-cream-warm/50 border border-tat-charcoal/10 text-tat-charcoal/65 text-[14px] active:scale-[0.99] transition-transform"
+                    >
+                      <SearchIcon className="h-4 w-4 shrink-0" aria-hidden />
+                      <span className="truncate">Search trips, places, articles…</span>
+                    </button>
+
                     {/* TIER QUICK STRIP — three large tap-targets so users can
                         jump to a tier landing without expanding the Experiences
                         accordion. Visually differentiated chips so Private looks

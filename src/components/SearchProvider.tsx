@@ -15,8 +15,15 @@ export default function SearchProvider() {
         setOpen((o) => !o);
       }
     };
+    // Click affordances anywhere in the app dispatch this custom event so the
+    // Sanity-backed modal is the single search surface (mirrors tt:aria-open).
+    const openEvt = () => setOpen(true);
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    window.addEventListener("tt:search-open", openEvt);
+    return () => {
+      window.removeEventListener("keydown", handler);
+      window.removeEventListener("tt:search-open", openEvt);
+    };
   }, []);
 
   return open ? <SearchModal onClose={() => setOpen(false)} /> : null;

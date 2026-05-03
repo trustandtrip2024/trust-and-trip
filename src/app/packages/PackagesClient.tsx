@@ -25,10 +25,14 @@ const priceRanges = [
 
 const travelTypes = ["Couple", "Family", "Group", "Solo"];
 
+// Mirrors the categories actually used on Sanity package documents (audited
+// 2026-05). Chips that returned 0 results ("Budget") are dropped, and the
+// long-tail categories ("Wildlife", "Weekend") that exist in content but
+// were missing from the chip rail are added so every Sanity tag is surfaced.
 const CATEGORY_OPTIONS = [
   "Honeymoon", "Family", "Adventure", "Wellness", "Cultural",
-  "Spiritual", "Pilgrim", "Luxury", "Budget", "Quick Trips",
-  "Beach", "Mountain", "International", "Groups", "Solo",
+  "Spiritual", "Pilgrim", "Luxury", "Quick Trips", "Weekend",
+  "Beach", "Mountain", "Wildlife", "International", "Groups", "Solo",
 ];
 
 const ratingFloors = [
@@ -46,7 +50,36 @@ const sortOptions = [
   { label: "Newest first", value: "newest" },
 ];
 
-const INDIA_SLUGS = new Set(["kerala","goa","manali","rajasthan","ladakh","andaman","shimla","coorg","varanasi","agra","shimla-kasol","rishikesh-mussoorie","sikkim","meghalaya","tawang","kashmir","spiti","ooty-coonoor","hampi"]);
+// India region detection — derived from the live Sanity destinations prop
+// rather than a hand-maintained slug list. Keeping a static fallback here
+// caused `?region=domestic` to silently exclude packages anchored to any
+// destination added after the list was last edited (uttarakhand, char-dham,
+// tirupati, lakshadweep, spiti-valley, zanskar-valley, etc.). The static
+// FALLBACK is kept only as belt-and-braces if `destinations` is empty.
+const INDIA_SLUG_FALLBACK = new Set([
+  "kerala","goa","manali","rajasthan","ladakh","andaman","shimla","coorg",
+  "varanasi","kashmir","sikkim","spiti-valley","zanskar-valley",
+  "uttarakhand","char-dham","tirupati","lakshadweep","pondicherry",
+  "mahabaleshwar","lonavala","mount-abu","kanha","ranthambore","pushkar",
+  "darjeeling","north-east","puri",
+]);
+
+// Tier price thresholds — must match the equivalent constants in
+// /essentials, /signature and /private so `?tier=` filtering returns
+// the same packages a visitor would see on those landing pages.
+const ESSENTIALS_CEILING = 50000;
+const SIGNATURE_FLOOR    = 50000;
+const SIGNATURE_CEILING  = 150000;
+const PRIVATE_FLOOR      = 150000;
+
+// Visa-free destinations for Indian passports — mirrors the same list used
+// on /destinations and /offers so the `?theme=visa-free` Footer SEO chip
+// returns the right packages. Kept as a static set because visa policy is
+// political-not-content state; a Sanity-driven flag is overkill.
+const VISA_FREE_SLUGS = new Set([
+  "bali", "thailand", "sri-lanka", "maldives", "nepal", "bhutan",
+  "vietnam", "mauritius", "kenya", "jordan", "indonesia", "fiji",
+]);
 
 interface Props {
   packages: Package[];
@@ -82,6 +115,11 @@ export default function PackagesClient({
   // is missing on older docs). Without this, every tile click landed on
   // the unfiltered packages list and showed irrelevant trips.
   const initialStyle = sp.get("style") ?? "";
+  // ?theme= covers Footer SEO chips (visa-free, etc.) that don't map cleanly
+  // onto a Sanity category. Right now only "visa-free" is honoured — it
+  // filters to packages anchored to a passport-free destination from
+  // VISA_FREE_SLUGS. Future themes can extend the same param.
+  const initialTheme = sp.get("theme") ?? "";
 
   const resolvedPrice = initialBudget ? (BUDGET_TO_PRICE[initialBudget] ?? "") : "";
   const resolvedDuration = initialDuration
@@ -105,9 +143,21 @@ export default function PackagesClient({
   const [filterRegion, setFilterRegion] = useState(initialRegion);
   // Source-city pickup. Tier-2/3 routes (Lucknow/Kanpur/Haridwar) are an
   // open slot vs Veena (Mumbai/Pune-anchored) and PYT (metro-only).
+  // Pickup is a RANKING boost, not a hard filter — packages departing from
+  // the visitor's chosen city sort to the top, but cards from every other
+  // pickup city stay visible below them. Keeps Tier-2 routes (Lucknow,
+  // Kanpur, Haridwar) discoverable to a Mumbai visitor without forcing
+  // them to clear the filter to see anything else.
   const initialPickup = sp.get("pickup") ?? "";
   const [filterPickup, setFilterPickup] = useState(initialPickup);
+  // Tag pivot — chip rail of the most common tags across the currently
+  // filtered set. Lets visitors slice on real package metadata (e.g.
+  // "Visa on Arrival", "Helicopter Option", "Family Europe") without
+  // pre-defining every tag at build time.
+  const initialTag = sp.get("tag") ?? "";
+  const [filterTag, setFilterTag] = useState(initialTag);
   const [filterStyle, setFilterStyle] = useState(initialStyle);
+  const [filterTheme, setFilterTheme] = useState(initialTheme);
   const [sortBy, setSortBy] = useState<string>("popular");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -125,21 +175,39 @@ export default function PackagesClient({
     if (filterCategory) params.set("category", filterCategory);
     if (filterTier) params.set("tier", filterTier);
     if (filterPickup) params.set("pickup", filterPickup);
+    if (filterTag) params.set("tag", filterTag);
     if (filterStyle) params.set("style", filterStyle);
+    if (filterTheme) params.set("theme", filterTheme);
     if (sortBy && sortBy !== "popular") params.set("sort", sortBy);
     if (filterRegion) params.set("region", filterRegion);
 
     const qs = params.toString();
     const url = qs ? `${pathname}?${qs}` : pathname;
     router.replace(url, { scroll: false });
-  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterTier, filterRegion, filterPickup, filterStyle, sortBy, pathname, router]);
+  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterTier, filterRegion, filterPickup, filterTag, filterStyle, filterTheme, sortBy, pathname, router]);
+
+  // India-vs-international detection from the live `destinations` prop.
+  // Falls back to the curated slug set only if Sanity returned nothing,
+  // so the page never crashes during a refetch. See INDIA_SLUG_FALLBACK
+  // for the rationale.
+  const indiaSlugs = useMemo(() => {
+    if (destinations.length === 0) return INDIA_SLUG_FALLBACK;
+    const set = new Set<string>();
+    for (const d of destinations) {
+      if (d.country === "India") set.add(d.slug);
+    }
+    // Layer the fallback in so a destination missing the country field
+    // doesn't accidentally drop out of the domestic bucket.
+    INDIA_SLUG_FALLBACK.forEach((s) => set.add(s));
+    return set;
+  }, [destinations]);
 
   const filtered = useMemo(() => {
     const list = packages.filter((p) => {
       if (filterDestination && p.destinationSlug !== filterDestination) return false;
       if (filterTravelType && p.travelType !== filterTravelType) return false;
-      if (filterRegion === "domestic" && !INDIA_SLUGS.has(p.destinationSlug)) return false;
-      if (filterRegion === "international" && INDIA_SLUGS.has(p.destinationSlug)) return false;
+      if (filterRegion === "domestic" && !indiaSlugs.has(p.destinationSlug)) return false;
+      if (filterRegion === "international" && indiaSlugs.has(p.destinationSlug)) return false;
       if (filterDuration) {
         const range = durationRanges.find((d) => d.label === filterDuration);
         if (range && (p.days < range.min || p.days > range.max)) return false;
@@ -156,13 +224,25 @@ export default function PackagesClient({
         if (!p.categories || !p.categories.includes(filterCategory)) return false;
       }
       if (filterTier) {
+        // Tier filter must match the price-threshold logic used by the
+        // dedicated /essentials, /signature and /private landing pages.
+        // Earlier this filtered on a non-existent "Budget" category and
+        // returned 0 results for ?tier=essentials.
         const cats = (p.categories ?? []).map((c) => c.toLowerCase());
-        if (filterTier === "essentials" && !cats.includes("budget")) return false;
-        if (filterTier === "private"    && !cats.includes("luxury")) return false;
-        if (filterTier === "signature"  && (cats.includes("budget") || cats.includes("luxury"))) return false;
+        const isLuxury = cats.includes("luxury");
+        if (filterTier === "essentials" && p.price >= ESSENTIALS_CEILING) return false;
+        if (filterTier === "signature"  && (p.price < SIGNATURE_FLOOR || p.price >= SIGNATURE_CEILING || isLuxury)) return false;
+        if (filterTier === "private"    && p.price < PRIVATE_FLOOR && !isLuxury) return false;
       }
-      if (filterPickup) {
-        if (!p.tags?.includes(`ex-${filterPickup}`)) return false;
+      // Pickup is intentionally NOT a hard filter — see filterPickup
+      // declaration above. The boost is applied during sort below so a
+      // visitor anchored to "Lucknow" still sees Mumbai, Delhi and metro
+      // departures, just ranked below the matching Lucknow trips.
+      if (filterTag) {
+        if (!p.tags?.includes(filterTag)) return false;
+      }
+      if (filterTheme === "visa-free") {
+        if (!VISA_FREE_SLUGS.has(p.destinationSlug)) return false;
       }
       if (filterStyle) {
         const cats = (p.categories ?? []).map((c) => c.toLowerCase());
@@ -184,35 +264,34 @@ export default function PackagesClient({
       return true;
     });
 
-    // Sort
+    // Sort. Pickup boost is layered on every sort mode — even on
+    // price-asc/desc, the chosen pickup city's trips float to the top of
+    // their respective price band so the visitor sees their own departure
+    // options first without losing the sort intent.
+    const pickupTag = filterPickup ? `ex-${filterPickup}` : "";
+    const matchesPickup = (p: Package) =>
+      pickupTag ? (p.tags?.includes(pickupTag) ? 1 : 0) : 0;
+
     const sorted = [...list];
-    switch (sortBy) {
-      case "price-asc":
-        sorted.sort((a, b) => a.price - b.price);
-        break;
-      case "price-desc":
-        sorted.sort((a, b) => b.price - a.price);
-        break;
-      case "rating":
-        sorted.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
-        break;
-      case "duration-asc":
-        sorted.sort((a, b) => a.days - b.days);
-        break;
-      case "newest":
-        // heuristic: reverse original order (closest to array end = newest in Sanity)
-        sorted.reverse();
-        break;
-      case "popular":
-      default:
-        sorted.sort((a, b) => {
-          const scoreA = (a.rating ?? 0) * (a.reviews ?? 0) + (a.trending ? 100 : 0);
-          const scoreB = (b.rating ?? 0) * (b.reviews ?? 0) + (b.trending ? 100 : 0);
-          return scoreB - scoreA;
-        });
-    }
+    const baseCmp = (a: Package, b: Package): number => {
+      switch (sortBy) {
+        case "price-asc":    return a.price - b.price;
+        case "price-desc":   return b.price - a.price;
+        case "rating":       return (b.rating ?? 0) - (a.rating ?? 0);
+        case "duration-asc": return a.days - b.days;
+        case "newest":       return 0;
+        case "popular":
+        default: {
+          const sa = (a.rating ?? 0) * (a.reviews ?? 0) + (a.trending ? 100 : 0);
+          const sb = (b.rating ?? 0) * (b.reviews ?? 0) + (b.trending ? 100 : 0);
+          return sb - sa;
+        }
+      }
+    };
+    if (sortBy === "newest") sorted.reverse();
+    sorted.sort((a, b) => matchesPickup(b) - matchesPickup(a) || baseCmp(a, b));
     return sorted;
-  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterStyle, filterTier, filterRegion, filterPickup, sortBy]);
+  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterStyle, filterTheme, filterTier, filterRegion, filterPickup, filterTag, indiaSlugs, sortBy]);
 
   const activeFilterCount =
     (filterDestination ? 1 : 0) +
@@ -221,7 +300,27 @@ export default function PackagesClient({
     (filterPrice ? 1 : 0) +
     (filterRating ? 1 : 0) +
     (filterCategory ? 1 : 0) +
-    (filterStyle ? 1 : 0);
+    (filterStyle ? 1 : 0) +
+    (filterTheme ? 1 : 0) +
+    (filterTag ? 1 : 0);
+
+  // Top tag pivots from the currently filtered set. Strips internal-only
+  // tags (ex-<city>, Domestic, International — already surfaced as their
+  // own chips) so the rail shows real content metadata. Capped at 12 so
+  // it stays a single overflow row on mobile.
+  const tagPivots = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const p of filtered) {
+      for (const t of p.tags ?? []) {
+        if (!t || t.startsWith("ex-")) continue;
+        if (t === "Domestic" || t === "International") continue;
+        counts.set(t, (counts.get(t) ?? 0) + 1);
+      }
+    }
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12);
+  }, [filtered]);
 
   const clearAll = () => {
     setFilterDestination("");
@@ -233,7 +332,9 @@ export default function PackagesClient({
     setFilterTier("");
     setFilterRegion("");
     setFilterPickup("");
+    setFilterTag("");
     setFilterStyle("");
+    setFilterTheme("");
     setSortBy("popular");
   };
 
@@ -299,18 +400,21 @@ export default function PackagesClient({
             const cities = [...cityCounts.entries()].sort((a, b) => b[1] - a[1]);
             return (
               <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-                <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">Pickup from</span>
+                <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">
+                  Boost pickup
+                </span>
                 <button
                   type="button"
                   onClick={() => setFilterPickup("")}
                   aria-pressed={!filterPickup}
+                  title="Show every departure city, ranked by popularity"
                   className={`shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
                     !filterPickup
                       ? "bg-tat-orange text-white border-tat-orange"
                       : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30"
                   }`}
                 >
-                  Any city
+                  All cities
                 </button>
                 {cities.map(([city, n]) => {
                   const active = filterPickup === city;
@@ -321,6 +425,7 @@ export default function PackagesClient({
                       type="button"
                       onClick={() => setFilterPickup(active ? "" : city)}
                       aria-pressed={active}
+                      title={`Float ${label} departures to the top — other cities still visible below`}
                       className={`shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
                         active
                           ? "bg-tat-orange text-white border-tat-orange"
@@ -332,9 +437,53 @@ export default function PackagesClient({
                     </button>
                   );
                 })}
+                {filterPickup && (
+                  <span className="shrink-0 text-[10px] text-tat-charcoal/55 italic">
+                    showing all cities · matches first
+                  </span>
+                )}
               </div>
             );
           })()}
+
+          {tagPivots.length > 0 && (
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+              <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">
+                Pivot by tag
+              </span>
+              <button
+                type="button"
+                onClick={() => setFilterTag("")}
+                aria-pressed={!filterTag}
+                className={`shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
+                  !filterTag
+                    ? "bg-tat-charcoal text-tat-paper border-tat-charcoal"
+                    : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30"
+                }`}
+              >
+                All
+              </button>
+              {tagPivots.map(([tag, n]) => {
+                const active = filterTag === tag;
+                return (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => setFilterTag(active ? "" : tag)}
+                    aria-pressed={active}
+                    className={`shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-medium transition-all ${
+                      active
+                        ? "bg-tat-gold/20 text-tat-charcoal border-tat-gold"
+                        : "bg-white text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30 hover:text-tat-charcoal"
+                    }`}
+                  >
+                    {tag}
+                    <span className={`text-[10px] ${active ? "text-tat-charcoal/60" : "text-tat-charcoal/40"}`}>{n}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
             <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">Region</span>
@@ -455,8 +604,11 @@ export default function PackagesClient({
           </AnimatePresence>
 
           <div>
-            {/* Active filter chips — visible on both mobile and desktop. */}
-            {activeFilterCount > 0 && (
+            {/* Active filter chips — visible on both mobile and desktop.
+                Pickup is a soft boost (not counted in activeFilterCount)
+                but still shown as a removable chip so the visitor can
+                clear it without scanning the rail. */}
+            {(activeFilterCount > 0 || filterPickup) && (
               <ActiveFilterChips
                 destinations={destinations}
                 filterDestination={filterDestination}
@@ -473,6 +625,12 @@ export default function PackagesClient({
                 clearCategory={() => setFilterCategory("")}
                 filterStyle={filterStyle}
                 clearStyle={() => setFilterStyle("")}
+                filterTheme={filterTheme}
+                clearTheme={() => setFilterTheme("")}
+                filterTag={filterTag}
+                clearTag={() => setFilterTag("")}
+                filterPickup={filterPickup}
+                clearPickup={() => setFilterPickup("")}
                 clearAll={clearAll}
               />
             )}
@@ -524,6 +682,17 @@ export default function PackagesClient({
                   </a>
                 </div>
               </div>
+            ) : activeFilterCount === 0 && !filterTier && !filterRegion && !filterPickup ? (
+              // Default browse view — group results into category sections.
+              // Reads as a guided "what kind of trip?" landing rather than a
+              // flat 100-row grid. The first 8 cards in each category render;
+              // a "See all in <category>" link sets the category filter so
+              // the visitor lands in the flat grid scoped to that pivot.
+              <GroupedByCategory
+                packages={filtered}
+                onPickCategory={setFilterCategory}
+                pickup={filterPickup}
+              />
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-5">
                 {filtered.map((p, i) => (
@@ -541,6 +710,8 @@ export default function PackagesClient({
                     trending={p.trending}
                     limitedSlots={p.limitedSlots}
                     categories={p.categories}
+                    pickupCity={pickupCityFor(p)}
+                    pickupMatch={!!filterPickup && p.tags?.includes(`ex-${filterPickup}`)}
                     index={i}
                   />
                 ))}
@@ -840,6 +1011,130 @@ function DestinationFilter({
   );
 }
 
+// Pickup-city helper — surfaces the FIRST `ex-<city>` tag a package
+// carries as a human-readable label. Returns "" when the package has no
+// pickup tag (those depart from any metro the visitor can fly out of).
+function pickupCityFor(p: Package): string {
+  const ex = p.tags?.find((t) => t.startsWith("ex-"));
+  if (!ex) return "";
+  return ex.slice(3).replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// Default browse view — slices the result list into top categories so the
+// /packages landing reads as a guided "what kind of trip?" page rather
+// than a 300-row catalog. Only kicks in when no filter is applied; once
+// the visitor narrows, the page reverts to the flat grid.
+function GroupedByCategory({
+  packages,
+  onPickCategory,
+  pickup,
+}: {
+  packages: Package[];
+  onPickCategory: (c: string) => void;
+  pickup: string;
+}) {
+  // Display order — lifestyle categories first, audience next, region last.
+  const ORDER = [
+    "Honeymoon", "Family", "Adventure", "Wellness", "Spiritual",
+    "Pilgrim", "Beach", "Mountain", "Wildlife", "Luxury", "Cultural",
+    "Quick Trips", "Weekend", "International", "Groups", "Solo",
+  ];
+  const buckets = useMemo(() => {
+    const map = new Map<string, Package[]>();
+    for (const p of packages) {
+      const cats = p.categories ?? [];
+      if (cats.length === 0) {
+        const key = "Other";
+        if (!map.has(key)) map.set(key, []);
+        map.get(key)!.push(p);
+        continue;
+      }
+      // Place package under its FIRST recognised category so it doesn't
+      // appear in three sections. Falls back to its first category if
+      // none are in the curated ORDER.
+      const primary = cats.find((c) => ORDER.includes(c)) ?? cats[0];
+      if (!map.has(primary)) map.set(primary, []);
+      map.get(primary)!.push(p);
+    }
+    return map;
+  }, [packages]);
+
+  // Render in display order, then any leftover keys, then "Other" last.
+  const ordered: [string, Package[]][] = [];
+  for (const cat of ORDER) {
+    const arr = buckets.get(cat);
+    if (arr && arr.length > 0) ordered.push([cat, arr]);
+  }
+  for (const [cat, arr] of buckets) {
+    if (cat === "Other") continue;
+    if (!ORDER.includes(cat)) ordered.push([cat, arr]);
+  }
+  if (buckets.has("Other")) ordered.push(["Other", buckets.get("Other")!]);
+
+  return (
+    <div className="space-y-12">
+      {ordered.map(([cat, arr]) => {
+        const showAll = arr.length > 8;
+        const slice = arr.slice(0, 8);
+        return (
+          <section key={cat} aria-labelledby={`cat-${cat}`}>
+            <header className="flex items-end justify-between gap-3 mb-4">
+              <div>
+                <h3
+                  id={`cat-${cat}`}
+                  className="font-display text-h3 font-medium text-tat-charcoal"
+                >
+                  {cat}
+                </h3>
+                <p className="text-xs text-tat-charcoal/55 mt-0.5">
+                  {arr.length} package{arr.length === 1 ? "" : "s"}
+                  {pickup && (
+                    <> · {arr.filter((p) => p.tags?.includes(`ex-${pickup}`)).length} from {pickup.replace(/-/g, " ")}</>
+                  )}
+                </p>
+              </div>
+              {showAll && (
+                <button
+                  type="button"
+                  onClick={() => onPickCategory(cat)}
+                  className="text-xs font-semibold text-tat-gold hover:text-tat-charcoal underline-offset-2 hover:underline"
+                >
+                  See all {arr.length} →
+                </button>
+              )}
+            </header>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-5">
+              {slice.map((p, i) => (
+                <PackageCard
+                  key={p.slug}
+                  title={p.title}
+                  slug={p.slug}
+                  image={p.image}
+                  duration={p.duration}
+                  price={p.price}
+                  rating={p.rating}
+                  reviews={p.reviews}
+                  destinationName={p.destinationName}
+                  travelType={p.travelType}
+                  trending={p.trending}
+                  limitedSlots={p.limitedSlots}
+                  categories={p.categories}
+                  pickupCity={pickupCityFor(p)}
+                  pickupMatch={!!pickup && p.tags?.includes(`ex-${pickup}`)}
+                  index={i}
+                />
+              ))}
+            </div>
+          </section>
+        );
+      })}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-5">
+        <CustomTripCTACard />
+      </div>
+    </div>
+  );
+}
+
 // Inline summary of every applied filter as removable chips. Shown above
 // the results grid so users see what's filtering without opening the panel
 // and can remove a single filter without touching the rest.
@@ -859,6 +1154,12 @@ interface ChipsProps {
   clearCategory: () => void;
   filterStyle: string;
   clearStyle: () => void;
+  filterTheme: string;
+  clearTheme: () => void;
+  filterTag: string;
+  clearTag: () => void;
+  filterPickup: string;
+  clearPickup: () => void;
   clearAll: () => void;
 }
 
@@ -871,6 +1172,9 @@ function ActiveFilterChips({
   filterRating, clearRating,
   filterCategory, clearCategory,
   filterStyle, clearStyle,
+  filterTheme, clearTheme,
+  filterTag, clearTag,
+  filterPickup, clearPickup,
   clearAll,
 }: ChipsProps) {
   const destName = filterDestination
@@ -880,8 +1184,14 @@ function ActiveFilterChips({
   const chips: { label: string; onRemove: () => void }[] = [];
   if (filterDestination) chips.push({ label: destName, onRemove: clearDestination });
   if (filterStyle) chips.push({ label: `Style: ${filterStyle}`, onRemove: clearStyle });
+  if (filterTheme === "visa-free") chips.push({ label: "Visa-free for Indians", onRemove: clearTheme });
   if (filterTravelType) chips.push({ label: filterTravelType, onRemove: clearTravelType });
   if (filterCategory) chips.push({ label: filterCategory, onRemove: clearCategory });
+  if (filterTag) chips.push({ label: `#${filterTag}`, onRemove: clearTag });
+  if (filterPickup) {
+    const lbl = filterPickup.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    chips.push({ label: `Boost: ${lbl}`, onRemove: clearPickup });
+  }
   if (filterDuration) chips.push({ label: filterDuration, onRemove: clearDuration });
   if (filterPrice) chips.push({ label: filterPrice, onRemove: clearPrice });
   if (filterRating) chips.push({ label: `${filterRating}★ +`, onRemove: clearRating });

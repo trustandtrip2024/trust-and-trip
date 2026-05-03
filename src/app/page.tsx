@@ -1,4 +1,4 @@
-export const revalidate = 300;
+export const revalidate = 60;
 
 export const metadata = {
   title: "Trust and Trip — Trips that feel made just for you",
