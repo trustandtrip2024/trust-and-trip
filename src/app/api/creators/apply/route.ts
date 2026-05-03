@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { generateRefCode } from "@/lib/creator-attribution";
 import { pushLead } from "@/lib/bitrix24";
 import { rateLimit, clientIp } from "@/lib/redis";
+import { encryptPayout } from "@/lib/payout-crypto";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
         ref_code,
         status: "pending",
         payout_method: body.payout_method || null,
-        payout_details: body.payout_details ? { raw: body.payout_details } : null,
+        payout_details: body.payout_details ? encryptPayout(body.payout_details) : null,
         notes: [
           body.primary_content ? `Content: ${body.primary_content}` : null,
           body.why ? `Why: ${body.why}` : null,
