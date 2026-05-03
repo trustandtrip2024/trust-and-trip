@@ -52,6 +52,8 @@ export interface PackageCardProps {
   highlights?: string[];
   inclusions?: string[];
   categories?: string[];
+  pickupCity?: string;
+  pickupMatch?: boolean;
   index?: number;
   inSlider?: boolean;
 }
@@ -71,6 +73,8 @@ export default function PackageCard({
   highlights,
   inclusions,
   categories,
+  pickupCity,
+  pickupMatch,
   index = 0,
   inSlider = false,
 }: PackageCardProps) {
@@ -214,6 +218,21 @@ export default function PackageCard({
                 <span className="bg-tat-charcoal/5 px-2 py-0.5 rounded-full shrink-0">{travelType}</span>
               </>
             )}
+          </div>
+        )}
+
+        {pickupCity && (
+          <div className="flex items-center gap-1 mb-1.5">
+            <span
+              className={`inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full border ${
+                pickupMatch
+                  ? "bg-tat-orange/15 text-tat-orange border-tat-orange/40"
+                  : "bg-tat-charcoal/5 text-tat-charcoal/65 border-tat-charcoal/10"
+              }`}
+              title={`Departs from ${pickupCity}`}
+            >
+              {pickupMatch ? "✓" : "Ex"} {pickupCity}
+            </span>
           </div>
         )}
 
