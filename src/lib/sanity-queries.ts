@@ -72,6 +72,7 @@ const DESTINATIONS_QUERY = `*[_type == "destination"] | order(name asc) {
   "thingsToDo": thingsToDo,
   "highlights": highlights,
   "whisper": whisper,
+  "_updatedAt": _updatedAt,
   ${GALLERY_PROJ}
 }`;
 
@@ -90,13 +91,25 @@ const DESTINATION_BY_SLUG_QUERY = `*[_type == "destination" && slug.current == $
   "thingsToDo": thingsToDo,
   "highlights": highlights,
   "whisper": whisper,
+  "_updatedAt": _updatedAt,
   ${GALLERY_PROJ}
 }`;
 
 type SanityDestination = Omit<Destination, "image" | "heroImage"> & {
   image: any;
   heroImage: any;
+  _updatedAt?: string;
 };
+
+// Append a doc-version cache-buster to image URLs so swapping a Sanity image
+// (or repositioning its hotspot) actually changes the URL the browser sees.
+// Without this, edits that reuse the same asset id render no visible change
+// because Vercel image-optimizer + browser keep the prior bytes.
+function bust(url: string, ts?: string): string {
+  if (!ts) return url;
+  const v = ts.replace(/\D/g, "").slice(0, 14);
+  return url + (url.includes("?") ? "&" : "?") + "v=" + v;
+}
 
 export const getDestinations = cache(async (): Promise<Destination[]> => {
   return cached("sanity:destinations", TTL.long, async () => {
@@ -105,8 +118,12 @@ export const getDestinations = cache(async (): Promise<Destination[]> => {
       const fallback = galleryImage(d.slug) ?? FALLBACK_DEST_IMAGE;
       return {
         ...d,
-        image: d.image ? urlFor(d.image).width(1200).quality(80).url() : fallback,
-        heroImage: d.heroImage ? urlFor(d.heroImage).width(2400).quality(85).url() : fallback,
+        image: d.image
+          ? bust(urlFor(d.image).width(1200).quality(80).url(), d._updatedAt)
+          : fallback,
+        heroImage: d.heroImage
+          ? bust(urlFor(d.heroImage).width(2400).quality(85).url(), d._updatedAt)
+          : fallback,
       };
     });
   });
@@ -119,8 +136,12 @@ export const getDestinationBySlug = cache(async (slug: string): Promise<Destinat
     const fallback = galleryImage(raw.slug) ?? FALLBACK_DEST_IMAGE;
     return {
       ...raw,
-      image: raw.image ? urlFor(raw.image).width(2400).quality(85).url() : fallback,
-      heroImage: raw.heroImage ? urlFor(raw.heroImage).width(2400).quality(85).url() : fallback,
+      image: raw.image
+        ? bust(urlFor(raw.image).width(2400).quality(85).url(), raw._updatedAt)
+        : fallback,
+      heroImage: raw.heroImage
+        ? bust(urlFor(raw.heroImage).width(2400).quality(85).url(), raw._updatedAt)
+        : fallback,
     };
   });
 });
@@ -171,6 +192,8 @@ const PACKAGE_FIELDS = `
   },
   "faqs": faqs[]{ q, a },
   "youtubeUrl": youtubeUrl,
+  "_updatedAt": _updatedAt,
+  "destUpdatedAt": destination->_updatedAt,
   "departures": departures[]{ date, batchLabel, slotsLeft, priceOverride },
   "priceBreakdown": priceBreakdown,
   "bestMonths": bestMonths[]{ month, tag, note },
@@ -224,6 +247,8 @@ type SanityPackage = Omit<Package, "image" | "heroImage"> & {
   image: any;
   heroImage: any;
   destinationGallery?: GalleryPhoto[];
+  _updatedAt?: string;
+  destUpdatedAt?: string;
 };
 
 // Deterministic shuffle keyed by a string. Same package slug always
@@ -324,10 +349,10 @@ function mapPackage(p: SanityPackage): Package {
     trending: p.trending ?? false,
     featured: p.featured ?? false,
     limitedSlots: p.limitedSlots ?? false,
-    image: destImage ?? (p.image ? urlFor(p.image).width(1200).quality(80).url() : FALLBACK_IMAGE),
+    image: destImage ?? (p.image ? bust(urlFor(p.image).width(1200).quality(80).url(), p._updatedAt) : FALLBACK_IMAGE),
     heroImage: destImage
       ? destImage.replace("w=1600", "w=2400")
-      : (p.heroImage ? urlFor(p.heroImage).width(2400).quality(85).url() : FALLBACK_HERO),
+      : (p.heroImage ? bust(urlFor(p.heroImage).width(2400).quality(85).url(), p._updatedAt) : FALLBACK_HERO),
   };
 }
 

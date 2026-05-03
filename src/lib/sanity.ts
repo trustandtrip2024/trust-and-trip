@@ -6,7 +6,10 @@ export const sanityClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
   apiVersion: "2024-01-01",
-  useCdn: true, // faster, uses Sanity's CDN
+  // Live API (not CDN). Image swaps in Sanity Studio land within seconds
+  // instead of waiting on the CDN's 60s propagation delay. Next.js ISR
+  // (revalidate=300 on home, etc.) still cushions the Sanity round-trip.
+  useCdn: false,
 });
 
 // Helper to turn Sanity image references into actual URLs
