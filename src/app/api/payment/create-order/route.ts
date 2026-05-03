@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 import { pushBookingAsDeal } from "@/lib/bitrix24";
 import { REF_COOKIE, isValidRefCode } from "@/lib/creator-attribution";
 import { rateLimit, clientIp } from "@/lib/redis";
-import { sendCapiEvents, ipFromRequest } from "@/lib/meta-capi";
+import { sendCapiEvents, ipFromRequest, readMarketingConsentFromCookies } from "@/lib/meta-capi";
 import { ga4InitiateCheckout, clientIdFromCookie } from "@/lib/ga4-mp";
 import { getPackageBySlug } from "@/lib/sanity-queries";
 
@@ -231,32 +231,36 @@ export async function POST(req: NextRequest) {
     // event_id = razorpay order_id so any browser-side IC dedupes naturally.
     const fbp = cookies().get("_fbp")?.value;
     const fbc = cookies().get("_fbc")?.value;
-    sendCapiEvents([
-      {
-        name: "InitiateCheckout",
-        eventId: order.id,
-        actionSource: "website",
-        user: {
-          email: customer_email,
-          phone: customer_phone,
-          firstName: String(customer_name).split(/\s+/)[0],
-          country: "in",
-          externalId: bookingRow?.id ? String(bookingRow.id) : undefined,
-          fbp,
-          fbc,
-          clientIp: ipFromRequest(req),
-          clientUserAgent: req.headers.get("user-agent") ?? undefined,
+    const capiAllowed = await readMarketingConsentFromCookies();
+    sendCapiEvents(
+      [
+        {
+          name: "InitiateCheckout",
+          eventId: order.id,
+          actionSource: "website",
+          user: {
+            email: customer_email,
+            phone: customer_phone,
+            firstName: String(customer_name).split(/\s+/)[0],
+            country: "in",
+            externalId: bookingRow?.id ? String(bookingRow.id) : undefined,
+            fbp,
+            fbc,
+            clientIp: ipFromRequest(req),
+            clientUserAgent: req.headers.get("user-agent") ?? undefined,
+          },
+          customData: {
+            currency: "INR",
+            value: DEPOSIT_AMOUNT / 100,
+            contentName: package_title,
+            contentIds: package_slug ? [package_slug] : undefined,
+            contentType: "product",
+            numItems: 1,
+          },
         },
-        customData: {
-          currency: "INR",
-          value: DEPOSIT_AMOUNT / 100,
-          contentName: package_title,
-          contentIds: package_slug ? [package_slug] : undefined,
-          contentType: "product",
-          numItems: 1,
-        },
-      },
-    ]).catch((e) => console.error("[capi] InitiateCheckout failed", e));
+      ],
+      capiAllowed,
+    ).catch((e) => console.error("[capi] InitiateCheckout failed", e));
 
     // GA4 begin_checkout mirror.
     const gaClientId = clientIdFromCookie(cookies().get("_ga")?.value);

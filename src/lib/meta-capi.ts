@@ -122,13 +122,47 @@ interface CapiResponse {
   events_received?: number;
   fbtrace_id?: string;
   error?: string;
+  /** Set when dispatch was blocked upstream (e.g. no marketing consent). */
+  suppressed?: "no_consent";
+}
+
+/**
+ * Reads marketing-consent flag from the request cookie. Mirrors what
+ * CookieConsentContext writes when the visitor accepts/rejects on the
+ * banner. Default-deny when the cookie is absent (fresh visitor) or
+ * malformed — Path A from the 2026-05-03 /admin/decisions log.
+ *
+ * Pass through `marketingConsentAllowed` as the second arg to
+ * `sendCapiEvents` to gate dispatch on it. Server routes call this from
+ * inside the request handler so they have access to next/headers cookies.
+ */
+export async function readMarketingConsentFromCookies(): Promise<boolean> {
+  // next/headers is a server-only import — keep it inline so this file
+  // stays usable from edge contexts that don't depend on the helper.
+  const { cookies } = await import("next/headers");
+  const c = cookies().get("tt_consent_m")?.value;
+  return c === "1";
 }
 
 /**
  * Send one or more events to Meta CAPI. Fire-and-forget — never throws.
- * Silently no-ops if META_CAPI_ACCESS_TOKEN is missing.
+ * Silently no-ops if META_CAPI_ACCESS_TOKEN is missing or
+ * `marketingConsentAllowed` is false (Path A: legitimate-interest gate
+ * decided 2026-05-03 in /admin/decisions).
+ *
+ * Pass `marketingConsentAllowed` from the request handler — usually via
+ * `await readMarketingConsentFromCookies()`. For fully server-to-server
+ * paths with no cookie context (Razorpay webhook etc.), the booking
+ * record persists the consent flag at create-order time and the verify
+ * route reads it back from the row.
  */
-export async function sendCapiEvents(events: CapiEvent[]): Promise<CapiResponse> {
+export async function sendCapiEvents(
+  events: CapiEvent[],
+  marketingConsentAllowed = false,
+): Promise<CapiResponse> {
+  if (!marketingConsentAllowed) {
+    return { ok: true, events_received: 0, suppressed: "no_consent" };
+  }
   if (!TOKEN) {
     return { ok: false, error: "META_CAPI_ACCESS_TOKEN not set" };
   }
@@ -225,31 +259,36 @@ export async function capiViewContent(opts: {
   clientIp?: string;
   clientUserAgent?: string;
   pageUrl?: string;
+  marketingConsentAllowed?: boolean;
 }): Promise<void> {
-  await sendCapiEvents([
-    {
-      name: "ViewContent",
-      eventId: opts.eventId,
-      eventSourceUrl: opts.pageUrl,
-      user: {
-        email: opts.email,
-        phone: opts.phone,
-        country: "in",
-        externalId: opts.externalId,
-        fbp: opts.fbp,
-        fbc: opts.fbc,
-        clientIp: opts.clientIp,
-        clientUserAgent: opts.clientUserAgent,
+  const allowed = opts.marketingConsentAllowed ?? (await readMarketingConsentFromCookies());
+  await sendCapiEvents(
+    [
+      {
+        name: "ViewContent",
+        eventId: opts.eventId,
+        eventSourceUrl: opts.pageUrl,
+        user: {
+          email: opts.email,
+          phone: opts.phone,
+          country: "in",
+          externalId: opts.externalId,
+          fbp: opts.fbp,
+          fbc: opts.fbc,
+          clientIp: opts.clientIp,
+          clientUserAgent: opts.clientUserAgent,
+        },
+        customData: {
+          currency: "INR",
+          value: opts.value ?? 0,
+          contentName: opts.packageTitle,
+          contentIds: opts.packageSlug ? [opts.packageSlug] : undefined,
+          contentType: "product",
+        },
       },
-      customData: {
-        currency: "INR",
-        value: opts.value ?? 0,
-        contentName: opts.packageTitle,
-        contentIds: opts.packageSlug ? [opts.packageSlug] : undefined,
-        contentType: "product",
-      },
-    },
-  ]).catch((e) => console.error("[meta-capi] capiViewContent failed", e));
+    ],
+    allowed,
+  ).catch((e) => console.error("[meta-capi] capiViewContent failed", e));
 }
 
 /**
@@ -269,32 +308,37 @@ export async function capiLead(opts: {
   clientIp?: string;
   clientUserAgent?: string;
   pageUrl?: string;
+  marketingConsentAllowed?: boolean;
 }): Promise<{ eventId: string }> {
   const eventId = newEventId();
+  const allowed = opts.marketingConsentAllowed ?? (await readMarketingConsentFromCookies());
   // Fire-and-forget — never block the response.
-  sendCapiEvents([
-    {
-      name: "Lead",
-      eventId,
-      eventSourceUrl: opts.pageUrl,
-      user: {
-        email: opts.email,
-        phone: opts.phone,
-        firstName: opts.firstName,
-        city: opts.city,
-        country: "in",
-        externalId: opts.externalId,
-        fbp: opts.fbp,
-        fbc: opts.fbc,
-        clientIp: opts.clientIp,
-        clientUserAgent: opts.clientUserAgent,
+  sendCapiEvents(
+    [
+      {
+        name: "Lead",
+        eventId,
+        eventSourceUrl: opts.pageUrl,
+        user: {
+          email: opts.email,
+          phone: opts.phone,
+          firstName: opts.firstName,
+          city: opts.city,
+          country: "in",
+          externalId: opts.externalId,
+          fbp: opts.fbp,
+          fbc: opts.fbc,
+          clientIp: opts.clientIp,
+          clientUserAgent: opts.clientUserAgent,
+        },
+        customData: {
+          currency: "INR",
+          value: opts.value ?? 0,
+          contentName: opts.contentName,
+        },
       },
-      customData: {
-        currency: "INR",
-        value: opts.value ?? 0,
-        contentName: opts.contentName,
-      },
-    },
-  ]).catch((e) => console.error("[meta-capi] capiLead failed", e));
+    ],
+    allowed,
+  ).catch((e) => console.error("[meta-capi] capiLead failed", e));
   return { eventId };
 }

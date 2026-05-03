@@ -17,6 +17,19 @@ type CookieConsentContextValue = {
 
 const STORAGE_KEY = "trustandtrip_cookie_consent";
 
+// Server-side mirror of the marketing-consent flag. Server routes read this
+// cookie to gate Meta CAPI dispatch (Path A — DPDPA-conservative legal
+// basis decided 2026-05-03 in /admin/decisions). Non-httpOnly so the
+// browser can write it; non-sensitive (single bit). 1y TTL — refreshed on
+// every accept/reject.
+const CONSENT_MARKETING_COOKIE = "tt_consent_m";
+
+function writeMarketingCookie(value: boolean) {
+  if (typeof document === "undefined") return;
+  const oneYear = 60 * 60 * 24 * 365;
+  document.cookie = `${CONSENT_MARKETING_COOKIE}=${value ? "1" : "0"}; max-age=${oneYear}; path=/; SameSite=Lax`;
+}
+
 const CookieConsentContext = createContext<CookieConsentContextValue>({
   consent: null,
   acceptAll: () => {},
@@ -51,6 +64,7 @@ export function CookieConsentProvider({ children }: { children: React.ReactNode 
     } catch {
       // ignore
     }
+    writeMarketingCookie(state.marketing);
   };
 
   const acceptAll = () => save({ analytics: true, marketing: true });

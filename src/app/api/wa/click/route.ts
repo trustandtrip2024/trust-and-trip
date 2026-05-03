@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@supabase/supabase-js";
-import { sendCapiEvents, ipFromRequest } from "@/lib/meta-capi";
+import { sendCapiEvents, ipFromRequest, readMarketingConsentFromCookies } from "@/lib/meta-capi";
 import { rateLimit, clientIp } from "@/lib/redis";
 import crypto from "crypto";
 
@@ -91,6 +91,10 @@ export async function GET(req: NextRequest) {
   const phone = phoneRaw.length === 10 ? `91${phoneRaw}` : phoneRaw;
   const target = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
 
+  // Read marketing consent at request scope — cookies()/next/headers is only
+  // available inside the request handler, not the fire-and-forget worker.
+  const capiAllowed = await readMarketingConsentFromCookies();
+
   // Fire-and-forget capture so the redirect is sub-50ms.
   void recordClick({
     phone,
@@ -107,6 +111,7 @@ export async function GET(req: NextRequest) {
     fbc: cookies().get("_fbc")?.value,
     clientIp: ipFromRequest(req),
     userAgent: req.headers.get("user-agent") ?? undefined,
+    capiAllowed,
   });
 
   return NextResponse.redirect(target, { status: 302 });
@@ -127,6 +132,7 @@ interface CaptureInput {
   fbc?: string;
   clientIp?: string;
   userAgent?: string;
+  capiAllowed?: boolean;
 }
 
 async function recordClick(input: CaptureInput) {
@@ -155,23 +161,26 @@ async function recordClick(input: CaptureInput) {
 
   // CAPI Contact — small but useful optimizer signal.
   const eventId = crypto.randomUUID();
-  sendCapiEvents([
-    {
-      name: "Contact",
-      eventId,
-      eventSourceUrl: input.referer,
-      actionSource: "website",
-      user: {
-        country: "in",
-        fbp: input.fbp,
-        fbc: input.fbc,
-        clientIp: input.clientIp,
-        clientUserAgent: input.userAgent,
+  sendCapiEvents(
+    [
+      {
+        name: "Contact",
+        eventId,
+        eventSourceUrl: input.referer,
+        actionSource: "website",
+        user: {
+          country: "in",
+          fbp: input.fbp,
+          fbc: input.fbc,
+          clientIp: input.clientIp,
+          clientUserAgent: input.userAgent,
+        },
+        customData: {
+          currency: "INR",
+          contentName: `whatsapp_click:${input.src}`,
+        },
       },
-      customData: {
-        currency: "INR",
-        contentName: `whatsapp_click:${input.src}`,
-      },
-    },
-  ]).catch((e) => console.error("[wa-click] capi failed", e));
+    ],
+    input.capiAllowed ?? false,
+  ).catch((e) => console.error("[wa-click] capi failed", e));
 }
