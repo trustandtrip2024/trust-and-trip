@@ -759,6 +759,7 @@ const BLOG_FIELDS = `
   excerpt,
   content,
   "image": image.asset->url,
+  "_updatedAt": _updatedAt,
   author,
   date,
   readTime,
@@ -766,13 +767,25 @@ const BLOG_FIELDS = `
   tags
 `;
 
+// Append the same ?v=<digits> cache-buster used on destination/package
+// images so a Sanity Studio image swap on a blog post lands within the
+// next ISR window instead of waiting for the asset id to change.
+function bustBlogImage(url: string | undefined, ts: string | undefined): string {
+  if (!url) return "";
+  if (!ts) return url;
+  const v = ts.replace(/\D/g, "").slice(0, 14);
+  return url + (url.includes("?") ? "&" : "?") + "v=" + v;
+}
+
 export async function getBlogPosts(category?: string): Promise<SanityBlogPost[]> {
   const key = category ? `sanity:blog:${category}` : "sanity:blog:all";
   return cached(key, TTL.long, async () => {
     const filter = category
       ? `*[_type == "blogPost" && category == $category] | order(date desc)`
       : `*[_type == "blogPost"] | order(date desc)`;
-    return sanityClient.fetch<SanityBlogPost[]>(`${filter} { ${BLOG_FIELDS} }`, category ? { category } : {});
+    type Raw = SanityBlogPost & { _updatedAt?: string };
+    const raw = await sanityClient.fetch<Raw[]>(`${filter} { ${BLOG_FIELDS} }`, category ? { category } : {});
+    return raw.map((p) => ({ ...p, image: bustBlogImage(p.image, p._updatedAt) }));
   });
 }
 
