@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import PayoutsAdminClient from "./PayoutsAdminClient";
+import { decryptPayout } from "@/lib/payout-crypto";
 
 export const dynamic = "force-dynamic";
 
@@ -67,7 +68,7 @@ export default async function AdminPayoutsPage() {
     email: c.email,
     ref_code: c.ref_code,
     payout_method: c.payout_method,
-    payout_details_raw: (c.payout_details as { raw?: string } | null)?.raw ?? null,
+    payout_details_raw: decryptPayout(c.payout_details),
     total_earned_paise: c.total_earned_paise ?? 0,
     total_paid_paise: c.total_paid_paise ?? 0,
     pending_paise: pendingMap.get(c.id) ?? 0,

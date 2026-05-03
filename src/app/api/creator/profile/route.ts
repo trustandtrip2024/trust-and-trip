@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 import { createClient } from "@supabase/supabase-js";
+import { encryptPayout } from "@/lib/payout-crypto";
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,7 +23,7 @@ export async function PATCH(req: NextRequest) {
       phone: body.phone,
       instagram_handle: body.instagram_handle,
       payout_method: body.payout_method,
-      payout_details: body.payout_details ? { raw: body.payout_details } : null,
+      payout_details: body.payout_details ? encryptPayout(body.payout_details) : null,
     };
     const update = Object.fromEntries(Object.entries(allowed).filter(([, v]) => v !== undefined));
 
