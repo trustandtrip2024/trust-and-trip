@@ -13,7 +13,12 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { rateLimit, clientIp } from "@/lib/redis";
-import { sendCapiEvents, ipFromRequest, type CapiEventName } from "@/lib/meta-capi";
+import {
+  sendCapiEvents,
+  ipFromRequest,
+  readMarketingConsentFromCookies,
+  type CapiEventName,
+} from "@/lib/meta-capi";
 
 const ALLOWED_EVENTS: Set<CapiEventName> = new Set([
   "ViewContent",
@@ -48,34 +53,38 @@ export async function POST(req: NextRequest) {
 
   const fbp = cookies().get("_fbp")?.value;
   const fbc = cookies().get("_fbc")?.value;
+  const consentAllowed = await readMarketingConsentFromCookies();
 
   // Fire-and-forget — never block the client beacon.
-  sendCapiEvents([
-    {
-      name: eventName,
-      eventId,
-      eventSourceUrl: typeof body.pageUrl === "string" ? body.pageUrl : undefined,
-      actionSource: "website",
-      user: {
-        country: "in",
-        fbp,
-        fbc,
-        clientIp: ipFromRequest(req),
-        clientUserAgent: req.headers.get("user-agent") ?? undefined,
+  sendCapiEvents(
+    [
+      {
+        name: eventName,
+        eventId,
+        eventSourceUrl: typeof body.pageUrl === "string" ? body.pageUrl : undefined,
+        actionSource: "website",
+        user: {
+          country: "in",
+          fbp,
+          fbc,
+          clientIp: ipFromRequest(req),
+          clientUserAgent: req.headers.get("user-agent") ?? undefined,
+        },
+        customData: {
+          currency: "INR",
+          value: typeof body.value === "number" ? body.value : undefined,
+          contentName: typeof body.contentName === "string" ? body.contentName : undefined,
+          contentIds: Array.isArray(body.contentIds)
+            ? (body.contentIds as unknown[]).filter((x): x is string => typeof x === "string").slice(0, 10)
+            : undefined,
+          contentCategory: typeof body.contentCategory === "string" ? body.contentCategory : undefined,
+          contentType: body.contentType === "product_group" ? "product_group" : "product",
+          searchString: typeof body.searchString === "string" ? body.searchString : undefined,
+        },
       },
-      customData: {
-        currency: "INR",
-        value: typeof body.value === "number" ? body.value : undefined,
-        contentName: typeof body.contentName === "string" ? body.contentName : undefined,
-        contentIds: Array.isArray(body.contentIds)
-          ? (body.contentIds as unknown[]).filter((x): x is string => typeof x === "string").slice(0, 10)
-          : undefined,
-        contentCategory: typeof body.contentCategory === "string" ? body.contentCategory : undefined,
-        contentType: body.contentType === "product_group" ? "product_group" : "product",
-        searchString: typeof body.searchString === "string" ? body.searchString : undefined,
-      },
-    },
-  ]).catch((e) => console.error("[capi-track] failed", e));
+    ],
+    consentAllowed,
+  ).catch((e) => console.error("[capi-track] failed", e));
 
   return NextResponse.json({ ok: true });
 }
