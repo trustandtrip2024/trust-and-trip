@@ -25,10 +25,14 @@ const priceRanges = [
 
 const travelTypes = ["Couple", "Family", "Group", "Solo"];
 
+// Mirrors the categories actually used on Sanity package documents (audited
+// 2026-05). Chips that returned 0 results ("Budget") are dropped, and the
+// long-tail categories ("Wildlife", "Weekend") that exist in content but
+// were missing from the chip rail are added so every Sanity tag is surfaced.
 const CATEGORY_OPTIONS = [
   "Honeymoon", "Family", "Adventure", "Wellness", "Cultural",
-  "Spiritual", "Pilgrim", "Luxury", "Budget", "Quick Trips",
-  "Beach", "Mountain", "International", "Groups", "Solo",
+  "Spiritual", "Pilgrim", "Luxury", "Quick Trips", "Weekend",
+  "Beach", "Mountain", "Wildlife", "International", "Groups", "Solo",
 ];
 
 const ratingFloors = [
@@ -46,7 +50,36 @@ const sortOptions = [
   { label: "Newest first", value: "newest" },
 ];
 
-const INDIA_SLUGS = new Set(["kerala","goa","manali","rajasthan","ladakh","andaman","shimla","coorg","varanasi","agra","shimla-kasol","rishikesh-mussoorie","sikkim","meghalaya","tawang","kashmir","spiti","ooty-coonoor","hampi"]);
+// India region detection — derived from the live Sanity destinations prop
+// rather than a hand-maintained slug list. Keeping a static fallback here
+// caused `?region=domestic` to silently exclude packages anchored to any
+// destination added after the list was last edited (uttarakhand, char-dham,
+// tirupati, lakshadweep, spiti-valley, zanskar-valley, etc.). The static
+// FALLBACK is kept only as belt-and-braces if `destinations` is empty.
+const INDIA_SLUG_FALLBACK = new Set([
+  "kerala","goa","manali","rajasthan","ladakh","andaman","shimla","coorg",
+  "varanasi","kashmir","sikkim","spiti-valley","zanskar-valley",
+  "uttarakhand","char-dham","tirupati","lakshadweep","pondicherry",
+  "mahabaleshwar","lonavala","mount-abu","kanha","ranthambore","pushkar",
+  "darjeeling","north-east","puri",
+]);
+
+// Tier price thresholds — must match the equivalent constants in
+// /essentials, /signature and /private so `?tier=` filtering returns
+// the same packages a visitor would see on those landing pages.
+const ESSENTIALS_CEILING = 50000;
+const SIGNATURE_FLOOR    = 50000;
+const SIGNATURE_CEILING  = 150000;
+const PRIVATE_FLOOR      = 150000;
+
+// Visa-free destinations for Indian passports — mirrors the same list used
+// on /destinations and /offers so the `?theme=visa-free` Footer SEO chip
+// returns the right packages. Kept as a static set because visa policy is
+// political-not-content state; a Sanity-driven flag is overkill.
+const VISA_FREE_SLUGS = new Set([
+  "bali", "thailand", "sri-lanka", "maldives", "nepal", "bhutan",
+  "vietnam", "mauritius", "kenya", "jordan", "indonesia", "fiji",
+]);
 
 interface Props {
   packages: Package[];
@@ -82,6 +115,11 @@ export default function PackagesClient({
   // is missing on older docs). Without this, every tile click landed on
   // the unfiltered packages list and showed irrelevant trips.
   const initialStyle = sp.get("style") ?? "";
+  // ?theme= covers Footer SEO chips (visa-free, etc.) that don't map cleanly
+  // onto a Sanity category. Right now only "visa-free" is honoured — it
+  // filters to packages anchored to a passport-free destination from
+  // VISA_FREE_SLUGS. Future themes can extend the same param.
+  const initialTheme = sp.get("theme") ?? "";
 
   const resolvedPrice = initialBudget ? (BUDGET_TO_PRICE[initialBudget] ?? "") : "";
   const resolvedDuration = initialDuration
@@ -108,6 +146,7 @@ export default function PackagesClient({
   const initialPickup = sp.get("pickup") ?? "";
   const [filterPickup, setFilterPickup] = useState(initialPickup);
   const [filterStyle, setFilterStyle] = useState(initialStyle);
+  const [filterTheme, setFilterTheme] = useState(initialTheme);
   const [sortBy, setSortBy] = useState<string>("popular");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -126,20 +165,37 @@ export default function PackagesClient({
     if (filterTier) params.set("tier", filterTier);
     if (filterPickup) params.set("pickup", filterPickup);
     if (filterStyle) params.set("style", filterStyle);
+    if (filterTheme) params.set("theme", filterTheme);
     if (sortBy && sortBy !== "popular") params.set("sort", sortBy);
     if (filterRegion) params.set("region", filterRegion);
 
     const qs = params.toString();
     const url = qs ? `${pathname}?${qs}` : pathname;
     router.replace(url, { scroll: false });
-  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterTier, filterRegion, filterPickup, filterStyle, sortBy, pathname, router]);
+  }, [filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterTier, filterRegion, filterPickup, filterStyle, filterTheme, sortBy, pathname, router]);
+
+  // India-vs-international detection from the live `destinations` prop.
+  // Falls back to the curated slug set only if Sanity returned nothing,
+  // so the page never crashes during a refetch. See INDIA_SLUG_FALLBACK
+  // for the rationale.
+  const indiaSlugs = useMemo(() => {
+    if (destinations.length === 0) return INDIA_SLUG_FALLBACK;
+    const set = new Set<string>();
+    for (const d of destinations) {
+      if (d.country === "India") set.add(d.slug);
+    }
+    // Layer the fallback in so a destination missing the country field
+    // doesn't accidentally drop out of the domestic bucket.
+    INDIA_SLUG_FALLBACK.forEach((s) => set.add(s));
+    return set;
+  }, [destinations]);
 
   const filtered = useMemo(() => {
     const list = packages.filter((p) => {
       if (filterDestination && p.destinationSlug !== filterDestination) return false;
       if (filterTravelType && p.travelType !== filterTravelType) return false;
-      if (filterRegion === "domestic" && !INDIA_SLUGS.has(p.destinationSlug)) return false;
-      if (filterRegion === "international" && INDIA_SLUGS.has(p.destinationSlug)) return false;
+      if (filterRegion === "domestic" && !indiaSlugs.has(p.destinationSlug)) return false;
+      if (filterRegion === "international" && indiaSlugs.has(p.destinationSlug)) return false;
       if (filterDuration) {
         const range = durationRanges.find((d) => d.label === filterDuration);
         if (range && (p.days < range.min || p.days > range.max)) return false;
@@ -156,13 +212,21 @@ export default function PackagesClient({
         if (!p.categories || !p.categories.includes(filterCategory)) return false;
       }
       if (filterTier) {
+        // Tier filter must match the price-threshold logic used by the
+        // dedicated /essentials, /signature and /private landing pages.
+        // Earlier this filtered on a non-existent "Budget" category and
+        // returned 0 results for ?tier=essentials.
         const cats = (p.categories ?? []).map((c) => c.toLowerCase());
-        if (filterTier === "essentials" && !cats.includes("budget")) return false;
-        if (filterTier === "private"    && !cats.includes("luxury")) return false;
-        if (filterTier === "signature"  && (cats.includes("budget") || cats.includes("luxury"))) return false;
+        const isLuxury = cats.includes("luxury");
+        if (filterTier === "essentials" && p.price >= ESSENTIALS_CEILING) return false;
+        if (filterTier === "signature"  && (p.price < SIGNATURE_FLOOR || p.price >= SIGNATURE_CEILING || isLuxury)) return false;
+        if (filterTier === "private"    && p.price < PRIVATE_FLOOR && !isLuxury) return false;
       }
       if (filterPickup) {
         if (!p.tags?.includes(`ex-${filterPickup}`)) return false;
+      }
+      if (filterTheme === "visa-free") {
+        if (!VISA_FREE_SLUGS.has(p.destinationSlug)) return false;
       }
       if (filterStyle) {
         const cats = (p.categories ?? []).map((c) => c.toLowerCase());
@@ -212,7 +276,7 @@ export default function PackagesClient({
         });
     }
     return sorted;
-  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterStyle, filterTier, filterRegion, filterPickup, sortBy]);
+  }, [packages, filterDestination, filterTravelType, filterDuration, filterPrice, filterRating, filterCategory, filterStyle, filterTheme, filterTier, filterRegion, filterPickup, indiaSlugs, sortBy]);
 
   const activeFilterCount =
     (filterDestination ? 1 : 0) +
@@ -221,7 +285,8 @@ export default function PackagesClient({
     (filterPrice ? 1 : 0) +
     (filterRating ? 1 : 0) +
     (filterCategory ? 1 : 0) +
-    (filterStyle ? 1 : 0);
+    (filterStyle ? 1 : 0) +
+    (filterTheme ? 1 : 0);
 
   const clearAll = () => {
     setFilterDestination("");
@@ -234,6 +299,7 @@ export default function PackagesClient({
     setFilterRegion("");
     setFilterPickup("");
     setFilterStyle("");
+    setFilterTheme("");
     setSortBy("popular");
   };
 
@@ -473,6 +539,8 @@ export default function PackagesClient({
                 clearCategory={() => setFilterCategory("")}
                 filterStyle={filterStyle}
                 clearStyle={() => setFilterStyle("")}
+                filterTheme={filterTheme}
+                clearTheme={() => setFilterTheme("")}
                 clearAll={clearAll}
               />
             )}
@@ -859,6 +927,8 @@ interface ChipsProps {
   clearCategory: () => void;
   filterStyle: string;
   clearStyle: () => void;
+  filterTheme: string;
+  clearTheme: () => void;
   clearAll: () => void;
 }
 
@@ -871,6 +941,7 @@ function ActiveFilterChips({
   filterRating, clearRating,
   filterCategory, clearCategory,
   filterStyle, clearStyle,
+  filterTheme, clearTheme,
   clearAll,
 }: ChipsProps) {
   const destName = filterDestination
@@ -880,6 +951,7 @@ function ActiveFilterChips({
   const chips: { label: string; onRemove: () => void }[] = [];
   if (filterDestination) chips.push({ label: destName, onRemove: clearDestination });
   if (filterStyle) chips.push({ label: `Style: ${filterStyle}`, onRemove: clearStyle });
+  if (filterTheme === "visa-free") chips.push({ label: "Visa-free for Indians", onRemove: clearTheme });
   if (filterTravelType) chips.push({ label: filterTravelType, onRemove: clearTravelType });
   if (filterCategory) chips.push({ label: filterCategory, onRemove: clearCategory });
   if (filterDuration) chips.push({ label: filterDuration, onRemove: clearDuration });

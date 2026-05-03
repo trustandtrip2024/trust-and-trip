@@ -914,4 +914,20 @@ export const extraExperiences: Experience[] = [
       "2N–4N shoot trips with editing-ready raw delivery",
     ],
   },
+  {
+    title: "Solo Travel Trips",
+    slug: "solo",
+    category: "Solo",
+    travelType: "Solo",
+    image: IMG.alpine,
+    description: "Solo trips for first-time and seasoned travellers — safe routes, women-friendly stays, group joins on request, and a 24/7 planner on WhatsApp. Spiti bike loops, Kerala backwater stays, Switzerland rail trips, Vietnam circuits.",
+    tagline: "Travel light. Travel alone. Travel safe.",
+    highlights: [
+      "Verified solo-friendly stays + women-only floors where available",
+      "Optional small-group joins for trekking and bike trips",
+      "Real planner on WhatsApp through the trip — not a chatbot",
+      "Top picks: Spiti, Kerala, Switzerland, Vietnam, Bali, Sikkim",
+      "Pickup from your source city, no coach-tour lock-in",
+    ],
+  },
 ];

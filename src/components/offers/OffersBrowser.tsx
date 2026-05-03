@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { Clock, Tag, ArrowRight, Star, Zap, X, Globe, Plane } from "lucide-react";
 import CountdownTimer from "@/components/CountdownTimer";
 
@@ -53,15 +54,37 @@ function matchesCategory(offer: OfferCard, cat: CategoryKey, indianSlugs: Set<st
   return true;
 }
 
+// Indian destination prefixes used to flag non-Indian offers when the
+// "International" category chip is selected. "bali" was previously listed
+// here in error and bucketed every Bali deal as domestic — Bali is in
+// Indonesia. Char Dham, Kedarnath, Vaishno Devi etc. anchor pilgrim
+// offers that should also count as domestic.
 const INDIAN_SLUG_PREFIXES = new Set([
-  "bali","kerala","goa","manali","rajasthan","ladakh","andaman","shimla",
-  "coorg","varanasi","agra","spiti","kashmir","uttarakhand","char","kedarnath",
-  "rishikesh","haridwar","leh","bhutan","sikkim","udaipur","jaipur","jodhpur",
-  "munnar","ooty","gangtok","darjeeling","mussoorie","nainital",
+  "kerala","goa","manali","rajasthan","ladakh","andaman","shimla",
+  "coorg","varanasi","spiti","kashmir","uttarakhand","char","kedarnath",
+  "rishikesh","haridwar","leh","sikkim","udaipur","jaipur","jodhpur",
+  "munnar","ooty","gangtok","darjeeling","mussoorie","nainital","tirupati",
+  "vaishno","pushkar","ranthambore","kanha","puri","mahabaleshwar",
+  "lonavala","mount-abu","lakshadweep","pondicherry","north-east",
+  "zanskar","do-dham","panchkedar",
+]);
+
+const VALID_CATEGORIES: ReadonlySet<CategoryKey> = new Set([
+  "all", "honeymoon", "family", "group", "solo", "international",
 ]);
 
 export default function OffersBrowser({ offers, visaFreeSlugs }: Props) {
-  const [category, setCategory] = useState<CategoryKey>("all");
+  // Header offers dropdown links pre-seed the category via ?cat=… so
+  // visitors arriving from "Honeymoon Specials" land directly on the
+  // honeymoon-filtered grid instead of the unfiltered list.
+  const sp = useSearchParams();
+  const initialCat = (() => {
+    const raw = sp.get("cat");
+    if (raw && VALID_CATEGORIES.has(raw as CategoryKey)) return raw as CategoryKey;
+    return "all" as CategoryKey;
+  })();
+
+  const [category, setCategory] = useState<CategoryKey>(initialCat);
   const [sort, setSort] = useState<SortKey>("discount-desc");
   const [visaFree, setVisaFree] = useState(false);
 

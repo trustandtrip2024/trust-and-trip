@@ -19,14 +19,19 @@ export const metadata = {
   },
 };
 
-// Known India slugs as safety net when Sanity country field is missing
+// Safety-net India slugs used when a Sanity destination doc is missing the
+// `country` field. Trimmed (2026-05) to match the slugs that actually
+// exist in production — stale entries (himachal-pradesh, agra, rishikesh,
+// andaman-and-nicobar, munnar, ooty, hampi, meghalaya, tawang) were
+// silently flagging non-existent destinations as Indian and slipping past
+// the chip filters.
 const INDIA_SLUGS = [
   "kerala", "goa", "kashmir", "ladakh", "rajasthan", "andaman",
-  "manali", "shimla", "himachal-pradesh", "coorg", "varanasi",
-  "agra", "rishikesh", "uttarakhand", "spiti-valley",
-  "andaman-and-nicobar", "munnar", "ooty", "shimla-kasol",
-  "rishikesh-mussoorie", "sikkim", "meghalaya", "tawang",
-  "spiti", "ooty-coonoor", "hampi",
+  "manali", "shimla", "coorg", "varanasi", "uttarakhand",
+  "spiti-valley", "zanskar-valley", "sikkim", "char-dham",
+  "tirupati", "lakshadweep", "pondicherry", "mahabaleshwar",
+  "lonavala", "mount-abu", "kanha", "ranthambore", "pushkar",
+  "darjeeling", "north-east", "puri",
 ];
 
 // Visa-free for Indian passports — drives the "Visa-free" filter chip
