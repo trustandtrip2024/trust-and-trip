@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   Heart, Users, Mountain, Waves, Globe2, Zap, Sparkles, Building2,
+  Leaf, Bird, Crown,
   type LucideIcon,
 } from "lucide-react";
 
@@ -22,6 +23,9 @@ const CHIPS: Chip[] = [
   { label: "Adventure",     icon: Zap,       category: "Adventure",   hint: "Trek, raft, surf, paraglide" },
   { label: "International", icon: Globe2,    category: "International", hint: "Bali, Maldives, Thailand, Dubai" },
   { label: "Quick trips",   icon: Building2, category: "Quick Trips", hint: "2-4 nights · long-weekend escapes" },
+  { label: "Wellness",      icon: Leaf,      category: "Wellness",    hint: "Ayurveda, yoga, Himalayan retreats" },
+  { label: "Wildlife",      icon: Bird,      category: "Wildlife",    hint: "Tiger reserves, jungle safaris" },
+  { label: "Luxury",        icon: Crown,     category: "Luxury",      hint: "Premium suites, signature service" },
 ];
 
 /**
