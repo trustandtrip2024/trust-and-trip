@@ -8,6 +8,7 @@ import { SlidersHorizontal, X, ArrowUpDown, Star, Sparkles, ArrowRight } from "l
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { captureIntent } from "@/lib/capture-intent";
+import StickyOnScrollUp from "@/components/StickyOnScrollUp";
 
 const durationRanges = [
   { label: "3 – 5 days", min: 3, max: 5 },
@@ -338,19 +339,44 @@ export default function PackagesClient({
     setSortBy("popular");
   };
 
+  // Source-city pickup options derived from `ex-<city>` tags. Drives the
+  // Pickup section inside the filter drawer.
+  const pickupCities = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const p of packages) {
+      for (const t of p.tags ?? []) {
+        if (t.startsWith("ex-")) counts.set(t.slice(3), (counts.get(t.slice(3)) ?? 0) + 1);
+      }
+    }
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  }, [packages]);
+
   return (
-    <section className="py-12 md:py-16">
-      <div className="container-custom">
-        {/* Tier + region chip rail — quick top-level segmenting that maps to
-            existing categories/region filters. Renders on every viewport. */}
-        <div className="mb-6 flex flex-col gap-3">
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">Tier</span>
+    <section className="pb-12 md:pb-16">
+      {/* Sticky toolbar — collapses tier + region + filter + sort into a
+          single bar that hides on scroll-down and reveals on scroll-up. */}
+      <StickyOnScrollUp className="bg-tat-paper/95 backdrop-blur-md border-b border-tat-charcoal/8">
+        <div className="container-custom py-3 flex items-center gap-2 md:gap-3 overflow-x-auto no-scrollbar">
+          <button
+            type="button"
+            onClick={() => setFiltersOpen(true)}
+            className="shrink-0 inline-flex items-center gap-2 h-10 px-3.5 rounded-full bg-tat-charcoal text-tat-paper text-[13px] font-semibold"
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="bg-tat-gold text-tat-charcoal h-5 min-w-[20px] px-1 rounded-full text-[11px] font-bold flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+
+          <div className="hidden sm:flex items-center gap-1 shrink-0">
             {[
-              { v: "",           l: "All",        sub: "Every budget" },
-              { v: "essentials", l: "Essentials", sub: "Pocket-friendly" },
-              { v: "signature",  l: "Signature",  sub: "Hand-curated" },
-              { v: "private",    l: "Private",    sub: "Bespoke + concierge" },
+              { v: "",           l: "All" },
+              { v: "essentials", l: "Essentials" },
+              { v: "signature",  l: "Signature" },
+              { v: "private",    l: "Private" },
             ].map((t) => {
               const active = filterTier === t.v;
               return (
@@ -359,138 +385,25 @@ export default function PackagesClient({
                   type="button"
                   onClick={() => setFilterTier(t.v)}
                   aria-pressed={active}
-                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
+                  className={`shrink-0 h-9 px-3 rounded-full text-[12px] font-semibold transition-colors ${
                     active
-                      ? "bg-tat-charcoal text-tat-paper border-tat-charcoal"
-                      : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30 hover:text-tat-charcoal"
+                      ? "bg-tat-charcoal text-tat-paper"
+                      : "text-tat-charcoal/70 hover:bg-tat-charcoal/8"
                   }`}
                 >
                   {t.l}
-                  <span className={`text-[10px] font-normal ${active ? "text-tat-paper/70" : "text-tat-charcoal/45"}`}>· {t.sub}</span>
                 </button>
               );
             })}
           </div>
-          {filterTier && filterTier !== "" && (() => {
-            const tierLink = filterTier === "essentials" ? "/essentials"
-              : filterTier === "signature" ? "/signature"
-              : filterTier === "private"   ? "/private"
-              : null;
-            if (!tierLink) return null;
-            return (
-              <p className="text-[11px] text-tat-charcoal/55">
-                Want the dedicated story for this tier?{" "}
-                <Link href={tierLink} className="font-semibold text-tat-gold hover:text-tat-charcoal underline-offset-2 hover:underline">
-                  Visit the {filterTier.charAt(0).toUpperCase() + filterTier.slice(1)} page →
-                </Link>
-              </p>
-            );
-          })()}
-          {(() => {
-            // Source-city pickup rail. Surfaces only when any package carries
-            // an `ex-*` tag, so the chip strip disappears for flat catalogs
-            // and keeps the UI honest.
-            const cityCounts = new Map<string, number>();
-            for (const p of packages) {
-              for (const t of p.tags ?? []) {
-                if (t.startsWith("ex-")) cityCounts.set(t.slice(3), (cityCounts.get(t.slice(3)) ?? 0) + 1);
-              }
-            }
-            if (!cityCounts.size) return null;
-            const cities = [...cityCounts.entries()].sort((a, b) => b[1] - a[1]);
-            return (
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-                <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">
-                  Boost pickup
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setFilterPickup("")}
-                  aria-pressed={!filterPickup}
-                  title="Show every departure city, ranked by popularity"
-                  className={`shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
-                    !filterPickup
-                      ? "bg-tat-orange text-white border-tat-orange"
-                      : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30"
-                  }`}
-                >
-                  All cities
-                </button>
-                {cities.map(([city, n]) => {
-                  const active = filterPickup === city;
-                  const label = city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-                  return (
-                    <button
-                      key={city}
-                      type="button"
-                      onClick={() => setFilterPickup(active ? "" : city)}
-                      aria-pressed={active}
-                      title={`Float ${label} departures to the top — other cities still visible below`}
-                      className={`shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
-                        active
-                          ? "bg-tat-orange text-white border-tat-orange"
-                          : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30 hover:text-tat-charcoal"
-                      }`}
-                    >
-                      Ex {label}
-                      <span className={`text-[10px] ${active ? "text-white/70" : "text-tat-charcoal/40"}`}>{n}</span>
-                    </button>
-                  );
-                })}
-                {filterPickup && (
-                  <span className="shrink-0 text-[10px] text-tat-charcoal/55 italic">
-                    showing all cities · matches first
-                  </span>
-                )}
-              </div>
-            );
-          })()}
 
-          {tagPivots.length > 0 && (
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-              <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">
-                Pivot by tag
-              </span>
-              <button
-                type="button"
-                onClick={() => setFilterTag("")}
-                aria-pressed={!filterTag}
-                className={`shrink-0 inline-flex items-center px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
-                  !filterTag
-                    ? "bg-tat-charcoal text-tat-paper border-tat-charcoal"
-                    : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30"
-                }`}
-              >
-                All
-              </button>
-              {tagPivots.map(([tag, n]) => {
-                const active = filterTag === tag;
-                return (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => setFilterTag(active ? "" : tag)}
-                    aria-pressed={active}
-                    className={`shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-medium transition-all ${
-                      active
-                        ? "bg-tat-gold/20 text-tat-charcoal border-tat-gold"
-                        : "bg-white text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30 hover:text-tat-charcoal"
-                    }`}
-                  >
-                    {tag}
-                    <span className={`text-[10px] ${active ? "text-tat-charcoal/60" : "text-tat-charcoal/40"}`}>{n}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
+          <span className="hidden sm:block h-5 w-px bg-tat-charcoal/15 shrink-0" />
 
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-tat-charcoal/50 shrink-0">Region</span>
+          <div className="flex items-center gap-1 shrink-0">
             {[
-              { v: "",              l: "All regions" },
+              { v: "",              l: "All" },
               { v: "domestic",      l: "India" },
-              { v: "international", l: "International" },
+              { v: "international", l: "Intl" },
             ].map((r) => {
               const active = filterRegion === r.v;
               return (
@@ -499,10 +412,10 @@ export default function PackagesClient({
                   type="button"
                   onClick={() => setFilterRegion(r.v)}
                   aria-pressed={active}
-                  className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all ${
+                  className={`shrink-0 h-9 px-3 rounded-full text-[12px] font-semibold transition-colors ${
                     active
-                      ? "bg-tat-gold text-tat-charcoal border-tat-gold"
-                      : "bg-white text-tat-charcoal/70 border-tat-charcoal/15 hover:border-tat-charcoal/30 hover:text-tat-charcoal"
+                      ? "bg-tat-gold text-tat-charcoal"
+                      : "text-tat-charcoal/70 hover:bg-tat-charcoal/8"
                   }`}
                 >
                   {r.l}
@@ -510,155 +423,137 @@ export default function PackagesClient({
               );
             })}
           </div>
-        </div>
 
-        {/* Mobile bar */}
-        <div className="flex items-center justify-between gap-3 mb-6 lg:hidden">
-          <button
-            onClick={() => setFiltersOpen(!filtersOpen)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-tat-charcoal text-tat-paper text-sm"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            Filters{" "}
-            {activeFilterCount > 0 && (
-              <span className="bg-tat-gold text-tat-charcoal h-5 w-5 rounded-full text-xs flex items-center justify-center">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
-          <div className="relative">
+          <div className="ml-auto relative shrink-0">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none pl-8 pr-6 py-2.5 rounded-full border border-tat-charcoal/15 text-sm text-tat-charcoal bg-tat-paper focus:outline-none focus:ring-2 focus:ring-tat-gold/40"
+              className="appearance-none h-10 pl-9 pr-4 rounded-full border border-tat-charcoal/15 text-[12px] font-semibold text-tat-charcoal bg-white focus:outline-none focus:ring-2 focus:ring-tat-gold/40"
             >
               {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
             <ArrowUpDown className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-tat-charcoal/50 pointer-events-none" />
           </div>
         </div>
+      </StickyOnScrollUp>
 
-        <div className="grid lg:grid-cols-[260px_1fr] gap-8 lg:gap-12">
-          {/* Desktop sidebar */}
-          <aside className="hidden lg:block">
-            <div className="lg:sticky lg:top-28 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pb-24 no-scrollbar">
-              <FilterPanel
-                destinations={destinations}
-                filterDestination={filterDestination}
-                setFilterDestination={setFilterDestination}
-                filterTravelType={filterTravelType}
-                setFilterTravelType={setFilterTravelType}
-                filterDuration={filterDuration}
-                setFilterDuration={setFilterDuration}
-                filterPrice={filterPrice}
-                setFilterPrice={setFilterPrice}
-                filterRating={filterRating}
-                setFilterRating={setFilterRating}
-                filterCategory={filterCategory}
-                setFilterCategory={setFilterCategory}
-                activeFilterCount={activeFilterCount}
-                clearAll={clearAll}
+      <div className="container-custom pt-6 md:pt-8">
+        {/* Mobile-only tier chips — too many to fit alongside the filter
+            button on a phone, so they fall below the sticky bar instead. */}
+        <div className="sm:hidden flex items-center gap-1 overflow-x-auto no-scrollbar mb-4">
+          {[
+            { v: "",           l: "All tiers" },
+            { v: "essentials", l: "Essentials" },
+            { v: "signature",  l: "Signature" },
+            { v: "private",    l: "Private" },
+          ].map((t) => {
+            const active = filterTier === t.v;
+            return (
+              <button
+                key={t.v || "all-tier-m"}
+                type="button"
+                onClick={() => setFilterTier(t.v)}
+                aria-pressed={active}
+                className={`shrink-0 h-8 px-3 rounded-full text-[12px] font-semibold transition-colors ${
+                  active
+                    ? "bg-tat-charcoal text-tat-paper"
+                    : "bg-white border border-tat-charcoal/15 text-tat-charcoal/70"
+                }`}
+              >
+                {t.l}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Drawer — same panel for every viewport. Replaces the old
+            desktop sidebar + mobile drawer split so we maintain one filter
+            surface instead of two. */}
+        <AnimatePresence>
+          {filtersOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setFiltersOpen(false)}
+                className="fixed inset-0 bg-tat-charcoal/60 backdrop-blur-sm z-[60]"
               />
-            </div>
-          </aside>
-
-          {/* Mobile drawer */}
-          <AnimatePresence>
-            {filtersOpen && (
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setFiltersOpen(false)}
-                  className="fixed inset-0 bg-tat-charcoal/60 backdrop-blur-sm z-[60] lg:hidden"
+              <motion.aside
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed left-0 top-0 bottom-0 w-full max-w-sm bg-tat-paper z-[70] overflow-y-auto p-6"
+              >
+                <FilterPanel
+                  destinations={destinations}
+                  filterDestination={filterDestination}
+                  setFilterDestination={setFilterDestination}
+                  filterTravelType={filterTravelType}
+                  setFilterTravelType={setFilterTravelType}
+                  filterDuration={filterDuration}
+                  setFilterDuration={setFilterDuration}
+                  filterPrice={filterPrice}
+                  setFilterPrice={setFilterPrice}
+                  filterRating={filterRating}
+                  setFilterRating={setFilterRating}
+                  filterCategory={filterCategory}
+                  setFilterCategory={setFilterCategory}
+                  filterPickup={filterPickup}
+                  setFilterPickup={setFilterPickup}
+                  pickupCities={pickupCities}
+                  filterTag={filterTag}
+                  setFilterTag={setFilterTag}
+                  tagPivots={tagPivots}
+                  activeFilterCount={activeFilterCount}
+                  clearAll={clearAll}
+                  onClose={() => setFiltersOpen(false)}
                 />
-                <motion.aside
-                  initial={{ x: "-100%" }}
-                  animate={{ x: 0 }}
-                  exit={{ x: "-100%" }}
-                  transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                  className="fixed left-0 top-0 bottom-0 w-full max-w-sm bg-tat-paper z-[70] overflow-y-auto p-6 lg:hidden"
-                >
-                  <FilterPanel
-                    destinations={destinations}
-                    filterDestination={filterDestination}
-                    setFilterDestination={setFilterDestination}
-                    filterTravelType={filterTravelType}
-                    setFilterTravelType={setFilterTravelType}
-                    filterDuration={filterDuration}
-                    setFilterDuration={setFilterDuration}
-                    filterPrice={filterPrice}
-                    setFilterPrice={setFilterPrice}
-                    filterRating={filterRating}
-                    setFilterRating={setFilterRating}
-                    filterCategory={filterCategory}
-                    setFilterCategory={setFilterCategory}
-                    activeFilterCount={activeFilterCount}
-                    clearAll={clearAll}
-                    onClose={() => setFiltersOpen(false)}
-                  />
-                </motion.aside>
-              </>
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>
+
+        <div>
+          {/* Active filter chips — Pickup is a soft boost (not counted in
+              activeFilterCount) but still shown as a removable chip so the
+              visitor can clear it without re-opening the drawer. */}
+          {(activeFilterCount > 0 || filterPickup) && (
+            <ActiveFilterChips
+              destinations={destinations}
+              filterDestination={filterDestination}
+              clearDestination={() => setFilterDestination("")}
+              filterTravelType={filterTravelType}
+              clearTravelType={() => setFilterTravelType("")}
+              filterDuration={filterDuration}
+              clearDuration={() => setFilterDuration("")}
+              filterPrice={filterPrice}
+              clearPrice={() => setFilterPrice("")}
+              filterRating={filterRating}
+              clearRating={() => setFilterRating("")}
+              filterCategory={filterCategory}
+              clearCategory={() => setFilterCategory("")}
+              filterStyle={filterStyle}
+              clearStyle={() => setFilterStyle("")}
+              filterTheme={filterTheme}
+              clearTheme={() => setFilterTheme("")}
+              filterTag={filterTag}
+              clearTag={() => setFilterTag("")}
+              filterPickup={filterPickup}
+              clearPickup={() => setFilterPickup("")}
+              clearAll={clearAll}
+            />
+          )}
+
+          <p className="text-sm text-tat-charcoal/60 mb-5">
+            <span className="font-medium text-tat-charcoal">{filtered.length}</span> packages
+            {activeFilterCount > 0 && (
+              <span className="text-tat-charcoal/45"> · {activeFilterCount} filter{activeFilterCount > 1 ? "s" : ""} applied</span>
             )}
-          </AnimatePresence>
+          </p>
 
-          <div>
-            {/* Active filter chips — visible on both mobile and desktop.
-                Pickup is a soft boost (not counted in activeFilterCount)
-                but still shown as a removable chip so the visitor can
-                clear it without scanning the rail. */}
-            {(activeFilterCount > 0 || filterPickup) && (
-              <ActiveFilterChips
-                destinations={destinations}
-                filterDestination={filterDestination}
-                clearDestination={() => setFilterDestination("")}
-                filterTravelType={filterTravelType}
-                clearTravelType={() => setFilterTravelType("")}
-                filterDuration={filterDuration}
-                clearDuration={() => setFilterDuration("")}
-                filterPrice={filterPrice}
-                clearPrice={() => setFilterPrice("")}
-                filterRating={filterRating}
-                clearRating={() => setFilterRating("")}
-                filterCategory={filterCategory}
-                clearCategory={() => setFilterCategory("")}
-                filterStyle={filterStyle}
-                clearStyle={() => setFilterStyle("")}
-                filterTheme={filterTheme}
-                clearTheme={() => setFilterTheme("")}
-                filterTag={filterTag}
-                clearTag={() => setFilterTag("")}
-                filterPickup={filterPickup}
-                clearPickup={() => setFilterPickup("")}
-                clearAll={clearAll}
-              />
-            )}
-
-            {/* Desktop results header */}
-            <div className="hidden lg:flex items-center justify-between mb-6 gap-4 flex-wrap">
-              <p className="text-sm text-tat-charcoal/60">
-                <span className="font-medium text-tat-charcoal">{filtered.length}</span> packages
-                {activeFilterCount > 0 && (
-                  <span className="text-tat-charcoal/45"> · {activeFilterCount} filter{activeFilterCount > 1 ? "s" : ""} applied</span>
-                )}
-              </p>
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-tat-charcoal/50">Sort by:</span>
-                <div className="relative">
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none pl-3 pr-8 py-2 rounded-lg border border-tat-charcoal/15 text-sm text-tat-charcoal bg-white hover:border-tat-charcoal/30 focus:outline-none focus:ring-2 focus:ring-tat-gold/40 transition-colors"
-                  >
-                    {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-                  </select>
-                  <ArrowUpDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-tat-charcoal/50 pointer-events-none" />
-                </div>
-              </div>
-            </div>
-
-            {filtered.length === 0 ? (
+          {filtered.length === 0 ? (
               <div className="text-center py-20 bg-tat-paper rounded-3xl border border-tat-charcoal/5 px-6">
                 <p className="text-5xl mb-5">🧭</p>
                 <p className="font-display text-h2 font-medium mb-2">
@@ -720,7 +615,6 @@ export default function PackagesClient({
             )}
           </div>
         </div>
-      </div>
     </section>
   );
 }
@@ -739,6 +633,12 @@ interface PanelProps {
   setFilterRating: (v: string) => void;
   filterCategory: string;
   setFilterCategory: (v: string) => void;
+  filterPickup: string;
+  setFilterPickup: (v: string) => void;
+  pickupCities: [string, number][];
+  filterTag: string;
+  setFilterTag: (v: string) => void;
+  tagPivots: [string, number][];
   activeFilterCount: number;
   clearAll: () => void;
   onClose?: () => void;
@@ -751,6 +651,8 @@ function FilterPanel({
   filterPrice, setFilterPrice,
   filterRating, setFilterRating,
   filterCategory, setFilterCategory,
+  filterPickup, setFilterPickup, pickupCities,
+  filterTag, setFilterTag, tagPivots,
   activeFilterCount, clearAll, onClose,
 }: PanelProps) {
   return (
@@ -768,7 +670,7 @@ function FilterPanel({
             </button>
           )}
           {onClose && (
-            <button onClick={onClose} className="lg:hidden p-2 rounded-full hover:bg-tat-charcoal/5">
+            <button onClick={onClose} className="p-2 rounded-full hover:bg-tat-charcoal/5">
               <X className="h-5 w-5" />
             </button>
           )}
@@ -844,7 +746,7 @@ function FilterPanel({
         />
       </FilterGroup>
 
-      <FilterGroup label="Minimum rating" last>
+      <FilterGroup label="Minimum rating">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setFilterRating("")}
@@ -872,6 +774,75 @@ function FilterPanel({
           ))}
         </div>
       </FilterGroup>
+
+      {pickupCities.length > 0 && (
+        <FilterGroup label="Boost pickup city">
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              onClick={() => setFilterPickup("")}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                !filterPickup
+                  ? "bg-tat-orange text-white border-tat-orange"
+                  : "bg-tat-paper text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30"
+              }`}
+            >
+              All cities
+            </button>
+            {pickupCities.map(([city, n]) => {
+              const active = filterPickup === city;
+              const label = city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+              return (
+                <button
+                  key={city}
+                  onClick={() => setFilterPickup(active ? "" : city)}
+                  className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    active
+                      ? "bg-tat-orange text-white border-tat-orange"
+                      : "bg-tat-paper text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30"
+                  }`}
+                >
+                  Ex {label}
+                  <span className={`text-[10px] ${active ? "text-white/70" : "text-tat-charcoal/40"}`}>{n}</span>
+                </button>
+              );
+            })}
+          </div>
+        </FilterGroup>
+      )}
+
+      {tagPivots.length > 0 && (
+        <FilterGroup label="Pivot by tag" last>
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              onClick={() => setFilterTag("")}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                !filterTag
+                  ? "bg-tat-charcoal text-tat-paper border-tat-charcoal"
+                  : "bg-tat-paper text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30"
+              }`}
+            >
+              All
+            </button>
+            {tagPivots.map(([tag, n]) => {
+              const active = filterTag === tag;
+              return (
+                <button
+                  key={tag}
+                  onClick={() => setFilterTag(active ? "" : tag)}
+                  className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    active
+                      ? "bg-tat-gold/20 text-tat-charcoal border-tat-gold"
+                      : "bg-tat-paper text-tat-charcoal/65 border-tat-charcoal/15 hover:border-tat-charcoal/30"
+                  }`}
+                >
+                  {tag}
+                  <span className={`text-[10px] ${active ? "text-tat-charcoal/60" : "text-tat-charcoal/40"}`}>{n}</span>
+                </button>
+              );
+            })}
+          </div>
+        </FilterGroup>
+      )}
     </>
   );
 }

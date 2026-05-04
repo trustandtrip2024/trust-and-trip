@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import type { Destination } from "@/lib/data";
 import { useTripPlanner } from "@/context/TripPlannerContext";
+import StickyOnScrollUp from "@/components/StickyOnScrollUp";
 
 interface Props {
   destinations: Destination[];
@@ -115,91 +116,87 @@ export default function DestinationsBrowser({
 
   return (
     <>
-      {/* Sticky filter bar — sits below sticky site header. The lg:top-20
-          matches Header h-20; mobile uses top-16 to mirror StickySubnav. */}
-      <div className="sticky top-16 lg:top-20 z-30 bg-tat-paper/95 dark:bg-tat-charcoal/95 backdrop-blur-md border-b border-tat-charcoal/10 dark:border-white/10">
-        <div className="container-custom py-3 md:py-4 space-y-3">
-          {/* Row 1: search + sort */}
-          <div className="flex items-center gap-2 md:gap-3">
-            <div className="relative flex-1 min-w-0">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-tat-charcoal/45 pointer-events-none" aria-hidden />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search Bali, Maldives, Char Dham…"
-                className="w-full h-10 md:h-11 pl-10 pr-9 rounded-full bg-tat-cream-warm/40 dark:bg-white/5 ring-1 ring-tat-charcoal/10 dark:ring-white/10 text-[14px] text-tat-charcoal dark:text-tat-paper placeholder:text-tat-charcoal/40 focus:outline-none focus:ring-2 focus:ring-tat-gold"
-                aria-label="Search destinations"
-              />
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => setQuery("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 grid place-items-center rounded-full hover:bg-tat-charcoal/8"
-                  aria-label="Clear search"
-                >
-                  <X className="h-3.5 w-3.5 text-tat-charcoal/55" />
-                </button>
-              )}
-            </div>
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as SortKey)}
-              className="h-10 md:h-11 px-3 md:px-4 rounded-full bg-tat-cream-warm/40 dark:bg-white/5 ring-1 ring-tat-charcoal/10 dark:ring-white/10 text-[12px] md:text-[13px] font-medium text-tat-charcoal dark:text-tat-paper focus:outline-none focus:ring-2 focus:ring-tat-gold cursor-pointer"
-              aria-label="Sort destinations"
-            >
-              <option value="popular">Sort: Popular</option>
-              <option value="price-asc">Price: low to high</option>
-              <option value="price-desc">Price: high to low</option>
-              <option value="name">A–Z</option>
-            </select>
-          </div>
-
-          {/* Row 2: chip filters */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar -mx-5 px-5 sm:mx-0 sm:px-0">
-            <SegmentChip active={region === "all"} onClick={() => setRegion("all")} icon={Globe}>All</SegmentChip>
-            <SegmentChip active={region === "india"} onClick={() => setRegion("india")}>India</SegmentChip>
-            <SegmentChip active={region === "international"} onClick={() => setRegion("international")}>International</SegmentChip>
-
-            <span className="h-5 w-px bg-tat-charcoal/15 dark:bg-white/15 mx-1 shrink-0" />
-
-            <SegmentChip active={visaFree} onClick={() => setVisaFree((v) => !v)} icon={Plane}>Visa-free</SegmentChip>
-
-            <span className="h-5 w-px bg-tat-charcoal/15 dark:bg-white/15 mx-1 shrink-0" />
-
-            <select
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-              className="h-9 px-3 rounded-full bg-tat-cream-warm/40 dark:bg-white/5 ring-1 ring-tat-charcoal/10 dark:ring-white/10 text-[12px] font-medium text-tat-charcoal dark:text-tat-paper focus:outline-none focus:ring-2 focus:ring-tat-gold cursor-pointer shrink-0"
-              aria-label="Best in month"
-            >
-              <option value="">Any month</option>
-              {MONTHS.map((m) => <option key={m} value={m}>Best in {m}</option>)}
-            </select>
-
-            <span className="h-5 w-px bg-tat-charcoal/15 dark:bg-white/15 mx-1 shrink-0" />
-
-            <SegmentChip active={budget === "all"} onClick={() => setBudget("all")}>Any budget</SegmentChip>
-            <SegmentChip active={budget === "under-50k"} onClick={() => setBudget("under-50k")}>Under ₹50k</SegmentChip>
-            <SegmentChip active={budget === "50k-1l"} onClick={() => setBudget("50k-1l")}>₹50k–1L</SegmentChip>
-            <SegmentChip active={budget === "1l-plus"} onClick={() => setBudget("1l-plus")}>₹1L+</SegmentChip>
-
-            {activeFilters > 0 && (
-              <>
-                <span className="h-5 w-px bg-tat-charcoal/15 dark:bg-white/15 mx-1 shrink-0" />
-                <button
-                  type="button"
-                  onClick={clearAll}
-                  className="shrink-0 inline-flex items-center gap-1 h-9 px-3 rounded-full text-[12px] font-semibold text-tat-charcoal/70 hover:text-tat-charcoal hover:bg-tat-charcoal/8"
-                >
-                  <X className="h-3.5 w-3.5" />
-                  Clear all
-                </button>
-              </>
+      {/* Sticky filter bar — reveals on scroll-up so the visitor can re-tweak
+          without scrolling all the way back to the top. Two rows fold to one
+          on wide screens; mobile keeps a horizontally-scrolling chip strip. */}
+      <StickyOnScrollUp className="bg-tat-paper/95 dark:bg-tat-charcoal/95 backdrop-blur-md border-b border-tat-charcoal/10 dark:border-white/10">
+        <div className="container-custom py-3 flex items-center gap-2 overflow-x-auto no-scrollbar">
+          <div className="relative flex-1 min-w-[180px] max-w-md shrink-0">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-tat-charcoal/45 pointer-events-none" aria-hidden />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search destinations…"
+              className="w-full h-10 pl-10 pr-9 rounded-full bg-tat-cream-warm/40 dark:bg-white/5 ring-1 ring-tat-charcoal/10 dark:ring-white/10 text-[13px] text-tat-charcoal dark:text-tat-paper placeholder:text-tat-charcoal/40 focus:outline-none focus:ring-2 focus:ring-tat-gold"
+              aria-label="Search destinations"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 grid place-items-center rounded-full hover:bg-tat-charcoal/8"
+                aria-label="Clear search"
+              >
+                <X className="h-3.5 w-3.5 text-tat-charcoal/55" />
+              </button>
             )}
           </div>
+
+          <SegmentChip active={region === "all"} onClick={() => setRegion("all")} icon={Globe}>All</SegmentChip>
+          <SegmentChip active={region === "india"} onClick={() => setRegion("india")}>India</SegmentChip>
+          <SegmentChip active={region === "international"} onClick={() => setRegion("international")}>Intl</SegmentChip>
+
+          <span className="h-5 w-px bg-tat-charcoal/15 dark:bg-white/15 mx-1 shrink-0" />
+
+          <SegmentChip active={visaFree} onClick={() => setVisaFree((v) => !v)} icon={Plane}>Visa-free</SegmentChip>
+
+          <select
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+            className="h-9 px-3 rounded-full bg-tat-cream-warm/40 dark:bg-white/5 ring-1 ring-tat-charcoal/10 dark:ring-white/10 text-[12px] font-medium text-tat-charcoal dark:text-tat-paper focus:outline-none focus:ring-2 focus:ring-tat-gold cursor-pointer shrink-0"
+            aria-label="Best in month"
+          >
+            <option value="">Any month</option>
+            {MONTHS.map((m) => <option key={m} value={m}>Best in {m}</option>)}
+          </select>
+
+          <select
+            value={budget}
+            onChange={(e) => setBudget(e.target.value as BudgetFilter)}
+            className="h-9 px-3 rounded-full bg-tat-cream-warm/40 dark:bg-white/5 ring-1 ring-tat-charcoal/10 dark:ring-white/10 text-[12px] font-medium text-tat-charcoal dark:text-tat-paper focus:outline-none focus:ring-2 focus:ring-tat-gold cursor-pointer shrink-0"
+            aria-label="Budget"
+          >
+            <option value="all">Any budget</option>
+            <option value="under-50k">Under ₹50k</option>
+            <option value="50k-1l">₹50k–1L</option>
+            <option value="1l-plus">₹1L+</option>
+          </select>
+
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            className="ml-auto h-9 px-3 rounded-full bg-tat-cream-warm/40 dark:bg-white/5 ring-1 ring-tat-charcoal/10 dark:ring-white/10 text-[12px] font-medium text-tat-charcoal dark:text-tat-paper focus:outline-none focus:ring-2 focus:ring-tat-gold cursor-pointer shrink-0"
+            aria-label="Sort destinations"
+          >
+            <option value="popular">Popular</option>
+            <option value="price-asc">Price ↑</option>
+            <option value="price-desc">Price ↓</option>
+            <option value="name">A–Z</option>
+          </select>
+
+          {activeFilters > 0 && (
+            <button
+              type="button"
+              onClick={clearAll}
+              className="shrink-0 inline-flex items-center gap-1 h-9 px-3 rounded-full text-[12px] font-semibold text-tat-charcoal/70 hover:text-tat-charcoal hover:bg-tat-charcoal/8"
+            >
+              <X className="h-3.5 w-3.5" />
+              Clear
+            </button>
+          )}
         </div>
-      </div>
+      </StickyOnScrollUp>
 
       {/* Result counter + empty state */}
       <div className="container-custom pt-6 md:pt-8">
