@@ -145,7 +145,9 @@ export async function callBitrix(method: string, body: unknown): Promise<BitrixR
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-      signal: AbortSignal.timeout(10_000),
+      // 30s — Bitrix24.in can hit 10–15s response times during Indian peak hours,
+      // which was timing out the 10s budget and silently dropping crm.lead.add.
+      signal: AbortSignal.timeout(30_000),
     });
     const data = (await res.json()) as BitrixResponse;
 
