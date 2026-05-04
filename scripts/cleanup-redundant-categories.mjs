@@ -89,24 +89,24 @@ async function main() {
   const packages = await fetchQuery(`*[_type == "package" && (
     count(categoryRefs[_ref in [${REDUNDANT_DOC_IDS.map((id) => `"${id}"`).join(",")}]]) > 0 ||
     count(categories[lower(@) in [${[...REDUNDANT_LABELS].map((l) => `"${l}"`).join(",")}]]) > 0
-  )]{ _id, "slug": slug.current, categories, categoryRefs[]{ _key, _ref } }`);
+  )]{ _id, "slug": slug.current, categories, categoryRefs[]{ _key, _type, _ref } }`);
 
   console.log(`\n[1/2] ${packages.length} packages need cleanup`);
 
   const patches = packages.map((pkg) => {
-    const newCatRefs = (pkg.categoryRefs || []).filter((r) => !REDUNDANT_DOC_IDS.includes(r._ref));
+    // Preserve `_type` when re-writing the array — Sanity strips items
+    // that lack the discriminator, breaking ref rendering in Studio.
+    const newCatRefs = (pkg.categoryRefs || [])
+      .filter((r) => !REDUNDANT_DOC_IDS.includes(r._ref))
+      .map((r) => ({ _key: r._key, _type: r._type || "reference", _ref: r._ref }));
     const newCats = (pkg.categories || []).filter(
       (c) => !REDUNDANT_LABELS.has(String(c).toLowerCase()),
     );
-    return {
-      patch: {
-        id: pkg._id,
-        set: {
-          categoryRefs: newCatRefs,
-          categories: newCats,
-        },
-      },
-    };
+    const set = { categoryRefs: newCatRefs };
+    const unset = [];
+    if (newCats.length > 0) set.categories = newCats;
+    else unset.push("categories");
+    return { patch: { id: pkg._id, set, unset } };
   });
 
   for (const batch of chunk(patches, 50)) await mutate(batch);

@@ -371,6 +371,12 @@ function cleanTitle(raw) {
   t = t.replace(/\s*[—–-]\s*/g, " — ").replace(/\s*\|\s*/g, " · ").replace(/\s+/g, " ").trim();
   // Remove "(<Name>)" parenthetical
   t = t.replace(/\([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\)/g, "").trim();
+  // Strip trailing duration phrasing — the nights/days/duration fields
+  // already carry it, so don't bake it into the title (slug too).
+  t = t.replace(/\s*[·—–\-|]\s*\d{1,2}\s*N(?:ights?)?\s*\/?\s*\d{1,2}\s*D(?:ays?)?\s*$/i, "");
+  t = t.replace(/\s+\d{1,2}\s*N(?:ights?)?\s*\/?\s*\d{1,2}\s*D(?:ays?)?\s*$/i, "");
+  t = t.replace(/\s+\d{1,2}\s*(?:Nights?|Days?)\s*$/i, "");
+  t = t.replace(/\s*[·—–|]\s*$/g, "").replace(/\s{2,}/g, " ").trim();
   return t || raw.trim();
 }
 
@@ -658,9 +664,10 @@ function buildPackageDoc(pdfNum, txt) {
   const price = parsedPrice ?? (destSlug ? FALLBACK_PRICE_BY_DEST[destSlug] : null) ?? null;
   let nd = parseNightsDays(title, txt, date);
 
-  // Slug — disambiguate by appending pdf number when title repeats
-  const slugBase = slugify(title);
-  const slug = `${slugBase}-${pdfNum}`;
+  // Slug — keep the cleaned title; collisions are deduped at the doc-set
+  // step in main() (see SLUG_USED below). Don't suffix the pdf number —
+  // the cleaned title is already unique enough for ~99% of imports.
+  const slug = slugify(title);
   const hotels = parseHotels(txt);
   const itinerary = parseItinerary(txt);
   const mealPlan = parseMealPlan(txt);
@@ -754,7 +761,7 @@ function buildPackageDoc(pdfNum, txt) {
     trending: false,
     featured: false,
     limitedSlots: false,
-    faqs: STANDARD_FAQS,
+    faqs: STANDARD_FAQS.map((f, i) => ({ _key: `faq-${i}`, ...f })),
     bestFor: title,
     visaInfo: {
       required: /^(?!.*(India|Indian|Domestic)).*(vietnam|thailand|bali|nepal|sri\s*lanka|maldives|seychelles|dubai|singapore|malaysia|japan|korea|turkey|switzerland|italy|paris|france|uk|russia|kenya|australia|cambodia|hong\s*kong)/i.test(title),
@@ -878,6 +885,23 @@ async function main() {
   const deduped = [...byTitle.values()];
   const dropped = docs.length - deduped.length;
   if (dropped > 0) console.log(`\nDropped ${dropped} duplicate-title doc(s).`);
+
+  // ── Step 4b: dedupe slugs across the batch (cleaned titles can repeat
+  // across PDFs — e.g. several "Goa Family Holiday" quotes). Append -2,
+  // -3, … to the second-and-later occurrences so the slug field stays
+  // unique without leaking pdf numbers into URLs.
+  const slugUsed = new Set();
+  for (const d of deduped) {
+    const base = d.slug?.current || "package";
+    let final = base;
+    let n = 1;
+    while (slugUsed.has(final)) {
+      n += 1;
+      final = `${base}-${n}`;
+    }
+    slugUsed.add(final);
+    d.slug = { _type: "slug", current: final };
+  }
 
   // ── Step 5: filter out docs missing required fields ────────────────
   const ready = deduped.filter(d => d.destination && d.price > 0);
