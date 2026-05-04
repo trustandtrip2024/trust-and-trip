@@ -3,6 +3,17 @@ const withBundleAnalyzer = process.env.ANALYZE === "true"
   ? require("@next/bundle-analyzer")({ enabled: true, openAnalyzer: false })
   : (cfg) => cfg;
 
+// Old → new package slug map written by scripts/fix-package-imports.mjs
+// when the PDF-import slug cleanup ran on 2026-05-05. Keeps any URL
+// shared with clients during the brief window the long auto-slugs were
+// live (~4 days) resolving to the renamed package.
+let PACKAGE_SLUG_REDIRECTS = {};
+try {
+  PACKAGE_SLUG_REDIRECTS = require("./scripts/slug-redirects.json");
+} catch {
+  // file absent until the repair script runs with --commit
+}
+
 // Sentry wrapper — only applied if SENTRY_DSN is set so local builds without
 // Sentry credentials don't fail.
 const sentryEnabled = !!(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN);
@@ -62,7 +73,13 @@ const nextConfig = {
   },
 
   async redirects() {
+    const packageSlugRedirects = Object.entries(PACKAGE_SLUG_REDIRECTS).flatMap(([from, to]) => [
+      { source: `/packages/${from}`, destination: `/packages/${to}`, permanent: true },
+      { source: `/packages/${from}/`, destination: `/packages/${to}`, permanent: true },
+    ]);
+
     return [
+      ...packageSlugRedirects,
       // ─── Old site main pages ──────────────────────────────────────────────
       { source: "/about-travel-packages-trust-and-trip", destination: "/about", permanent: true },
       { source: "/about-travel-packages-trust-and-trip/", destination: "/about", permanent: true },

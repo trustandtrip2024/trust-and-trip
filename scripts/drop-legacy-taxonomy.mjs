@@ -90,12 +90,14 @@ async function main() {
   for (const pkg of packages) {
     const hasCatRefs = Array.isArray(pkg.categoryRefs) && pkg.categoryRefs.length > 0;
     const hasTagRefs = Array.isArray(pkg.tagRefs) && pkg.tagRefs.length > 0;
-    const hasLegacyCats = Array.isArray(pkg.categories) && pkg.categories.length > 0;
-    const hasLegacyTags = Array.isArray(pkg.tags) && pkg.tags.length > 0;
+    // Treat `null` and `[]` as legacy too — earlier scripts set these
+    // shapes, but Studio still flags the field as "present but unknown".
+    const legacyCatsPresent = Object.prototype.hasOwnProperty.call(pkg, "categories");
+    const legacyTagsPresent = Object.prototype.hasOwnProperty.call(pkg, "tags");
 
     const unset = [];
-    if (hasCatRefs && hasLegacyCats) { unset.push("categories"); unsetCats++; }
-    if (hasTagRefs && hasLegacyTags) { unset.push("tags"); unsetTags++; }
+    if (hasCatRefs && legacyCatsPresent) { unset.push("categories"); unsetCats++; }
+    if (hasTagRefs && legacyTagsPresent) { unset.push("tags"); unsetTags++; }
 
     if (unset.length === 0) { untouched++; continue; }
     pkgPatches.push({ patch: { id: pkg._id, unset } });
