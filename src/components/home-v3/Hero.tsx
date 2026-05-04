@@ -4,28 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Search, Calendar, Users, Wallet, ArrowRight, MessageCircle, Star,
+  ArrowRight, MessageCircle, Star,
   ShieldCheck, Clock, Sparkles, Pause, Play,
 } from "lucide-react";
-import { useTripPlanner } from "@/context/TripPlannerContext";
+import HeroSanitySearch from "./HeroSanitySearch";
 
 const HERO_BG_FALLBACK =
   "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=70";
 const WHATSAPP_HREF =
   "https://wa.me/918115999588?text=" +
   encodeURIComponent("Hi Trust and Trip — I'd like help planning my trip.");
-
-const MONTHS = [
-  "Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",
-];
-const PAX_OPTIONS = ["1", "2", "3", "4", "5+"];
-const BUDGET_OPTIONS = [
-  { id: "<50k",   label: "Under ₹50k" },
-  { id: "50-1L",  label: "₹50k – ₹1L" },
-  { id: "1-2L",   label: "₹1L – ₹2L" },
-  { id: "2-5L",   label: "₹2L – ₹5L" },
-  { id: "5L+",    label: "₹5L +" },
-];
 
 interface Props {
   trustStrip?: string;
@@ -46,11 +34,6 @@ export default function Hero({
 }: Props = {}) {
   const bgImage = heroImage || HERO_BG_FALLBACK;
   const videoPoster = videoPosterUrl || bgImage;
-  const { open: openPlanner } = useTripPlanner();
-  const [destination, setDestination] = useState("");
-  const [month, setMonth] = useState("");
-  const [pax, setPax] = useState("");
-  const [budget, setBudget] = useState("");
 
   // Video accessibility: auto-pause when prefers-reduced-motion is on,
   // and surface a visible play/pause toggle so vestibular-sensitive
@@ -86,16 +69,6 @@ export default function Hero({
       setVideoPaused(true);
     }
   };
-
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
-    openPlanner({
-      destinationName: destination,
-      month,
-      duration: pax,
-      budget,
-    });
-  }
 
   return (
     <section
@@ -190,23 +163,11 @@ export default function Hero({
             your itinerary — free until you&apos;re sure. No card, no commitment.
           </p>
 
-          {/* ─── Mobile-only CTA ───────────────────────────────────
-              Desktop hero has the full search form (line 170+). On
-              mobile that form is hidden, so without this CTA there is
-              no primary conversion action above the fold. */}
-          <div className="md:hidden mt-5 flex flex-col gap-3 max-w-md">
-            <button
-              type="button"
-              onClick={() => openPlanner({})}
-              className="relative overflow-hidden inline-flex items-center justify-center gap-2 h-12 px-6 rounded-xl bg-gradient-to-r from-tat-teal via-tat-teal to-tat-teal-deep text-white font-semibold text-[15px] shadow-[0_14px_30px_-10px_rgba(14,124,123,0.85)] active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2"
-            >
-              <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-tt-shimmer" />
-              <Sparkles className="relative h-4 w-4" aria-hidden />
-              <span className="relative">Plan my trip — free</span>
-              <ArrowRight className="relative h-4 w-4" aria-hidden />
-            </button>
-            <p className="text-[11px] text-white/75 text-center">
-              2 mins · No card · Real planner replies in 24h
+          {/* Mobile-only Sanity search — primary above-the-fold action */}
+          <div className="md:hidden mt-5">
+            <HeroSanitySearch />
+            <p className="mt-2 text-[11px] text-white/75 text-center">
+              Search destinations, packages, articles · Powered by Sanity
             </p>
           </div>
 
@@ -230,84 +191,11 @@ export default function Hero({
           </ul>
         </div>
 
-        {/* ─── Desktop: full search form ───────────────────────────
-            Gold gradient hairline at top + glow ring on hover sells
-            the form as a premium primary action, not a flat web
-            widget. Submit button gets gold→orange gradient + shimmer. */}
-        <form
-          onSubmit={submit}
-          className="group/heroform relative hidden md:block mt-8 bg-white/95 dark:bg-tat-charcoal/95 backdrop-blur-md rounded-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.55)] ring-1 ring-white/15 hover:ring-tat-gold/45 transition-shadow duration-300"
-        >
-          <span
-            aria-hidden
-            className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-tat-gold/70 to-transparent"
-          />
-          <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_0.8fr_1fr_auto] divide-y md:divide-y-0 md:divide-x divide-tat-charcoal/10 dark:divide-white/10">
-            <Field label="Destination" icon={Search}>
-              <input
-                type="text"
-                value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                placeholder="Bali, Maldives, Char Dham…"
-                className="w-full bg-transparent text-[15px] text-tat-charcoal dark:text-tat-paper placeholder:text-tat-charcoal/40 dark:placeholder:text-tat-paper/40 focus:outline-none"
-                aria-label="Destination"
-              />
-            </Field>
-            <Field label="When" icon={Calendar}>
-              <select
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
-                className="w-full bg-transparent text-[15px] text-tat-charcoal dark:text-tat-paper focus:outline-none cursor-pointer"
-                aria-label="Travel month"
-              >
-                <option value="">Pick month</option>
-                {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
-              </select>
-            </Field>
-            <Field label="Travelers" icon={Users}>
-              <select
-                value={pax}
-                onChange={(e) => setPax(e.target.value)}
-                className="w-full bg-transparent text-[15px] text-tat-charcoal dark:text-tat-paper focus:outline-none cursor-pointer"
-                aria-label="Number of travelers"
-              >
-                <option value="">2 adults</option>
-                {PAX_OPTIONS.map((p) => <option key={p} value={p}>{p}</option>)}
-              </select>
-            </Field>
-            <Field label="Budget / person" icon={Wallet}>
-              <select
-                value={budget}
-                onChange={(e) => setBudget(e.target.value)}
-                className="w-full bg-transparent text-[15px] text-tat-charcoal dark:text-tat-paper focus:outline-none cursor-pointer"
-                aria-label="Budget per person"
-              >
-                <option value="">Any budget</option>
-                {BUDGET_OPTIONS.map((b) => (
-                  <option key={b.id} value={b.id}>{b.label}</option>
-                ))}
-              </select>
-            </Field>
-            <div className="p-2 md:p-2.5 flex">
-              <button
-                type="submit"
-                className="relative overflow-hidden w-full md:w-auto inline-flex flex-col items-center justify-center gap-0 h-12 md:h-14 px-6 md:px-8 rounded-xl bg-gradient-to-r from-tat-teal via-tat-teal to-tat-teal-deep text-white font-semibold text-[15px] shadow-[0_14px_30px_-10px_rgba(14,124,123,0.85)] active:scale-[0.98] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tat-gold focus-visible:ring-offset-2 group/cta"
-              >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-tt-shimmer"
-                />
-                <span className="relative inline-flex items-center gap-1.5 leading-none">
-                  Plan my trip
-                  <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover/cta:translate-x-0.5" />
-                </span>
-                <span className="relative text-[10px] font-medium opacity-80 mt-1 tracking-wide leading-none">
-                  Free · 2 mins · No card
-                </span>
-              </button>
-            </div>
-          </div>
-        </form>
+        {/* Desktop Sanity-powered search bar — typeahead pulls
+            destinations / packages / articles from Sanity in real time. */}
+        <div className="hidden md:block mt-8">
+          <HeroSanitySearch />
+        </div>
 
         {/* Below-form trust line + live-planner WhatsApp escape.
             Green pulse dot on the WhatsApp link sells "real human
@@ -337,18 +225,3 @@ export default function Hero({
   );
 }
 
-function Field({
-  label, icon: Icon, children,
-}: {
-  label: string; icon: typeof Search; children: React.ReactNode;
-}) {
-  return (
-    <label className="block px-4 py-3 md:py-4 cursor-text">
-      <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] font-semibold text-tat-charcoal/55 dark:text-tat-paper/55">
-        <Icon className="h-3 w-3 text-tat-gold" aria-hidden />
-        {label}
-      </span>
-      <div className="mt-1">{children}</div>
-    </label>
-  );
-}
