@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { sanityClient, urlFor } from "@/lib/sanity";
 import SearchInputClient from "@/components/search/SearchInputClient";
+import StickyOnScrollUp from "@/components/StickyOnScrollUp";
 
 interface RawResult {
   type: "package" | "destination" | "post";
@@ -181,7 +182,7 @@ export default async function SearchPage({ searchParams }: Props) {
 
       {/* Type filter chips */}
       {q && totalCount > 0 && (
-        <div className="sticky top-16 lg:top-20 z-30 bg-tat-paper/95 backdrop-blur-md border-b border-tat-charcoal/8">
+        <StickyOnScrollUp className="bg-tat-paper/95 backdrop-blur-md border-b border-tat-charcoal/8">
           <div className="container-custom py-3">
             <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-5 px-5 sm:mx-0 sm:px-0">
               {TYPE_TABS.map((t) => {
@@ -215,7 +216,7 @@ export default async function SearchPage({ searchParams }: Props) {
               })}
             </div>
           </div>
-        </div>
+        </StickyOnScrollUp>
       )}
 
       {/* Body */}
