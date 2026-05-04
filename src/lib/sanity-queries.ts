@@ -59,8 +59,9 @@ const GALLERY_PROJ = `gallery[]{
 const DESTINATIONS_QUERY = `*[_type == "destination"] | order(name asc) {
   "name": name,
   "slug": slug.current,
-  "country": country,
-  "region": region,
+  "country": countryRef->name,
+  "countrySlug": countryRef->slug.current,
+  "region": coalesce(countryRef->region, region),
   "priceFrom": priceFrom,
   "tagline": tagline,
   "image": image,
@@ -78,8 +79,9 @@ const DESTINATIONS_QUERY = `*[_type == "destination"] | order(name asc) {
 const DESTINATION_BY_SLUG_QUERY = `*[_type == "destination" && slug.current == $slug][0] {
   "name": name,
   "slug": slug.current,
-  "country": country,
-  "region": region,
+  "country": countryRef->name,
+  "countrySlug": countryRef->slug.current,
+  "region": coalesce(countryRef->region, region),
   "priceFrom": priceFrom,
   "tagline": tagline,
   "image": image,
@@ -176,8 +178,10 @@ const PACKAGE_FIELDS = `
     "images": images[].asset->url
   },
   "activities": activities,
-  "categories": categories,
-  "tags": tags,
+  "categories": categoryRefs[]->label,
+  "tags": tagRefs[]->label,
+  "categorySlugs": categoryRefs[]->slug.current,
+  "tagSlugs": tagRefs[]->slug.current,
   "trending": coalesce(trending, false),
   "featured": coalesce(featured, false),
   "limitedSlots": coalesce(limitedSlots, false),
@@ -431,7 +435,10 @@ export async function getPilgrimPackages(): Promise<Package[]> {
     // 2026 generator. Falls through any future pilgrim destination too,
     // without code changes.
     const raw = await sanityClient.fetch<SanityPackage[]>(
-      `*[_type == "package" && ("Pilgrim" in categories || "Spiritual" in categories)] | order(rating desc, price asc) [0...12] { ${PACKAGE_FIELDS} }`
+      `*[_type == "package" && (
+        "pilgrim" in categoryRefs[]->slug.current ||
+        "spiritual" in categoryRefs[]->slug.current
+      )] | order(rating desc, price asc) [0...12] { ${PACKAGE_FIELDS} }`
     );
     return raw.map(mapPackage);
   });
@@ -453,8 +460,12 @@ export async function getPackagesByType(travelType: string): Promise<Package[]> 
 }
 
 export async function getPackagesByCategory(category: string): Promise<Package[]> {
+  // Accepts either the slug ("honeymoon") or the label ("Honeymoon").
   const raw = await sanityClient.fetch<SanityPackage[]>(
-    `*[_type == "package" && $category in categories] | order(rating desc, featured desc) { ${PACKAGE_FIELDS} }`,
+    `*[_type == "package" && (
+      $category in categoryRefs[]->slug.current ||
+      $category in categoryRefs[]->label
+    )] | order(rating desc, featured desc) { ${PACKAGE_FIELDS} }`,
     { category }
   );
   return raw.map(mapPackage);
@@ -462,7 +473,10 @@ export async function getPackagesByCategory(category: string): Promise<Package[]
 
 export async function getPackagesByTag(tag: string): Promise<Package[]> {
   const raw = await sanityClient.fetch<SanityPackage[]>(
-    `*[_type == "package" && $tagName in tags] | order(rating desc, featured desc) { ${PACKAGE_FIELDS} }`,
+    `*[_type == "package" && (
+      $tagName in tagRefs[]->slug.current ||
+      $tagName in tagRefs[]->label
+    )] | order(rating desc, featured desc) { ${PACKAGE_FIELDS} }`,
     { tagName: tag }
   );
   return raw.map(mapPackage);
@@ -482,6 +496,59 @@ export async function getOfferPackages(): Promise<Package[]> {
   );
   return raw.map(mapPackage);
 }
+
+// ─── Category queries (taxonomy doc) ───────────────────────────────────────
+
+export type CategoryDoc = {
+  _id: string;
+  label: string;
+  slug: string;
+  travelTypeAffinity?: "Couple" | "Family" | "Group" | "Solo";
+  tagline?: string;
+  intro?: string;
+  icon?: string | null;
+  heroImage?: string | null;
+  highlights?: string[];
+  sortOrder?: number;
+  showInNav?: boolean;
+  packageCount?: number;
+};
+
+const CATEGORY_FIELDS = `
+  _id,
+  label,
+  "slug": slug.current,
+  travelTypeAffinity,
+  tagline,
+  intro,
+  "icon": icon.asset->url,
+  "heroImage": heroImage.asset->url,
+  highlights,
+  sortOrder,
+  showInNav,
+  "packageCount": count(*[_type == "package" && references(^._id)])
+`;
+
+export const getCategories = cache(async (): Promise<CategoryDoc[]> => {
+  return cached("sanity:categories", TTL.long, async () => {
+    return sanityClient.fetch<CategoryDoc[]>(
+      `*[_type == "category"] | order(sortOrder asc, label asc) { ${CATEGORY_FIELDS} }`,
+    );
+  });
+});
+
+export const getCategoryBySlug = cache(async (slug: string): Promise<CategoryDoc | null> => {
+  return cached(`sanity:category:${slug}`, TTL.medium, () =>
+    sanityClient.fetch<CategoryDoc | null>(
+      `*[_type == "category" && slug.current == $slug][0] { ${CATEGORY_FIELDS} }`,
+      { slug },
+    ),
+  );
+});
+
+export const getAllCategorySlugs = cache(async (): Promise<string[]> => {
+  return sanityClient.fetch<string[]>(`*[_type == "category"].slug.current`);
+});
 
 // ─── Homepage content (singleton) ─────────────────────────────────────────
 

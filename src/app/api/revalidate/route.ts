@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 //   URL:     https://trustandtrip.com/api/revalidate
 //   Method:  POST
 //   Trigger: on create / update / delete for documents you care about
-//   Filter:  _type in ["destination","package","homepageContent","blogPost","ugcPost","partnerLogo","pressQuote"]
+//   Filter:  _type in ["destination","package","homepageContent","blogPost","ugcPost","partnerLogo","pressQuote","category","tag","country","theme"]
 //   Headers: Authorization: Bearer ${SANITY_REVALIDATE_SECRET}
 //   Projection (Sanity body):
 //     {
@@ -79,6 +79,47 @@ function targetsFor(type: string, slug?: string): string[] {
     case "pressQuote":
       return ["path:/", "tag:homepage", "tag:press"];
 
+    case "category":
+      // A category edit changes the category landing page + every package
+      // page that lists category pills + the homepage shelf and the
+      // /categories index. Revalidating /packages too is cheap insurance.
+      return [
+        "path:/",
+        "path:/categories",
+        slug ? `path:/categories/${slug}` : null,
+        "path:/packages",
+        "tag:packages",
+        "tag:homepage",
+        "tag:categories",
+      ].filter(Boolean) as string[];
+
+    case "tag":
+      return [
+        "path:/packages",
+        "tag:packages",
+        "tag:tags",
+      ];
+
+    case "country":
+      // Country meta (visa, currency, timezone) flows into every
+      // destination + package in that country. Revalidate broadly.
+      return [
+        "path:/",
+        "path:/destinations",
+        "path:/packages",
+        "tag:destinations",
+        "tag:packages",
+      ];
+
+    case "theme":
+      // Editorial collections drive homepage shelves + their own landing.
+      return [
+        "path:/",
+        slug ? `path:/themes/${slug}` : null,
+        "tag:homepage",
+        "tag:themes",
+      ].filter(Boolean) as string[];
+
     default:
       // Unknown _type → revalidate homepage as a safe fallback.
       return ["path:/"];
@@ -116,6 +157,14 @@ function redisKeysFor(type: string): string[] {
       return ["partner:logos"];
     case "pressQuote":
       return ["press:featured"];
+    case "category":
+      return ["sanity:categories", "packages", "trending-packages", "featured-packages"];
+    case "tag":
+      return ["packages"];
+    case "country":
+      return ["destinations", "packages"];
+    case "theme":
+      return ["sanity:themes", "homepage:content"];
     default:
       return [];
   }

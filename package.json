@@ -13,7 +13,13 @@
     "eval:intent": "node scripts/eval-intent.mjs",
     "wa:test": "node scripts/wa-test.mjs",
     "packages:pdf": "node scripts/dump-packages-pdf.mjs",
-    "packages:html": "node scripts/dump-packages-html.mjs"
+    "packages:html": "node scripts/dump-packages-html.mjs",
+    "taxonomy:migrate": "node scripts/migrate-taxonomy.mjs",
+    "taxonomy:migrate:dry": "node scripts/migrate-taxonomy.mjs --dry-run",
+    "taxonomy:cleanup": "node scripts/cleanup-redundant-categories.mjs",
+    "taxonomy:cleanup:dry": "node scripts/cleanup-redundant-categories.mjs --dry-run",
+    "taxonomy:drop-legacy": "node scripts/drop-legacy-taxonomy.mjs",
+    "taxonomy:drop-legacy:dry": "node scripts/drop-legacy-taxonomy.mjs --dry-run"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",

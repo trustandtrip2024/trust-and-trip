@@ -9,11 +9,19 @@ import { ugcPostType } from './ugcPostType'
 import { featuredItineraryType } from './featuredItineraryType'
 import { offerBannerType } from './offerBannerType'
 import { homeShelfType } from './homeShelfType'
+import { countryType } from './countryType'
+import { categoryType } from './categoryType'
+import { tagType } from './tagType'
+import { themeType } from './themeType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
     destinationType,
     packageType,
+    countryType,
+    categoryType,
+    tagType,
+    themeType,
     blogPostType,
     homepageContentType,
     partnerLogoType,

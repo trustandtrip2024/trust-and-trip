@@ -12,7 +12,14 @@ export const destinationType = defineType({
       name: 'slug', type: 'slug', options: { source: 'name', maxLength: 96 },
       validation: (R) => R.required(),
     }),
-    defineField({ name: 'country', title: 'Country', type: 'string', validation: (R) => R.required() }),
+    defineField({
+      name: 'countryRef',
+      title: 'Country',
+      type: 'reference',
+      to: [{ type: 'country' }],
+      description: 'Pick from the governed Country list. Inherits region, currency, timezone, and default visa info.',
+      validation: (R) => R.required(),
+    }),
     defineField({
       name: 'region', title: 'Region', type: 'string',
       options: {

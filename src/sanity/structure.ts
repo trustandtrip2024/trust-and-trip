@@ -16,8 +16,13 @@ export const structure: StructureResolver = (S) =>
             .documentId('homepageContent')
         ),
       S.divider(),
+      S.documentTypeListItem('country').title('Countries'),
       S.documentTypeListItem('destination').title('Destinations'),
       S.documentTypeListItem('package').title('Packages'),
+      S.divider(),
+      S.documentTypeListItem('category').title('Categories'),
+      S.documentTypeListItem('tag').title('Tags'),
+      S.documentTypeListItem('theme').title('Themes / Collections'),
       S.divider(),
       S.documentTypeListItem('blogPost').title('Blog Posts'),
       S.divider(),
